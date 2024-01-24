@@ -1,10 +1,10 @@
 # SSEC-JHU snaptron_query
 
 [![CI](https://github.com/ssec-jhu/snaptron-query/actions/workflows/ci.yml/badge.svg)](https://github.com/ssec-jhu/snaptron-query/actions/workflows/ci.yml)
-<!---[![Documentation Status](https://readthedocs.org/projects/ssec-jhu-snaptron-query/badge/?version=latest)](https://ssec-jhu-snaptron-query.readthedocs.io/en/latest/?badge=latest) --->
 [![codecov](https://codecov.io/gh/ssec-jhu/snaptron-query/graph/badge.svg?token=9uy1hl0p9o)](https://codecov.io/gh/ssec-jhu/snaptron-query)
 [![Security](https://github.com/ssec-jhu/snaptron-query/actions/workflows/security.yml/badge.svg)](https://github.com/ssec-jhu/snaptron-query/actions/workflows/security.yml)
 <!---[![DOI](https://zenodo.org/badge/<insert_ID_number>.svg)](https://zenodo.org/badge/latestdoi/<insert_ID_number>) --->
+<!---[![Documentation Status](https://readthedocs.org/projects/ssec-jhu-snaptron-query/badge/?version=latest)](https://ssec-jhu-snaptron-query.readthedocs.io/en/latest/?badge=latest) --->
 
 
 ![SSEC-JHU Logo](docs/_static/SSEC_logo_horiz_blue_1152x263.png)
