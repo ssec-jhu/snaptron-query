@@ -1,5 +1,5 @@
-from package_name.util import find_package_location, find_repo_location
-from package_name import __project__, __version__
+from snaptron_query.util import find_package_location, find_repo_location
+from snaptron_query import __project__, __version__
 
 
 def test_find_repo_location():

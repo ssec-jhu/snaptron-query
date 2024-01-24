@@ -1,9 +1,9 @@
-# SSEC-JHU <package_name>
+# SSEC-JHU snaptron_query
 
-[![CI](https://github.com/ssec-jhu/base-template/actions/workflows/ci.yml/badge.svg)](https://github.com/ssec-jhu/base-template/actions/workflows/ci.yml)
-[![Documentation Status](https://readthedocs.org/projects/ssec-jhu-base-template/badge/?version=latest)](https://ssec-jhu-base-template.readthedocs.io/en/latest/?badge=latest)
-[![codecov](https://codecov.io/gh/ssec-jhu/base-template/branch/main/graph/badge.svg?token=0KPNKHRC2V)](https://codecov.io/gh/ssec-jhu/base-template)
-[![Security](https://github.com/ssec-jhu/base-template/actions/workflows/security.yml/badge.svg)](https://github.com/ssec-jhu/base-template/actions/workflows/security.yml)
+[![CI](https://github.com/ssec-jhu/snaptron-query/actions/workflows/ci.yml/badge.svg)](https://github.com/ssec-jhu/snaptron-query/actions/workflows/ci.yml)
+<!---[![Documentation Status](https://readthedocs.org/projects/ssec-jhu-snaptron-query/badge/?version=latest)](https://ssec-jhu-snaptron-query.readthedocs.io/en/latest/?badge=latest) --->
+[![codecov](https://codecov.io/gh/ssec-jhu/snaptron-query/graph/badge.svg?token=9uy1hl0p9o)](https://codecov.io/gh/ssec-jhu/snaptron-query)
+[![Security](https://github.com/ssec-jhu/snaptron-query/actions/workflows/security.yml/badge.svg)](https://github.com/ssec-jhu/snaptron-query/actions/workflows/security.yml)
 <!---[![DOI](https://zenodo.org/badge/<insert_ID_number>.svg)](https://zenodo.org/badge/latestdoi/<insert_ID_number>) --->
 
 
@@ -13,11 +13,8 @@ Base repo template to be used by all others.
 
 Things to do when using this template:
 
- * Correct ```<package_name>``` for child repo - suggest doing a search-all (grep) "package_name".
  * Uncomment above DOI in README.md and correct ``<insert_ID_number>``.
  * Correct "description" field in .zenodo.json to reflect description of child repo.
- * Correct the ``CI Status`` badge with child repo name.
- * Correct CodeCov status badge.
  * Correct meta data in ``CITATION.cff``.
  * Correct ``homepage``, ``documentation``, and ``repository`` under ``[project.urls]`` in pyproject.toml
  * Import package into https://readthedocs.org/.
@@ -68,11 +65,11 @@ For additional cmds see the [Conda cheat-sheet](https://docs.conda.io/projects/c
   #### with Docker:
   * Follow the above [Build with Docker instructions](#with-docker).
   * Run container from image: ``docker run -d -p 8000:8000 <image_name>``. _NOTE: ``-p 8000:8000`` is specific to the example application using port 8000._
-  * Alternatively, images can be pulled from ``ghcr.io/ssec-jhu/`` e.g., ``docker pull ghcr.io/ssec-jhu/base-template:pr-1``.
+  * Alternatively, images can be pulled from ``ghcr.io/ssec-jhu/`` e.g., ``docker pull ghcr.io/ssec-jhu/snaptron-query:pr-1``.
 
   #### with Python ecosystem:
   * Follow the above [Build with Python ecosystem instructions](#with-python-ecosystem).
-  * Run ``uvicorn package_name.app.main:app --host 0.0.0.0 --port", "8000``. _NOTE: This is just an example and is obviously application dependent._
+  * Run ``uvicorn snaptron_query.app.main:app --host 0.0.0.0 --port", "8000``. _NOTE: This is just an example and is obviously application dependent._
 
 ### Usage:
 To be completed by child repo.
@@ -93,7 +90,7 @@ Facilitates in testing typos, syntax, style, and other simple code analysis test
 ### Security Checks:
 Facilitates in checking for security concerns using [Bandit](https://bandit.readthedocs.io/en/latest/index.html).
  * ``cd`` into repo dir.
- * ``bandit --severity-level=medium -r package_name``
+ * ``bandit --severity-level=medium -r snaptron_query``
 
 ### Unit Tests:
 Facilitates in testing core package functionality at a modular level.
