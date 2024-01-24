@@ -22,8 +22,8 @@ authors:
 - family-names: "Abbasinejad"
   given-names: "Fatemeh"
   orcid: "https://orcid.org/0009-0006-3239-7112"
-title: "<package_name>"
+title: "snaptron_query"
 version: 0.0.1
 doi: <insert zenodo DOI>
 date-released: 2023-01-01
-url: "https://github.com/ssec-jhu/<package_name>"
+url: "https://github.com/ssec-jhu/snaptron_query"

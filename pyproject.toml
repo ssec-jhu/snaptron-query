@@ -1,5 +1,5 @@
 [project]
-name = "package_name"  # Replace package_name with actual name (it's just a template).
+name = "snaptron_query"
 dynamic = ["version"]
 authors = [
     {name = "Scientifc Software Engineering Center at JHU", email = "ssec@jhu.edu"},
@@ -34,21 +34,21 @@ docs = [
 ]
 
 [project.urls]
-homepage = "https://github.com/ssec-jhu/base-template"
-documentation = "https://github.com/ssec-jhu/base-template"
-repository = "https://github.com/ssec-jhu/base-template"
+homepage = "https://github.com/ssec-jhu/snaptron-query"
+documentation = "https://github.com/ssec-jhu/snaptron-query"
+repository = "https://github.com/ssec-jhu/snaptron-query"
 
 [build-system]
 requires = ["setuptools>=61.2", "setuptools_scm[toml]>=8.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["package_name"]  # Replace package_name with actual name (it's just a template).
+packages = ["snaptron_query"]
 zip-safe = false
 include-package-data = true
 
 [tool.setuptools_scm]
-write_to = "package_name/_version.py"  # Replace package_name with actual name (it's just a template).
+write_to = "snaptron_query/_version.py"
 
 [tool.bandit]
 exclude_dirs = ["tests"]
