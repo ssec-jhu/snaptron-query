@@ -55,25 +55,26 @@ def get_box_plot(df):
 
 
 def get_junction_query_column_def():
-    w = 200
-    columnDefs3 = [
-        {"field": "snaptron_id", "maxWidth": w, "checkboxSelection": True, "headerCheckboxSelection": True},
-        {"field": "start", "maxWidth": w},
-        {"field": "end", "maxWidth": w},
-        {"field": "gene_id:gene_name:gene_type:bp_length"},
-        {"field": "samples"},
-    ]
-    columnDefs2 = [
-        {"field": "norm_rail_id"},
-        {"field": "norm_raw_counts"},
-        {'field': "norm_factor",
-         "filter": "agNumberColumnFilter",
-         "filterParams": {
-             "buttons": ["apply", "reset"],  # for filterying
-             "closeOnApply": True,
-         },
-         },
-    ]
+    # w = 200
+    # columnDefs3 = [
+    #     {"field": "snaptron_id", "maxWidth": w, "checkboxSelection": True, "headerCheckboxSelection": True},
+    #     {"field": "start", "maxWidth": w},
+    #     {"field": "end", "maxWidth": w},
+    #     {"field": "gene_id:gene_name:gene_type:bp_length"},
+    #     {"field": "samples"},
+    # ]
+    # columnDefs2 = [
+    #     {"field": "norm_rail_id"},
+    #     {"field": "norm_raw_counts"},
+    #     {'field': "norm_factor",
+    #      "filter": "agNumberColumnFilter",
+    #      "filterParams": {
+    #          "buttons": ["apply", "reset"],  # for filterying
+    #          "closeOnApply": True,
+    #      },
+    #      },
+    # ]
+
     # columns=['rail_id', 'external_id', 'study', 'inc', 'exc', 'total', 'psi'])
     columnDefs = [
         {"field": 'rail_id', "headerName": "Rail ID", "filter": "agNumberColumnFilter", },
