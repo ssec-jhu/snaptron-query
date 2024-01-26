@@ -10,13 +10,13 @@ from dash import html
 import inline_styles
 
 
-def get_button_download(comp):
-    # comp = 'dbc'
+def get_button_download(component_style):
+    # component_style = 'dbc'
     string = 'Download'
     button_id = 'id-button-download'
     # TODO: add the icon
     # add_icon = DashIconify(icon="ic:round-add-box")
-    if comp == 'dmc':
+    if component_style == 'dmc':
         return dmc.Button(
             string,
             id=button_id,
@@ -40,7 +40,7 @@ def get_button_download(comp):
             mt="md",
             radius="md",
         )
-    elif comp == 'dbc':
+    elif component_style == 'dbc':
         return dbc.Button(
             string,
             id=button_id,
@@ -58,10 +58,10 @@ def get_button_download(comp):
         )
 
 
-def get_switch_log_psi(comp):
+def get_switch_log_psi(component_style):
     string = 'log Y'
     switch_id = 'id-switch-log-psi'
-    if comp == 'dmc':
+    if component_style == 'dmc':
         return dmc.Switch(
             id=switch_id,
             label=string,
@@ -73,7 +73,7 @@ def get_switch_log_psi(comp):
             # https://www.dash-mantine-components.com/components/switch
             # persistence,
         )
-    elif comp == 'dbc':
+    elif component_style == 'dbc':
         return dbc.Switch(
             id=switch_id,
             label=string,
@@ -82,12 +82,12 @@ def get_switch_log_psi(comp):
         )
 
 
-def get_switch_lock_data_with_table(comp):
+def get_switch_lock_data_with_table(component_style):
     string = 'Lock Table with Graphs'
     switch_id = 'id-switch-lock-with-table'
     # TODO: add the icon
     # add_icon = DashIconify(icon="ic:round-add-box")
-    if comp == 'dmc':
+    if component_style == 'dmc':
         return dmc.Switch(
             id=switch_id,
             label=string,
@@ -99,7 +99,7 @@ def get_switch_lock_data_with_table(comp):
             # https://www.dash-mantine-components.com/components/switch
             # persistence,
         )
-    elif comp == 'dbc':
+    elif component_style == 'dbc':
         return html.Div(
             [
                 # TODO: One option if the button doesn't fit is the take the label out as a separate component

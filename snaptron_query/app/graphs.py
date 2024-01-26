@@ -1,10 +1,15 @@
 """
     This file includes the graph components used in the queries.
+    Functions are wrappers around px chart components.
 """
 
 import plotly.express as px
 
 
+"""
+    Wrapper for plotly express histogram given a df
+    Wrapping in a function for clarity
+"""
 def get_histogram(df):
     # fig.update traces using below
     # https://plotly.com/python/reference/histogram/
@@ -24,6 +29,10 @@ def get_histogram(df):
     return fig
 
 
+"""
+    Wrapper for plotly express box plot given a df
+    Wrapping in a function for clarity
+"""
 def get_box_plot(df):
     # https://plotly.com/python/box-plots/
     # https://plotly.com/python-api-reference/generated/plotly.express.box
@@ -54,6 +63,10 @@ def get_box_plot(df):
     return fig
 
 
+"""
+    Wrapper for ag-grid column definitions and their indivisual style
+    Wrapping in a function for clarity
+"""
 def get_junction_query_column_def():
     # w = 200
     # columnDefs3 = [
