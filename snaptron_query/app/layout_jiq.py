@@ -9,22 +9,7 @@ from dash import html, dcc
 
 import components
 import components_jiq_form as fc
-
-# --------------------
-#       USE FOR DEBUGGING LAYOUT
-# --------------------
-# set the 0 to 1 to see the grids for alignment and layout changes
-border_card = f'0px solid {dmc.theme.DEFAULT_COLORS['indigo'][4]}'
-border_column = f'0px solid {dmc.theme.DEFAULT_COLORS['green'][4]}'
-border_grids = f'0px solid {dmc.theme.DEFAULT_COLORS['orange'][4]}'
-style_debugging = {
-    'border': border_grids,
-    # "textAlign": "center",
-}
-# set this value to 'block' to see the layout without running the query
-display_style = 'block'  # none or block for debugging
-# --------------------
-
+import inline_styles as styles
 
 col_width = 2
 
@@ -44,7 +29,7 @@ def get_dbc_grid_with_dcc_com():
                     ],
                     width=col_width * 5,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
             ],
@@ -59,34 +44,34 @@ def get_dbc_grid_with_dcc_com():
                 dbc.Col(
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     fc.get_text_chromosome('dcc'),
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     fc.get_text_inclusion_junction('dcc'),
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     fc.get_text_exclusion_junction('dcc'),
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
             ],
@@ -100,35 +85,35 @@ def get_dbc_grid_with_dcc_com():
                     fc.get_text_junction('dcc'),
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     fc.get_input_chrom('dcc'),
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     fc.get_input_inc_junction('dcc'),
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     fc.get_input_exc_junction('dcc'),
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     fc.get_button_add_junction('dbc'),
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
             ],
@@ -140,7 +125,7 @@ def get_dbc_grid_with_dcc_com():
             dbc.Col(
                 fc.get_button_generate_results('dbc'),
                 style={
-                    "border": border_column,
+                    "border": styles.border_column,
                 },
                 # className="d-grid gap-2 d-md-flex justify-content-md-end", # will justify to the right side
             ),
@@ -168,7 +153,7 @@ def get_dbc_cols_with_dmc_comp():
                     fc.get_dropdown_compilation('dmc'),
                     # width=col_width * 5,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
             ],
@@ -184,34 +169,34 @@ def get_dbc_cols_with_dmc_comp():
                 dbc.Col(
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     fc.get_text_chromosome('dmc'),
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     fc.get_text_inclusion_junction('dmc'),
                     width=col_width + 1,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     fc.get_text_exclusion_junction('dmc'),
                     width=col_width + 1,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
             ],
@@ -225,7 +210,7 @@ def get_dbc_cols_with_dmc_comp():
                     fc.get_text_junction('dmc'),
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                     align='center',  # vertical alignment: center start end
                     className='ml-auto',  # will justify to the right side
@@ -234,28 +219,28 @@ def get_dbc_cols_with_dmc_comp():
                     fc.get_input_chrom('dmc'),
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     fc.get_input_inc_junction('dmc'),
                     width=col_width + 1,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     fc.get_input_exc_junction('dmc'),
                     width=col_width + 1,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
                 dbc.Col(
                     fc.get_button_add_junction('dmc'),
                     width=col_width,
                     style={
-                        "border": border_column,
+                        "border": styles.border_column,
                     },
                 ),
             ],
@@ -268,7 +253,7 @@ def get_dbc_cols_with_dmc_comp():
                 fc.get_button_generate_results('dbc'),
                 # width=col_width * 5,
                 style={
-                    "border": border_column,
+                    "border": styles.border_column,
                 },
                 # className="d-grid gap-2 d-md-flex justify-content-md-end", # will justify to the right side
             ),
@@ -295,27 +280,27 @@ def get_dmc_grid():
                 dmc.Col(fc.get_dropdown_compilation('dmc'),
                         span=10,
                         style={
-                            'border': border_grids,
+                            'border': styles.border_grids,
                         },
                         ),
-                dmc.Col(span=2, style={'border': border_grids, }),
+                dmc.Col(span=2, style={'border': styles.border_grids, }),
 
                 # the span sum for each row must equal 12
-                dmc.Col(span=2, style={'border': border_grids, }),
+                dmc.Col(span=2, style={'border': styles.border_grids, }),
                 dmc.Col(fc.get_text_chromosome('dmc'), span=2),
                 dmc.Col(fc.get_text_inclusion_junction('dmc'), span=2),
                 dmc.Col(fc.get_text_exclusion_junction('dmc'), span=2),
-                dmc.Col(span=4, style={'border': border_grids, }),
+                dmc.Col(span=4, style={'border': styles.border_grids, }),
 
                 # the span sum for each row must equal 12
-                dmc.Col(fc.get_text_junction('dmc'), span=2, style={'border': border_grids, }),
-                dmc.Col(fc.get_input_chrom('dmc'), span=2, style={'border': border_grids, }),
-                dmc.Col(fc.get_input_inc_junction('dmc'), span=2, style={'border': border_grids, }),
-                dmc.Col(fc.get_input_exc_junction('dmc'), span=2, style={'border': border_grids, }),
-                dmc.Col(fc.get_button_add_junction('dmc'), span=2, style={'border': border_grids, }),
+                dmc.Col(fc.get_text_junction('dmc'), span=2, style={'border': styles.border_grids, }),
+                dmc.Col(fc.get_input_chrom('dmc'), span=2, style={'border': styles.border_grids, }),
+                dmc.Col(fc.get_input_inc_junction('dmc'), span=2, style={'border': styles.border_grids, }),
+                dmc.Col(fc.get_input_exc_junction('dmc'), span=2, style={'border': styles.border_grids, }),
+                dmc.Col(fc.get_button_add_junction('dmc'), span=2, style={'border': styles.border_grids, }),
                 # dmc.Col(span='auto'), # this will fill the row
-                dmc.Col(span=2, style={'border': border_grids, }),  # this will fill the row
-                dmc.Col(fc.get_button_generate_results('dmc'), span='auto', style={'border': border_grids, }),
+                dmc.Col(span=2, style={'border': styles.border_grids, }),  # this will fill the row
+                dmc.Col(fc.get_button_generate_results('dmc'), span='auto', style={'border': styles.border_grids, }),
             ],
             gutter="sm",  # small gutters
 
@@ -333,13 +318,13 @@ def get_dmc_grid_example():
     return [
         dmc.Grid(
             [
-                dmc.Col(html.Div("long words here", style=style_debugging), span=3),
-                dmc.Col(html.Div("test 2", style=style_debugging), span=3),
-                dmc.Col(html.Div("test 3", style=style_debugging), span=3),
-                dmc.Col(html.Div("test 4", style=style_debugging), span=3),
-                dmc.Col(html.Div("test 5", style=style_debugging), span=3),
-                dmc.Col(html.Div("test 6", style=style_debugging), span=3),
-                dmc.Col(html.Div("test 7", style=style_debugging), span=3),
+                dmc.Col(html.Div("long words here", style=styles.style_debugging), span=3),
+                dmc.Col(html.Div("test 2", style=styles.style_debugging), span=3),
+                dmc.Col(html.Div("test 3", style=styles.style_debugging), span=3),
+                dmc.Col(html.Div("test 4", style=styles.style_debugging), span=3),
+                dmc.Col(html.Div("test 5", style=styles.style_debugging), span=3),
+                dmc.Col(html.Div("test 6", style=styles.style_debugging), span=3),
+                dmc.Col(html.Div("test 7", style=styles.style_debugging), span=3),
             ],
             gutter="xl",
         ),
@@ -365,7 +350,7 @@ def get_dmc_simple_grid():
                 fc.get_dropdown_compilation('dmc'),
             ],
             style={
-                "border": border_grids,
+                "border": styles.border_grids,
             },
         ),
         dmc.SimpleGrid(
@@ -380,7 +365,7 @@ def get_dmc_simple_grid():
                 html.Div(),
             ],
             style={
-                "border": border_grids,
+                "border": styles.border_grids,
             },
         ),
         dmc.SimpleGrid(
@@ -395,7 +380,7 @@ def get_dmc_simple_grid():
                 fc.get_button_add_junction('dmc'),
             ],
             style={
-                "border": border_grids,
+                "border": styles.border_grids,
             },
         ),
         dmc.SimpleGrid(
@@ -405,7 +390,7 @@ def get_dmc_simple_grid():
                 fc.get_button_generate_results('dmc')
             ],
             style={
-                "border": border_grids,
+                "border": styles.border_grids,
             },
         )
     ]
@@ -430,7 +415,7 @@ def get_card_query_form_and_image():
                             html.Div(
                                 children=get_dmc_simple_grid(),
                                 style={
-                                    "border": border_column,
+                                    "border": styles.border_column,
                                 },
                             ),
                         ],
@@ -444,7 +429,7 @@ def get_card_query_form_and_image():
                                         }
                                  ),
                         style={
-                            'border': border_column,
+                            'border': styles.border_column,
                         },
                         width=4,
                         className='g-1',  # small gutters for this column.
@@ -458,12 +443,7 @@ def get_card_query_form_and_image():
         # withBorder=True,
         # shadow="sm",
         radius="md",
-        style={"width": '100%',
-               "border": border_card,
-               # "border-radius": "10px",
-               # "background-color": "#CDCDCD",
-               # "box-shadow": "1px 2px 7px 0px grey"
-               },
+        style=styles.boundary_style,
     )
     return card
 
@@ -493,9 +473,7 @@ def get_card_query_form():
         # withBorder=True,
         # shadow="sm",
         radius="md",
-        style={"width": '100%',
-               "border": border_card,
-               },
+        #style=styles.boundary_style,
     )
     return card
 
@@ -518,10 +496,7 @@ def get_card_image():
         # withBorder=True,
         # shadow="sm",
         radius="md",
-        style={"width": '100%',
-               # 'height': '120%'
-               "border": border_card,
-               },
+        #style=styles.boundary_style,
     )
     return card
 
@@ -593,21 +568,21 @@ def get_testing_card_dbc_vc_dmc():
             dmc.Title('DMC grid out of the group', order=3),
             dmc.Grid(
                 [
-                    dmc.Col(html.Div("long words here", style=style_debugging), span=3),
-                    dmc.Col(html.Div("2", style=style_debugging), span=3),
-                    dmc.Col(html.Div("3", style=style_debugging), span=3),
-                    dmc.Col(html.Div("4", style=style_debugging), span=3),
-                    dmc.Col(html.Div("5", style=style_debugging), span=3),
-                    dmc.Col(html.Div("6", style=style_debugging), span=3),
-                    dmc.Col(html.Div("7", style=style_debugging), span=3),
+                    dmc.Col(html.Div("long words here", style=styles.style_debugging), span=3),
+                    dmc.Col(html.Div("2", style=styles.style_debugging), span=3),
+                    dmc.Col(html.Div("3", style=styles.style_debugging), span=3),
+                    dmc.Col(html.Div("4", style=styles.style_debugging), span=3),
+                    dmc.Col(html.Div("5", style=styles.style_debugging), span=3),
+                    dmc.Col(html.Div("6", style=styles.style_debugging), span=3),
+                    dmc.Col(html.Div("7", style=styles.style_debugging), span=3),
                 ],
                 gutter="xl",
             ),
         ],
-        withBorder=True,
-        shadow="sm",
+        #withBorder=True,
+        #shadow="sm",
         radius="md",
-        style={"width": '100%'},
+        style=styles.boundary_style,
     )
     return card
 
@@ -624,24 +599,17 @@ def get_card_histogram():
             # ),
             dmc.Grid(
                 children=[
-                    dmc.Col(components.get_switch_log_psi('dmc'), span=3, style={'border': border_grids, }),
-                    dmc.Col(span=9, style={'border': border_grids, }),
-                    dmc.Col(html.Div(dcc.Graph(id="id-histogram")), span=12, style={'border': border_grids, }),
+                    dmc.Col(components.get_switch_log_psi('dmc'), span=3, style={'border': styles.border_grids, }),
+                    dmc.Col(span=9, style={'border': styles.border_grids, }),
+                    dmc.Col(html.Div(dcc.Graph(id="id-histogram")), span=12, style={'border': styles.border_grids, }),
                 ],
                 gutter="xs",
             ),
         ],
-        withBorder=True,
-        shadow="md",
+        #withBorder=True,
+        #shadow="md",
         radius="md",
-        style={
-            'display': display_style,
-            "width": '100%',
-            "border": border_card,
-            # "border-radius": "10px",
-            # "background-color": "#CDCDCD",
-            "box-shadow": "1px 2px 7px 0px grey"
-        },
+        style=styles.boundary_style,
     )
     return card
 
@@ -663,7 +631,7 @@ def get_card_box_plot():
                             components.get_switch_log_psi('dbc'),
                         ],
                         width=3,
-                        style={'border': border_column},
+                        style={'border': styles.border_column},
                     )
                 ],
                 className="g-1"  # border border-primary",
@@ -675,7 +643,7 @@ def get_card_box_plot():
                             html.Div(dcc.Graph(id="id-box-plot"))
                         ],
                         # width=3,
-                        style={'border': border_column},
+                        style={'border': styles.border_column},
                     )
                 ],
                 className="g-0"  # border border-primary",
@@ -690,17 +658,10 @@ def get_card_box_plot():
             #         gutter="xs",
             # ),
         ],
-        withBorder=True,
-        shadow="sm",
+        #withBorder=True,
+        #shadow="sm",
         radius="md",
-        style={
-            'display': display_style,
-            "width": '100%',
-            "border": border_card,
-            # "border-radius": "10px",
-            # "background-color": "#CDCDCD",
-            "box-shadow": "1px 2px 7px 0px grey"
-        },
+        style=styles.boundary_style,
     )
     return card
 
@@ -725,7 +686,7 @@ def get_card_table():
                         ],
                         width=2,
                         align='center',
-                        style={'border': border_column}
+                        style={'border': styles.border_column}
                         # className='ml-auto'
                     ),
                     dbc.Col(
@@ -734,7 +695,7 @@ def get_card_table():
                         ],
                         width=3,
                         align='center',
-                        style={'border': border_column},
+                        style={'border': styles.border_column},
                         # className='ms-auto' # will justify to the right
                     ),
                 ],
@@ -779,17 +740,10 @@ def get_card_table():
                 ]
             )
         ],
-        withBorder=True,
-        shadow="md",
+        #withBorder=True,
+        #shadow="md",
         radius="md",
-        style={
-            'display': display_style,
-            "width": '100%',
-            "border": border_card,
-            # "border-radius": "10px",
-            # "background-color": "#CDCDCD",
-            "box-shadow": "1px 2px 7px 0px grey"
-        },
+        style=styles.boundary_style,
     )
     return card
 
@@ -806,15 +760,19 @@ junction_inclusion_query_layout = html.Div(
                         get_card_query_form()
                     ],
                     # className="bg-light",
-                    style={'border': border_column}),
+                    style={'border': styles.border_column}),
                 dbc.Col(
                     [
                         get_card_image()
                     ],
                     width=4,
-                    style={'border': border_column}
+                    style={'border': styles.border_column}
                 )
             ],
+            #TODO: using the general boundary messes with the layout, need to figure out why?
+            #style=styles.boundary_style,
+            style={"box-shadow": "1px 2px 7px 0px grey",
+                   "border-radius": "10px"},
             className='g-0',  # no gutters in between the cards
         ),
         # an alternative option to the card and the image
@@ -825,7 +783,7 @@ junction_inclusion_query_layout = html.Div(
         #                 get_card_query_form_and_image()
         #             ],
         #             # className="bg-light",
-        #             style={'border': border_column}),
+        #             style={'border': styles.border_column}),
         #     ],
         #     className='g-0',  # no gutters in between the cards
         # ),
@@ -839,17 +797,17 @@ junction_inclusion_query_layout = html.Div(
                         get_card_box_plot()
                     ],
                     width=6,
-                    style={'border': border_column}
+                    style={'border': styles.border_column}
                 ),
                 dbc.Col(
                     [
                         get_card_histogram()
                     ],
                     width=6,
-                    style={'border': border_column}
+                    style={'border': styles.border_column}
                 )
             ],
-            className='g-2',  # no gutters in between the columns
+            className='g-2',  # leave some gutter in between plots
             justify="center",
         ),
 
@@ -861,7 +819,7 @@ junction_inclusion_query_layout = html.Div(
                     [
                         get_card_table()
                     ],
-                    style={'border': border_column}
+                    style={'border': styles.border_column}
                 )
             ]
         ),
