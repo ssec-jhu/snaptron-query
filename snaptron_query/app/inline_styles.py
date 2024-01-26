@@ -2,9 +2,10 @@
     This file provides inline custom styles for some of the dash components
 """
 
-# will need to do inline styling for tabs not CSS
+# IMPORTANT!
+# will need to do inline styling for tabs, not CSS
 # see here: https://github.com/plotly/dash-core-components/issues/327
-# specifically I had an issue with the width, the CSS would not follow the code
+# specifically I had an issue with the width, the code would not follow CSS but exact code as inline did the job
 
 borderColor = '3px solid var(--bs-info-border-subtle)'  # '3px solid #e36209' orange
 
