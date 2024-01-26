@@ -2,18 +2,40 @@
     This file provides inline custom styles for some of the dash components
 """
 
+# --------------------
+#       USE FOR DEBUGGING LAYOUT
+# --------------------
+# set the 0 to 1 to see the grids for alignment and layout changes
+import dash_mantine_components as dmc
+border_card = f'0px solid {dmc.theme.DEFAULT_COLORS['indigo'][4]}'
+border_column = f'0px solid {dmc.theme.DEFAULT_COLORS['green'][4]}'
+border_grids = f'0px solid {dmc.theme.DEFAULT_COLORS['orange'][4]}'
+style_debugging = {
+    'border': border_grids,
+    # "textAlign": "center",
+}
+# --------------------
+
+
 # IMPORTANT!
 # will need to do inline styling for tabs, not CSS
 # see here: https://github.com/plotly/dash-core-components/issues/327
 # specifically I had an issue with the width, the code would not follow CSS but exact code as inline did the job
 
 borderColor = '3px solid var(--bs-info-border-subtle)'  # '3px solid #e36209' orange
+tabBackgroundColor = 'var(--bs-secondary-bg)'  # '#f9f9f9' , 'var(--bs-light-bg-subtle)'
+buttonColor = tabBackgroundColor  # 'var(--bs-primary)' ,var(--bs-info-border-subtle), '#f9f9f9'
 
-tabBackgroundColor = 'var(--bs-secondary-bg)'  # '#f9f9f9'
-# tabBackgroundColor = 'var(--bs-light-bg-subtle)'
-
-# buttonColor = 'var(--bs-info-border-subtle)'   #'#f9f9f9'
-buttonColor = tabBackgroundColor  # 'var(--bs-primary)'
+# set this value to 'block' to see the layout without running the query
+display_style = 'block'  # none or block for debugging
+boundary_style = {
+    'display': display_style,
+    'width': '100%',
+    'border': border_card,
+    # "border-radius": "10px",
+    # "background-color": "#CDCDCD",
+    'box-shadow': "1px 2px 7px 0px grey" #'shadow-sm' does not work here
+}
 
 tab_style_vertical = {
     'padding': '10px 20px',
