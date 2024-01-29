@@ -142,6 +142,8 @@ def get_button_generate_results(component_style):
 """
     Wrapper function to retrieve the texted boxes used in the JIQ query based on the style only
 """
+
+
 def get_input(component_style, input_placeholder, input_id):
     # debounce:
     # if True, changes to input will be sent back to the Dash server only on enter or
