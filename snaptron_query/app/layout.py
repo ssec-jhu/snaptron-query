@@ -19,9 +19,10 @@ jumbotron = html.Div(
             # html.Hr(className="my-2"),
         ],
         fluid=True,
-        className="py-6",
+        className="display-4",  # py-6, display-4 is bigger
     ),
-    className="bg-primary text-light py-4 text-center fs-1 fw-light",  # bg-secondary
+    style={'box-shadow': "0 5px 5px -5px #333"},
+    className="bg-primary bg-gradient text-light py-4 text-center fs-1 fw-light",  # bg-secondary
 )
 
 """
@@ -42,43 +43,12 @@ tab_horizontal_bootstrap = dbc.Tabs(
         # Gene Expression Query Tab
         dbc.Tab(
             label="Gene Expression Query",
-            tab_id="id-tab-horizontal-bootstrap-geq"),
+            tab_id="id-tab-horizontal-bootstrap-geq",
+        ),
     ],
     # id="id-tabs",
     active_tab="id-tab-horizontal-bootstrap-jiq",
     className="dbc nav-fill",  # Use Bootstrap's nav-fill class to fill the tab_horizontal_bootstrap space
-)
-
-"""
-    This layout puts the user queries in vertical tab format.
-    Style: DCC tabs
-    Pros: Better UX
-    Cons: Takes up some width
-"""
-tab_vertical_styled = dcc.Tabs(
-    children=[
-        dcc.Tab(
-            ljiq.junction_inclusion_query_layout,
-            label='Junction Inclusion Query',
-            value='jiq',  # used as the id
-            style=styles.tab_style_vertical,
-            selected_style=styles.tab_selected_style_vertical,
-            # className='tab2',
-            # selected_className='tab2--selected'
-        ),
-        dcc.Tab(label='Gene Expression Query',
-                value='geq',
-                style=styles.tab_style_vertical,
-                selected_style=styles.tab_selected_style_vertical,
-                # className='tab2',
-                # selected_className='tab2--selected'
-                ),
-    ],
-    vertical=True,
-    # className="nav-fill",
-    # className="dbc", #uncomment this to get the dbc theme applied to the tabs
-    id='tabs',
-    value='jiq',  # active tab
 )
 
 """
