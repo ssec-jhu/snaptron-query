@@ -8,3 +8,19 @@
 .ag-header-cell-filtered span {
   color: #fff !important;
 }
+
+.accordion-button:not(.collapsed) {
+    /*color: var(--bs-accordion-active-color); this is text color
+
+    /*background-color: var(--bs-nav-tabs-active-bg);*/
+    /*background-color: var(--bs-nav-link-disabled-color)*/
+    /*background-color: var(-bs-accordion-active-bg);*/
+    background-color: var(--bs-gray-200);
+}
+
+/*This is when it's closed'*/
+.accordion-button {
+    /*background-color: var(--bs-gray-300); */
+    /*background-color: var(--bs-primary-bg-subtle);*/
+    background-color: var(--bs-gray-200); /*same as bs-light*/
+}
