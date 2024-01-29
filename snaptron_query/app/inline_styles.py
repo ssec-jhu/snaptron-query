@@ -7,6 +7,7 @@
 # --------------------
 # set the 0 to 1 to see the grids for alignment and layout changes
 import dash_mantine_components as dmc
+
 border_card = f'0px solid {dmc.theme.DEFAULT_COLORS['indigo'][4]}'
 border_column = f'0px solid {dmc.theme.DEFAULT_COLORS['green'][4]}'
 border_grids = f'0px solid {dmc.theme.DEFAULT_COLORS['orange'][4]}'
@@ -24,7 +25,7 @@ style_debugging = {
 
 borderColor = '3px solid var(--bs-success-border-subtle)'  # '3px solid #e36209' orange
 tabBackgroundColor = 'var(--bs-light-bg-subtle)'  # '#f9f9f9' , 'var(--bs-light-bg-subtle)'
-buttonColor = 'var(--bs-secondary)' #,var(--bs-info-border-subtle), '#f9f9f9'
+buttonColor = 'var(--bs-secondary)'  # ,var(--bs-info-border-subtle), '#f9f9f9'
 
 # set this value to 'block' to see the layout without running the query
 display_style = 'block'  # none or block for debugging
@@ -32,11 +33,11 @@ boundary_style = {
     'display': display_style,
     'width': '100%',
     'border': border_card,
-    #'background-color': '#d8e7ff',
-    #'background-color':'var(--bs-gray-200)',
+    # 'background-color': '#d8e7ff',
+    # 'background-color':'var(--bs-gray-200)',
     # "border-radius": "10px",
     # "background-color": "#CDCDCD",
-    'box-shadow': "1px 2px 7px 0px grey" #'shadow-sm' does not work here
+    'box-shadow': "1px 2px 7px 0px grey"  # 'shadow-sm' does not work here
 }
 
 tab_style_vertical = {
@@ -63,7 +64,7 @@ tab_style_vertical = {
 }
 
 tab_selected_style_vertical = {
-    #'padding': '10px 20px',
+    # 'padding': '10px 20px',
     'borderRadius': '5px 0 0 5px',  # these are the 4 corners of the tab_horizontal_bootstrap
     'cursor': 'pointer',
     'marginRight': '1px',
