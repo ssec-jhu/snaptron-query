@@ -1,14 +1,13 @@
-from dash import Dash, html, dcc, Input, Output
-from dash.exceptions import PreventUpdate
-
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 import pandas as pd
+from dash import Dash, html, dcc, Input, Output
+from dash.exceptions import PreventUpdate
 
-import layout
 import graphs
-from snaptron_client import SnaptronClientManager
+import layout
 from query_junction_inclusion import JunctionInclusionQueryManager as jiq_mgr
+from snaptron_client import SnaptronClientManager
 
 # Initialize the app
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
@@ -35,21 +34,20 @@ app.layout = dbc.Container(
         layout.jumbotron,
 
         # Next row is the query area, whether it's junction query or gene expression query
-        # dmc.Space(h=30),
-        # tab_horizontal_bootstrap,
-        # dmc.Space(h=30),
-        # tab_horizontal_bootstrap,
         dmc.Space(h=30),
-        layout.tab_horizontal_styled,
-        # dmc.Space(h=30),
-        # layout.tab_vertical_styled,
+        layout.tab_horizontal_bootstrap,
+        # other options
+        #layout.tab_horizontal_styled,
+        #layout.tab_vertical_styled,
+        #layout_jiq.junction_inclusion_query_layout,
 
         dmc.Space(h=30),
         html.Div(id="id-log-content",
                  # style={'display:none'}
                  ),
     ],
-    # className='container-fluid'
+    #fluid=True, # this will make the page use full screen width
+    #className='container-fluid'
 )
 
 
