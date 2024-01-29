@@ -6,13 +6,12 @@
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 from dash import html
-
+import global_strings
 import inline_styles
 
 
 def get_button_download(component_style):
-    # component_style = 'dbc'
-    string = 'Download'
+    string = global_strings.button_download_str
     button_id = 'id-button-download'
     # TODO: add the icon
     # add_icon = DashIconify(icon="ic:round-add-box")
@@ -59,7 +58,7 @@ def get_button_download(component_style):
 
 
 def get_switch_log_psi(component_style):
-    string = 'log Y'
+    string = global_strings.switch_log_str
     switch_id = 'id-switch-log-psi'
     if component_style == 'dmc':
         return dmc.Switch(
@@ -83,7 +82,7 @@ def get_switch_log_psi(component_style):
 
 
 def get_switch_lock_data_with_table(component_style):
-    string = 'Lock Table with Graphs'
+    string = global_strings.switch_lock_str
     switch_id = 'id-switch-lock-with-table'
     # TODO: add the icon
     # add_icon = DashIconify(icon="ic:round-add-box")
