@@ -38,14 +38,20 @@ def get_dropdown_compilation(component_style):
             value=default,
             # style={"width": 200},
         )
-    # elif component_style == 'dbc':
-    #     return dbc.Select(
-    #         id=dropdown_id,
-    #         options=[
-    #             {"label": "Option 1", "value": 1},
-    #             {"label": "Option 2", "value": 2},
-    #         ]
-    #     )
+    elif component_style == 'dbc':
+        dropdown = html.Div(
+            [
+                dbc.Label(string,className='fw-bold'),
+                dcc.Dropdown(
+                    data_list,
+                    default,
+                    id=dropdown_id,
+                    # clearable=False,
+                ),
+            ],
+            className="dbc",
+        )
+        return dropdown
     elif component_style == 'dcc':
         # dcc dropdown component doesn't have an automatic label, so I am bundling it into a html.Div
         return html.Div(
@@ -127,15 +133,15 @@ def get_button_generate_results(component_style):
             n_clicks=0,
             id=button_id,
             # the rest is styling related
-            size="sm",  # smaller button size
+            size="md", #button size
             # STYLE notes:
             # mx-auto: centers it
             # col-8: sets the width of the button to 8 columns...
             # class_name="d-grid mx-auto, btn-outline-primary"
-            color="light",
+            # color="light",
             # outline=True,
-            class_name="d-grid gap-2 col-8 mx-auto",  # bg-secondary text-light
-            style={'backgroundColor': inline_styles.buttonColor}
+            class_name="d-grid gap-2 col-8 mx-auto btn-primary",  # bg-secondary text-light
+            # style={'backgroundColor': inline_styles.buttonColor}
         )
 
 
@@ -157,6 +163,13 @@ def get_input(component_style, input_placeholder, input_id):
             size='sm',  # or md
             mr='5px',  # add some margin to the right of the textbox
 
+        )
+    elif component_style=='dbc':
+        return dbc.Input(
+            id=input_id,
+            placeholder=input_placeholder,
+            size="sm",
+            #className="mr-5"
         )
     elif component_style == 'dcc':
         return dcc.Input(
@@ -195,7 +208,9 @@ def get_text(component_style, string):
         Wrapper function to retrieve the text used in the JIQ query based on the style only
     """
     if component_style == 'dmc':
-        return dmc.Text(string, weight=500, size="sm")  # semi bold
+        return dmc.Text(string, weight=500, size="sm")  # 500=semi bold
+    elif component_style == 'dbc':
+        return dbc.Label(string, className='fw-bold')
     elif component_style == 'dcc':
         return html.Label(string)
 
@@ -225,6 +240,8 @@ def get_text_junction(component_style):
     # TODO: MultiJunction query: id fields for the text boxes need to be generated dynamically
     string = global_strings.input_junction_txt_list[0]
     if component_style == 'dmc':
-        return dmc.Text(string, weight=500, size="md")
+        return dmc.Text(string, weight=500, size="sm")
+    elif component_style == 'dbc':
+        return dbc.Label(string, className='text-primary me-1 sm')
     elif component_style == 'dcc':
         return html.Label(string)
