@@ -1,6 +1,6 @@
 """
     This file includes most general components used in all the queries
-    Form specific components relative to specific queries are are put in a separate file
+    Form specific components relative to specific queries are put in a separate file
 """
 
 import dash_bootstrap_components as dbc
@@ -45,15 +45,15 @@ def get_button_download(component_style):
             id=button_id,
             n_clicks=0,
             # the rest is styling related
-            size="sm",  # smaller button size
+            size="md",  # smaller button size
             # STYLE notes:
             # mx-auto: centers it
-            # col-8: sets the width of the button to 8 columns...
+            # col-8: sets the width of the button to 8 columns OF the main column, so it's 8/12th of the dbc.col
             # class_name="d-grid mx-auto, btn-outline-primary"
-            color="light",
+            # color="light", #if you have this will overwrite the class
             # outline=True,
-            class_name="d-grid gap-2 col-8 mx-auto",  # bg-secondary text-light
-            style={'backgroundColor': inline_styles.buttonColor}
+            class_name="d-grid gap-2 col-8 btn-primary",  # bg-secondary text-light #mx-auto
+            # style={'backgroundColor': inline_styles.buttonColor}
         )
 
 
