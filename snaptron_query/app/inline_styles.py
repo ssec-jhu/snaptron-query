@@ -22,9 +22,9 @@ style_debugging = {
 # see here: https://github.com/plotly/dash-core-components/issues/327
 # specifically I had an issue with the width, the code would not follow CSS but exact code as inline did the job
 
-borderColor = '3px solid var(--bs-info-border-subtle)'  # '3px solid #e36209' orange
-tabBackgroundColor = 'var(--bs-secondary-bg)'  # '#f9f9f9' , 'var(--bs-light-bg-subtle)'
-buttonColor = tabBackgroundColor  # 'var(--bs-primary)' ,var(--bs-info-border-subtle), '#f9f9f9'
+borderColor = '3px solid var(--bs-success-border-subtle)'  # '3px solid #e36209' orange
+tabBackgroundColor = 'var(--bs-light-bg-subtle)'  # '#f9f9f9' , 'var(--bs-light-bg-subtle)'
+buttonColor = 'var(--bs-secondary)' #,var(--bs-info-border-subtle), '#f9f9f9'
 
 # set this value to 'block' to see the layout without running the query
 display_style = 'block'  # none or block for debugging
@@ -32,6 +32,8 @@ boundary_style = {
     'display': display_style,
     'width': '100%',
     'border': border_card,
+    #'background-color': '#d8e7ff',
+    #'background-color':'var(--bs-gray-200)',
     # "border-radius": "10px",
     # "background-color": "#CDCDCD",
     'box-shadow': "1px 2px 7px 0px grey" #'shadow-sm' does not work here
@@ -61,7 +63,7 @@ tab_style_vertical = {
 }
 
 tab_selected_style_vertical = {
-    'padding': '10px 20px',
+    #'padding': '10px 20px',
     'borderRadius': '5px 0 0 5px',  # these are the 4 corners of the tab_horizontal_bootstrap
     'cursor': 'pointer',
     'marginRight': '1px',
