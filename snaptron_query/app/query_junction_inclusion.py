@@ -1,7 +1,7 @@
 import decimal
 import numpy as np
 import pandas as pd
-
+import global_strings
 # TODO: rail id dictionary should become a member of the class
 
 # 1: normal way
@@ -35,11 +35,11 @@ def read_meta_data_file(compilation):
         df = pd.read_csv('data/samples_SRAV3H.tsv', sep='\t', low_memory=False)  # will remove the complaints
 
     elif readingCSV == 3:  # winner
-        req_cols = ['rail_id', 'external_id', 'study', 'study_title', 'library_layout']
+        req_cols = global_strings.meta_data_required_list
         df = pd.read_csv('data/samples_SRAV3H.tsv', sep='\t', usecols=req_cols)
 
     elif readingCSV == 4:  # this actually made it slower!
-        req_cols = ['rail_id', 'external_id', 'study', 'study_title', 'library_layout']
+        req_cols = global_strings.meta_data_required_list
         df = pd.read_csv('data/samples_SRAV3H.tsv', sep='\t', usecols=req_cols,
                          dtype={'rail_id': 'int64',
                                 'external_id': 'string',
@@ -52,7 +52,7 @@ def read_meta_data_file(compilation):
     # resetting the index
     # ---------------------
     if indexing:
-        df = df.set_index('rail_id')
+        df = df.set_index(global_strings.snaptron_col_rail_id)
         # print(df_samples.loc[135471]) # rail ID is an integer if it was a string you needed quotes
         # for railID in rail_id_dictionary:
         #    meta_data = df_samples.loc[int(railID)] # must cast to an int here because the data is not a string
@@ -224,21 +224,21 @@ class JunctionInclusionQueryManager:
             if workingList == 1:
                 split_data = [item.split(',') for item in rail_id_data_list]
                 df_final = pd.DataFrame(split_data,
-                                        columns=['rail_id', 'external_id', 'study', 'inc', 'exc', 'total', 'psi'])
+                                        columns=[global_strings.snaptron_col_rail_id, 'external_id', 'study', 'inc', 'exc', 'total', 'psi'])
                 # df = pd.DataFrame(split_data)
             elif workingList == 2:
                 split_data = [item[0].split(',') for item in rail_id_data_list]
                 df_final = pd.DataFrame(split_data,
-                                        columns=['rail_id', 'external_id', 'study', 'inc', 'exc', 'total', 'psi'])
+                                        columns=[global_strings.snaptron_col_rail_id, 'external_id', 'study', 'inc', 'exc', 'total', 'psi'])
             elif workingList == 3:
                 reshaped_data3 = np.array(rail_id_data_list).reshape(-1, 3)  # 3 because there are 3 columns right now
                 df_final = pd.DataFrame(reshaped_data3,
-                                        columns=['rail_id', 'external_id', 'study', 'inc', 'exc', 'total', 'psi'])
+                                        columns=[global_strings.snaptron_col_rail_id, 'external_id', 'study', 'inc', 'exc', 'total', 'psi'])
 
             # TODO: column names will change based on compilation here too
             # convert the datatypes here so it's easy later
             df_final['psi'] = df_final['psi'].astype('float')
-            df_final['rail_id'] = df_final['rail_id'].astype('int')
+            df_final[global_strings.snaptron_col_rail_id] = df_final[global_strings.snaptron_col_rail_id].astype('int')
             df_final['inc'] = df_final['inc'].astype('int')
             df_final['exc'] = df_final['exc'].astype('int')
             df_final['total'] = df_final['total'].astype('int')
