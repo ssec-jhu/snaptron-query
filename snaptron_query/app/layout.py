@@ -60,7 +60,7 @@ tab_vertical_styled = dcc.Tabs(
         dcc.Tab(
             ljiq.junction_inclusion_query_layout,
             label='Junction Inclusion Query',
-            value='jiq',    # used as the id
+            value='jiq',  # used as the id
             style=styles.tab_style_vertical,
             selected_style=styles.tab_selected_style_vertical,
             # className='tab2',
@@ -97,14 +97,14 @@ tab_horizontal_styled = dcc.Tabs(
             selected_style=styles.horizontal_tab_selected,
             # selected_className='custom-tab--selected'
         ),
-        dcc.Tab(# TODO: Gene expression layout here
+        dcc.Tab(  # TODO: Gene expression layout here
             label='Gene Expression Query',
             value='geq',
             style=styles.horizontal_tab,
             selected_style=styles.horizontal_tab_selected,
             # className='bg-primary',
             # selected_className='bg-light'
-            ),
+        ),
     ],
     # style=custom_inline_styles.horizontal_tabs,
     # className='custom-tabs',
