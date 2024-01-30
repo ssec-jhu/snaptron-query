@@ -5,7 +5,7 @@
 compilation_list = ['srav3h', 'gtexv2', 'srav1m', 'tcaga2']
 drop_compilation = 'Select the organism of interest'
 drop_compilation_placeholder = 'Select a compilation'
-
+jiq_form_title = 'Junction Information'
 button_download_str = 'Download'
 switch_log_str = 'log'
 switch_lock_str = 'Lock Table with Graphs'
