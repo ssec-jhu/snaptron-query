@@ -14,7 +14,7 @@ dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.mi
 bs_cdn = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 app = Dash(__name__,
            suppress_callback_exceptions=True,
-           external_stylesheets=[dbc.themes.FLATLY,
+           external_stylesheets=[dbc.themes.SANDSTONE,
                                  dbc_css,
                                  # bs_cdn,
                                  # dbc.icons.BOOTSTRAP
@@ -37,17 +37,17 @@ app.layout = dbc.Container(
         dmc.Space(h=30),
         layout.tab_horizontal_bootstrap,
         # other options
-        #layout.tab_horizontal_styled,
-        #layout.tab_vertical_styled,
-        #layout_jiq.junction_inclusion_query_layout,
+        # layout.tab_horizontal_styled,
+        # layout.tab_vertical_styled,
+        # layout_jiq.junction_inclusion_query_layout,
 
         dmc.Space(h=30),
         html.Div(id="id-log-content",
                  # style={'display:none'}
                  ),
     ],
-    #fluid=True, # this will make the page use full screen width
-    #className='container-fluid'
+    # fluid=True, # this will make the page use full screen width
+    # className='container-fluid'
 )
 
 
@@ -98,7 +98,7 @@ def on_button_click_gen_results(n_clicks, compilation, chromosome_number, inc, e
         # TODO: hardcode URL for now
         host = 'https://snaptron.cs.jhu.edu'
         query_type_string = 'snaptron'  # vs 'genes' for gene expression
-        head = f'{host}/{compilation}/{query_type_string}?regions=chr{chromosome_number}'+':'
+        head = f'{host}/{compilation}/{query_type_string}?regions=chr{chromosome_number}' + ':'
         url = f'{head}{exc}'
         url = 'https://snaptron.cs.jhu.edu/srav3h/snaptron?regions=chr19:4491836-4493702'
 
