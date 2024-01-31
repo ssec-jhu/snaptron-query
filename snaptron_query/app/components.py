@@ -10,51 +10,17 @@ import global_strings
 import inline_styles
 
 
-def get_button_download(component_style):
+def get_button_download():
     string = global_strings.button_download_str
     button_id = 'id-button-download'
     # TODO: add the icon
-    # add_icon = DashIconify(icon="ic:round-add-box")
-    if component_style == 'dmc':
-        return dmc.Button(
-            string,
-            id=button_id,
-            n_clicks=0,
-            # the rest is styling related
-            variant="light",
-            color="indigo",
-            # colors=[
-            #     "gray",
-            #     "red",
-            #     "pink",
-            #     "grape",
-            #     "violet",
-            #     "indigo",
-            #     "blue",
-            #     "lime",
-            #     "yellow",
-            #     "orange",
-            # ]
-            fullWidth=True,
-            mt="md",
-            radius="md",
-        )
-    elif component_style == 'dbc':
-        return dbc.Button(
-            string,
-            id=button_id,
-            n_clicks=0,
-            # the rest is styling related
-            size="md",  # smaller button size
-            # STYLE notes:
-            # mx-auto: centers it
-            # col-8: sets the width of the button to 8 columns OF the main column, so it's 8/12th of the dbc.col
-            # class_name="d-grid mx-auto, btn-outline-primary"
-            # color="light", #if you have this will overwrite the class
-            # outline=True,
-            class_name="d-grid gap-2 col-8 btn-primary",  # bg-secondary text-light #mx-auto
-            # style={'backgroundColor': inline_styles.buttonColor}
-        )
+    return dbc.Button(
+        string,
+        id=button_id,
+        n_clicks=0,
+        size="md",  # button size
+        class_name="d-grid gap-2 col-8 btn-primary",  # bg-secondary text-light #mx-auto
+    )
 
 
 def get_switch_log_psi(component_style):

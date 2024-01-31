@@ -66,34 +66,13 @@ def get_box_plot(df):
     return fig
 
 
-"""
-    Wrapper for ag-grid column definitions and their indivisual style
-    Wrapping in a function for clarity
-"""
 def get_junction_query_column_def():
-    # w = 200
-    # columnDefs3 = [
-    #     {"field": "snaptron_id", "maxWidth": w, "checkboxSelection": True, "headerCheckboxSelection": True},
-    #     {"field": "start", "maxWidth": w},
-    #     {"field": "end", "maxWidth": w},
-    #     {"field": "gene_id:gene_name:gene_type:bp_length"},
-    #     {"field": "samples"},
-    # ]
-    # columnDefs2 = [
-    #     {"field": "norm_rail_id"},
-    #     {"field": "norm_raw_counts"},
-    #     {'field': "norm_factor",
-    #      "filter": "agNumberColumnFilter",
-    #      "filterParams": {
-    #          "buttons": ["apply", "reset"],  # for filterying
-    #          "closeOnApply": True,
-    #      },
-    #      },
-    # ]
+    """
+        Wrapper for ag-grid column definitions and their indivisual style
+        Wrapping in a function for clarity
+    """
 
-    #TODO: add filter params reset to the psi column, confirm with PI
-
-    # columns=['rail_id', 'external_id', 'study', 'inc', 'exc', 'total', 'psi'])
+    # TODO: add filter params reset to the psi column, confirm with PI
     column_defs = [
         {"field": 'rail_id', "headerName": "Rail ID", "filter": "agNumberColumnFilter", },
         {"field": 'external_id', "headerName": "External ID"},

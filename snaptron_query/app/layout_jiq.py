@@ -8,26 +8,23 @@ import dash_mantine_components as dmc
 from dash import html, dcc
 
 import components
-import components_jiq_form as fc
+import components_jiq_form as form
 import inline_styles as styles
+import global_strings
 
-col_width = 2
 
-
+# TODO: texts on the form are still using DMC, DBC puts a margin on the bottom, investigate.
 def get_jiq_form():
     """
-        Grid is defined with dash bootstrap components (dbc)
-        Individual components are defined with dash mantine components (dmc)
+        Grid and components are defined with dash bootstrap components (dbc)
         The width of the top and bottom row is set to fill the row
         The width of the junction textbox column is set to 3 so the rest of the columns balance out
-
     """
     return [
         dbc.Row(
             [
                 dbc.Col(
-                    fc.get_dropdown_compilation('dmc'),
-                    # width=col_width * 5,
+                    form.get_dropdown_compilation(),
                     style={
                         "border": styles.border_column,
                     },
@@ -36,41 +33,49 @@ def get_jiq_form():
             className="g-0 form-control-sm",
             justify="start",
         ),
-        # html.Br(),
 
         # ROW 2 has the titles of the textbooks so subsequent rows
-        # just have textbooks added, not the labels
         dbc.Row(
             [
                 dbc.Col(
-                    width=col_width,
+                    width=2,
                     style={
                         "border": styles.border_column,
                     },
+                    align='center',  # vertical alignment: center start end
+                    # className='col-md-auto mx-2',  # will fit the column to the text
                 ),
                 dbc.Col(
-                    fc.get_text_chromosome('dmc'),
-                    width=col_width,
+                    form.get_text_chromosome('dmc'),
+                    # TODO: switching to dbc puts a space under the text, needs investigation
+                    width=2,
                     style={
                         "border": styles.border_column,
                     },
+                    align='center',  # vertical alignment: center start end
+                    className='mx-0.5'
                 ),
                 dbc.Col(
-                    fc.get_text_inclusion_junction('dmc'),
-                    width=col_width + 1,
+                    form.get_text_inclusion_junction('dmc'),
+                    # TODO: switching to dbc puts a space under the text, needs investigation
+                    width=3,
                     style={
                         "border": styles.border_column,
                     },
+                    align='center',  # vertical alignment: center start end
+                    className='mx-0.5'
                 ),
                 dbc.Col(
-                    fc.get_text_exclusion_junction('dmc'),
-                    width=col_width + 1,
+                    form.get_text_exclusion_junction('dmc'),
+                    # TODO: switching to dbc puts a space under the text, needs investigation
+                    width=3,
                     style={
                         "border": styles.border_column,
                     },
+                    align='center',  # vertical alignment: center start end
                 ),
                 dbc.Col(
-                    width=col_width,
+                    width=2,
                     style={
                         "border": styles.border_column,
                     },
@@ -83,8 +88,8 @@ def get_jiq_form():
         dbc.Row(
             [
                 dbc.Col(
-                    fc.get_text_junction('dmc'),
-                    width=col_width,
+                    form.get_text_junction('dmc'),
+                    width=2,
                     style={
                         "border": styles.border_column,
                     },
@@ -92,32 +97,39 @@ def get_jiq_form():
                     className='ml-auto',  # will justify to the right side
                 ),
                 dbc.Col(
-                    fc.get_input_chrom('dmc'),
-                    width=col_width,
+                    form.get_input_chrom(),
+                    width=2,
                     style={
                         "border": styles.border_column,
                     },
+                    align='center',  # vertical alignment: center start end
+                    className='mx-0.5'
                 ),
                 dbc.Col(
-                    fc.get_input_inc_junction('dmc'),
-                    width=col_width + 1,
+                    form.get_input_inc_junction(),
+                    width=3,
                     style={
                         "border": styles.border_column,
                     },
+                    align='center',  # vertical alignment: center start end
+                    className='mx-0.5'
                 ),
                 dbc.Col(
-                    fc.get_input_exc_junction('dmc'),
-                    width=col_width + 1,
+                    form.get_input_exc_junction(),
+                    width=3,
                     style={
                         "border": styles.border_column,
                     },
+                    align='center',  # vertical alignment: center start end
                 ),
                 dbc.Col(
-                    fc.get_button_add_junction('dmc'),
-                    width=col_width,
+                    form.get_button_add_junction(),
+                    width=2,
                     style={
                         "border": styles.border_column,
                     },
+                    align='center',  # vertical alignment: center start end
+                    className='col-md-auto'  # will fit the column to the text
                 ),
             ],
             # border border-danger: add for border and gutter debugging
@@ -126,8 +138,7 @@ def get_jiq_form():
         ),
         dbc.Row(
             dbc.Col(
-                fc.get_button_generate_results('dbc'),
-                # width=col_width * 5,
+                form.get_button_generate_results(),
                 style={
                     "border": styles.border_column,
                 },
@@ -142,81 +153,30 @@ def get_jiq_form():
     ]
 
 
-def get_card_query_form():
-    """
-        Bundles the junction inclusion query form in one card.
-        Card borders are set to 0.
-    """
-    card = dmc.Card(
-        children=[
-            dmc.CardSection(
-                # dmc.Title('Form card', order=2, align='center'),
-                # dmc.Title('Junction Inclusion Query', order=2, align='center'),
-            ),
-            # dmc.Space(h=50),
-            dmc.Group(
-                [
-                    # html.Div(get_dmc_simple_grid())
-                    html.Div(get_jiq_form())
-                ],
-                position="center",  # centering it makes everything fall into place nicely
-                mt="md",
-                mb="xs",
-            ),
-        ],
-        # withBorder=True,
-        # shadow="sm",
-        radius="md",
-        # style=styles.boundary_style,
-    )
-    return card
-
-
-def get_card_image():
-    """
-         Bundles the image in one card.
-         Card borders are set to 0.
-    """
-    card = dmc.Card(
-        children=[
-            dmc.CardSection(
-                dmc.Image(
-                    src='assets/junction_query.png',
-                    withPlaceholder=True,
-                    # height='155%',
-                )
-            ),
-        ],
-        # withBorder=True,
-        # shadow="sm",
-        radius="md",
-        # style=styles.boundary_style,
-    )
-    return card
-
-
 def get_card_histogram():
     """
-
+        Wrapper function for the histogram component in a card layout
     """
-    card = dmc.Card(
+    card = dbc.Card(
         id='id-card-histogram',
         children=[
-            # dmc.CardSection(
-            #     dmc.Title('PSI histogram', order=4, align='center'),
-            # ),
-            dmc.Grid(
-                children=[
-                    dmc.Col(components.get_switch_log_psi('dmc'), span=3, style={'border': styles.border_grids, }),
-                    dmc.Col(span=9, style={'border': styles.border_grids, }),
-                    dmc.Col(html.Div(dcc.Graph(id="id-histogram")), span=12, style={'border': styles.border_grids, }),
-                ],
-                gutter="xs",
+            dbc.CardBody(
+                [
+                    dbc.Row(
+                        [
+                            components.get_switch_log_psi('dmc')
+                        ],
+                        style={'border': styles.border_column, }
+                    ),
+                    dbc.Row(
+                        [
+                            html.Div(dcc.Graph(id="id-histogram"))
+                        ],
+                        style={'border': styles.border_column}
+                    )
+                ]
             ),
         ],
-        # withBorder=True,
-        # shadow="md",
-        radius="md",
         style=styles.boundary_style,
     )
     return card
@@ -224,51 +184,28 @@ def get_card_histogram():
 
 def get_card_box_plot():
     """
-
+        Wrapper function for the box plot component in a card layout
     """
-    card = dmc.Card(
+    card = dbc.Card(
         id='id-card-box-plot',
         children=[
-            # dmc.CardSection(
-            #     dmc.Title('PSI Box plot', order=4, align='center'),
-            # ),
-            dbc.Row(
+            dbc.CardBody(
                 [
-                    dbc.Col(
+                    dbc.Row(
                         [
-                            components.get_switch_log_psi('dbc'),
+                            components.get_switch_log_psi('dmc')
                         ],
-                        width=3,
-                        style={'border': styles.border_column},
-                    )
-                ],
-                className="g-1"  # border border-primary",
-            ),
-            dbc.Row(
-                [
-                    dbc.Col(
+                        style={'border': styles.border_column}
+                    ),
+                    dbc.Row(
                         [
                             html.Div(dcc.Graph(id="id-box-plot"))
                         ],
-                        # width=3,
-                        style={'border': styles.border_column},
+                        style={'border': styles.border_column}
                     )
-                ],
-                className="g-0"  # border border-primary",
+                ]
             ),
-
-            # dmc.Grid(
-            #     children = [
-            #             dmc.Col(components.get_switch_log_psi('dmc'),span=3,style={'border': border_grids, }),
-            #             dmc.Col(span=9, style={'border': border_grids, }),
-            #             dmc.Col(html.Div(dcc.Graph(id="id-box-plot")), span=12, style={'border': border_grids, }),
-            #         ],
-            #         gutter="xs",
-            # ),
         ],
-        # withBorder=True,
-        # shadow="sm",
-        radius="md",
         style=styles.boundary_style,
     )
     return card
@@ -290,19 +227,19 @@ def get_card_table():
                 [
                     dbc.Col(
                         [
-                            components.get_button_download('dbc')
+                            components.get_button_download()
                         ],
                         width=2,
-                        align='center',
+                        # align='center',
                         style={'border': styles.border_column}
                         # className='ml-auto'
                     ),
                     dbc.Col(
                         [
-                            components.get_switch_lock_data_with_table('dbc')
+                            components.get_switch_lock_data_with_table('dmc')
                         ],
                         width=3,
-                        align='center',
+                        align='end',
                         style={'border': styles.border_column},
                         # className='ms-auto' # will justify to the right
                     ),
@@ -312,7 +249,7 @@ def get_card_table():
             ),
             dbc.Row(
                 [
-                    dbc.Col(
+                    dbc.Container(
                         [
                             dag.AgGrid(
                                 id="id-ag-grid",
@@ -324,14 +261,14 @@ def get_card_table():
                                 # rowData=df.to_dict("records"),
 
                                 # TODO: height of the table may need to be dynamic depending on compilation data
-                                style={'height': 800},
+                                style={'height': 600},
 
-                                # TODO: multijunction query will need column size to fit
+                                # TODO: multi-junction query will need column size to fit
                                 # columnSize="sizeToFit",
                                 defaultColDef={"flex": 1,  # snaps the end
                                                "sortable": True, "resizable": True, "filter": True,
                                                # "minWidth": 150,
-                                               # TODO: is cellwrapping required when the abstract of the study is
+                                               # TODO: is cell wrapping required when the abstract of the study is
                                                #  included. Both of below must be on for cell wrapping
                                                # 'wrapText': True,
                                                # 'autoHeight': True,
@@ -341,9 +278,12 @@ def get_card_table():
                                                  'isRowSelectable': {"function": "log(params)"},
                                                  'pagination': True,
                                                  },
-                                className="header-style-on-filter ag-theme-alpine",
+                                # TODO: this will NOT change the table theme to dbc
+                                # className="header-style-on-filter ag-theme-alpine dbc-ag-grid",
                             ),
-                        ]
+                        ],
+                        # TODO: this will change the table theme to follow dbc
+                        className="ag-theme-alpine dbc dbc-ag-grid"
                     )
                 ]
             )
@@ -356,67 +296,94 @@ def get_card_table():
     return card
 
 
+def get_accordian_jiq():
+    return dbc.Accordion(
+        [
+            dbc.AccordionItem(
+                [
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                [
+                                    html.Div(get_jiq_form())
+                                ],
+                                width=8
+                            ),
+                            dbc.Col(
+                                [
+                                    html.Img(
+                                        src='assets/junction_query.png',
+                                        # withPlaceholder=True,
+                                        width='80%',
+                                    )
+                                ]
+                            )
+                        ]
+                    ),
+                ],
+                title=global_strings.jiq_form_title,
+            ),
+        ]
+    )
+
+
+def get_accordian_graphs():
+    return dbc.Accordion(
+        [
+            dbc.AccordionItem(
+                [
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                [
+                                    html.Div(get_card_box_plot())
+                                ],
+                            ),
+                            dbc.Col(
+                                [
+                                    html.Div(get_card_histogram())
+                                ]
+                            )
+                        ]
+                    ),
+                ],
+                title=global_strings.jiq_graphs_group_title
+            ),
+        ]
+    )
+
+
 """
     This is the query/form layout for the junction inclusion query
 """
-junction_inclusion_query_layout = html.Div(
+junction_inclusion_query_layout = dbc.Container(
     [
+        # Top row  contains input form
+        dmc.Space(h=30),  # this will create a space with the tab above it
         dbc.Row(
             [
-                dbc.Col(
-                    [
-                        get_card_query_form()
-                    ],
-                    # className="bg-light",
-                    style={'border': styles.border_column}),
-                dbc.Col(
-                    [
-                        get_card_image()
-                    ],
-                    width=4,
-                    style={'border': styles.border_column}
-                )
+                get_accordian_jiq(),
             ],
+
             # TODO: using the general boundary messes with the layout, need to figure out why?
             # style=styles.boundary_style,
             style={"box-shadow": "1px 2px 7px 0px grey",
                    "border-radius": "10px"},
             className='g-0',  # no gutters in between the cards
         ),
-        # an alternative option to the card and the image
-        # dbc.Row(
-        #     [
-        #         dbc.Col(
-        #             [
-        #                 get_card_query_form_and_image()
-        #             ],
-        #             # className="bg-light",
-        #             style={'border': styles.border_column}),
-        #     ],
-        #     className='g-0',  # no gutters in between the cards
-        # ),
 
-        # Second row  contains the plots and graphs
+        # Second row  of the layout contains the plots and graphs
         dmc.Space(h=20),
         dbc.Row(
             [
-                dbc.Col(
-                    [
-                        get_card_box_plot()
-                    ],
-                    width=6,
-                    style={'border': styles.border_column}
-                ),
-                dbc.Col(
-                    [
-                        get_card_histogram()
-                    ],
-                    width=6,
-                    style={'border': styles.border_column}
-                )
+                get_accordian_graphs(),
             ],
-            className='g-2',  # leave some gutter in between plots
-            justify="center",
+
+            # TODO: using the general boundary messes with the layout, need to figure out why?
+            # style=styles.boundary_style,
+            style={"box-shadow": "1px 2px 7px 0px grey",
+                   "border-radius": "10px"},
+            className='g-0',  # no gutters in between the cards
         ),
 
         # Third row is the row containing the table
@@ -431,13 +398,6 @@ junction_inclusion_query_layout = html.Div(
                 )
             ]
         ),
-
-        # # You can uncomment here:for the other grid structure layouts
-        # html.Br(),
-        # get_card_query_form_and_image(),
-        # html.Br(),
-        # get_testing_card_dbc_vc_dmc(),
-
     ],
     # className='shadow-sm' # puts the shadow background around the div
 )
