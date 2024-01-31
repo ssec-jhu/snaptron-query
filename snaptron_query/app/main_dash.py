@@ -51,21 +51,6 @@ app.layout = dbc.Container(
 )
 
 
-# TODO: upon click another row of text boxes must be generated for input
-# @app.callback(
-#     Output('log-content', 'children'),
-#     Input('id-button-add-more-junctions', 'n_clicks'),
-#     allow_duplicate=True,
-# )
-# def on_more_junction_button_click(n):
-#     # placeholder function for now
-#
-#     print('here')
-#     if n is None:
-#         print("Not clicked.")
-#     else:
-#         return f"Clicked {n} times."
-
 @app.callback(
     Output('id-store-info', 'data'),
     Output('id-store-jiq-df', 'data'),

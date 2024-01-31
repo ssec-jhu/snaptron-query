@@ -7,7 +7,7 @@ import dash_bootstrap_components as dbc
 from dash import html, dcc
 
 import inline_styles as styles
-import layout_jiq as ljiq
+import layout_jiq
 
 """
     This is the component at the top of the page. It can be
@@ -35,7 +35,7 @@ tab_horizontal_bootstrap = dbc.Tabs(
     [
         # Junction Inclusion Query Tab
         dbc.Tab(
-            ljiq.junction_inclusion_query_layout,
+            layout_jiq.junction_inclusion_query_layout,
             label="Junction Inclusion Query",
             tab_id="id-tab-horizontal-bootstrap-jiq",
         ),
@@ -60,7 +60,7 @@ tab_horizontal_bootstrap = dbc.Tabs(
 tab_horizontal_styled = dcc.Tabs(
     children=[
         dcc.Tab(
-            ljiq.junction_inclusion_query_layout,
+            layout_jiq.junction_inclusion_query_layout,
             label='Junction Inclusion Query',
             value='jiq',
             style=styles.horizontal_tab,
