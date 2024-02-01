@@ -2,15 +2,13 @@
     This is the Junction Inclusion Query Layout.
 """
 
-import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 from dash import html, dcc
 
-import components
-import components_jiq_form as form
-import inline_styles as styles
+import components_jiq as components
 import global_strings
+import inline_styles as styles
 
 
 # TODO: texts on the form are still using DMC, DBC puts a margin on the bottom, investigate.
@@ -24,7 +22,7 @@ def get_jiq_form():
         dbc.Row(
             [
                 dbc.Col(
-                    form.get_dropdown_compilation(),
+                    components.get_dropdown_compilation(),
                     style={
                         "border": styles.border_column,
                     },
@@ -46,7 +44,7 @@ def get_jiq_form():
                     # className='col-md-auto mx-2',  # will fit the column to the text
                 ),
                 dbc.Col(
-                    form.get_text_chromosome('dmc'),
+                    components.get_text_chromosome('dmc'),
                     # TODO: switching to dbc puts a space under the text, needs investigation
                     width=2,
                     style={
@@ -56,7 +54,7 @@ def get_jiq_form():
                     className='mx-0.5'
                 ),
                 dbc.Col(
-                    form.get_text_inclusion_junction('dmc'),
+                    components.get_text_inclusion_junction('dmc'),
                     # TODO: switching to dbc puts a space under the text, needs investigation
                     width=3,
                     style={
@@ -66,7 +64,7 @@ def get_jiq_form():
                     className='mx-0.5'
                 ),
                 dbc.Col(
-                    form.get_text_exclusion_junction('dmc'),
+                    components.get_text_exclusion_junction('dmc'),
                     # TODO: switching to dbc puts a space under the text, needs investigation
                     width=3,
                     style={
@@ -88,7 +86,7 @@ def get_jiq_form():
         dbc.Row(
             [
                 dbc.Col(
-                    form.get_text_junction('dmc'),
+                    components.get_text_junction('dmc'),
                     width=2,
                     style={
                         "border": styles.border_column,
@@ -97,7 +95,7 @@ def get_jiq_form():
                     className='ml-auto',  # will justify to the right side
                 ),
                 dbc.Col(
-                    form.get_input_chrom(),
+                    components.get_input_chrom(),
                     width=2,
                     style={
                         "border": styles.border_column,
@@ -106,7 +104,7 @@ def get_jiq_form():
                     className='mx-0.5'
                 ),
                 dbc.Col(
-                    form.get_input_inc_junction(),
+                    components.get_input_inc_junction(),
                     width=3,
                     style={
                         "border": styles.border_column,
@@ -115,7 +113,7 @@ def get_jiq_form():
                     className='mx-0.5'
                 ),
                 dbc.Col(
-                    form.get_input_exc_junction(),
+                    components.get_input_exc_junction(),
                     width=3,
                     style={
                         "border": styles.border_column,
@@ -123,7 +121,7 @@ def get_jiq_form():
                     align='center',  # vertical alignment: center start end
                 ),
                 dbc.Col(
-                    form.get_button_add_junction(),
+                    components.get_button_add_junction(),
                     width=2,
                     style={
                         "border": styles.border_column,
@@ -138,7 +136,7 @@ def get_jiq_form():
         ),
         dbc.Row(
             dbc.Col(
-                form.get_button_generate_results(),
+                components.get_button_generate_results(),
                 style={
                     "border": styles.border_column,
                 },
@@ -236,7 +234,7 @@ def get_card_table():
                     ),
                     dbc.Col(
                         [
-                            components.get_switch_lock_data_with_table('dmc')
+                            components.get_switch_lock_data_with_table('dbc')
                         ],
                         width=3,
                         align='end',
@@ -244,43 +242,14 @@ def get_card_table():
                         # className='ms-auto' # will justify to the right
                     ),
                 ],
-                className="g-0",  # border border-primary",
+                className="g-1",  # button too close to the table, needs some gutter
                 justify='between'
             ),
             dbc.Row(
                 [
                     dbc.Container(
                         [
-                            dag.AgGrid(
-                                id="id-ag-grid",
-                                # ag grid and persistence: data will get lost when tab switches
-                                # https://community.plotly.com/t/how-to-add-persistence-to-dash-ag-grid/74944
-                                persistence=True,
-                                # columnDef and rowData will be dynamically defined via callback
-                                # columnDefs=[{"field": i} for i in df.columns.to_list()],
-                                # rowData=df.to_dict("records"),
-
-                                # TODO: height of the table may need to be dynamic depending on compilation data
-                                style={'height': 600},
-
-                                # TODO: multi-junction query will need column size to fit
-                                # columnSize="sizeToFit",
-                                defaultColDef={"flex": 1,  # snaps the end
-                                               "sortable": True, "resizable": True, "filter": True,
-                                               # "minWidth": 150,
-                                               # TODO: is cell wrapping required when the abstract of the study is
-                                               #  included. Both of below must be on for cell wrapping
-                                               # 'wrapText': True,
-                                               # 'autoHeight': True,
-                                               },
-                                dashGridOptions={'rowSelection': 'multiple',
-                                                 'checkboxSelection': 'True',
-                                                 'isRowSelectable': {"function": "log(params)"},
-                                                 'pagination': True,
-                                                 },
-                                # TODO: this will NOT change the table theme to dbc
-                                # className="header-style-on-filter ag-theme-alpine dbc-ag-grid",
-                            ),
+                            components.get_table_jiq()
                         ],
                         # TODO: this will change the table theme to follow dbc
                         className="ag-theme-alpine dbc dbc-ag-grid"
@@ -334,6 +303,7 @@ def get_accordian_graphs():
                 [
                     dbc.Row(
                         [
+                            # row equally divided for the plots
                             dbc.Col(
                                 [
                                     html.Div(get_card_box_plot())
@@ -353,51 +323,53 @@ def get_accordian_graphs():
     )
 
 
-"""
-    This is the query/form layout for the junction inclusion query
-"""
-junction_inclusion_query_layout = dbc.Container(
-    [
-        # Top row  contains input form
-        dmc.Space(h=30),  # this will create a space with the tab above it
-        dbc.Row(
-            [
-                get_accordian_jiq(),
-            ],
+def get_layout_junction_inclusion():
+    """
+        This is the query/form layout for the junction inclusion query
+    """
+    layout = dbc.Container(
+        [
+            # Top row  contains input form
+            dmc.Space(h=30),  # this will create a space with the tab above it
+            dbc.Row(
+                [
+                    get_accordian_jiq(),
+                ],
 
-            # TODO: using the general boundary messes with the layout, need to figure out why?
-            # style=styles.boundary_style,
-            style={"box-shadow": "1px 2px 7px 0px grey",
-                   "border-radius": "10px"},
-            className='g-0',  # no gutters in between the cards
-        ),
+                # TODO: using the general boundary messes with the layout, need to figure out why?
+                # style=styles.boundary_style,
+                style={"box-shadow": "1px 2px 7px 0px grey",
+                       "border-radius": "10px"},
+                className='g-0',  # no gutters in between the cards
+            ),
 
-        # Second row  of the layout contains the plots and graphs
-        dmc.Space(h=20),
-        dbc.Row(
-            [
-                get_accordian_graphs(),
-            ],
+            # Second row  of the layout contains the plots and graphs
+            dmc.Space(h=20),
+            dbc.Row(
+                [
+                    get_accordian_graphs(),
+                ],
 
-            # TODO: using the general boundary messes with the layout, need to figure out why?
-            # style=styles.boundary_style,
-            style={"box-shadow": "1px 2px 7px 0px grey",
-                   "border-radius": "10px"},
-            className='g-0',  # no gutters in between the cards
-        ),
+                # TODO: using the general boundary messes with the layout, need to figure out why?
+                # style=styles.boundary_style,
+                style={"box-shadow": "1px 2px 7px 0px grey",
+                       "border-radius": "10px"},
+                className='g-0',  # no gutters in between the cards
+            ),
 
-        # Third row is the row containing the table
-        dmc.Space(h=20),
-        dbc.Row(
-            [
-                dbc.Col(
-                    [
-                        get_card_table()
-                    ],
-                    style={'border': styles.border_column}
-                )
-            ]
-        ),
-    ],
-    # className='shadow-sm' # puts the shadow background around the div
-)
+            # Third row is the row containing the table
+            dmc.Space(h=20),
+            dbc.Row(
+                [
+                    dbc.Col(
+                        [
+                            get_card_table()
+                        ],
+                        style={'border': styles.border_column}
+                    )
+                ]
+            ),
+        ],
+        # className='shadow-sm' # puts the shadow background around the div
+    )
+    return layout

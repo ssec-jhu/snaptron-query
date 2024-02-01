@@ -5,6 +5,10 @@ compilation_list = ['srav3h', 'gtexv2', 'srav1m', 'tcaga2']
 drop_compilation = 'Select the organism of interest'
 drop_compilation_placeholder = 'Select a compilation'
 jiq_form_title = 'Junction Information'
+
+tab_jiq = "Junction Inclusion Query"
+tab_geq = "Gene Expression Query"
+
 jiq_graphs_group_title = 'Graphs'
 button_download_str = 'Download'
 switch_log_str = 'log'
