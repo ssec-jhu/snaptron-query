@@ -23,109 +23,72 @@ def get_jiq_form():
             [
                 dbc.Col(
                     components.get_dropdown_compilation(),
-                    style={
-                        "border": styles.border_column,
-                    },
+                    style={"border": styles.border_column},
                 ),
             ],
             className="g-0 form-control-sm",
             justify="start",
         ),
 
-        # ROW 2 has the titles of the textbooks so subsequent rows
+        # ROW 2 has the titles of the text boxes
         dbc.Row(
             [
                 dbc.Col(
                     width=2,
-                    style={
-                        "border": styles.border_column,
-                    },
+                    style={"border": styles.border_column},
                     align='center',  # vertical alignment: center start end
-                    # className='col-md-auto mx-2',  # will fit the column to the text
-                ),
-                dbc.Col(
-                    components.get_text_chromosome('dmc'),
-                    # TODO: switching to dbc puts a space under the text, needs investigation
-                    width=2,
-                    style={
-                        "border": styles.border_column,
-                    },
-                    align='center',  # vertical alignment: center start end
-                    className='mx-0.5'
                 ),
                 dbc.Col(
                     components.get_text_inclusion_junction('dmc'),
                     # TODO: switching to dbc puts a space under the text, needs investigation
-                    width=3,
-                    style={
-                        "border": styles.border_column,
-                    },
+                    width=4,
+                    style={"border": styles.border_column},
                     align='center',  # vertical alignment: center start end
                     className='mx-0.5'
                 ),
                 dbc.Col(
                     components.get_text_exclusion_junction('dmc'),
                     # TODO: switching to dbc puts a space under the text, needs investigation
-                    width=3,
-                    style={
-                        "border": styles.border_column,
-                    },
+                    width=4,
+                    style={"border": styles.border_column},
                     align='center',  # vertical alignment: center start end
                 ),
                 dbc.Col(
                     width=2,
-                    style={
-                        "border": styles.border_column,
-                    },
+                    style={"border": styles.border_column},
                 ),
             ],
             # border border-primary: add for border and gutter debugging
             className="g-0 form-control-sm",
             justify="start",
         ),
+        # ROW 3 has the form components
         dbc.Row(
             [
                 dbc.Col(
                     components.get_text_junction('dmc'),
                     width=2,
-                    style={
-                        "border": styles.border_column,
-                    },
+                    style={"border": styles.border_column},
                     align='center',  # vertical alignment: center start end
-                    className='ml-auto',  # will justify to the right side
-                ),
-                dbc.Col(
-                    components.get_input_chrom(),
-                    width=2,
-                    style={
-                        "border": styles.border_column,
-                    },
-                    align='center',  # vertical alignment: center start end
-                    className='mx-0.5'
+                    # className='col-md-auto mx-1',  # will justify to the right side
                 ),
                 dbc.Col(
                     components.get_input_inc_junction(),
-                    width=3,
-                    style={
-                        "border": styles.border_column,
-                    },
+                    width=4,
+                    style={"border": styles.border_column},
                     align='center',  # vertical alignment: center start end
                     className='mx-0.5'
                 ),
                 dbc.Col(
                     components.get_input_exc_junction(),
-                    width=3,
-                    style={
-                        "border": styles.border_column,
-                    },
+                    width=4,
+                    style={"border": styles.border_column},
                     align='center',  # vertical alignment: center start end
                 ),
                 dbc.Col(
                     components.get_button_add_junction(),
                     width=2,
-                    style={
-                        "border": styles.border_column,
-                    },
+                    style={"border": styles.border_column},
                     align='center',  # vertical alignment: center start end
                     className='col-md-auto'  # will fit the column to the text
                 ),
@@ -135,13 +98,13 @@ def get_jiq_form():
             justify="start",
         ),
         dbc.Row(
-            dbc.Col(
-                components.get_button_generate_results(),
-                style={
-                    "border": styles.border_column,
-                },
-                # className="d-grid gap-2 d-md-flex justify-content-md-end", # will justify to the right side
-            ),
+            [
+                dbc.Col(
+                    components.get_button_generate_results(),
+                    style={"border": styles.border_column},
+                    class_name="d-grid gap-0 col-12"  # this will make the button take over full width
+                ),
+            ],
             # ROW style notes:
             # gap-3: does not apply to the row
             # my-2: creates the padding at the top
@@ -164,7 +127,7 @@ def get_card_histogram():
                         [
                             components.get_switch_log_psi('dmc')
                         ],
-                        style={'border': styles.border_column, }
+                        style={'border': styles.border_column}
                     ),
                     dbc.Row(
                         [
@@ -282,12 +245,14 @@ def get_accordian_jiq():
                                 [
                                     html.Img(
                                         src='assets/junction_query.png',
-                                        # withPlaceholder=True,
-                                        width='80%',
+                                        width='100%',  # this will force align the height to the column next to it
+                                        # style={'border':'1px solid black'}
                                     )
-                                ]
+                                ],
+                                style={"border": styles.border_column},
                             )
-                        ]
+                        ],
+                        justify="start",
                     ),
                 ],
                 title=global_strings.jiq_form_title,
