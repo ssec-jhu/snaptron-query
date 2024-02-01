@@ -76,8 +76,8 @@ def get_button_generate_results():
         # class_name="d-grid mx-auto, btn-outline-primary"
         # color="light",
         # outline=True,
-        class_name="d-grid gap-2 col-8 mx-auto btn-primary",  # bg-secondary text-light
-        # style={'backgroundColor': inline_styles.buttonColor}
+        # class_name="d-grid gap-2 col-8 mx-auto btn-primary",  # bg-secondary text-light
+        class_name="btn-primary",
     )
 
 
@@ -96,12 +96,6 @@ def get_input(input_placeholder, input_id):
 """
     Wrapper functions to dynamically create input textbox components given their id and style
 """
-
-
-def get_input_chrom():
-    input_placeholder = global_strings.input_chr_placeholder
-    input_id = 'id-input-chromosome'
-    return get_input(input_placeholder, input_id)
 
 
 def get_input_inc_junction():
@@ -131,11 +125,6 @@ def get_text(component_style, string):
         return dbc.Label(string, className='fw-bold')
     elif component_style == 'dcc':
         return html.Label(string)
-
-
-def get_text_chromosome(component_style):
-    string = global_strings.input_chr_txt
-    return get_text(component_style, string)
 
 
 def get_text_inclusion_junction(component_style):
@@ -193,7 +182,7 @@ def get_switch_log_psi(component_style):
             id=switch_id,
             label=string,
             # class_name="d-grid gap-2 col-8 mx-auto",  # bg-secondary text-light
-            # style={'backgroundColor': inline_styles.tabBackgroundColor}
+            # style={'backgroundColor': inline_styles.tab_background_color}
         )
 
 
@@ -222,7 +211,7 @@ def get_switch_lock_data_with_table(component_style):
                 dbc.Switch(
                     id=switch_id,
                     label=string,
-                    style={'backgroundColor': inline_styles.borderColor}
+                    #style={'backgroundColor': inline_styles.borderColor}
                 )
             ]
         )

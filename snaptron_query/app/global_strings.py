@@ -17,11 +17,9 @@ switch_lock_str = 'Lock Table with Graphs'
 button_add_junction = 'Add Junction'
 button_run = 'Run Query'  # TODO: strings: should this be Calculate or Run?
 
-input_chr_placeholder = 'ex: 19'
-input_chr_txt = 'Chromosome'
-input_inc_placeholder = 'ex: 4491836-4492014'
+input_inc_placeholder = 'ex: chr19:4491836-4492014'
 input_inc_txt = 'Inclusion Junction'
-input_exc_placeholder = 'ex: 4491836-4493702'
+input_exc_placeholder = 'ex: chr19:4491836-4493702'
 input_exc_txt = 'Exclusion Junction'
 input_junction_txt_list = ['Junction 1', 'Junction 2', 'Junction 3', 'Junction 4', 'Junction 5']
 
