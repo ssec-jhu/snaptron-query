@@ -8,6 +8,7 @@ from dash import html, dcc
 
 import inline_styles as styles
 import layout_jiq
+import global_strings
 
 """
     This is the component at the top of the page. It can be
@@ -35,14 +36,14 @@ tab_horizontal_bootstrap = dbc.Tabs(
     [
         # Junction Inclusion Query Tab
         dbc.Tab(
-            layout_jiq.junction_inclusion_query_layout,
-            label="Junction Inclusion Query",
+            layout_jiq.get_layout_junction_inclusion(),
+            label=global_strings.tab_jiq,
             tab_id="id-tab-horizontal-bootstrap-jiq",
         ),
 
         # Gene Expression Query Tab
         dbc.Tab(
-            label="Gene Expression Query",
+            label=global_strings.tab_geq,
             tab_id="id-tab-horizontal-bootstrap-geq",
         ),
     ],
@@ -60,15 +61,15 @@ tab_horizontal_bootstrap = dbc.Tabs(
 tab_horizontal_styled = dcc.Tabs(
     children=[
         dcc.Tab(
-            layout_jiq.junction_inclusion_query_layout,
-            label='Junction Inclusion Query',
+            layout_jiq.get_layout_junction_inclusion(),
+            label=global_strings.tab_jiq,
             value='jiq',
             style=styles.horizontal_tab,
             selected_style=styles.horizontal_tab_selected,
             # selected_className='custom-tab--selected'
         ),
         dcc.Tab(  # TODO: Gene expression layout here
-            label='Gene Expression Query',
+            label=global_strings.tab_geq,
             value='geq',
             style=styles.horizontal_tab,
             selected_style=styles.horizontal_tab_selected,

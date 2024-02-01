@@ -33,7 +33,7 @@ app.layout = dbc.Container(
         # navbar,# Top row with titles and all
         layout.jumbotron,
 
-        # Next row is the query area, whether it's junction query or gene expression query
+        # Next row is are the tabs and their content
         dmc.Space(h=30),
         layout.tab_horizontal_bootstrap,
         # other options
