@@ -56,14 +56,13 @@ app.layout = dbc.Container(
     Output('id-store-jiq-df', 'data'),
     Input('id-button-generate-results', 'n_clicks'),
     Input(component_id="id-input-compilation", component_property="value"),
-    Input(component_id="id-input-chromosome", component_property="value"),
     Input(component_id="id-input-inc-junc", component_property="value"),
     Input(component_id="id-input-exc-junc", component_property="value"),
     Input('id-store-info', 'data'),
     # allow_duplicate=True,
     prevent_initial_call=True
 )
-def on_button_click_gen_results(n_clicks, compilation, chromosome_number, inc, exc, datasets):
+def on_button_click_gen_results(n_clicks, compilation, inc, exc, datasets):
     # TODO this function gets called with every input change, not just the button click,
     #  need to narrow to just the button click
 
@@ -81,6 +80,7 @@ def on_button_click_gen_results(n_clicks, compilation, chromosome_number, inc, e
     else:
         # Gather the form data and create the URL
         # TODO: hardcode URL for now
+        chromosome_number =19
         host = 'https://snaptron.cs.jhu.edu'
         query_type_string = 'snaptron'  # vs 'genes' for gene expression
         head = f'{host}/{compilation}/{query_type_string}?regions=chr{chromosome_number}' + ':'
