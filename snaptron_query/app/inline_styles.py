@@ -17,10 +17,6 @@ boundary_style = {
     'display': display_style,
     'width': '100%',
     'border': border_card,
-    # 'background-color': '#d8e7ff',
-    # 'background-color':'var(--bs-gray-200)',
-    # "border-radius": "10px",
-    # "background-color": "#CDCDCD",
     'box-shadow': "1px 2px 7px 0px grey"  # 'shadow-sm' does not work here
 }
 # --------------------
@@ -37,15 +33,10 @@ horizontal_tab = {
     'borderRadius': '5px 5px 0 0px',
     'cursor': 'pointer',
     'marginBottom': '50px',  # puts some spacing below the tabs
-    'height': '70px',  # Fixed height
-    # need all three lines below to bring the content to center vertically
+    'height': '70px',       # Fixed height
     "display": "flex",  # need this line or the other two below will not work
     "justify-content": "center",
     "align-items": "center",
-
-    # ----------------
-    # different
-    # ----------------
     'backgroundColor': tab_background_color,
     'color': '#586069',  # text color
     'transition': 'background-color 0.3s, color 0.3s',
@@ -58,22 +49,12 @@ horizontal_tab_selected = {
     'cursor': 'pointer',
     'marginBottom': '50px',  # puts some spacing below the tabs
     'height': '70px',  # Fixed height
-
-    # need all three lines below to bring the content to center vertically
     "display": "flex",  # need this line or the other two below will not work
     "justify-content": "center",
     "align-items": "center",
-
-    # uncomment this to override the borderline
-    'borderTop': tab_border_color,
-
-    # ----------------
-    # different
-    # ----------------
+    'borderTop': tab_border_color, # uncomment this to override the borderline
     'backgroundColor': 'white',  # Light navy
     'color': 'black',  # text color
-    # shadow: X and Y offsets relative to the element, blur and spread radius, and color.
-    # 'boxShadow': '0 2px 4px rgba(0, 0, 0, 0.1)',
     'transition': 'background-color 0.3s, color 0.3s, box-shadow 0.3s',
     'font-weight': "bold",
 }
