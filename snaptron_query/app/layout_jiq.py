@@ -11,7 +11,6 @@ import global_strings
 import inline_styles as styles
 
 
-# TODO: texts on the form are still using DMC, DBC puts a margin on the bottom, investigate.
 def get_jiq_form():
     """
         Grid and components are defined with dash bootstrap components (dbc)
@@ -40,25 +39,22 @@ def get_jiq_form():
                 ),
                 dbc.Col(
                     components.get_text_inclusion_junction('dmc'),
-                    # TODO: switching to dbc puts a space under the text, needs investigation
                     width=4,
                     style={"border": styles.border_column},
-                    align='center',  # vertical alignment: center start end
+                    align='center',
                     className='mx-0.5'
                 ),
                 dbc.Col(
                     components.get_text_exclusion_junction('dmc'),
-                    # TODO: switching to dbc puts a space under the text, needs investigation
                     width=4,
                     style={"border": styles.border_column},
-                    align='center',  # vertical alignment: center start end
+                    align='center',
                 ),
                 dbc.Col(
                     width=2,
                     style={"border": styles.border_column},
                 ),
             ],
-            # border border-primary: add for border and gutter debugging
             className="g-0 form-control-sm",
             justify="start",
         ),
@@ -69,31 +65,29 @@ def get_jiq_form():
                     components.get_text_junction('dmc'),
                     width=2,
                     style={"border": styles.border_column},
-                    align='center',  # vertical alignment: center start end
-                    # className='col-md-auto mx-1',  # will justify to the right side
+                    align='center',
                 ),
                 dbc.Col(
                     components.get_input_inc_junction(),
                     width=4,
                     style={"border": styles.border_column},
-                    align='center',  # vertical alignment: center start end
+                    align='center',
                     className='mx-0.5'
                 ),
                 dbc.Col(
                     components.get_input_exc_junction(),
                     width=4,
                     style={"border": styles.border_column},
-                    align='center',  # vertical alignment: center start end
+                    align='center',
                 ),
                 dbc.Col(
                     components.get_button_add_junction(),
                     width=2,
                     style={"border": styles.border_column},
-                    align='center',  # vertical alignment: center start end
+                    align='center',
                     className='col-md-auto'  # will fit the column to the text
                 ),
             ],
-            # border border-danger: add for border and gutter debugging
             className="g-1 form-control-sm",
             justify="start",
         ),
@@ -105,11 +99,7 @@ def get_jiq_form():
                     class_name="d-grid gap-0 col-12"  # this will make the button take over full width
                 ),
             ],
-            # ROW style notes:
-            # gap-3: does not apply to the row
-            # my-2: creates the padding at the top
-            # border border-primary : add  to see the border for debugging
-            className="g-2 my-2",
+            className="g-2 my-2",  # my-2: creates the padding at the top
         ),
     ]
 
@@ -125,7 +115,7 @@ def get_card_histogram():
                 [
                     dbc.Row(
                         [
-                            components.get_switch_log_psi('dmc')
+                            components.get_switch_log_psi()
                         ],
                         style={'border': styles.border_column}
                     ),
@@ -154,7 +144,7 @@ def get_card_box_plot():
                 [
                     dbc.Row(
                         [
-                            components.get_switch_log_psi('dmc')
+                            components.get_switch_log_psi()
                         ],
                         style={'border': styles.border_column}
                     ),
@@ -180,10 +170,6 @@ def get_card_table():
     card = dmc.Card(
         id='id-card-table',
         children=[
-            # TODO: may need a card section for the table, need to finalize this
-            # dmc.CardSection(
-            #     dmc.Title('Query Results', order=3, align='center'),
-            # ),
             dbc.Row(
                 [
                     dbc.Col(
@@ -191,18 +177,15 @@ def get_card_table():
                             components.get_button_download()
                         ],
                         width=2,
-                        # align='center',
                         style={'border': styles.border_column}
-                        # className='ml-auto'
                     ),
                     dbc.Col(
                         [
-                            components.get_switch_lock_data_with_table('dbc')
+                            components.get_switch_lock_data_with_table()
                         ],
                         width=3,
                         align='end',
                         style={'border': styles.border_column},
-                        # className='ms-auto' # will justify to the right
                     ),
                 ],
                 className="g-1",  # button too close to the table, needs some gutter
@@ -214,14 +197,11 @@ def get_card_table():
                         [
                             components.get_table_jiq()
                         ],
-                        # TODO: this will change the table theme to follow dbc
                         className="ag-theme-alpine dbc dbc-ag-grid"
                     )
                 ]
             )
         ],
-        # withBorder=True,
-        # shadow="md",
         radius="md",
         style=styles.boundary_style,
     )
@@ -246,7 +226,6 @@ def get_accordian_jiq():
                                     html.Img(
                                         src='assets/junction_query.png',
                                         width='100%',  # this will force align the height to the column next to it
-                                        # style={'border':'1px solid black'}
                                     )
                                 ],
                                 style={"border": styles.border_column},
@@ -270,14 +249,10 @@ def get_accordian_graphs():
                         [
                             # row equally divided for the plots
                             dbc.Col(
-                                [
-                                    html.Div(get_card_box_plot())
-                                ],
+                                [html.Div(get_card_box_plot())]
                             ),
                             dbc.Col(
-                                [
-                                    html.Div(get_card_histogram())
-                                ]
+                                [html.Div(get_card_histogram())]
                             )
                         ]
                     ),
@@ -300,9 +275,6 @@ def get_layout_junction_inclusion():
                 [
                     get_accordian_jiq(),
                 ],
-
-                # TODO: using the general boundary messes with the layout, need to figure out why?
-                # style=styles.boundary_style,
                 style={"box-shadow": "1px 2px 7px 0px grey",
                        "border-radius": "10px"},
                 className='g-0',  # no gutters in between the cards
@@ -314,9 +286,6 @@ def get_layout_junction_inclusion():
                 [
                     get_accordian_graphs(),
                 ],
-
-                # TODO: using the general boundary messes with the layout, need to figure out why?
-                # style=styles.boundary_style,
                 style={"box-shadow": "1px 2px 7px 0px grey",
                        "border-radius": "10px"},
                 className='g-0',  # no gutters in between the cards
@@ -335,6 +304,5 @@ def get_layout_junction_inclusion():
                 ]
             ),
         ],
-        # className='shadow-sm' # puts the shadow background around the div
     )
     return layout
