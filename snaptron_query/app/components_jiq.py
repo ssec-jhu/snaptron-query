@@ -15,13 +15,11 @@ def get_dropdown_compilation():
     """
         Wrapper function to retrieve the dropdown component
     """
-    data_list = global_strings.compilation_list
     dropdown = html.Div(
         [
             dbc.Label(global_strings.drop_compilation, className='fw-bold'),
             dcc.Dropdown(
-                data_list,
-                default = data_list[0],
+                options = global_strings.compilation_names_dict,
                 id='id-input-compilation',
             ),
         ],
