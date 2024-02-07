@@ -5,8 +5,8 @@
 
 import dash_bootstrap_components as dbc
 from dash import html
-import layout_jiq
-import global_strings
+from snaptron_query.app import layout_jiq
+from snaptron_query.app import global_strings
 
 
 def get_navbar_top():

@@ -71,7 +71,10 @@ For additional cmds see the [Conda cheat-sheet](https://docs.conda.io/projects/c
 
   #### with Python ecosystem:
   * Follow the above [Build with Python ecosystem instructions](#with-python-ecosystem).
-  * Run ``uvicorn snaptron_query.app.main:app --host 0.0.0.0 --port", "8000``. _NOTE: This is just an example and is obviously application dependent._
+  * Run ``python3 -m  snaptron_query.app.main_dash_app``.This will have Dash running on http://127.0.0.1:8050/.
+    
+  #### with Tox:
+  * Run ``tox -e test exec -- python -m snaptron_query.app.main_dash_app``.This will have Dash running on http://127.0.0.1:8050/.
 
 ### Usage:
 To be completed by child repo.

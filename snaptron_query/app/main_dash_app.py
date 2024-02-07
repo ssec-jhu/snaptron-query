@@ -4,9 +4,9 @@ import pandas as pd
 from dash import Dash, html, dcc, Input, Output
 from dash.exceptions import PreventUpdate
 
-import graphs
-import layout
-import global_strings
+from snaptron_query.app import graphs
+from snaptron_query.app import layout
+from snaptron_query.app import global_strings
 
 # Initialize the app
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"

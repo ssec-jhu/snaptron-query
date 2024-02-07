@@ -6,9 +6,9 @@ import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 from dash import html, dcc
 
-import components_jiq as components
-import global_strings
-import inline_styles as styles
+from snaptron_query.app import components_jiq as components
+from snaptron_query.app import global_strings
+from snaptron_query.app import inline_styles as styles
 
 
 def get_jiq_form():
@@ -115,7 +115,7 @@ def get_card_histogram():
                 [
                     dbc.Row(
                         [
-                            components.get_switch_log_psi()
+                            components.get_switch_log_psi_histogram()
                         ],
                         style={'border': styles.border_column}
                     ),
@@ -144,7 +144,7 @@ def get_card_box_plot():
                 [
                     dbc.Row(
                         [
-                            components.get_switch_log_psi()
+                            components.get_switch_log_psi_box_plot()
                         ],
                         style={'border': styles.border_column}
                     ),

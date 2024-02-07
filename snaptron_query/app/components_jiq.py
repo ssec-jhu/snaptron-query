@@ -8,7 +8,7 @@ import dash_mantine_components as dmc
 from dash import html, dcc
 from dash_iconify import DashIconify
 
-import global_strings
+from snaptron_query.app import global_strings
 
 
 def get_dropdown_compilation():
@@ -127,12 +127,17 @@ def get_button_download():
     )
 
 
-def get_switch_log_psi():
+def get_switch_log_psi_histogram():
     return dbc.Switch(
-        id='id-switch-log-psi',
+        id='id-switch-log-psi-histogram',
         label=global_strings.switch_log,
     )
 
+def get_switch_log_psi_box_plot():
+    return dbc.Switch(
+        id='id-switch-log-psi-box_plot',
+        label=global_strings.switch_log,
+    )
 
 def get_switch_lock_data_with_table():
     return html.Div(
