@@ -6,8 +6,7 @@ dash-core-components==2.0.0
 dash-html-components==2.0.0
 dash-iconify==0.1.2
 dash-mantine-components==0.13.0a3
-pandas==2.2.0
-pandas-datareader==0.10.0
+pandas==2.1.4
 httpx==0.26.0
 matplotlib==3.8.2
 plotly==5.18.0

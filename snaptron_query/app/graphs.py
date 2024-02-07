@@ -4,7 +4,7 @@
 """
 
 import plotly.express as px
-import global_strings
+from snaptron_query.app import global_strings
 
 
 def get_histogram(df):
