@@ -4,6 +4,7 @@ import pandas as pd
 from dash import Dash, html, dcc, Input, Output
 from dash.exceptions import PreventUpdate
 
+
 from snaptron_query.app import graphs, layout, global_strings
 
 # Initialize the app
@@ -13,6 +14,8 @@ app = Dash(__name__,
            external_stylesheets=[dbc.themes.SANDSTONE,
                                  dbc_css,
                                  ])
+
+df_srav3h = jiq.read_meta_data_file()
 
 # this is the main layout of the page with all tabs
 app.layout = dbc.Container(
@@ -57,28 +60,48 @@ def on_button_click_gen_results(n_clicks, compilation, inc, exc, datasets):
     if n_clicks <= datasets.get('clicks', 0):
         raise PreventUpdate
     else:
-        # ----------------------------------------
-        #       Work In Progress Here
-        # ----------------------------------------
-        # Gather the form data and create the URL
-        # TODO: hardcode URL for now
-        chromosome_number = 19
-        host = 'https://snaptron.cs.jhu.edu'
-        query_type_string = 'snaptron'  # vs 'genes' for gene expression
-        head = f'{host}/{compilation}/{query_type_string}?regions=chr{chromosome_number}' + ':'
-        url = f'{head}{exc}{inc}'
-        # url = 'https://snaptron.cs.jhu.edu/srav3h/snaptron?regions=chr19:4491836-4493702'
-        # TODO: run the query and return result's data frame here
-        # putting example data for now
-        data_dict = {
-            'rail_id': [1, 2, 3, 4, 5],
-            'external_id': [10, 20, 30, 40, 50],
-            'study': ['AA', 'BB', 'CC', 'DD', 'EE'],
-            'inc': [25, 30, 22, 28, 35],
-            'exc': [25, 30, 22, 28, 35],
-            'total': [25, 30, 22, 28, 35],
-            'psi': [15, 26, 34, 5, 17],
-        }
+        try:
+            # ----------------------------------------
+            #       Work In Progress Here
+            # ----------------------------------------
+            host = 'https://snaptron.cs.jhu.edu'
+            query_type_string = 'snaptron'  # vs 'genes' for gene expression
+            (inc_chr, inc_coordinates) = inc.split(':')
+            (exc_chr, exc_coordinates) = exc.split(':')
+            # chromosome numbers must match
+            if inc_chr != exc_chr:
+                raise PreventUpdate
+
+            url = f'{host}/{compilation}/{query_type_string}?regions={exc}'
+            url = 'https://snaptron.cs.jhu.edu/srav3h/snaptron?regions=chr19:4491836-4493702'
+            # RUN the URL and get results back from SNAPTRON
+            sqm = SnaptronClientManager(url)
+            df = sqm.get_query_results_dataframe()
+            # make sure you get results back
+            if df.shape[0] == 0:
+                raise exceptions.BadURL
+
+            # Select the meta data that must be used
+            # TODO: add the rest of the meta data as PI provides list
+            if compilation == global_strings.compilation_names[0]:
+                df_meta_data = df_srav3h
+            else:
+                raise PreventUpdate
+
+            # Set upt the JIQ manager then run the Junction Inclusion Query
+            (exc_start, exc_end) = exc_coordinates.split('-')
+            (inc_start, inc_end) = inc_coordinates.split('-')
+            jqm = jiq.JunctionInclusionQueryManager(int(exc_start), int(exc_end), int(inc_start), int(inc_end))
+            results_df = jqm.run_junction_inclusion_query(df, df_meta_data)
+
+        except exceptions.BadURL:
+            # TODO: setup UI for error messages
+            print("URL was bad")
+            raise PreventUpdate
+        except exceptions.EmptyResponse:
+            # TODO: setup UI for error messages
+            print("URL was correct but server returned empty response")
+            raise PreventUpdate
 
         # ----------------------------------------
 
