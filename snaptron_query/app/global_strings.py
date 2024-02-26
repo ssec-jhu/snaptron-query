@@ -1,13 +1,10 @@
-"""
-    General Strings
-"""
+"""General Strings"""
 
 tab_jiq = "Junction PSI Query"
 tab_geq = "Gene Expression Query"
 
-"""
-    Strings used in the Junction Inclusion Query Form
-"""
+"""Strings used in the Junction Inclusion Query Form"""
+
 compilation_names = ['SRAv3h', 'GTEXv2', 'TCGAv2', 'SRAv1m']
 compilation_names_dict = {
     compilation_names[0]: f'human {compilation_names[0]}',
@@ -30,9 +27,8 @@ input_exc_placeholder = 'ex: chr19:4491836-4493702'
 input_exc_txt = 'Exclusion Junction'
 input_junction_txt_list = ['Junction 1', 'Junction 2', 'Junction 3', 'Junction 4', 'Junction 5']
 
-"""
-    Strings used in the Graphs and Tables 
-"""
+"""Strings used in the Graphs and Tables """
+
 histogram_title = 'PSI Histogram'
 boxplot_label = 'Rail ID'
 box_plot_title = 'PSI Box Plot'
@@ -56,17 +52,17 @@ srav3h_meta_data_required_list = [snaptron_col_rail_id,
                                   ]
 srav1m_meta_data_required_list = srav3h_meta_data_required_list  # SRA mouse and SRA human are similar
 
-tcgav2_meta_data_required_list = ["rail_id","tcga_barcode", "study","gdc_cases.project.name",
+tcgav2_meta_data_required_list = ["rail_id", "tcga_barcode", "study", "gdc_cases.project.name",
                                   "gdc_cases.project.primary_site", "cgc_sample_sample_type",
-                                  "gdc_state","gdc_cases.demographic.race",
+                                  "gdc_state", "gdc_cases.demographic.race",
                                   "gdc_cases.demographic.ethnicity",
                                   "gdc_cases.diagnoses.tumor_stage",
-                                  "gdc_cases.diagnoses.vital_status","gdc_cases.samples.oct_embedded",
-                                  "gdc_cases.samples.is_ffpe","gdc_cases.samples.sample_type",
-                                  "cgc_sample_country_of_sample_procurement","cgc_case_tumor_status",
-                                  "cgc_drug_therapy_pharmaceutical_therapy_type","cgc_follow_up_tumor_status"
+                                  "gdc_cases.diagnoses.vital_status", "gdc_cases.samples.oct_embedded",
+                                  "gdc_cases.samples.is_ffpe", "gdc_cases.samples.sample_type",
+                                  "cgc_sample_country_of_sample_procurement", "cgc_case_tumor_status",
+                                  "cgc_drug_therapy_pharmaceutical_therapy_type", "cgc_follow_up_tumor_status"
                                   ]
-gtexv2_meta_data_required_list = ["rail_id","run_acc", "study","SEX","AGE", "SAMPID","SMTS","SMTSD"]
+gtexv2_meta_data_required_list = ["rail_id", "run_acc", "study", "SEX", "AGE", "SAMPID", "SMTS", "SMTSD"]
 
 # columns=['rail_id', 'external_id', 'study', 'inc', 'exc', 'total', 'psi'])
 table_jiq_col_inc = 'inc'

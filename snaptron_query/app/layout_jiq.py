@@ -1,6 +1,4 @@
-"""
-    This is the Junction Inclusion Query Layout.
-"""
+"""This is the Junction Inclusion Query Layout."""
 
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
@@ -12,10 +10,8 @@ from snaptron_query.app import inline_styles as styles
 
 
 def get_jiq_form():
-    """
-        Grid and components are defined with dash bootstrap components (dbc)
-        The width of the top and bottom row is set to fill the row
-        The width of the junction textbox column is set to 3 so the rest of the columns balance out
+    """Wrapper function for the Junction Inclusion Query components.
+    The width of the top and bottom row is set to fill the row
     """
     return [
         dbc.Row(
@@ -105,9 +101,7 @@ def get_jiq_form():
 
 
 def get_card_histogram():
-    """
-        Wrapper function for the histogram component in a card layout
-    """
+    """Wrapper function for the histogram component in a card layout"""
     card = dbc.Card(
         id='id-card-histogram',
         children=[
@@ -134,9 +128,7 @@ def get_card_histogram():
 
 
 def get_card_box_plot():
-    """
-        Wrapper function for the box plot component in a card layout
-    """
+    """Wrapper function for the box plot component in a card layout"""
     card = dbc.Card(
         id='id-card-box-plot',
         children=[
@@ -163,9 +155,7 @@ def get_card_box_plot():
 
 
 def get_card_table():
-    """
-        A wrapper function that puts the table in a dmc card container
-        Card layout uses dbc grid layout
+    """Wrapper function for the table component
     """
     card = dmc.Card(
         id='id-card-table',
@@ -264,9 +254,7 @@ def get_accordian_graphs():
 
 
 def get_layout_junction_inclusion():
-    """
-        This is the query/form layout for the junction inclusion query
-    """
+    """This is the query/form layout for the junction inclusion query"""
     layout = dbc.Container(
         [
             # Top row  contains input form

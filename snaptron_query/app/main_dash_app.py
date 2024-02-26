@@ -4,9 +4,7 @@ import pandas as pd
 from dash import Dash, html, dcc, Input, Output
 from dash.exceptions import PreventUpdate
 
-from snaptron_query.app import graphs
-from snaptron_query.app import layout
-from snaptron_query.app import global_strings
+from snaptron_query.app import graphs, layout, global_strings
 
 # Initialize the app
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
@@ -31,11 +29,11 @@ app.layout = dbc.Container(
         dmc.Space(h=30),
         layout.get_tabs(),
 
-
+        # a space for log content if any
         dmc.Space(h=30),
         html.Div(id="id-log-content"),
     ],
-    fluid=True,  # this will make the page use full screen width
+    # fluid=True,  # this will make the page use full screen width
 )
 
 
@@ -54,8 +52,8 @@ def on_button_click_gen_results(n_clicks, compilation, inc, exc, datasets):
     if not datasets:
         datasets = dict(clicks=0, log='')
 
-    old_click = datasets['clicks']
-    if n_clicks <= old_click:
+    # compare old clicks with the new clicks
+    if n_clicks <= datasets.get('clicks', 0):
         raise PreventUpdate
     else:
         # ----------------------------------------
@@ -71,7 +69,7 @@ def on_button_click_gen_results(n_clicks, compilation, inc, exc, datasets):
         # url = 'https://snaptron.cs.jhu.edu/srav3h/snaptron?regions=chr19:4491836-4493702'
         # TODO: run the query and return result's data frame here
         # putting example data for now
-        data = {
+        data_dict = {
             'rail_id': [1, 2, 3, 4, 5],
             'external_id': [10, 20, 30, 40, 50],
             'study': ['AA', 'BB', 'CC', 'DD', 'EE'],
@@ -80,10 +78,9 @@ def on_button_click_gen_results(n_clicks, compilation, inc, exc, datasets):
             'total': [25, 30, 22, 28, 35],
             'psi': [15, 26, 34, 5, 17],
         }
-        results_df = pd.DataFrame(data)
+
         # ----------------------------------------
 
-        data_dict = results_df.to_dict(orient='list')
         # keep track of any log needed
         log_msg = f'Click= {n_clicks}-URL={url[0]}'
         datasets['log'] = log_msg
@@ -105,9 +102,7 @@ def update_table(data_from_store, current_style):
         raise PreventUpdate
 
     # convert data from storage to data frame and make sure the psi column is float type
-    df = pd.DataFrame(data_from_store)
-    df['psi'] = df['psi'].astype('float')
-    row_data = df.to_dict("records")
+    row_data = pd.DataFrame(data_from_store).astype({'psi': float}).to_dict('records')
 
     # Set the columnDefs for the ag-grid
     column_defs = graphs.get_junction_query_column_def()
@@ -117,7 +112,7 @@ def update_table(data_from_store, current_style):
     current_style['display'] = 'block'
 
     # parentheses must be here, dash does not like it without it
-    return (row_data, column_defs, current_style)  # grid
+    return row_data, column_defs, current_style  # grid
 
 
 @app.callback(
