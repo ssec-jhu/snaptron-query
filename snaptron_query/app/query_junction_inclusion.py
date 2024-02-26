@@ -4,8 +4,7 @@ from snaptron_query.app import global_strings
 
 
 def read_srav3h():
-    df_srav3h = pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
-                            usecols=global_strings.srav3h_meta_data_required_list)
+    df_srav3h = pd.read_csv('data/samples_SRAv3h.tsv', sep='\t', usecols=global_strings.srav3h_meta_data_required_list)
     # reset the index on rail id for faster lookups
     df_srav3h = df_srav3h.set_index(global_strings.snaptron_col_rail_id)
     return df_srav3h
@@ -18,12 +17,9 @@ def read_meta_data_file():
     return df_srav3h
 
 
-"""
-    Module that processes the junction inclusion query given the dataframe output from snaptron
-"""
-
-
 class JunctionInclusionQueryManager:
+    """Module that processes the junction inclusion query given the dataframe output from snaptron"""
+
     def __init__(self,
                  exclusion_start: int,
                  exclusion_end: int,
@@ -37,11 +33,25 @@ class JunctionInclusionQueryManager:
         self.rail_id_dictionary = dict()
         return
 
+    @staticmethod
+    def read_srav3h():
+        df_srav3h = pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
+                                usecols=global_strings.srav3h_meta_data_required_list)
+        # reset the index on rail id for faster lookups
+        df_srav3h = df_srav3h.set_index(global_strings.snaptron_col_rail_id)
+        return df_srav3h
+
+    @staticmethod
+    def read_meta_data_file():
+        df_srav3h = read_srav3h()
+
+        # TODO: add the rest of the meta data files here as they become available
+
+        return df_srav3h
+
     def __gather_rail_id_and_counts(self, samples, mark_in_or_ex):
-        """
-            Given the samples extracted for the junction,
-            extract the rail id and count info from the data.
-            If the sample is from an inclusion junction, mark it.
+        """Given the samples extracted for the junction,extract the rail id and count info from the data.If the
+        sample is from an inclusion junction, mark it.
         """
         # samples  usually has 1 row, but just in case
         # I am putting it in a for loop
@@ -65,13 +75,12 @@ class JunctionInclusionQueryManager:
                         self.rail_id_dictionary[rail_id] = [dict_value]
 
     def __gather_rail_id_meta_data(self, df_meta_data, rail_id_meta_data_list, rail_id):
-        """
-            Given the metadata for the compilation and the rail ids,
-            function extracts the related metadata for rail ids
+        """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
+        rail ids
         """
         # look up the rail id and extract the information
         try:
-            meta_data_series = df_meta_data.loc[int(rail_id)]  # NEED to cast to int or it won't work!
+            meta_data_series = df_meta_data.loc[int(rail_id)]  # NEED to cast to int, or it won't work!
 
             # TODO: move forward only if the rail id was found, throw exception otherwise,
 
@@ -109,9 +118,8 @@ class JunctionInclusionQueryManager:
         return rail_id_meta_data_list
 
     def run_junction_inclusion_query(self, df, df_meta_data):
-        """
-            Given the snaptron interface results, this function calculates the Percent Spliced In  (PSI)
-            given the inclusion junction and the exclusion junction
+        """Given the snaptron interface results, this function calculates the Percent Spliced In (PSI)
+        given the inclusion junction and the exclusion junction
         """
         # TODO: GLOBAL: move all strings into a strings file
         exc_junctions_df = df.loc[(df['start'] == self.exclusion_start) & (df['end'] == self.exclusion_end)]
