@@ -4,8 +4,9 @@ import pandas as pd
 from dash import Dash, html, dcc, Input, Output
 from dash.exceptions import PreventUpdate
 
-
-from snaptron_query.app import graphs, layout, global_strings
+from snaptron_query.app import graphs, layout, global_strings, exceptions
+from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager
+from snaptron_query.app.snaptron_client import SnaptronClientManager
 
 # Initialize the app
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
@@ -15,7 +16,8 @@ app = Dash(__name__,
                                  dbc_css,
                                  ])
 
-df_srav3h = jiq.read_meta_data_file()
+# Meta data loaded in global space
+df_srav3h = JunctionInclusionQueryManager.read_meta_data_file()
 
 # this is the main layout of the page with all tabs
 app.layout = dbc.Container(
@@ -25,7 +27,7 @@ app.layout = dbc.Container(
         dcc.Store(id="id-store-info"),
         dcc.Store(id="id-store-jiq-df"),
 
-        # navbar,# Top row with titles and all
+        # navbar, top row with titles and all
         layout.get_navbar_top(),
 
         # Next row is are the tabs and their content
@@ -61,56 +63,61 @@ def on_button_click_gen_results(n_clicks, compilation, inc, exc, datasets):
         raise PreventUpdate
     else:
         try:
-            # ----------------------------------------
-            #       Work In Progress Here
-            # ----------------------------------------
-            host = 'https://snaptron.cs.jhu.edu'
-            query_type_string = 'snaptron'  # vs 'genes' for gene expression
-            (inc_chr, inc_coordinates) = inc.split(':')
-            (exc_chr, exc_coordinates) = exc.split(':')
-            # chromosome numbers must match
-            if inc_chr != exc_chr:
-                raise PreventUpdate
+            if compilation and inc and exc:
+                # verify coordinates
+                if (not SnaptronClientManager.verify_coordinates(inc) or
+                        not SnaptronClientManager.verify_coordinates(exc)):
+                    raise exceptions.BadCoordinates
 
-            url = f'{host}/{compilation}/{query_type_string}?regions={exc}'
-            url = 'https://snaptron.cs.jhu.edu/srav3h/snaptron?regions=chr19:4491836-4493702'
-            # RUN the URL and get results back from SNAPTRON
-            sqm = SnaptronClientManager(url)
-            df = sqm.get_query_results_dataframe()
-            # make sure you get results back
-            if df.shape[0] == 0:
-                raise exceptions.BadURL
+                # make sure chromosome numbers match
+                (exc_chr, exc_coordinates) = exc.split(':')
+                (inc_chr, inc_coordinates) = inc.split(':')
+                if inc_chr != exc_chr:
+                    raise exceptions.BadCoordinates
 
-            # Select the meta data that must be used
-            # TODO: add the rest of the meta data as PI provides list
-            if compilation == global_strings.compilation_names[0]:
-                df_meta_data = df_srav3h
+                # RUN the URL and get results back from SNAPTRON
+                sqm = SnaptronClientManager()
+                sqm.create_junction_inclusion_url(compilation, exc)
+                df = sqm.get_query_results_dataframe()
+
+                # make sure you get results back
+                if df.shape[0] == 0:
+                    raise exceptions.EmptyResponse
+
+                # Select the meta data that must be used
+                # TODO: add the rest of the meta data as PI provides list
+                if compilation == global_strings.compilation_names[0]:
+                    df_meta_data = df_srav3h
+                else:
+                    raise PreventUpdate
+
+                # Set upt the JIQ manager then run the Junction Inclusion Query
+                (exc_start, exc_end) = exc_coordinates.split('-')
+                (inc_start, inc_end) = inc_coordinates.split('-')
+                jqm = JunctionInclusionQueryManager(int(exc_start), int(exc_end), int(inc_start), int(inc_end))
+                results_df = jqm.run_junction_inclusion_query(df, df_meta_data)
+
+                table_data = results_df.to_dict()
             else:
-                raise PreventUpdate
+                raise exceptions.MissingUserInputs
 
-            # Set upt the JIQ manager then run the Junction Inclusion Query
-            (exc_start, exc_end) = exc_coordinates.split('-')
-            (inc_start, inc_end) = inc_coordinates.split('-')
-            jqm = jiq.JunctionInclusionQueryManager(int(exc_start), int(exc_end), int(inc_start), int(inc_end))
-            results_df = jqm.run_junction_inclusion_query(df, df_meta_data)
-
+        # TODO: setup UI for error messages
         except exceptions.BadURL:
-            # TODO: setup UI for error messages
             print("URL was bad")
             raise PreventUpdate
         except exceptions.EmptyResponse:
-            # TODO: setup UI for error messages
             print("URL was correct but server returned empty response")
             raise PreventUpdate
-
-        # ----------------------------------------
+        except exceptions.MissingUserInputs or exceptions.BadCoordinates:
+            print("Some user input error")
+            raise PreventUpdate
 
         # keep track of any log needed
-        log_msg = f'Click= {n_clicks}-URL={url[0]}'
+        log_msg = f'Click= {n_clicks}-URL={sqm.get_url()}'
         datasets['log'] = log_msg
         datasets['clicks'] = n_clicks
 
-    return datasets, data_dict
+    return datasets, table_data
 
 
 @app.callback(
