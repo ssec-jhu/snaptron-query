@@ -1,7 +1,4 @@
-"""
-    This file includes the general layout inside the tabs
-
-"""
+"""This file includes the general layout inside the tabs"""
 
 import dash_bootstrap_components as dbc
 from dash import html
@@ -10,9 +7,7 @@ from snaptron_query.app import global_strings
 
 
 def get_navbar_top():
-    """
-        This is the component at the top of the page. It can be
-    """
+    """This is the component at the top of the page."""
     return html.Div(
         dbc.Container(
             [
@@ -27,12 +22,7 @@ def get_navbar_top():
 
 
 def get_tabs():
-    """
-        This layout puts the user queries in horizontal tab format.
-        Style: Bootstrap
-        Pros: gives the form layout more room
-        Cons: The aesthetics
-    """
+    """This defines the tab layout."""
     tabs = dbc.Tabs(
         [
             # Junction Inclusion Query Tab

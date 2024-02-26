@@ -1,6 +1,4 @@
-"""
-    This file includes components related to the junction inclusion query
-"""
+"""This file includes components related to the junction inclusion query"""
 
 import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
@@ -12,14 +10,12 @@ from snaptron_query.app import global_strings
 
 
 def get_dropdown_compilation():
-    """
-        Wrapper function to retrieve the dropdown component
-    """
+    """Wrapper function to retrieve the dropdown component"""
     dropdown = html.Div(
         [
             dbc.Label(global_strings.drop_compilation, className='fw-bold'),
             dcc.Dropdown(
-                options = global_strings.compilation_names_dict,
+                options=global_strings.compilation_names_dict,
                 id='id-input-compilation',
             ),
         ],
@@ -29,9 +25,7 @@ def get_dropdown_compilation():
 
 
 def get_button_add_junction():
-    """
-        Wrapper function to retrieve the multi junction component
-    """
+    """Wrapper function to retrieve the multi junction component"""
     # search here for icon: https://icon-sets.iconify.design/
     return dbc.Button(
         id='id-button-add-more-junctions',
@@ -43,9 +37,7 @@ def get_button_add_junction():
 
 
 def get_button_generate_results():
-    """
-        Wrapper function to retrieve the button component
-    """
+    """Wrapper function to retrieve the button component"""
     return dbc.Button(
         global_strings.button_run,
         n_clicks=0,
@@ -56,9 +48,7 @@ def get_button_generate_results():
 
 
 def get_input(input_placeholder, input_id):
-    """
-        Wrapper function to retrieve the texted boxes used in the JIQ query based on the style only
-    """
+    """Wrapper function to retrieve the texted boxes used in the JIQ query based on the style only"""
     return dbc.Input(
         id=input_id,
         placeholder=input_placeholder,
@@ -67,9 +57,7 @@ def get_input(input_placeholder, input_id):
     )
 
 
-"""
-    Wrapper functions to dynamically create input textbox components given their id and style
-"""
+"""Wrapper functions to dynamically create input textbox components given their id and style"""
 
 
 def get_input_inc_junction():
@@ -80,15 +68,11 @@ def get_input_exc_junction():
     return get_input(global_strings.input_exc_placeholder, 'id-input-exc-junc')
 
 
-"""
-    Functions Below: Wrapper functions to to dynamically create text components given their string, and style
-"""
+"""Functions Below: Wrapper functions to to dynamically create text components given their string, and style"""
 
 
 def get_text(component_style, string):
-    """
-        Wrapper function to retrieve the text used in the JIQ query based on the style only
-    """
+    """Wrapper function to retrieve the text used in the JIQ query based on the style only"""
     if component_style == 'dmc':
         return dmc.Text(string, weight=500, size="sm")  # 500=semi bold
     elif component_style == 'dbc':
@@ -133,11 +117,13 @@ def get_switch_log_psi_histogram():
         label=global_strings.switch_log,
     )
 
+
 def get_switch_log_psi_box_plot():
     return dbc.Switch(
         id='id-switch-log-psi-box_plot',
         label=global_strings.switch_log,
     )
+
 
 def get_switch_lock_data_with_table():
     return html.Div(

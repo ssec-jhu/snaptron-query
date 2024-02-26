@@ -1,20 +1,15 @@
-"""
-    This file includes the graph components used in the queries.
-    Functions are wrappers around px chart components.
-"""
+"""This file includes the graph components used in the queries."""
 
 import plotly.express as px
 from snaptron_query.app import global_strings
 
 
 def get_histogram(df):
-    """
-        Wrapper for plotly express histogram given a df
-        Wrapping in a function for clarity
+    """Wrapper for plotly express histogram given a df - for clarity
 
-        fig.update traces using below
-        https://plotly.com/python/reference/histogram/
-        https://plotly.com/python/histograms/
+    fig.update traces using below
+    https://plotly.com/python/reference/histogram/
+    https://plotly.com/python/histograms/
     """
     fig = px.histogram(df,
                        x=global_strings.table_jiq_col_psi,
@@ -26,13 +21,11 @@ def get_histogram(df):
 
 
 def get_box_plot(df):
-    """
-        Wrapper for plotly express box plot given a df
-        Wrapping in a function for clarity
+    """Wrapper for plotly express box plot given a df
 
-        https://plotly.com/python/box-plots/
-        https://plotly.com/python-api-reference/generated/plotly.express.box
-        https://plotly.com/python/reference/box/
+    https://plotly.com/python/box-plots/
+    https://plotly.com/python-api-reference/generated/plotly.express.box
+    https://plotly.com/python/reference/box/
     """
     fig = px.box(df,
                  y=global_strings.table_jiq_col_psi,
@@ -49,11 +42,9 @@ def get_box_plot(df):
 
 
 def get_junction_query_column_def():
-    """
-        Wrapper for ag-grid column definitions and their individual style
-        Wrapping in a function for clarity
-    """
-    column_defs = [
+    """Wrapper for ag-grid column definitions and their individual style"""
+
+    return [
         {"field": 'rail_id', "headerName": "Rail ID", "filter": "agNumberColumnFilter", },
         {"field": 'external_id', "headerName": "External ID"},
         {"field": 'study', "headerName": "Study"},
@@ -62,4 +53,3 @@ def get_junction_query_column_def():
         {"field": 'total', "headerName": "Total Count", "filter": "agNumberColumnFilter", },
         {"field": 'psi', "headerName": "PSI", "filter": "agNumberColumnFilter", 'initialSort': 'desc'},
     ]
-    return column_defs
