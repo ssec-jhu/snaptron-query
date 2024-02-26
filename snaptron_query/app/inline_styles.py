@@ -1,6 +1,4 @@
-"""
-    This file provides inline custom styles for some of the dash components
-"""
+"""This file provides inline custom styles for some of the dash components"""
 
 # --------------------
 #       USE FOR DEBUGGING LAYOUT
