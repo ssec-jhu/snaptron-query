@@ -24,7 +24,6 @@ tab_border_color = '3px solid var(--bs-success-border-subtle)'  # '3px solid #e3
 tab_background_color = 'var(--bs-light-bg-subtle)'  # '#f9f9f9' , 'var(--bs-light-bg-subtle)'
 
 horizontal_tab = {
-
     'padding': '10px 20px',
     'borderRadius': '5px 5px 0 0px',
     'cursor': 'pointer',

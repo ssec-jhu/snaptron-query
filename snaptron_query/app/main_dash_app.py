@@ -33,6 +33,7 @@ app.layout = dbc.Container(
         dmc.Space(h=30),
         html.Div(id="id-log-content"),
     ],
+    # TODO: Keep this commented here, need to verify with PI rep to switch to full width or not
     # fluid=True,  # this will make the page use full screen width
 )
 
