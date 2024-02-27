@@ -97,7 +97,7 @@ def get_text_junction(component_style):
         return dmc.Text(string, weight=500, size="sm")
     elif component_style == 'dbc':
         return dbc.Label(string, className='text-primary me-1 sm')
-    elif component_style == 'dcc':
+    else:
         return html.Label(string)
 
 
