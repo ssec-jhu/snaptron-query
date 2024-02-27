@@ -17,6 +17,7 @@ app = Dash(__name__,
                                  ])
 
 # Meta data loaded in global space
+# TODO: read the rest of the meta data files here as they become availbale
 df_srav3h = JunctionInclusionQueryManager.read_meta_data_file()
 
 # this is the main layout of the page with all tabs
@@ -53,7 +54,7 @@ app.layout = dbc.Container(
     Input('id-store-info', 'data'),
     prevent_initial_call=True
 )
-def on_button_click_gen_results(n_clicks, compilation, inc, exc, datasets):
+def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclusion_interval, datasets):
     #  this function gets called with every input change, not just the button click
     if not datasets:
         datasets = dict(clicks=0, log='')
@@ -63,22 +64,22 @@ def on_button_click_gen_results(n_clicks, compilation, inc, exc, datasets):
         raise PreventUpdate
     else:
         try:
-            if compilation and inc and exc:
+            if compilation and inclusion_interval and exclusion_interval:
                 # verify coordinates
-                if (not SnaptronClientManager.verify_coordinates(inc) or
-                        not SnaptronClientManager.verify_coordinates(exc)):
+                if (not SnaptronClientManager.verify_coordinates(inclusion_interval) or
+                        not SnaptronClientManager.verify_coordinates(exclusion_interval)):
                     raise exceptions.BadCoordinates
 
                 # make sure chromosome numbers match
-                (exc_chr, exc_coordinates) = exc.split(':')
-                (inc_chr, inc_coordinates) = inc.split(':')
+                (exc_chr, exc_coordinates) = exclusion_interval.split(':')
+                (inc_chr, inc_coordinates) = inclusion_interval.split(':')
                 if inc_chr != exc_chr:
                     raise exceptions.BadCoordinates
 
                 # RUN the URL and get results back from SNAPTRON
-                sqm = SnaptronClientManager()
-                sqm.create_junction_inclusion_url(compilation, exc)
-                df = sqm.get_query_results_dataframe()
+                scm = SnaptronClientManager()
+                scm.create_junction_inclusion_url(compilation, exclusion_interval)
+                df = scm.get_query_results_dataframe()
 
                 # make sure you get results back
                 if df.shape[0] == 0:
@@ -113,7 +114,7 @@ def on_button_click_gen_results(n_clicks, compilation, inc, exc, datasets):
             raise PreventUpdate
 
         # keep track of any log needed
-        log_msg = f'Click= {n_clicks}-URL={sqm.get_url()}'
+        log_msg = f'Click= {n_clicks}-URL={scm.get_url()}'
         datasets['log'] = log_msg
         datasets['clicks'] = n_clicks
 
