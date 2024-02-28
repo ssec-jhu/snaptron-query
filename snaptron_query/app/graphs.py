@@ -67,10 +67,17 @@ def get_box_plot(df, log_psi_values, violin_overlay):
 def get_junction_query_column_def():
     """Wrapper for ag-grid column definitions and their individual style"""
 
+    # TODO: different compilation are going to have different headers
+    # this function needs to be dynamic
     return [
         {"field": 'rail_id', "headerName": "Rail ID", "filter": "agNumberColumnFilter", },
         {"field": 'external_id', "headerName": "External ID"},
         {"field": 'study', "headerName": "Study"},
+        {"field": 'study_title', "headerName": "Study Title"},
+        {"field": 'library_layout', "headerName": "Library"},
+        {"field": 'sample_description', "headerName": "Desc"},
+        {"field": 'sample_name', "headerName": "Name"},
+        {"field": 'sample_title', "headerName": "Title"},
         {"field": 'inc', "headerName": "Inclusion Count", "filter": "agNumberColumnFilter", },
         {"field": 'exc', "headerName": "Exclusion Count", "filter": "agNumberColumnFilter", },
         {"field": 'total', "headerName": "Total Count", "filter": "agNumberColumnFilter", },
