@@ -44,11 +44,17 @@ snaptron_col_external_id = 'external_id'
 snaptron_col_study = 'study'
 snaptron_col_study_title = 'study_title'
 snaptron_col_library_layout = 'library_layout'
+snaptron_col_sample_description = 'sample_description'
+snaptron_col_sample_name = 'sample_name'
+snaptron_col_sample_title = 'sample_title'
 srav3h_meta_data_required_list = [snaptron_col_rail_id,
                                   snaptron_col_external_id,
                                   snaptron_col_study,
                                   snaptron_col_study_title,
-                                  snaptron_col_library_layout
+                                  snaptron_col_library_layout,
+                                  snaptron_col_sample_description,
+                                  snaptron_col_sample_name,
+                                  snaptron_col_sample_title
                                   ]
 srav1m_meta_data_required_list = srav3h_meta_data_required_list  # SRA mouse and SRA human are similar
 

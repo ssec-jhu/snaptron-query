@@ -1,20 +1,6 @@
 import decimal
 import pandas as pd
-from snaptron_query.app import global_strings
-
-
-def read_srav3h():
-    df_srav3h = pd.read_csv('data/samples_SRAv3h.tsv', sep='\t', usecols=global_strings.srav3h_meta_data_required_list)
-    # reset the index on rail id for faster lookups
-    df_srav3h = df_srav3h.set_index(global_strings.snaptron_col_rail_id)
-    return df_srav3h
-
-
-def read_meta_data_file():
-    df_srav3h = read_srav3h()
-    # TODO: add the rest of the meta data files here as they become available
-
-    return df_srav3h
+from snaptron_query.app import global_strings, exceptions
 
 
 class JunctionInclusionQueryManager:
@@ -33,54 +19,43 @@ class JunctionInclusionQueryManager:
         self.rail_id_dictionary = dict()
         return
 
-    @staticmethod
-    def read_srav3h():
-        df_srav3h = pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
-                                usecols=global_strings.srav3h_meta_data_required_list)
-        # reset the index on rail id for faster lookups
-        df_srav3h = df_srav3h.set_index(global_strings.snaptron_col_rail_id)
-        return df_srav3h
+    def get_rail_id_dictionary(self):
+        return self.rail_id_dictionary
 
-    @staticmethod
-    def read_meta_data_file():
-        df_srav3h = read_srav3h()
-
-        # TODO: add the rest of the meta data files here as they become available
-
-        return df_srav3h
-
-    def __gather_rail_id_and_counts(self, samples, mark_in_or_ex):
+    def _gather_samples_rail_id_and_counts(self, samples, mark_in_or_ex):
         """Given the samples extracted for the junction,extract the rail id and count info from the data.If the
         sample is from an inclusion junction, mark it.
         """
-        # samples  usually has 1 row, but just in case
+        # samples usually has 1 row, but just in case
         # I am putting it in a for loop
         for junction_samples in samples:
             # samples are separated by commas
-            # then each sample is separated with a colon b=from its count
+            # then each sample is separated with a colon from its count
             js = junction_samples.split(',')
             for eachSample in js:
                 # each sample in snaptron is set as railID:count
                 if eachSample:
-                    rail_id_count = eachSample.split(':')  # (railId, count)
-                    rail_id = rail_id_count[0]
-                    count = rail_id_count[1]
-                    dict_value = {'count': count,
-                                  'inc': mark_in_or_ex}
+                    (rail_id, count) = eachSample.split(':')
 
-                    # keep the item in a  dictionary
+                    # cast the strings
+                    rail_id = int(rail_id)
+                    count = int(count)
+
+                    dict_value = {'count': int(count), 'inc': mark_in_or_ex}
+
+                    # keep the item in a dictionary
                     if rail_id in self.rail_id_dictionary:
                         self.rail_id_dictionary[rail_id].append(dict_value)
                     else:
                         self.rail_id_dictionary[rail_id] = [dict_value]
 
-    def __gather_rail_id_meta_data(self, df_meta_data, rail_id_meta_data_list, rail_id):
+    def _gather_rail_id_meta_data(self, df_meta_data, rail_id_meta_data_list, rail_id):
         """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
         rail ids
         """
         # look up the rail id and extract the information
         try:
-            meta_data_series = df_meta_data.loc[int(rail_id)]  # NEED to cast to int, or it won't work!
+            meta_data_series = df_meta_data.loc[int(rail_id)]  # make sure it is an int for lookup
 
             # TODO: move forward only if the rail id was found, throw exception otherwise,
 
@@ -117,13 +92,21 @@ class JunctionInclusionQueryManager:
 
         return rail_id_meta_data_list
 
+    @staticmethod
+    def _find_junction(df, start, end):
+        return df.loc[(df['start'] == start) & (df['end'] == end)]
+
     def run_junction_inclusion_query(self, df, df_meta_data):
         """Given the snaptron interface results, this function calculates the Percent Spliced In (PSI)
         given the inclusion junction and the exclusion junction
         """
-        # TODO: GLOBAL: move all strings into a strings file
-        exc_junctions_df = df.loc[(df['start'] == self.exclusion_start) & (df['end'] == self.exclusion_end)]
-        inc_junctions_df = df.loc[(df['start'] == self.inclusion_start) & (df['end'] == self.inclusion_end)]
+        # find the exclusion and inclusion junction rows
+        exc_junctions_df = self._find_junction(df, self.exclusion_start, self.exclusion_end)
+        inc_junctions_df = self._find_junction(df, self.inclusion_start, self.inclusion_end)
+
+        # if either one is empty the user has inputted wrong coordinates
+        if not exc_junctions_df.shape[0] or not inc_junctions_df.shape[0]:
+            raise exceptions.BadCoordinates
 
         # extract the 'sample' column form the row this is where all the samples and their count is
         exclusion_junction_samples = (exc_junctions_df['samples']).tolist()
@@ -131,8 +114,8 @@ class JunctionInclusionQueryManager:
 
         # Gather results in a dictionary. Samples that were extracted
         # as part of an inclusion junction are marked as 'true' and 'false' otherwise
-        self.__gather_rail_id_and_counts(exclusion_junction_samples, 'False')
-        self.__gather_rail_id_and_counts(inclusion_junction_samples, 'True')
+        self._gather_samples_rail_id_and_counts(exclusion_junction_samples, 'False')
+        self._gather_samples_rail_id_and_counts(inclusion_junction_samples, 'True')
 
         # TODO: GLOBAL: this function should be called in global space
         #  and its data frame passed in based on compilation. String should also be global
@@ -141,7 +124,7 @@ class JunctionInclusionQueryManager:
         # this list will gather all the rail ids and their meta data
         rail_id_data_list = []
         for rail_id in self.rail_id_dictionary:
-            rail_id_data_list = self.__gather_rail_id_meta_data(df_meta_data, rail_id_data_list, rail_id)
+            rail_id_data_list = self._gather_rail_id_meta_data(df_meta_data, rail_id_data_list, rail_id)
 
         # create a dataframe form the list
         # TODO: column here will be different based on compilation -> maybe make that  function,
