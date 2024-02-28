@@ -1,6 +1,6 @@
 import decimal
 import pandas as pd
-from snaptron_query.app import global_strings, exceptions
+from snaptron_query.app import exceptions
 
 
 class JunctionInclusionQueryManager:
@@ -17,6 +17,7 @@ class JunctionInclusionQueryManager:
         self.inclusion_start = inclusion_start
         self.inclusion_end = inclusion_end
         self.rail_id_dictionary = dict()
+        self.gathered_rail_id_meta_data_and_psi = []
         return
 
     def get_rail_id_dictionary(self):
@@ -29,8 +30,7 @@ class JunctionInclusionQueryManager:
         # samples usually has 1 row, but just in case
         # I am putting it in a for loop
         for junction_samples in samples:
-            # samples are separated by commas
-            # then each sample is separated with a colon from its count
+            # samples are separated by commas then each sample is separated with a colon from its count
             js = junction_samples.split(',')
             for eachSample in js:
                 # each sample in snaptron is set as railID:count
@@ -40,7 +40,6 @@ class JunctionInclusionQueryManager:
                     # cast the strings
                     rail_id = int(rail_id)
                     count = int(count)
-
                     dict_value = {'count': int(count), 'inc': mark_in_or_ex}
 
                     # keep the item in a dictionary
@@ -49,48 +48,55 @@ class JunctionInclusionQueryManager:
                     else:
                         self.rail_id_dictionary[rail_id] = [dict_value]
 
-    def _gather_rail_id_meta_data(self, df_meta_data, rail_id_meta_data_list, rail_id):
+    def _calculate_percent_spliced_in(self, rail_id):
+        # calculate Percent Spliced In
+        sample_counts = self.rail_id_dictionary[rail_id]
+        # make sure all values are 0
+        inclusion_count = exclusion_count = 0
+        psi = 0.0
+        for s in sample_counts:
+            inclusion_junction_type = s.get('inc')
+            if inclusion_junction_type == 'True':
+                inclusion_count = int(s.get('count'))
+            if inclusion_junction_type == 'False':
+                exclusion_count = int(s.get('count'))
+        total_count = inclusion_count + exclusion_count
+
+        # TODO: PSI calculation tolerance of 15, PI must verify?
+        if total_count > 0:
+            # calculate the percent spliced in
+            psi = round(((100 * decimal.Decimal(inclusion_count)) / decimal.Decimal(total_count)), 2)
+
+        return psi, inclusion_count, exclusion_count, total_count
+
+    def _gather_rail_id_meta_data(self, rail_id, df_meta_data):
         """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
         rail ids
         """
         # look up the rail id and extract the information
         try:
-            meta_data_series = df_meta_data.loc[int(rail_id)]  # make sure it is an int for lookup
+            # look up the rail id, make sure it is an int
+            # note: loc will return a data series not a frame
+            meta_data = (df_meta_data.loc[int(rail_id)]).to_dict()
 
-            # TODO: move forward only if the rail id was found, throw exception otherwise,
+            # calculate psi related values
+            (psi, inclusion_count, exclusion_count, total_count) = self._calculate_percent_spliced_in(rail_id)
 
-            # TODO: this data will be different for different compilations
-            # external_id, study, study_title = lookup_meta_data(meta_data_series)
-            external_id = meta_data_series['external_id']
-            study = meta_data_series['study']
-            study_title = meta_data_series['study_title']
+            # combine calculated values with the meta data
+            # TODO: for multi junction query the behavior may be different here
+            meta_data['rail_id'] = int(rail_id)
+            meta_data['inc'] = int(inclusion_count)
+            meta_data['exc'] = int(exclusion_count)
+            meta_data['total'] = int(total_count)
+            meta_data['psi'] = float(psi)
 
-            counts = self.rail_id_dictionary[rail_id]
-            inclusion_count = 0
-            exclusion_count = 0
-            psi = 0.0
-            for c in counts:
-                if c['inc'] == 'True':
-                    inclusion_count = int(c['count'])
-                if c['inc'] == 'False':
-                    exclusion_count = int(c['count'])
-            total_count = inclusion_count + exclusion_count
-
-            # TODO: PSI calculation tolerance of 15? original code had this, ut now with ag grid it can be removed
-            if total_count > 0:
-                # calculate the percent spliced in
-                psi = (100 * decimal.Decimal(inclusion_count)) / decimal.Decimal(total_count)
-                psi = round(psi, 2)
-
-                # TODO: append study_title as well, some bug here
-                data = f'{rail_id},{external_id},{study},{inclusion_count},{exclusion_count},{total_count},{psi}'
-                rail_id_meta_data_list.append(data)
+            # append to the rest of the data
+            self.gathered_rail_id_meta_data_and_psi.append(meta_data)
 
         except (KeyError, IndexError):
             # TODO: look into the rail ids that are not found in the meta data file.
+            # IT MUST BE IN THE META FILE
             print(f"{rail_id} not in meta data file.  Moving on to the next iteration.")
-
-        return rail_id_meta_data_list
 
     @staticmethod
     def _find_junction(df, start, end):
@@ -117,36 +123,11 @@ class JunctionInclusionQueryManager:
         self._gather_samples_rail_id_and_counts(exclusion_junction_samples, 'False')
         self._gather_samples_rail_id_and_counts(inclusion_junction_samples, 'True')
 
-        # TODO: GLOBAL: this function should be called in global space
-        #  and its data frame passed in based on compilation. String should also be global
-        # df_meta_data = read_meta_data_file('srav3h')
-
-        # this list will gather all the rail ids and their meta data
-        rail_id_data_list = []
+        # For each rail id found, gather its metadata and calculate PSI values
+        # this will populate self.gathered_rail_id_meta_data_and_psi
         for rail_id in self.rail_id_dictionary:
-            rail_id_data_list = self._gather_rail_id_meta_data(df_meta_data, rail_id_data_list, rail_id)
+            self._gather_rail_id_meta_data(rail_id, df_meta_data)
 
-        # create a dataframe form the list
-        # TODO: column here will be different based on compilation -> maybe make that  function,
-        # also used in gathering meta data
-        try:
-            split_data = [item.split(',') for item in rail_id_data_list]
-            df_final = pd.DataFrame(split_data,
-                                    columns=[global_strings.snaptron_col_rail_id,
-                                             global_strings.snaptron_col_external_id,
-                                             global_strings.snaptron_col_study,
-                                             'inc', 'exc', 'total', 'psi'])
-
-            # TODO: column names will change based on compilation here too
-            # convert the datatypes here so it's easy later
-            df_final[global_strings.snaptron_col_rail_id] = df_final[global_strings.snaptron_col_rail_id].astype('int')
-            df_final['inc'] = df_final['inc'].astype('int')
-            df_final['exc'] = df_final['exc'].astype('int')
-            df_final['total'] = df_final['total'].astype('int')
-            df_final['psi'] = df_final['psi'].astype('float')
-
-        except ValueError:
-            stop = 1
-            # TODO: do something if this is thrown
+        df_final = pd.DataFrame(self.gathered_rail_id_meta_data_and_psi)
 
         return df_final

@@ -12,19 +12,18 @@ from snaptron_query.app.snaptron_client import SnaptronClientManager
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 bs_cdn = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 app = Dash(__name__,
-           external_stylesheets=[dbc.themes.SANDSTONE,
-                                 dbc_css,
-                                 ])
+           external_stylesheets=[dbc.themes.SANDSTONE, dbc_css])
+
+
+def read_srav3h():
+    # TODO: read the rest of the meta data files here as they become available
+    # read the file and make sure index is set to the rail id for fast lookup
+    return (pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
+                        usecols=global_strings.srav3h_meta_data_required_list)).set_index(
+                        global_strings.snaptron_col_rail_id)
+
 
 # Meta data loaded in global space
-# TODO: read the rest of the meta data files here as they become availbale
-def read_srav3h():
-    df_srav3h = pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
-                            usecols=global_strings.srav3h_meta_data_required_list)
-    # reset the index on rail id for faster lookups
-    df_srav3h = df_srav3h.set_index(global_strings.snaptron_col_rail_id)
-    return df_srav3h
-
 df_srav3h = read_srav3h()
 
 # this is the main layout of the page with all tabs
@@ -141,7 +140,8 @@ def update_table(data_from_store, current_style):
         raise PreventUpdate
 
     # convert data from storage to data frame and make sure the psi column is float type
-    row_data = pd.DataFrame(data_from_store).astype({'psi': float}).to_dict('records')
+    # row_data = pd.DataFrame(data_from_store).astype({'psi': float}).to_dict('records')
+    row_data = pd.DataFrame(data_from_store).to_dict('records')
 
     # Set the columnDefs for the ag-grid
     column_defs = graphs.get_junction_query_column_def()
