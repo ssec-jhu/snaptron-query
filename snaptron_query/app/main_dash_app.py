@@ -18,7 +18,14 @@ app = Dash(__name__,
 
 # Meta data loaded in global space
 # TODO: read the rest of the meta data files here as they become availbale
-df_srav3h = JunctionInclusionQueryManager.read_meta_data_file()
+def read_srav3h():
+    df_srav3h = pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
+                            usecols=global_strings.srav3h_meta_data_required_list)
+    # reset the index on rail id for faster lookups
+    df_srav3h = df_srav3h.set_index(global_strings.snaptron_col_rail_id)
+    return df_srav3h
+
+df_srav3h = read_srav3h()
 
 # this is the main layout of the page with all tabs
 app.layout = dbc.Container(

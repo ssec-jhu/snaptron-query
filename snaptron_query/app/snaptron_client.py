@@ -16,7 +16,8 @@ class SnaptronClientManager:
     @staticmethod
     def verify_coordinates(coordinates):
         # TODO: this is a first step. More will be added as I get more info from PI
-        pattern = r'chr\d{0,2}:\d{0,9}-\d{0,9}$'
+        pattern = r'chr\d{1,2}:\d{1,9}-\d{1,9}$'
+        #pattern = r'([chrMXY\d]+):(\d+)-(\d+)$'
         if not re.match(pattern, (str(coordinates))):
             return False
 
@@ -39,7 +40,7 @@ class SnaptronClientManager:
         :return: the result of the snaptron web interface converted into a dataframe
         """
         if self._url:
-            resp = httpx.get(self._url)
+            resp = httpx.get(self._url.lower())
             if resp.status_code == 200:  # OK
                 data_bytes = resp.read()
                 if data_bytes:
