@@ -10,7 +10,19 @@ license = {file = "LICENSE"}
 
 requires-python = ">=3.11"
 dependencies = [
-    "fastapi[all]",
+    "dash",
+    "dash-ag-grid",
+    "dash-bootstrap-components",
+    "dash-bootstrap-templates",
+    "dash-core-components",
+    "dash-html-components",
+    "dash-iconify",
+    "dash-mantine-components",
+    "pandas",
+    "httpx",
+    "matplotlib",
+    "plotly",
+    "plotly-express",
 ]
 
 [project.optional-dependencies]
