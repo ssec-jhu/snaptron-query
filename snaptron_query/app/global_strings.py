@@ -69,3 +69,5 @@ table_jiq_col_inc = 'inc'
 table_jiq_col_exc = 'exc'
 table_jiq_col_total = 'total'
 table_jiq_col_psi = 'psi'
+
+temp_string='test'
