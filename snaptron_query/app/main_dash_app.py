@@ -19,7 +19,8 @@ def read_srav3h():
     # TODO: read the rest of the meta data files here as they become available
     # read the file and make sure index is set to the rail id for fast lookup
     return (pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
-                        usecols=global_strings.srav3h_meta_data_required_list)).set_index(
+                        usecols=global_strings.srav3h_meta_data_required_list,
+                        dtype={'sample_description': 'string'})).set_index(
                         global_strings.snaptron_col_rail_id)
 
 
@@ -104,7 +105,9 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
                 jqm = JunctionInclusionQueryManager(int(exc_start), int(exc_end), int(inc_start), int(inc_end))
                 results_df = jqm.run_junction_inclusion_query(df, df_meta_data)
 
-                table_data = results_df.to_dict()
+                # Performance Note: setting the orient to records so it stores lists of dictionaries
+                # allows the ag-grid to load data much faster
+                table_data = results_df.to_dict(orient='records')
             else:
                 raise exceptions.MissingUserInputs
 
@@ -139,9 +142,10 @@ def update_table(data_from_store, current_style):
     if not data_from_store:
         raise PreventUpdate
 
-    # convert data from storage to data frame and make sure the psi column is float type
-    # row_data = pd.DataFrame(data_from_store).astype({'psi': float}).to_dict('records')
-    row_data = pd.DataFrame(data_from_store).to_dict('records')
+    # Performance Note: keep comment here: this line of code was a bit slow. ag-grid accepts list of dicts so passing in
+    # the data from storage that is saved as list of dict saves times here.
+    # row_data = pd.DataFrame(data_from_store).to_dict('records') # SLOWER
+    row_data = data_from_store
 
     # Set the columnDefs for the ag-grid
     column_defs = graphs.get_junction_query_column_def()
@@ -176,7 +180,6 @@ def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_
     else:
         df = pd.DataFrame(row_data_from_table)
 
-    df[global_strings.table_jiq_col_psi] = df[global_strings.table_jiq_col_psi].astype('float')
     histogram = graphs.get_histogram(df)
     box_plot = graphs.get_box_plot(df, log_psi_values, violin_overlay)
     return histogram, box_plot
