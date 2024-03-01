@@ -42,36 +42,24 @@ box_plot_title = 'PSI Box Plot'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 snaptron_col_rail_id = 'rail_id'
 snaptron_col_external_id = 'external_id'
-snaptron_col_study = 'study'
-snaptron_col_study_title = 'study_title'
-snaptron_col_library_layout = 'library_layout'
-snaptron_col_sample_description = 'sample_description'
-snaptron_col_sample_name = 'sample_name'
-snaptron_col_sample_title = 'sample_title'
-srav3h_meta_data_required_list = [snaptron_col_rail_id,
-                                  snaptron_col_external_id,
-                                  snaptron_col_study,
-                                  snaptron_col_study_title,
-                                  snaptron_col_library_layout,
-                                  snaptron_col_sample_description,
-                                  snaptron_col_sample_name,
-                                  snaptron_col_sample_title
-                                  ]
+srav3h_meta_data_required_list = [snaptron_col_rail_id, snaptron_col_external_id,
+                                  'study', 'study_title','library_layout',
+                                  'sample_description', 'sample_name', 'sample_title']
+
 srav1m_meta_data_required_list = srav3h_meta_data_required_list  # SRA mouse and SRA human are similar
 
-tcgav2_meta_data_required_list = ["rail_id", "tcga_barcode", "study", "gdc_cases.project.name",
+tcgav2_meta_data_required_list = [snaptron_col_rail_id,
+                                  "tcga_barcode", "study", "gdc_cases.project.name",
                                   "gdc_cases.project.primary_site", "cgc_sample_sample_type",
                                   "gdc_state", "gdc_cases.demographic.race",
-                                  "gdc_cases.demographic.ethnicity",
-                                  "gdc_cases.diagnoses.tumor_stage",
+                                  "gdc_cases.demographic.ethnicity", "gdc_cases.diagnoses.tumor_stage",
                                   "gdc_cases.diagnoses.vital_status", "gdc_cases.samples.oct_embedded",
                                   "gdc_cases.samples.is_ffpe", "gdc_cases.samples.sample_type",
                                   "cgc_sample_country_of_sample_procurement", "cgc_case_tumor_status",
-                                  "cgc_drug_therapy_pharmaceutical_therapy_type", "cgc_follow_up_tumor_status"
-                                  ]
-gtexv2_meta_data_required_list = ["rail_id", "run_acc", "study", "SEX", "AGE", "SAMPID", "SMTS", "SMTSD"]
+                                  "cgc_drug_therapy_pharmaceutical_therapy_type", "cgc_follow_up_tumor_status"]
 
-# columns=['rail_id', 'external_id', 'study', 'inc', 'exc', 'total', 'psi'])
+gtexv2_meta_data_required_list = [snaptron_col_rail_id, "run_acc", "study", "SEX", "AGE", "SAMPID", "SMTS", "SMTSD"]
+
 table_jiq_col_inc = 'inc'
 table_jiq_col_exc = 'exc'
 table_jiq_col_total = 'total'

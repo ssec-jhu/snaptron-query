@@ -1,6 +1,11 @@
 import decimal
 import pandas as pd
-from snaptron_query.app import exceptions
+from snaptron_query.app import exceptions, global_strings as gs
+
+from enum import Enum
+class JunctionType(Enum):
+    EXCLUSION = 0
+    INCLUSION = 1
 
 
 class JunctionInclusionQueryManager:
@@ -16,16 +21,16 @@ class JunctionInclusionQueryManager:
         self.exclusion_end = exclusion_end
         self.inclusion_start = inclusion_start
         self.inclusion_end = inclusion_end
-        self.rail_id_dictionary = dict()
+        self.rail_id_dictionary = {}
         self.gathered_rail_id_meta_data_and_psi = []
         return
 
     def get_rail_id_dictionary(self):
         return self.rail_id_dictionary
 
-    def _gather_samples_rail_id_and_counts(self, samples, mark_in_or_ex):
+    def _gather_samples_rail_id_and_counts(self, samples, junction_type):
         """Given the samples extracted for the junction,extract the rail id and count info from the data.If the
-        sample is from an inclusion junction, mark it.
+        sample is from an inclusion junction, mark it as True
         """
         # samples usually has 1 row, but just in case
         # I am putting it in a for loop
@@ -40,7 +45,7 @@ class JunctionInclusionQueryManager:
                     # cast the strings
                     rail_id = int(rail_id)
                     count = int(count)
-                    dict_value = {'count': int(count), 'inc': mark_in_or_ex}
+                    dict_value = {'count': int(count), 'type': junction_type}
 
                     # keep the item in a dictionary
                     if rail_id in self.rail_id_dictionary:
@@ -55,11 +60,13 @@ class JunctionInclusionQueryManager:
         inclusion_count = exclusion_count = 0
         psi = 0.0
         for s in sample_counts:
-            inclusion_junction_type = s.get('inc')
-            if inclusion_junction_type == 'True':
+            inclusion_junction_type = s.get('type')
+            if inclusion_junction_type == JunctionType.INCLUSION:
                 inclusion_count = int(s.get('count'))
-            if inclusion_junction_type == 'False':
+            if inclusion_junction_type == JunctionType.EXCLUSION:
                 exclusion_count = int(s.get('count'))
+
+        # count totals
         total_count = inclusion_count + exclusion_count
 
         # TODO: PSI calculation tolerance of 15, PI must verify?
@@ -84,7 +91,7 @@ class JunctionInclusionQueryManager:
 
             # combine calculated values with the meta data
             # TODO: for multi junction query the behavior may be different here
-            meta_data['rail_id'] = int(rail_id)
+            meta_data[gs.snaptron_col_rail_id] = int(rail_id)
             meta_data['inc'] = int(inclusion_count)
             meta_data['exc'] = int(exclusion_count)
             meta_data['total'] = int(total_count)
@@ -95,8 +102,10 @@ class JunctionInclusionQueryManager:
 
         except (KeyError, IndexError):
             # TODO: look into the rail ids that are not found in the meta data file.
-            # IT MUST BE IN THE META FILE
-            print(f"{rail_id} not in meta data file.  Moving on to the next iteration.")
+            # TODO: IT MUST BE IN THE META FILE, is this a snaptron error? discuss with PI
+            # print(f"{rail_id} not in meta data file.  Moving on to the next iteration.")
+            # code must continue and not stop
+            pass
 
     @staticmethod
     def _find_junction(df, start, end):
@@ -118,10 +127,9 @@ class JunctionInclusionQueryManager:
         exclusion_junction_samples = (exc_junctions_df['samples']).tolist()
         inclusion_junction_samples = (inc_junctions_df['samples']).tolist()
 
-        # Gather results in a dictionary. Samples that were extracted
-        # as part of an inclusion junction are marked as 'true' and 'false' otherwise
-        self._gather_samples_rail_id_and_counts(exclusion_junction_samples, 'False')
-        self._gather_samples_rail_id_and_counts(inclusion_junction_samples, 'True')
+        # Gather results in a dictionary
+        self._gather_samples_rail_id_and_counts(exclusion_junction_samples, JunctionType.EXCLUSION)
+        self._gather_samples_rail_id_and_counts(inclusion_junction_samples, JunctionType.INCLUSION)
 
         # For each rail id found, gather its metadata and calculate PSI values
         # this will populate self.gathered_rail_id_meta_data_and_psi
