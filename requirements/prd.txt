@@ -9,6 +9,6 @@ dash-mantine-components==0.13.0a3
 pandas==2.1.4
 httpx==0.26.0
 matplotlib==3.8.2
-plotly==5.18.0
+plotly==5.19.0
 plotly-express==0.4.1
 numpy==1.26.3
