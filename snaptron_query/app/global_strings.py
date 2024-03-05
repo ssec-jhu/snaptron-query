@@ -37,6 +37,15 @@ histogram_title = 'PSI Histogram'
 boxplot_label = 'Rail ID'
 box_plot_title = 'PSI Box Plot'
 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+            Gene Expression Query 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+gene_id ='Gene ID'
+gene_coord = 'Gene Coordinates'
+geq_form_title = 'Gene Information'
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     Strings beyond this point are related to the snaptron interface
     DO NOT TOUCH if you don't know what you are doing

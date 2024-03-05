@@ -2,8 +2,8 @@
 
 import dash_bootstrap_components as dbc
 from dash import html
-from snaptron_query.app import layout_jiq
-from snaptron_query.app import global_strings
+from snaptron_query.app import layout_jiq,layout_geq, global_strings
+
 
 
 def get_navbar_top():
@@ -34,6 +34,7 @@ def get_tabs():
 
             # Gene Expression Query Tab
             dbc.Tab(
+                layout_geq.get_layout_gene_expression_query(),
                 label=global_strings.tab_geq,
                 tab_id="id-tab-horizontal-bootstrap-geq",
             ),

@@ -47,12 +47,13 @@ def get_button_generate_results():
     )
 
 
-def get_input(input_placeholder, input_id):
+def get_input(input_placeholder, input_id, disabled=False):
     """Wrapper function to retrieve the texted boxes used in the JIQ query based on the style only"""
     return dbc.Input(
         id=input_id,
         placeholder=input_placeholder,
         size="sm",
+        disabled=disabled
         # className="mr-5"
     )
 
