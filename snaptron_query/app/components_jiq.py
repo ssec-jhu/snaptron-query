@@ -120,8 +120,15 @@ def get_switch_log_psi_histogram():
 
 def get_switch_log_psi_box_plot():
     return dbc.Switch(
-        id='id-switch-log-psi-box_plot',
+        id='id-switch-log-psi-box-plot',
         label=global_strings.switch_log,
+    )
+
+
+def get_switch_violin_box_plot():
+    return dbc.Switch(
+        id='id-switch-violin-box-plot',
+        label=global_strings.switch_violin,
     )
 
 

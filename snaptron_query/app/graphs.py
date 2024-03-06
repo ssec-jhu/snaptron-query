@@ -20,21 +20,42 @@ def get_histogram(df):
     return fig
 
 
-def get_box_plot(df):
+def get_box_plot(df, log_psi_values, violin_overlay):
     """Wrapper for plotly express box plot given a df
 
     https://plotly.com/python/box-plots/
     https://plotly.com/python-api-reference/generated/plotly.express.box
     https://plotly.com/python/reference/box/
     """
-    fig = px.box(df,
-                 y=global_strings.table_jiq_col_psi,
-                 hover_data=[global_strings.snaptron_col_rail_id],
-                 labels={global_strings.snaptron_col_rail_id: global_strings.boxplot_label},
-                 # Request to not snap with table changes.
-                 # If provided, overrides auto-scaling on the y-axis in cartesian coordinates.
-                 range_y=[0, 110]
-                 )
+    import numpy as np
+    y_values = global_strings.table_jiq_col_psi
+    if log_psi_values:
+        y_values = np.log2(df[y_values])
+
+    if violin_overlay:
+        fig = px.violin(df, y=y_values, hover_data=[global_strings.snaptron_col_rail_id],
+                        labels={global_strings.snaptron_col_rail_id: global_strings.boxplot_label},
+                        box=True,
+                        points='all')  # show all points
+
+        fig.update_traces(jitter=0.1, pointpos=0, meanline_visible=True,
+                          line_color='royalblue', marker_color='darkblue')
+
+    else:
+        fig = px.box(df, y=y_values, hover_data=[global_strings.snaptron_col_rail_id],
+                     labels={global_strings.snaptron_col_rail_id: global_strings.boxplot_label},
+                     # Request to not snap with table changes.
+                     # If provided, overrides auto-scaling on the y-axis in cartesian coordinates.
+                     range_y=[0, 110],
+                     points='all')  # show all points
+
+        fig.update_traces(jitter=0.1, pointpos=0, boxmean=True,
+                          line_color='royalblue', marker_color='darkblue')
+
+
+    # update the y axis title if log switch is on
+    if log_psi_values:
+        fig.update_yaxes(title_text='Log₂(psi)')
 
     fig.update_layout(title=f'<b>{global_strings.box_plot_title}</b>', title_x=0.5)
 
