@@ -37,15 +37,15 @@ histogram_title = 'PSI Histogram'
 boxplot_label = 'Rail ID'
 box_plot_title = 'PSI Box Plot'
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             Gene Expression Query 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 geq_form_title = 'Gene Information'
+geq_query = 'Query Information'
+geq_normalized_info = 'Normalization Information'
 geq_gene_id = 'Gene ENSG ID'
 geq_gene_coord = 'Gene Coordinates'
 geq_normalized = 'Normalized GEX'
-geq_normalized_info = 'Normalization Information'
 geq_button_run = 'Calculate GEX'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
