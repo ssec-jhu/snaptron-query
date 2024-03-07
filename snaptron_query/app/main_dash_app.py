@@ -98,6 +98,7 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
                 # Performance Note: ag-grid will load much faster with a lists of dictionaries, so I am storing
                 # it as such. Once can convert a dataframe to dict with orient set to records for the ag-grid as well.
                 table_data = results_list_of_dict
+
             else:
                 raise exceptions.MissingUserInputs
 
@@ -178,6 +179,19 @@ def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_
     histogram = graphs.get_histogram(df)
     box_plot = graphs.get_box_plot(df, log_psi_values, violin_overlay)
     return histogram, box_plot
+
+
+@app.callback(
+    Output('id-input-gene-id-norm', 'disabled'),
+    Output('id-input-gene-coord-norm', 'disabled'),
+    Input('id-switch-normalize', 'value'),
+)
+def enable_normalization(normalize_value):
+    # if normalize_value is on, then the inputs for the normalization gene should be turned
+    # in other words disabled=False
+    norm_gene_id_enable = not normalize_value
+    norm_gene_coord_enable = not normalize_value
+    return norm_gene_id_enable, norm_gene_coord_enable
 
 
 # Run the app
