@@ -38,7 +38,8 @@ def get_box_plot(df, log_psi_values, violin_overlay):
                         box=True,
                         points='all')  # show all points
 
-        fig.update_traces(jitter=0.1, pointpos=0, meanline_visible=True,
+        # if you want to add the mean set meanline_visible=True
+        fig.update_traces(jitter=0.1, pointpos=0,
                           line_color='royalblue', marker_color='darkblue')
 
     else:
