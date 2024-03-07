@@ -47,6 +47,10 @@ geq_gene_id = 'Gene ENSG ID'
 geq_gene_coord = 'Gene Coordinates'
 geq_normalized = 'Normalized GEX'
 geq_button_run = 'Calculate GEX'
+geq_gene_coord_placeholder = 'ex: chr1:11012654-11025492'
+geq_gene_id_placeholder = 'ex: ENSG00000120948'
+geq_gene_coord_norm_placeholder = 'chr9:136862119-136866308'
+geq_gene_id_norm_placeholder = 'ex: ENSG00000107223'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     Strings beyond this point are related to the snaptron interface

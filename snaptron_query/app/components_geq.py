@@ -20,19 +20,19 @@ def get_text_gene_coordinates_norm(component_style):
 
 
 def get_input_gene_id():
-    return c_component.get_input("some place holder for the gene", 'id-input-gene-id')
+    return c_component.get_input(gs.geq_gene_id_placeholder, 'id-input-gene-id')
 
 
 def get_input_gene_id_norm():
-    return c_component.get_input("Gene ID placeholder", 'id-input-gene-id-norm', disabled='True')
+    return c_component.get_input(gs.geq_gene_id_norm_placeholder, 'id-input-gene-id-norm', disabled='True')
 
 
 def get_input_gene_coordinates():
-    return c_component.get_input("gene coord placeholder", 'id-input-gene-coord')
+    return c_component.get_input(gs.geq_gene_coord_placeholder, 'id-input-gene-coord')
 
 
 def get_input_gene_coordinates_norm():
-    return c_component.get_input("norm gene coord placeholder", 'id-input-gene-coord-norm', disabled='True')
+    return c_component.get_input(gs.geq_gene_coord_norm_placeholder, 'id-input-gene-coord-norm', disabled='True')
 
 
 def get_switch_normalize():
