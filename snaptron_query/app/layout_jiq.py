@@ -17,7 +17,7 @@ def get_jiq_form():
         dbc.Row(
             [
                 dbc.Col(
-                    c_components.get_dropdown_compilation(),
+                    c_components.get_dropdown_compilation('id-input-compilation-jiq'),
                     style={"border": styles.border_column},
                 ),
             ],

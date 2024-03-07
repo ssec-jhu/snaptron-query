@@ -53,7 +53,7 @@ app.layout = dbc.Container(
     Output('id-store-info', 'data'),
     Output('id-store-jiq-df', 'data'),
     Input('id-button-generate-results', 'n_clicks'),
-    Input(component_id="id-input-compilation", component_property="value"),
+    Input(component_id="id-input-compilation-jiq", component_property="value"),
     Input(component_id="id-input-inc-junc", component_property="value"),
     Input(component_id="id-input-exc-junc", component_property="value"),
     Input('id-store-info', 'data'),

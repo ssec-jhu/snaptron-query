@@ -13,7 +13,7 @@ def get_geq_form():
     """Wrapper function for the Gene Expression Query components."""
     return [
         dbc.Row(
-            [c_components.get_dropdown_compilation()],
+            [c_components.get_dropdown_compilation('id-input-compilation-geq')],
             className="g-5 form-control-sm",
             justify="start",
         ),

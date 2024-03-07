@@ -25,14 +25,14 @@ def get_input(input_placeholder, input_id, disabled=False):
     )
 
 
-def get_dropdown_compilation():
+def get_dropdown_compilation(component_id):
     """Wrapper function to retrieve the dropdown component"""
     dropdown = html.Div(
         [
             dbc.Label(gs.drop_compilation, className='fw-bold'),
             dcc.Dropdown(
                 options=gs.compilation_names_dict,
-                id='id-input-compilation',
+                id=component_id,
             ),
         ],
         className="dbc",
