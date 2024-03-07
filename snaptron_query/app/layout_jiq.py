@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 from dash import html, dcc
 
-from snaptron_query.app import components_jiq as components
+from snaptron_query.app import components as c_components, components_jiq as components
 from snaptron_query.app import global_strings
 from snaptron_query.app import inline_styles as styles
 
@@ -17,7 +17,7 @@ def get_jiq_form():
         dbc.Row(
             [
                 dbc.Col(
-                    components.get_dropdown_compilation(),
+                    c_components.get_dropdown_compilation(),
                     style={"border": styles.border_column},
                 ),
             ],

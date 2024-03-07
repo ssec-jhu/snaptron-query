@@ -24,7 +24,7 @@ switch_log = 'Log₂(y)'
 switch_violin = 'Violin Mode'
 switch_lock = 'Lock Table with Graphs'
 button_add_junction = 'Add Junction'
-button_run = 'Run Query'
+button_run = 'Calculate PSI'
 input_inc_placeholder = 'ex: chr19:4491836-4492014'
 input_inc_txt = 'Inclusion Junction'
 input_exc_placeholder = 'ex: chr19:4491836-4493702'
@@ -41,10 +41,12 @@ box_plot_title = 'PSI Box Plot'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             Gene Expression Query 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-gene_id ='Gene ID'
-gene_coord = 'Gene Coordinates'
 geq_form_title = 'Gene Information'
+geq_gene_id = 'Gene ENSG ID'
+geq_gene_coord = 'Gene Coordinates'
+geq_normalized = 'Normalized GEX'
+geq_normalized_info = 'Normalization Information'
+geq_button_run = 'Calculate GEX'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     Strings beyond this point are related to the snaptron interface

@@ -3,25 +3,11 @@
 import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
-from dash import html, dcc
+from dash import html
 from dash_iconify import DashIconify
 
+from snaptron_query.app import components as c_component
 from snaptron_query.app import global_strings
-
-
-def get_dropdown_compilation():
-    """Wrapper function to retrieve the dropdown component"""
-    dropdown = html.Div(
-        [
-            dbc.Label(global_strings.drop_compilation, className='fw-bold'),
-            dcc.Dropdown(
-                options=global_strings.compilation_names_dict,
-                id='id-input-compilation',
-            ),
-        ],
-        className="dbc",
-    )
-    return dropdown
 
 
 def get_button_add_junction():
@@ -47,26 +33,15 @@ def get_button_generate_results():
     )
 
 
-def get_input(input_placeholder, input_id, disabled=False):
-    """Wrapper function to retrieve the texted boxes used in the JIQ query based on the style only"""
-    return dbc.Input(
-        id=input_id,
-        placeholder=input_placeholder,
-        size="sm",
-        disabled=disabled
-        # className="mr-5"
-    )
-
-
 """Wrapper functions to dynamically create input textbox components given their id and style"""
 
 
 def get_input_inc_junction():
-    return get_input(global_strings.input_inc_placeholder, 'id-input-inc-junc')
+    return c_component.get_input(global_strings.input_inc_placeholder, 'id-input-inc-junc')
 
 
 def get_input_exc_junction():
-    return get_input(global_strings.input_exc_placeholder, 'id-input-exc-junc')
+    return c_component.get_input(global_strings.input_exc_placeholder, 'id-input-exc-junc')
 
 
 """Functions Below: Wrapper functions to to dynamically create text components given their string, and style"""
@@ -83,11 +58,11 @@ def get_text(component_style, string):
 
 
 def get_text_inclusion_junction(component_style):
-    return get_text(component_style, global_strings.input_inc_txt)
+    return c_component.get_text(component_style, global_strings.input_inc_txt)
 
 
 def get_text_exclusion_junction(component_style):
-    return get_text(component_style, global_strings.input_exc_txt)
+    return c_component.get_text(component_style, global_strings.input_exc_txt)
 
 
 def get_text_junction(component_style):
