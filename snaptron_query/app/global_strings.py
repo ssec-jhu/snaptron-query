@@ -5,12 +5,16 @@ tab_geq = "Gene Expression Query"
 
 """Strings used in the Junction Inclusion Query Form"""
 
-compilation_names = ['SRAv3h', 'GTEXv2', 'TCGAv2', 'SRAv1m']
+compilation_srav3h = 'SRAv3h'
+compilation_gtexv2 = 'GTEXv2'
+compilation_tcgav2 = 'TCGAv2'
+compilation_srav1m = 'SRAv1m'
+compilation_names = [compilation_srav3h, compilation_gtexv2, compilation_tcgav2, compilation_srav1m]
 compilation_names_dict = {
-    compilation_names[0]: f'human {compilation_names[0]}',
-    compilation_names[1]: f'human {compilation_names[1]}',
-    compilation_names[2]: f'human {compilation_names[2]}',
-    compilation_names[3]: f'mouse {compilation_names[3]}',
+    compilation_names[0]: f'human ({compilation_names[0]})',
+    compilation_names[1]: f'human ({compilation_names[1]})',
+    compilation_names[2]: f'human ({compilation_names[2]})',
+    compilation_names[3]: f'mouse ({compilation_names[3]})',
 }
 drop_compilation = 'Select the organism of interest'
 drop_compilation_placeholder = 'Select a compilation'
@@ -43,7 +47,7 @@ box_plot_title = 'PSI Box Plot'
 snaptron_col_rail_id = 'rail_id'
 snaptron_col_external_id = 'external_id'
 srav3h_meta_data_required_list = [snaptron_col_rail_id, snaptron_col_external_id,
-                                  'study', 'study_title','library_layout',
+                                  'study', 'study_title', 'library_layout',
                                   'sample_description', 'sample_name', 'sample_title']
 
 srav1m_meta_data_required_list = srav3h_meta_data_required_list  # SRA mouse and SRA human are similar

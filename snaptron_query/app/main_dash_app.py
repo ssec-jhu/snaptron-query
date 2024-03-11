@@ -4,9 +4,8 @@ import pandas as pd
 from dash import Dash, html, dcc, Input, Output
 from dash.exceptions import PreventUpdate
 
-from snaptron_query.app import graphs, layout, global_strings, exceptions
+from snaptron_query.app import graphs, layout, global_strings, exceptions, snaptron_client as sc
 from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager
-from snaptron_query.app.snaptron_client import SnaptronClientManager
 
 # Initialize the app
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
@@ -18,10 +17,9 @@ app = Dash(__name__,
 def read_srav3h():
     # TODO: read the rest of the meta data files here as they become available
     # read the file and make sure index is set to the rail id for fast lookup
-    return (pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
-                        usecols=global_strings.srav3h_meta_data_required_list,
-                        dtype={'sample_description': 'string'})).set_index(
-                        global_strings.snaptron_col_rail_id)
+    return pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
+                       usecols=global_strings.srav3h_meta_data_required_list,
+                       dtype={'sample_description': 'string'}).set_index(global_strings.snaptron_col_rail_id)
 
 
 # Meta data loaded in global space
@@ -72,42 +70,34 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
     else:
         try:
             if compilation and inclusion_interval and exclusion_interval:
-                # verify coordinates
-                if (not SnaptronClientManager.verify_coordinates(inclusion_interval) or
-                        not SnaptronClientManager.verify_coordinates(exclusion_interval)):
-                    raise exceptions.BadCoordinates
 
                 # make sure chromosome numbers match
-                (exc_chr, exc_coordinates) = exclusion_interval.split(':')
-                (inc_chr, inc_coordinates) = inclusion_interval.split(':')
-                if inc_chr != exc_chr:
-                    raise exceptions.BadCoordinates
+                # if there is any error in the intervals, an exception will be thrown
+                (exc_chr, exc_start, exc_end), (inc_chr, inc_start, inc_end) = (
+                    sc.split_and_verify_coordinates(exclusion_interval, inclusion_interval))
 
                 # RUN the URL and get results back from SNAPTRON
-                scm = SnaptronClientManager()
-                scm.create_junction_inclusion_url(compilation, exclusion_interval)
-                df = scm.get_query_results_dataframe()
-
+                df = sc.get_snaptron_query_results_df(compilation=compilation,
+                                                      junction_coordinates=exclusion_interval,
+                                                      query_mode='snaptron')
                 # make sure you get results back
-                if df.shape[0] == 0:
+                if df.empty:
                     raise exceptions.EmptyResponse
 
                 # Select the meta data that must be used
                 # TODO: add the rest of the meta data as PI provides list
-                if compilation == global_strings.compilation_names[0]:
+                if compilation == global_strings.compilation_srav3h:
                     df_meta_data = df_srav3h
                 else:
                     raise PreventUpdate
 
-                # Set upt the JIQ manager then run the Junction Inclusion Query
-                (exc_start, exc_end) = exc_coordinates.split('-')
-                (inc_start, inc_end) = inc_coordinates.split('-')
-                jqm = JunctionInclusionQueryManager(int(exc_start), int(exc_end), int(inc_start), int(inc_end))
-                results_df = jqm.run_junction_inclusion_query(df, df_meta_data)
+                # # Set upt the JIQ manager then run the Junction Inclusion Query
+                jqm = JunctionInclusionQueryManager(exc_start, exc_end, inc_start, inc_end)
+                results_list_of_dict = jqm.run_junction_inclusion_query(df, df_meta_data)
 
-                # Performance Note: setting the orient to records so it stores lists of dictionaries
-                # allows the ag-grid to load data much faster
-                table_data = results_df.to_dict(orient='records')
+                # Performance Note: ag-grid will load much faster with a lists of dictionaries, so I am storing
+                # it as such. Once can convert a dataframe to dict with orient set to records for the ag-grid as well.
+                table_data = results_list_of_dict
             else:
                 raise exceptions.MissingUserInputs
 
@@ -121,9 +111,12 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
         except exceptions.MissingUserInputs or exceptions.BadCoordinates:
             print("Some user input error")
             raise PreventUpdate
+        except exceptions.EmptyJunction:
+            print("Requested Junction has no sample data")
+            raise PreventUpdate
 
         # keep track of any log needed
-        log_msg = f'Click= {n_clicks}-URL={scm.get_url()}'
+        log_msg = f'Click= {n_clicks}'
         datasets['log'] = log_msg
         datasets['clicks'] = n_clicks
 

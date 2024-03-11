@@ -1,189 +1,116 @@
-from snaptron_query.app import global_strings as gs
+import pytest
+
+from snaptron_query.app import global_strings as gs, snaptron_client as sc, exceptions
 from snaptron_query.app.query_junction_inclusion import JunctionType
+
 
 def test_jiq_rail_id_size(junction):
     rail_dict = junction.get_rail_id_dict()
     assert len(rail_dict) == 160578
 
 
-def test_jiq_lookup_rail_id_inclusion(junction):
-    test_rail = [992538, 996729]
-    test_count = [100, 96]
+@pytest.mark.parametrize('rail_id,count', [(992538, 100), (996729, 96)])
+def test_jiq_lookup_rail_id_inclusion(junction, rail_id, count):
     rail_dict = junction.get_rail_id_dict()
-    for i, r in enumerate(test_rail):
-        v_list = rail_dict.get(r)
-        assert len(v_list) == 1
-        assert (v_list[0])['count'] == test_count[i]
-        assert (v_list[0])['type'] == JunctionType.EXCLUSION
-
-
-def test_jiq_rail_id_in_both_junctions_1(junction):
-    rail_dict = junction.get_rail_id_dict()
-    v_list = rail_dict.get(1975952)
-    # has to have both junctions count
-    assert len(v_list) == 2
-    # check exclusion values
-    assert (v_list[0])['count'] == 86
+    v_list = rail_dict.get(rail_id)
+    assert len(v_list) == 1
+    assert (v_list[0])['count'] == count
     assert (v_list[0])['type'] == JunctionType.EXCLUSION
-    # check inclusion values
-    assert (v_list[1])['count'] == 1
+
+
+@pytest.mark.parametrize('rail_id,exc_count,inc_count', [(1001806, 34, 4), (100107, 15, 1), (100073, 7, 2),
+                                                         (100051, 35, 1), (100015, 14, 1), (100005, 31, 1),
+                                                         (1975952, 86, 1)])
+def test_jiq_rail_id_in_both_junctions(junction, rail_id, exc_count, inc_count):
+    rail_dict = junction.get_rail_id_dict()
+    v_list = rail_dict.get(rail_id)
+    assert (v_list[0])['count'] == exc_count
+    assert (v_list[0])['type'] == JunctionType.EXCLUSION
+    assert (v_list[1])['count'] == inc_count
     assert (v_list[1])['type'] == JunctionType.INCLUSION
 
-
-def test_jiq_rail_id_in_both_junctions_2(junction):
-    rail_dict = junction.get_rail_id_dict()
-    v_list = rail_dict.get(100005)
-    # has to have both junctions count
-    assert len(v_list) == 2
-    # check exclusion values
-    assert (v_list[0])['count'] == 31
-    assert (v_list[0])['type'] == JunctionType.EXCLUSION
-    # check inclusion values
-    assert (v_list[1])['count'] == 1
-    assert (v_list[1])['type'] == JunctionType.INCLUSION
-
-
-def test_jiq_rail_id_in_both_junctions_3(junction):
-    rail_dict = junction.get_rail_id_dict()
-    v_list = rail_dict.get(100015)
-    # has to have both junctions count
-    assert len(v_list) == 2
-    # check exclusion values
-    assert (v_list[0])['count'] == 14
-    assert (v_list[0])['type'] == JunctionType.EXCLUSION
-    # check inclusion values
-    assert (v_list[1])['count'] == 1
-    assert (v_list[1])['type'] == JunctionType.INCLUSION
-
-
-def test_jiq_rail_id_in_both_junctions_4(junction):
-    rail_dict = junction.get_rail_id_dict()
-    v_list = rail_dict.get(100051)
-    # has to have both junctions count
-    assert len(v_list) == 2
-    # check exclusion values
-    assert (v_list[0])['count'] == 35
-    assert (v_list[0])['type'] == JunctionType.EXCLUSION
-    # check inclusion values
-    assert (v_list[1])['count'] == 1
-    assert (v_list[1])['type'] == JunctionType.INCLUSION
-
-
-def test_jiq_rail_id_in_both_junctions_5(junction):
-    rail_dict = junction.get_rail_id_dict()
-    v_list = rail_dict.get(100073)
-    # has to have both junctions count
-    assert len(v_list) == 2
-    # check exclusion values
-    assert (v_list[0])['count'] == 7
-    assert (v_list[0])['type'] == JunctionType.EXCLUSION
-    # check inclusion values
-    assert (v_list[1])['count'] == 2
-    assert (v_list[1])['type'] == JunctionType.INCLUSION
-
-
-def test_jiq_rail_id_in_both_junctions_6(junction):
-    rail_dict = junction.get_rail_id_dict()
-    v_list = rail_dict.get(100107)
-    # has to have both junctions count
-    assert len(v_list) == 2
-    # check exclusion values
-    assert (v_list[0])['count'] == 15
-    assert (v_list[0])['type'] == JunctionType.EXCLUSION
-    # check inclusion values
-    assert (v_list[1])['count'] == 1
-    assert (v_list[1])['type'] == JunctionType.INCLUSION
-
-
-def test_jiq_rail_id_in_both_junctions_7(junction):
-    rail_dict = junction.get_rail_id_dict()
-    v_list = rail_dict.get(1001806)
-    # has to have both junctions count
-    assert len(v_list) == 2
-    # check exclusion values
-    assert (v_list[0])['count'] == 34
-    assert (v_list[0])['type'] == JunctionType.EXCLUSION
-    # check inclusion values
-    assert (v_list[1])['count'] == 4
-    assert (v_list[1])['type'] == JunctionType.INCLUSION
-
-
-# turn these two tests on when testing with full data locally
-# def test_jiq_results_size_data_count():
-#     assert(df_jiq_results.shape[0]== 160576)
-#     assert(df_jiq_results.shape[1] == 11)
 
 def test_jiq_results_size_cols(junction):
     assert junction.get_results().shape[1] == 11
 
 
-def test_jiq_results_1(junction):
-    s = junction.get_results().loc[1000010]
-    assert s[gs.snaptron_col_external_id] == 'SRR3743424'
-    assert s['inc'] == 0
-    assert s['exc'] == 11
-    assert s['psi'] == 0.0
+@pytest.mark.parametrize('rail_id,external_id,inc,exc,psi', [(1000010, 'SRR3743424', 0, 11, 0.0),
+                                                             (2171668, 'SRR5714918', 35, 0, 100.0),
+                                                             (988956, 'SRR5461171', 66, 102, 39.29),
+                                                             (1127039, 'SRR5398327', 4, 12, 25.0),
+                                                             (499887, 'SRR3469415', 9, 23, 28.12),
+                                                             (988942, 'SRR5461170', 65, 101, 39.16),
+                                                             (1641727, 'SRR8083867', 17, 55, 23.61),
+                                                             (1641757, 'SRR8083868', 12, 45, 21.05),
+                                                             (2109561, 'SRR6873183', 12, 34, 26.09)])
+def test_jiq_results(junction, rail_id, external_id, inc, exc, psi):
+    s = junction.get_results().loc[rail_id]
+    assert s[gs.snaptron_col_external_id] == external_id
+    assert s[gs.table_jiq_col_inc] == inc
+    assert s[gs.table_jiq_col_exc] == exc
+    assert s[gs.table_jiq_col_psi] == psi
 
 
-def test_jiq_results_2(junction):
-    s = junction.get_results().loc[2171668]
-    assert s[gs.snaptron_col_external_id] == 'SRR5714918'
-    assert s['inc'] == 35
-    assert s['exc'] == 0
-    assert s['psi'] == 100.0
+def test_split_coordinates():
+    (exc_chr, exc_A, exc_B), (inc_chr, inc_A, inc_B) = sc.split_genome_coordinates('chr19:5000-6000', 'chr19:4000-5000')
+    assert exc_chr == 'chr19'
+    assert inc_chr == 'chr19'
+    # make sure they are cast correctly
+    assert exc_A != '5000'
+    assert exc_A == 5000
+    assert exc_B != '6000'
+    assert exc_B == 6000
+    assert inc_A != '4000'
+    assert inc_A == 4000
+    assert inc_B != '5000'
+    assert inc_B == 5000
 
 
-def test_jiq_results_3(junction):
-    s = junction.get_results().loc[988956]
-    assert s[gs.snaptron_col_external_id] == 'SRR5461171'
-    assert s['inc'] == 66
-    assert s['exc'] == 102
-    assert s['psi'] == 39.29
+def test_verify_bad_coordinates_1():
+    # bad chromosome number
+    with pytest.raises(exceptions.BadCoordinates):
+        sc.verify_coordinates('chr50:5000-6000')
 
 
-def test_jiq_results_4(junction):
-    s = junction.get_results().loc[1127039]
-    assert s[gs.snaptron_col_external_id] == 'SRR5398327'
-    assert s['inc'] == 4
-    assert s['exc'] == 12
-    assert s['psi'] == 25.0
+def test_verify_bad_coordinates_digits2():
+    with pytest.raises(exceptions.BadCoordinates):
+        sc.verify_coordinates('chr:5000-6000')
 
 
-def test_jiq_results_5(junction):
-    s = junction.get_results().loc[499887]
-    assert s[gs.snaptron_col_external_id] == 'SRR3469415'
-    assert s['inc'] == 9
-    assert s['exc'] == 23
-    assert s['psi'] == 28.12
+def test_verify_bad_coordinates_random_string():
+    with pytest.raises(exceptions.BadCoordinates):
+        sc.verify_coordinates('some_random_string')
 
 
-def test_jiq_results_6(junction):
-    s = junction.get_results().loc[988942]
-    assert s[gs.snaptron_col_external_id] == 'SRR5461170'
-    assert s['inc'] == 65
-    assert s['exc'] == 101
-    assert s['psi'] == 39.16
+def test_verify_bad_coordinates_xy():
+    with pytest.raises(exceptions.BadCoordinates):
+        sc.verify_coordinates('chrXY:4000-5000')
 
 
-def test_jiq_results_7(junction):
-    s = junction.get_results().loc[1641727]
-    assert s[gs.snaptron_col_external_id] == 'SRR8083867'
-    assert s['inc'] == 17
-    assert s['exc'] == 55
-    assert s['psi'] == 23.61
+def test_split_and_verify():
+    (exc_chr, exc_A, exc_B), (inc_chr, inc_A, inc_B) = sc.split_and_verify_coordinates('chr3:5555-6666',
+                                                                                       'chr3:4000-5000')
+    assert exc_chr == 'chr3'
+    assert inc_chr == 'chr3'
+    # make sure they are cast correctly
+    assert exc_A != '5555'
+    assert exc_A == 5555
+    assert exc_B != '6666'
+    assert exc_B == 6666
+    assert inc_A != '4000'
+    assert inc_A == 4000
+    assert inc_B != '5000'
+    assert inc_B == 5000
 
 
-def test_jiq_results_8(junction):
-    s = junction.get_results().loc[1641757]
-    assert s[gs.snaptron_col_external_id] == 'SRR8083868'
-    assert s['inc'] == 12
-    assert s['exc'] == 45
-    assert s['psi'] == 21.05
+def test_split_and_verify_mismatch_chromosomes():
+    with pytest.raises(exceptions.BadCoordinates):
+        sc.split_and_verify_coordinates('chr19:5000-6000', 'chr29:4000-5000')
 
 
-def test_jiq_results_9(junction):
-    s = junction.get_results().loc[2109561]
-    assert s[gs.snaptron_col_external_id] == 'SRR6873183'
-    assert s['inc'] == 12
-    assert s['exc'] == 34
-    assert s['psi'] == 26.09
+@pytest.mark.parametrize('rail_id', [2171668, 988956, 1127039, 499887, 988942, 1641727, 1641757, 2109561])
+def test_jiq_psi_results_vs_shinyapp_website(junction, ground_truth_df, rail_id):
+    our_results = junction.get_results().loc[rail_id]
+    ground_truth = ground_truth_df.loc[rail_id]
+    assert our_results[gs.snaptron_col_external_id] == ground_truth[gs.snaptron_col_external_id]
+    assert our_results[gs.table_jiq_col_psi] == ground_truth[gs.table_jiq_col_psi]

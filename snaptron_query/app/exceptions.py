@@ -16,3 +16,8 @@ class BadCoordinates(Exception):
 class MissingUserInputs(Exception):
     """Raised when the user has missing inputs"""
     pass
+
+
+class EmptyJunction(Exception):
+    """Raised when one of the junctions is empty"""
+    pass
