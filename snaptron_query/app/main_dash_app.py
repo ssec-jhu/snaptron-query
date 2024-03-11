@@ -121,9 +121,12 @@ def update_table(data_from_store, current_style):
     Output('id-box-plot', 'figure'),
     Input('id-ag-grid', 'rowData'),
     Input('id-ag-grid', 'virtualRowData'),
-    Input('id-switch-lock-with-table', 'value')
+    Input('id-switch-lock-with-table', 'value'),
+    Input('id-switch-log-psi-box-plot', 'value'),
+    Input('id-switch-violin-box-plot', 'value')
 )
-def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_data_with_table):
+def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_data_with_table,
+                  log_psi_values,violin_overlay):
     """
         Given the table data as input, it will update the relative graphs
     """
@@ -137,7 +140,7 @@ def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_
 
     df[global_strings.table_jiq_col_psi] = df[global_strings.table_jiq_col_psi].astype('float')
     histogram = graphs.get_histogram(df)
-    box_plot = graphs.get_box_plot(df)
+    box_plot = graphs.get_box_plot(df, log_psi_values, violin_overlay)
     return histogram, box_plot
 
 
