@@ -135,9 +135,7 @@ def update_table(data_from_store, current_style):
     if not data_from_store:
         raise PreventUpdate
 
-    # Performance Note: keep comment here: this line of code was a bit slow. ag-grid accepts list of dicts so passing in
-    # the data from storage that is saved as list of dict saves times here.
-    # row_data = pd.DataFrame(data_from_store).to_dict('records') # SLOWER
+    # ag-grid accepts list of dicts so passing in the data from storage that is saved as list of dict saves times here.
     row_data = data_from_store
 
     # Set the columnDefs for the ag-grid
