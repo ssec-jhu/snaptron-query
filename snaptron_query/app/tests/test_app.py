@@ -66,25 +66,16 @@ def test_jiq_verify_coordinates(pair_a, pair_b, chr_a, chr_b, start_a, end_a, st
     assert B_end == end_b
 
 
-def test_verify_bad_coordinates_1():
-    # bad chromosome number
+@pytest.mark.parametrize('pair_a,pair_b', [('chr19:5000-6000', 'chr29:4000-5000')])
+def test_jiq_verify_coordinates_with_errors(pair_a, pair_b):
     with pytest.raises(exceptions.BadCoordinates):
-        sc.verify_coordinates('chr50:5000-6000')
+        sc.jiq_verify_coordinate_pairs(pair_a, pair_b)
 
 
-def test_verify_bad_coordinates_digits2():
+@pytest.mark.parametrize('coordinates', ["chr50:5000-6000", 'chr:5000-6000', 'some_random_string', 'chrXY:4000-5000'])
+def test_verify_bad_coordinates_with_errors(coordinates):
     with pytest.raises(exceptions.BadCoordinates):
-        sc.verify_coordinates('chr:5000-6000')
-
-
-def test_verify_bad_coordinates_random_string():
-    with pytest.raises(exceptions.BadCoordinates):
-        sc.verify_coordinates('some_random_string')
-
-
-def test_verify_bad_coordinates_xy():
-    with pytest.raises(exceptions.BadCoordinates):
-        sc.verify_coordinates('chrXY:4000-5000')
+        sc.verify_coordinates(coordinates)
 
 
 def test_split_and_verify_mismatch_chromosomes():
