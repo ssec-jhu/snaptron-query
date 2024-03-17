@@ -1,0 +1,72 @@
+import collections
+
+import pandas as pd
+
+from snaptron_query.app import exceptions, global_strings as gs, query_junction_inclusion as jiq
+
+
+class GeneExpressionQueryManager:
+    """Module that processes the junction inclusion query given the dataframe output from snaptron"""
+
+    def __init__(self, gene_id):
+        self._gene_id = gene_id
+        self.rail_id_dictionary = collections.defaultdict(int)
+        self.gathered_rail_id_meta_data_and_counts = []
+
+    def setup_normalization_data(self, gene_id, gene_coordinates):
+        # set up the normalization tabel
+        return
+
+    def _gather_samples_rail_id_and_counts(self, samples):
+        for gene_samples in samples:
+            # samples are separated by commas then each sample is separated with a colon from its count as railID:count
+            for each_sample in gene_samples.split(','):
+                if each_sample:
+                    (rail_id, count) = jiq.split_and_cast(each_sample)
+                    # keep the item in a defaultdict(list)
+                    #self.rail_id_dictionary[rail_id].append(count)
+                    self.rail_id_dictionary[rail_id] = count
+
+    def _gather_rail_id_meta_data(self, rail_id, df_meta_data):
+        """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
+        rail ids
+        """
+        # look up the rail id and extract the information
+        try:
+            # gather the metadata associated with this rail id
+            # note: loc will return a data series not a frame
+            meta_data = (df_meta_data.loc[rail_id]).to_dict()
+
+            # # TODO: for multi junction query the data may be different here
+            # # append the calculated results such as PSI and other counts
+            # (meta_data[gs.table_jiq_col_psi], meta_data[gs.table_jiq_col_inc], meta_data[gs.table_jiq_col_exc],
+            #  meta_data[gs.table_jiq_col_total]) = self._calculate_percent_spliced_in(rail_id)
+            meta_data[gs.table_geq_col_raw_count]  = self.rail_id_dictionary[rail_id]
+            # add the rail id information
+            meta_data[gs.snaptron_col_rail_id] = rail_id
+
+            # append to the rest of the data
+            self.gathered_rail_id_meta_data_and_counts.append(meta_data)
+
+        except (KeyError, IndexError):
+            # TODO: look into the rail ids that are not found in the meta data file.
+            # TODO: IT MUST BE IN THE META FILE, is this a snaptron error? discuss with PI
+            # print(f"{rail_id} not in meta data file.  Moving on to the next iteration.")
+            # code must continue and not stop
+            pass
+
+    def run_gene_expression_query(self, df, df_meta_data):
+        row_df = df.loc[df[gs.snaptron_col_gene_id].str.contains(self._gene_id)]
+
+        if row_df.empty:
+            raise exceptions.GeneNotFound
+
+        # extract the 'sample' column form the row this is where all the samples and their count is
+        samples = (row_df['samples']).tolist()
+        self._gather_samples_rail_id_and_counts(samples)
+
+        for rail_id in self.rail_id_dictionary:
+            self._gather_rail_id_meta_data(rail_id, df_meta_data)
+        df = pd.DataFrame(self.gathered_rail_id_meta_data_and_counts)
+
+        return self.gathered_rail_id_meta_data_and_counts
