@@ -150,11 +150,11 @@ def get_card_box_plot():
 
                         ],
                         style={'border': styles.border_column},
-                        className = "g-0 form-control-sm"
+                        className="g-0 form-control-sm"
                     ),
                     dbc.Row(
                         [
-                           dcc.Graph(id="id-box-plot")
+                            dcc.Graph(id="id-box-plot")
                         ],
                         style={'border': styles.border_column},
                         className="g-0"
@@ -184,7 +184,7 @@ def get_card_table():
                     ),
                     dbc.Col(
                         [
-                            components.get_switch_lock_data_with_table()
+                            components.get_switch_lock_data_with_table_jiq()
                         ],
                         width=3,
                         align='end',

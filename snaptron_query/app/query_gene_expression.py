@@ -1,7 +1,5 @@
 import collections
 
-import pandas as pd
-
 from snaptron_query.app import exceptions, global_strings as gs, query_junction_inclusion as jiq
 
 
@@ -23,8 +21,8 @@ class GeneExpressionQueryManager:
             for each_sample in gene_samples.split(','):
                 if each_sample:
                     (rail_id, count) = jiq.split_and_cast(each_sample)
-                    # keep the item in a defaultdict(list)
-                    #self.rail_id_dictionary[rail_id].append(count)
+
+                    # keep the item in a defaultdict(int)
                     self.rail_id_dictionary[rail_id] = count
 
     def _gather_rail_id_meta_data(self, rail_id, df_meta_data):
@@ -34,14 +32,11 @@ class GeneExpressionQueryManager:
         # look up the rail id and extract the information
         try:
             # gather the metadata associated with this rail id
-            # note: loc will return a data series not a frame
             meta_data = (df_meta_data.loc[rail_id]).to_dict()
 
-            # # TODO: for multi junction query the data may be different here
-            # # append the calculated results such as PSI and other counts
-            # (meta_data[gs.table_jiq_col_psi], meta_data[gs.table_jiq_col_inc], meta_data[gs.table_jiq_col_exc],
-            #  meta_data[gs.table_jiq_col_total]) = self._calculate_percent_spliced_in(rail_id)
-            meta_data[gs.table_geq_col_raw_count]  = self.rail_id_dictionary[rail_id]
+            # add counts data
+            meta_data[gs.table_geq_col_raw_count] = self.rail_id_dictionary[rail_id]
+
             # add the rail id information
             meta_data[gs.snaptron_col_rail_id] = rail_id
 
@@ -67,6 +62,5 @@ class GeneExpressionQueryManager:
 
         for rail_id in self.rail_id_dictionary:
             self._gather_rail_id_meta_data(rail_id, df_meta_data)
-        df = pd.DataFrame(self.gathered_rail_id_meta_data_and_counts)
 
         return self.gathered_rail_id_meta_data_and_counts

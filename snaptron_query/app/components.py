@@ -4,6 +4,7 @@ from dash import html, dcc
 
 from snaptron_query.app import global_strings as gs
 
+
 def get_text(component_style, string):
     """Wrapper function to retrieve the text used  queries"""
     if component_style == 'dmc':
@@ -40,9 +41,22 @@ def get_dropdown_compilation(component_id):
     return dropdown
 
 
-def get_switch(switch_id,switch_label):
+def get_switch(switch_id, switch_label):
     return dbc.Switch(
         id=switch_id,
         label=switch_label
     )
 
+
+def get_switch_lock_data_with_table(switch_id, switch_label):
+    return html.Div(
+        [
+            # TODO: Keep label here for now, string needs to come out of switch later,
+            #  the width doesn't fit at the moment
+            # html.Label(string),
+            dbc.Switch(
+                id=switch_id,
+                label=switch_label,
+            )
+        ]
+    )

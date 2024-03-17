@@ -180,7 +180,7 @@ def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_
         df = pd.DataFrame(row_data_from_table)
 
     histogram = graphs.get_histogram(df)
-    box_plot = graphs.get_box_plot(df,log_psi_values, violin_overlay)
+    box_plot = graphs.get_box_plot(df, log_psi_values, violin_overlay)
     return histogram, box_plot
 
 
@@ -305,6 +305,7 @@ def update_table_geq(data_from_store, current_style):
     # parentheses must be here, dash does not like it without it
     return row_data, column_defs, current_style  # grid
 
+
 @app.callback(
     # Output('id-histogram', 'figure'),
     Output('id-box-plot-geq', 'figure'),
@@ -327,7 +328,7 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
     else:
         df = pd.DataFrame(row_data_from_table)
 
-    #histogram = graphs.get_histogram(df)
+    # histogram = graphs.get_histogram(df)
     box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay)
     return box_plot
 

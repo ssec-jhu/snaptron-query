@@ -1,16 +1,15 @@
-import dash_bootstrap_components as dbc
 import dash_ag_grid as dag
-from dash import html
+import dash_bootstrap_components as dbc
 
-from snaptron_query.app import global_strings as gs, components as c_component
+from snaptron_query.app import components, global_strings as gs
 
 
 def get_text_gene_id(component_style):
-    return c_component.get_text(component_style, gs.geq_gene_id)
+    return components.get_text(component_style, gs.geq_gene_id)
 
 
 def get_text_gene_coordinates(component_style):
-    return c_component.get_text(component_style, gs.geq_gene_coord)
+    return components.get_text(component_style, gs.geq_gene_coord)
 
 
 def get_text_gene_id_norm(component_style):
@@ -18,23 +17,23 @@ def get_text_gene_id_norm(component_style):
 
 
 def get_text_gene_coordinates_norm(component_style):
-    return c_component.get_text(component_style, gs.geq_gene_coord)
+    return components.get_text(component_style, gs.geq_gene_coord)
 
 
 def get_input_gene_id():
-    return c_component.get_input(gs.geq_gene_id_placeholder, 'id-input-gene-id')
+    return components.get_input(gs.geq_gene_id_placeholder, 'id-input-gene-id')
 
 
 def get_input_gene_id_norm():
-    return c_component.get_input(gs.geq_gene_id_norm_placeholder, 'id-input-gene-id-norm', disabled='True')
+    return components.get_input(gs.geq_gene_id_norm_placeholder, 'id-input-gene-id-norm', disabled='True')
 
 
 def get_input_gene_coordinates():
-    return c_component.get_input(gs.geq_gene_coord_placeholder, 'id-input-gene-coord')
+    return components.get_input(gs.geq_gene_coord_placeholder, 'id-input-gene-coord')
 
 
 def get_input_gene_coordinates_norm():
-    return c_component.get_input(gs.geq_gene_coord_norm_placeholder, 'id-input-gene-coord-norm', disabled='True')
+    return components.get_input(gs.geq_gene_coord_norm_placeholder, 'id-input-gene-coord-norm', disabled='True')
 
 
 def get_switch_normalize():
@@ -56,15 +55,8 @@ def get_button_geq_results():
     )
 
 
-def get_switch_lock_data_with_table():
-    return html.Div(
-        [
-            dbc.Switch(
-                id='id-switch-lock-with-table-geq',
-                label=gs.switch_lock,
-            )
-        ]
-    )
+def get_switch_lock_data_with_table_geq():
+    return components.get_switch_lock_data_with_table('id-switch-lock-with-table-geq', gs.switch_lock)
 
 
 def get_table_geq():

@@ -45,7 +45,7 @@ def get_box_plot(df, log_psi_values, violin_overlay):
     else:
         fig = px.box(df, y=y_values, hover_data=[global_strings.snaptron_col_rail_id],
                      labels={global_strings.snaptron_col_rail_id: global_strings.boxplot_label,
-                             global_strings.table_jiq_col_psi:global_strings.table_jiq_col_psi.upper()},
+                             global_strings.table_jiq_col_psi: global_strings.table_jiq_col_psi.upper()},
                      # Request to not snap with table changes.
                      # If provided, overrides auto-scaling on the y-axis in cartesian coordinates.
                      range_y=[0, 110],
@@ -53,7 +53,6 @@ def get_box_plot(df, log_psi_values, violin_overlay):
 
         fig.update_traces(jitter=0.1, pointpos=0, boxmean=True,
                           line_color='royalblue', marker_color='darkblue')
-
 
     # update the y axis title if log switch is on
     if log_psi_values:

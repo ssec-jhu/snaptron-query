@@ -181,7 +181,7 @@ def get_card_table():
                     # ),
                     dbc.Col(
                         [
-                            components.get_switch_lock_data_with_table()
+                            components.get_switch_lock_data_with_table_geq()
                         ],
                         width=3,
                         align='end',
