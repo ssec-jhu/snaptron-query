@@ -5,29 +5,26 @@ from snaptron_query.app import exceptions
 import re
 
 
-def split_genome_coordinates(*args):
-    # split values such as 'chrX:Y-Z'
-    return [(str(ch), int(start), int(end)) for ch, interval in [x.split(':') for x in args] for start, end in
-            [interval.split('-')]]
-
-
 def verify_coordinates(coordinates):
     # pattern used from snaptron code:
     # https://github.com/ChristopherWilks/snaptron/blob/75903c30d54708b19d91772142013687c74d88d8/snapconfshared.py#L196C31
+    # https://docs.python.org/3/library/re.html#re.Match
     pattern = r'^(chr[12]?[0-9XYM]):(\d+)-(\d+)$'
-    if not re.match(pattern, (str(coordinates))):
+    m = re.match(pattern, str(coordinates))
+    if m:  # group(0) is the entire match, will be None if there is no match
+        # group(1) will be the chromosome
+        # group(2) will be the start of the interval
+        # group(3) will be the end of the interval
+        return m.group(1), int(m.group(2)), int(m.group(3))
+    else:  # if not re.match(pattern, (str(coordinates))):
         raise exceptions.BadCoordinates
 
 
-def split_and_verify_coordinates(*args):
-    # verify the regex first
-    for x in args:
-        verify_coordinates(x)
+def jiq_verify_coordinate_pairs(exclusion_coordinates, inclusion_coordinates):
+    (exc_chr, exc_start, exc_end) = verify_coordinates(exclusion_coordinates)
+    (inc_chr, inc_start, inc_end) = verify_coordinates(inclusion_coordinates)
 
-    # split the intervals into chromosome numbers and interval starts and ends
-    (exc_chr, exc_start, exc_end), (inc_chr, inc_start, inc_end) = split_genome_coordinates(*args)
-
-    # add sanity checks here
+    # add sanity checks here for the pairs
     if inc_chr != exc_chr or inc_start > inc_end or exc_start > exc_end:
         raise exceptions.BadCoordinates
 
@@ -43,20 +40,22 @@ def get_snaptron_query_results_df(compilation, junction_coordinates, query_mode)
     """
     # TODO: move this to a config file when it's made
     host = 'https://snaptron.cs.jhu.edu'
-    url = f'{host}/{str(compilation)}/{query_mode}?regions={str(junction_coordinates)}'
+    url = f'{host}/{str(compilation).lower()}/{query_mode}?regions={str(junction_coordinates)}'
     # url = 'https://snaptro.cs.jhu.edu/srav3h/snaptron?regions=chr19:4491836-4493702'
     # temp_url = 'https://snaptron.cs.jhu.edu/srav3h/genes?regions=chr1:11013716-11024183'
 
-    if url:
-        try:
-            resp = httpx.get(url.lower())
-            resp.raise_for_status()
-            data_bytes = resp.read()
-            if data_bytes:
-                df = pd.read_csv(BytesIO(data_bytes), sep='\t')
-                return df
-            else:
-                raise exceptions.EmptyResponse
-        except Exception as e:
-            print(f"HTTP Exception: {e}")
-            raise exceptions.BadURL
+    try:
+        resp = httpx.get(url)
+        # this will raise an HTTPError, if the response was a http error.
+        resp.raise_for_status()
+
+        data_bytes = resp.read()
+        if data_bytes:
+            df = pd.read_csv(BytesIO(data_bytes), sep='\t')
+            return df
+        else:
+            raise exceptions.EmptyResponse
+    except Exception as e:
+        # Any other exception happens I want it forwarded to the front end for handling
+        print(f"HTTP Exception: {e}")
+        raise exceptions.BadURL

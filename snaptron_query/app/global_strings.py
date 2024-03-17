@@ -9,12 +9,11 @@ compilation_srav3h = 'SRAv3h'
 compilation_gtexv2 = 'GTEXv2'
 compilation_tcgav2 = 'TCGAv2'
 compilation_srav1m = 'SRAv1m'
-compilation_names = [compilation_srav3h, compilation_gtexv2, compilation_tcgav2, compilation_srav1m]
 compilation_names_dict = {
-    compilation_names[0]: f'human ({compilation_names[0]})',
-    compilation_names[1]: f'human ({compilation_names[1]})',
-    compilation_names[2]: f'human ({compilation_names[2]})',
-    compilation_names[3]: f'mouse ({compilation_names[3]})',
+    compilation_srav3h: f'human ({compilation_srav3h})',
+    compilation_gtexv2: f'human ({compilation_gtexv2})',
+    compilation_tcgav2: f'human ({compilation_tcgav2})',
+    compilation_srav1m: f'mouse ({compilation_srav1m})',
 }
 drop_compilation = 'Select the organism of interest'
 drop_compilation_placeholder = 'Select a compilation'

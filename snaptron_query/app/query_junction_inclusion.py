@@ -26,9 +26,8 @@ class JunctionInclusionQueryManager:
         self.exclusion_end = exclusion_end
         self.inclusion_start = inclusion_start
         self.inclusion_end = inclusion_end
-        self.rail_id_dictionary = {}
+        self.rail_id_dictionary = collections.defaultdict(list)
         self.gathered_rail_id_meta_data_and_psi = []
-        return
 
     def get_rail_id_dictionary(self):
         return self.rail_id_dictionary
@@ -41,21 +40,15 @@ class JunctionInclusionQueryManager:
         # I am putting it in a for loop
         for junction_samples in samples:
             # samples are separated by commas then each sample is separated with a colon from its count as railID:count
-            for eachSample in junction_samples.split(','):
-                if eachSample:
-                    (rail_id, count) = split_and_cast(eachSample)
+            for each_sample in junction_samples.split(','):
+                if each_sample:
+                    (rail_id, count) = split_and_cast(each_sample)
 
                     # create dictionary item
                     dict_value = {'count': count, 'type': junction_type}
 
-                    # keep the item in a dictionary
-                    if self.rail_id_dictionary == collections.defaultdict():
-                        self.rail_id_dictionary[rail_id] = [dict_value]
-                    else:
-                        if rail_id in self.rail_id_dictionary:
-                            self.rail_id_dictionary[rail_id].append(dict_value)
-                        else:
-                            self.rail_id_dictionary[rail_id] = [dict_value]
+                    # keep the item in a defaultdict(list)
+                    self.rail_id_dictionary[rail_id].append(dict_value)
 
     def _calculate_percent_spliced_in(self, rail_id):
         # calculate Percent Spliced In

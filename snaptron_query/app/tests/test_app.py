@@ -51,19 +51,19 @@ def test_jiq_results(junction, rail_id, external_id, inc, exc, psi):
     assert s[gs.table_jiq_col_psi] == psi
 
 
-def test_split_coordinates():
-    (exc_chr, exc_A, exc_B), (inc_chr, inc_A, inc_B) = sc.split_genome_coordinates('chr19:5000-6000', 'chr19:4000-5000')
-    assert exc_chr == 'chr19'
-    assert inc_chr == 'chr19'
+@pytest.mark.parametrize('pair_a,pair_b,chr_a,chr_b,start_a,end_a,start_b,end_b',
+                         [('chr3:5555-6666', 'chr3:4000-5000', 'chr3', 'chr3', 5555, 6666, 4000, 5000),
+                          ('chr19:5000-6000', 'chr19:4000-5000', 'chr19', 'chr19', 5000, 6000, 4000, 5000)]
+                         )
+def test_jiq_verify_coordinates(pair_a, pair_b, chr_a, chr_b, start_a, end_a, start_b, end_b):
+    (A_chr, A_start, A_end), (B_chr, B_start, B_end) = sc.jiq_verify_coordinate_pairs(pair_a, pair_b)
+    assert A_chr == chr_a
+    assert B_chr == chr_b
     # make sure they are cast correctly
-    assert exc_A != '5000'
-    assert exc_A == 5000
-    assert exc_B != '6000'
-    assert exc_B == 6000
-    assert inc_A != '4000'
-    assert inc_A == 4000
-    assert inc_B != '5000'
-    assert inc_B == 5000
+    assert A_start == start_a
+    assert A_end == end_a
+    assert B_start == start_b
+    assert B_end == end_b
 
 
 def test_verify_bad_coordinates_1():
@@ -87,25 +87,9 @@ def test_verify_bad_coordinates_xy():
         sc.verify_coordinates('chrXY:4000-5000')
 
 
-def test_split_and_verify():
-    (exc_chr, exc_A, exc_B), (inc_chr, inc_A, inc_B) = sc.split_and_verify_coordinates('chr3:5555-6666',
-                                                                                       'chr3:4000-5000')
-    assert exc_chr == 'chr3'
-    assert inc_chr == 'chr3'
-    # make sure they are cast correctly
-    assert exc_A != '5555'
-    assert exc_A == 5555
-    assert exc_B != '6666'
-    assert exc_B == 6666
-    assert inc_A != '4000'
-    assert inc_A == 4000
-    assert inc_B != '5000'
-    assert inc_B == 5000
-
-
 def test_split_and_verify_mismatch_chromosomes():
     with pytest.raises(exceptions.BadCoordinates):
-        sc.split_and_verify_coordinates('chr19:5000-6000', 'chr29:4000-5000')
+        sc.jiq_verify_coordinate_pairs('chr19:5000-6000', 'chr29:4000-5000')
 
 
 @pytest.mark.parametrize('rail_id', [2171668, 988956, 1127039, 499887, 988942, 1641727, 1641757, 2109561])

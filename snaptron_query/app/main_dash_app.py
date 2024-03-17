@@ -74,7 +74,7 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
                 # make sure chromosome numbers match
                 # if there is any error in the intervals, an exception will be thrown
                 (exc_chr, exc_start, exc_end), (inc_chr, inc_start, inc_end) = (
-                    sc.split_and_verify_coordinates(exclusion_interval, inclusion_interval))
+                    sc.jiq_verify_coordinate_pairs(exclusion_interval, inclusion_interval))
 
                 # RUN the URL and get results back from SNAPTRON
                 df = sc.get_snaptron_query_results_df(compilation=compilation,
@@ -113,6 +113,10 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
             raise PreventUpdate
         except exceptions.EmptyJunction:
             print("Requested Junction has no sample data")
+            raise PreventUpdate
+        except Exception as e:
+            # Any other exception happens I want it forwarded to the front end for handling
+            print(f"Exception: {e}")
             raise PreventUpdate
 
         # keep track of any log needed
