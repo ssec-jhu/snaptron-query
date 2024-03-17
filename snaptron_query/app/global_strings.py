@@ -18,7 +18,7 @@ compilation_names_dict = {
 drop_compilation = 'Select the organism of interest'
 drop_compilation_placeholder = 'Select a compilation'
 jiq_form_title = 'Junction Information'
-jiq_graphs_group_title = 'Graphs'
+graphs_group_title = 'Graphs'
 button_download = 'Download'
 switch_log = 'Log₂(y)'
 switch_violin = 'Violin Mode'
@@ -60,6 +60,7 @@ geq_gene_id_norm_placeholder = 'ex: ENSG00000107223'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 snaptron_col_rail_id = 'rail_id'
 snaptron_col_external_id = 'external_id'
+snaptron_col_gene_id = 'gene_id:gene_name:gene_type:bp_length'
 srav3h_meta_data_required_list = [snaptron_col_rail_id, snaptron_col_external_id,
                                   'study', 'study_title', 'library_layout',
                                   'sample_description', 'sample_name', 'sample_title']
@@ -82,3 +83,4 @@ table_jiq_col_inc = 'inc'
 table_jiq_col_exc = 'exc'
 table_jiq_col_total = 'total'
 table_jiq_col_psi = 'psi'
+table_geq_col_raw_count = 'count'

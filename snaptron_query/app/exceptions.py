@@ -21,3 +21,8 @@ class MissingUserInputs(Exception):
 class EmptyJunction(Exception):
     """Raised when one of the junctions is empty"""
     pass
+
+
+class GeneNotFound(Exception):
+    """Raised when the gene is not found in the results"""
+    pass

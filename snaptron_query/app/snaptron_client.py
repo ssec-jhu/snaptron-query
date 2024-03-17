@@ -31,6 +31,16 @@ def jiq_verify_coordinate_pairs(exclusion_coordinates, inclusion_coordinates):
     return (exc_chr, exc_start, exc_end), (inc_chr, inc_start, inc_end)
 
 
+def geq_verify_coordinate(gene_coordinate):
+    (coord_chr, coord_start, coord_end) = verify_coordinates(gene_coordinate)
+
+    # add sanity checks here for the pairs
+    if coord_start > coord_end:
+        raise exceptions.BadCoordinates
+
+    return coord_chr, coord_start, coord_end
+
+
 def get_snaptron_query_results_df(compilation, junction_coordinates, query_mode):
     """Will run the url and return the response
     :param compilation: from the list box selection

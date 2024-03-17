@@ -38,3 +38,11 @@ def get_dropdown_compilation(component_id):
         className="dbc",
     )
     return dropdown
+
+
+def get_switch(switch_id,switch_label):
+    return dbc.Switch(
+        id=switch_id,
+        label=switch_label
+    )
+

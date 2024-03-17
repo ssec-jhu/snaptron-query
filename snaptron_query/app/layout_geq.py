@@ -2,7 +2,7 @@
 
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
-from dash import html
+from dash import html, dcc
 
 from snaptron_query.app import components as c_components, components_geq as components
 from snaptron_query.app import global_strings as gs
@@ -77,6 +77,46 @@ def get_geq_form():
     ]
 
 
+def get_card_box_plot_geq():
+    """Wrapper function for the box plot component in a card layout"""
+    card = dbc.Card(
+        id='id-card-box-plot-geq',
+        children=[
+            dbc.CardBody(
+                [
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                width=1
+                            ),
+                            dbc.Col(
+                                c_components.get_switch('id-switch-log-psi-box-plot-geq', gs.switch_log),
+                                width=3
+                            ),
+                            dbc.Col(
+                                c_components.get_switch('id-switch-violin-box-plot-geq', gs.switch_violin),
+                                width=3
+                            )
+
+                        ],
+                        style={'border': styles.border_column},
+                        className="g-0 form-control-sm"
+                    ),
+                    dbc.Row(
+                        [
+                            dcc.Graph(id="id-box-plot-geq")
+                        ],
+                        style={'border': styles.border_column},
+                        className="g-0"
+                    )
+                ]
+            ),
+        ],
+        style=styles.boundary_style,
+    )
+    return card
+
+
 def get_accordian_geq():
     return dbc.Accordion(
         [
@@ -101,6 +141,73 @@ def get_accordian_geq():
     )
 
 
+def get_accordian_graphs():
+    return dbc.Accordion(
+        [
+            dbc.AccordionItem(
+                [
+                    dbc.Row(
+                        [
+                            # row equally divided for the plots
+                            dbc.Col(
+                                [html.Div(get_card_box_plot_geq())]
+                            ),
+                            # dbc.Col(
+                            #     [html.Div(get_card_histogram())]
+                            # )
+                        ]
+                    ),
+                ],
+                title=gs.graphs_group_title
+            ),
+        ]
+    )
+
+
+def get_card_table():
+    """Wrapper function for the table component
+    """
+    card = dmc.Card(
+        id='id-card-table-geq',
+        children=[
+            dbc.Row(
+                [
+                    # dbc.Col(
+                    #     [
+                    #         components.get_button_download()
+                    #     ],
+                    #     width=2,
+                    #     style={'border': styles.border_column}
+                    # ),
+                    dbc.Col(
+                        [
+                            components.get_switch_lock_data_with_table()
+                        ],
+                        width=3,
+                        align='end',
+                        style={'border': styles.border_column},
+                    ),
+                ],
+                className="g-1",  # button too close to the table, needs some gutter
+                justify='between'
+            ),
+            dbc.Row(
+                [
+                    dbc.Container(
+                        [
+                            components.get_table_geq()
+                        ],
+                        className="ag-theme-alpine dbc dbc-ag-grid"
+                    )
+                ]
+            )
+        ],
+        radius="md",
+        style=styles.boundary_style,
+    )
+    return card
+
+
 def get_layout_gene_expression_query():
     """This is the query/form layout for the gene expression query"""
     layout = dbc.Container(
@@ -114,6 +221,30 @@ def get_layout_gene_expression_query():
                 style={"box-shadow": "1px 2px 7px 0px grey",
                        "border-radius": "10px"},
                 className='g-0',  # no gutters in between the cards
+            ),
+
+            # Second row  of the layout contains the plots and graphs
+            dmc.Space(h=20),
+            dbc.Row(
+                [
+                    get_accordian_graphs(),
+                ],
+                style={"box-shadow": "1px 2px 7px 0px grey",
+                       "border-radius": "10px"},
+                className='g-0',  # no gutters in between the cards
+            ),
+
+            # Third row is the row containing the table
+            dmc.Space(h=20),
+            dbc.Row(
+                [
+                    dbc.Col(
+                        [
+                            get_card_table()
+                        ],
+                        style={'border': styles.border_column}
+                    )
+                ]
             ),
         ],
     )

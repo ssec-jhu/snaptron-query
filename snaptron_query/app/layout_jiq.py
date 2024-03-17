@@ -260,7 +260,7 @@ def get_accordian_graphs():
                         ]
                     ),
                 ],
-                title=global_strings.jiq_graphs_group_title
+                title=global_strings.graphs_group_title
             ),
         ]
     )
