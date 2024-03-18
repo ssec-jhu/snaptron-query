@@ -223,6 +223,9 @@ def on_button_click_gene_expression(n_clicks, compilation, gene_id, gene_coordin
         try:
             if compilation and gene_id and gene_coordinates:
 
+                if normalize_data and (not normalization_gene_coordinates or not normalization_gene_id):
+                    raise PreventUpdate
+
                 # Verify the gene coordinates string, we don't need the return values for this query
                 sc.geq_verify_coordinate(gene_coordinates)
 
@@ -244,7 +247,15 @@ def on_button_click_gene_expression(n_clicks, compilation, gene_id, gene_coordin
                 # # Set upt the JIQ manager then run the Junction Inclusion Query
                 geq = GeneExpressionQueryManager(gene_id)
                 if normalize_data:
-                    geq.setup_normalization_data(normalization_gene_id, normalization_gene_coordinates)
+                    sc.geq_verify_coordinate(normalization_gene_coordinates)
+
+                    # RUN the URL and get results back from SNAPTRON
+                    df_normalization = sc.get_snaptron_query_results_df(
+                                                            compilation=compilation,
+                                                          junction_coordinates=normalization_gene_coordinates,
+                                                          query_mode='genes')
+                    geq.setup_normalization_data(normalization_gene_id, df_normalization)
+
                 results_list_of_dict = geq.run_gene_expression_query(df, df_meta_data)
 
                 # Performance Note: ag-grid will load much faster with a lists of dictionaries, so I am storing
@@ -286,9 +297,10 @@ def on_button_click_gene_expression(n_clicks, compilation, gene_id, gene_coordin
     Output('id-card-table-geq', 'style'),
     Input('id-store-geq-df', 'data'),
     Input('id-card-table-geq', 'style'),
+    Input("id-switch-normalize", 'value'),
     prevent_initial_call=True
 )
-def update_table_geq(data_from_store, current_style):
+def update_table_geq(data_from_store, current_style,normalized_gex):
     if not data_from_store:
         raise PreventUpdate
 
@@ -296,7 +308,7 @@ def update_table_geq(data_from_store, current_style):
     row_data = data_from_store
 
     # Set the columnDefs for the ag-grid
-    column_defs = graphs.get_gene_expression_query_column_def()
+    column_defs = graphs.get_gene_expression_query_column_def(normalized_gex)
 
     # TODO: other components' style needs to be none by default and turned on here
     # set component visibility
@@ -313,10 +325,11 @@ def update_table_geq(data_from_store, current_style):
     Input('id-ag-grid-geq', 'virtualRowData'),
     Input('id-switch-lock-with-table-geq', 'value'),
     Input('id-switch-log-psi-box-plot-geq', 'value'),
-    Input('id-switch-violin-box-plot-geq', 'value')
+    Input('id-switch-violin-box-plot-geq', 'value'),
+    Input("id-switch-normalize", 'value'),
 )
 def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_graph_data_with_table,
-                      log_values, violin_overlay):
+                      log_values, violin_overlay,normalized_data):
     """
         Given the table data as input, it will update the relative graphs
     """
@@ -329,7 +342,7 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
         df = pd.DataFrame(row_data_from_table)
 
     # histogram = graphs.get_histogram(df)
-    box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay)
+    box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay,normalized_data)
     return box_plot
 
 
