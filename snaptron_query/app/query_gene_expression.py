@@ -1,5 +1,7 @@
 import collections
 
+import numpy as np
+
 from snaptron_query.app import exceptions, global_strings as gs, query_junction_inclusion as jiq
 
 
@@ -9,10 +11,29 @@ class GeneExpressionQueryManager:
     def __init__(self, gene_id):
         self._gene_id = gene_id
         self.rail_id_dictionary = collections.defaultdict(int)
+        self.normalization_factor_table = collections.defaultdict(int)
         self.gathered_rail_id_meta_data_and_counts = []
+        self.normalize_counts = False
 
-    def setup_normalization_data(self, gene_id, gene_coordinates):
-        # set up the normalization tabel
+    def setup_normalization_data(self, normalization_gene_id, df_normalization):
+        row_df = df_normalization.loc[df_normalization[gs.snaptron_col_gene_id].str.contains(normalization_gene_id)]
+
+        if row_df.empty:
+            raise exceptions.GeneNotFound
+
+        # extract the 'sample' column form the row this is where all the samples and their count is
+        samples = (row_df['samples']).tolist()
+        norm_gene_counts = collections.defaultdict(int)
+        for gene_samples in samples:
+            # samples are separated by commas then each sample is separated with a colon from its count as railID:count
+            for each_sample in gene_samples.split(','):
+                if each_sample:
+                    (rail_id, count) = jiq.split_and_cast(each_sample)
+                    norm_gene_counts[rail_id]= count
+
+        max_count = max(norm_gene_counts.values())
+        self.normalization_factor_table = {key: value / max_count for key, value in norm_gene_counts.items()}
+        self.normalize_counts = True
         return
 
     def _gather_samples_rail_id_and_counts(self, samples):
@@ -35,7 +56,13 @@ class GeneExpressionQueryManager:
             meta_data = (df_meta_data.loc[rail_id]).to_dict()
 
             # add counts data
-            meta_data[gs.table_geq_col_raw_count] = self.rail_id_dictionary[rail_id]
+            raw_count = self.rail_id_dictionary[rail_id]
+            meta_data[gs.table_geq_col_raw_count] = raw_count
+            if self.normalize_counts:
+                if rail_id in self.normalization_factor_table:
+                    factor = self.normalization_factor_table[rail_id]
+                    meta_data['factor'] = factor
+                    meta_data['normalized_count'] = raw_count/factor
 
             # add the rail id information
             meta_data[gs.snaptron_col_rail_id] = rail_id
