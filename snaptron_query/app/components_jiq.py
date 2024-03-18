@@ -77,7 +77,7 @@ def get_text(component_style, string):
         return dmc.Text(string, weight=500, size="sm")  # 500=semi bold
     elif component_style == 'dbc':
         return dbc.Label(string, className='fw-bold')
-    elif component_style == 'dcc':
+    else:
         return html.Label(string)
 
 
