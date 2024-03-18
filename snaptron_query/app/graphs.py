@@ -70,58 +70,45 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
     https://plotly.com/python-api-reference/generated/plotly.express.box
     https://plotly.com/python/reference/box/
     """
-    # df_melt = pd.melt(df, id_vars=['rail_id'], value_vars=['raw_count', 'normalized_count'])
-    if not normalized:
+    if normalized:
+        df_melt = pd.melt(df, id_vars=['rail_id'], value_vars=['raw_count', 'normalized_count'])
+        df = df_melt
+        y_values = 'value'
+        labels = {global_strings.snaptron_col_rail_id: global_strings.boxplot_label,
+                  'value': 'Raw Count'}
+    else:
         y_values = global_strings.table_geq_col_raw_count
-        if log_values:
-            y_values = np.log2(df[y_values])
+        labels = {global_strings.snaptron_col_rail_id: global_strings.boxplot_label,
+                  global_strings.table_geq_col_raw_count: 'Raw Count'}
 
-        if violin_overlay:
-            fig = px.violin(df, y=y_values, hover_data=[global_strings.snaptron_col_rail_id],
-                            labels={global_strings.snaptron_col_rail_id: global_strings.boxplot_label},
-                            box=True,
-                            # points='all'
-                            )  # show all points
+    hover_data = [global_strings.snaptron_col_rail_id]
 
-            # if you want to add the mean set mean-line_visible=True
-            fig.update_traces(jitter=0.2, pointpos=0,
-                              line_color='royalblue', marker_color='darkblue')
 
-        else:
-            fig = px.box(df, y=y_values, hover_data=[global_strings.snaptron_col_rail_id],
-                         labels={global_strings.snaptron_col_rail_id: global_strings.boxplot_label,
-                                 global_strings.table_geq_col_raw_count: 'Raw Count'},
-                         # Request to not snap with table changes.
-                         # If provided, overrides auto-scaling on the y-axis in cartesian coordinates.
-                         # range_y=[0, 110],
-                         # points='all')  # show all points
-                         )
+    if log_values:
+        y_values = np.log2(df[y_values])
 
-            fig.update_traces(jitter=0.2, pointpos=0, boxmean=True,
-                              line_color='royalblue', marker_color='darkblue')
 
-        # update the y-axis title if log switch is on
-        if log_values:
-            fig.update_yaxes(title_text='Log₂(PSI)')
+    if violin_overlay:
+        fig = px.violin(df, y=y_values, hover_data=hover_data, labels=labels,
+                        box=True,
+                        # points='all'
+                        )  # show all points
 
+        # if you want to add the mean set mean-line_visible=True
+        fig.update_traces(jitter=0.1, pointpos=0, line_color='royalblue', marker_color='darkblue')
 
     else:
-        df_melt = pd.melt(df, id_vars=['rail_id'], value_vars=['raw_count', 'normalized_count'])
-        y_values = 'value'
-        if log_values:
-            y_values = np.log2(df[y_values])
-        fig = px.box(df_melt,
-                     y='value', hover_data=[global_strings.snaptron_col_rail_id],
-                     labels={global_strings.snaptron_col_rail_id: global_strings.boxplot_label,
-                             global_strings.table_jiq_col_psi: global_strings.table_jiq_col_psi.upper()},
-                     # points='all',
-                     color="variable",
-                     # color_discrete_map = {'raw_count': '#90BA4C', 'normalized_count': '#DD9D31'},
-                     # facet_col='variable',  # this make two separate bx plots, but 2 cols each?!
-                     boxmode="group"
-                     )
-        fig.update_traces(jitter=0.2, boxmean=True, line_color='royalblue', marker_color='darkblue', col=0)
-        fig.update_traces(jitter=0.2, boxmean=True, line_color='royalblue', marker_color='darkblue', col=1)
+        if normalized:
+            fig = px.box(df, y=y_values, hover_data=hover_data, labels=labels,color="variable",boxmode='group')
+            fig.update_traces(jitter=0.9,pointpos=0, col=0)
+            fig.update_traces(jitter=0.9, pointpos=0, col=1)
+        else:
+            fig = px.box(df, y=y_values, hover_data=hover_data, labels=labels)
+            fig.update_traces(jitter=0.1, pointpos=0, boxmean=True, line_color='royalblue', marker_color='darkblue')
+
+    # update the y-axis title if log switch is on
+    if log_values:
+        fig.update_yaxes(title_text='Log₂(PSI)')
 
     fig.update_layout(title=f'<b>{global_strings.box_plot_title}</b>', title_x=0.5)
 
