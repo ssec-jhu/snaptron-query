@@ -4,12 +4,11 @@ import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 from dash import html, dcc
 
-from snaptron_query.app import components_jiq as components
-from snaptron_query.app import global_strings
+from snaptron_query.app import components, components_jiq, global_strings as gs
 from snaptron_query.app import inline_styles as styles
 
 
-def get_jiq_form():
+def get_form_jiq():
     """Wrapper function for the Junction Inclusion Query components.
     The width of the top and bottom row is set to fill the row
     """
@@ -17,7 +16,7 @@ def get_jiq_form():
         dbc.Row(
             [
                 dbc.Col(
-                    components.get_dropdown_compilation(),
+                    components.get_dropdown_compilation('id-input-compilation-jiq'),
                     style={"border": styles.border_column},
                 ),
             ],
@@ -34,14 +33,14 @@ def get_jiq_form():
                     align='center',  # vertical alignment: center start end
                 ),
                 dbc.Col(
-                    components.get_text_inclusion_junction('dmc'),
+                    components.get_text('dmc', gs.input_inc_txt),
                     width=4,
                     style={"border": styles.border_column},
                     align='center',
                     className='mx-0.5'
                 ),
                 dbc.Col(
-                    components.get_text_exclusion_junction('dmc'),
+                    components.get_text('dmc', gs.input_exc_txt),
                     width=4,
                     style={"border": styles.border_column},
                     align='center',
@@ -58,26 +57,26 @@ def get_jiq_form():
         dbc.Row(
             [
                 dbc.Col(
-                    components.get_text_junction('dmc'),
+                    components_jiq.get_text_junction('dmc'),
                     width=2,
                     style={"border": styles.border_column},
                     align='center',
                 ),
                 dbc.Col(
-                    components.get_input_inc_junction(),
+                    components.get_input(gs.input_inc_placeholder, 'id-input-jiq-inc-junc'),
                     width=4,
                     style={"border": styles.border_column},
                     align='center',
                     className='mx-0.5'
                 ),
                 dbc.Col(
-                    components.get_input_exc_junction(),
+                    components.get_input(gs.input_exc_placeholder, 'id-input-jiq-exc-junc'),
                     width=4,
                     style={"border": styles.border_column},
                     align='center',
                 ),
                 dbc.Col(
-                    components.get_button_add_junction(),
+                    components_jiq.get_button_add_junction(),
                     width=2,
                     style={"border": styles.border_column},
                     align='center',
@@ -90,7 +89,7 @@ def get_jiq_form():
         dbc.Row(
             [
                 dbc.Col(
-                    components.get_button_generate_results(),
+                    components_jiq.get_button_jiq_results(),
                     style={"border": styles.border_column},
                     class_name="d-grid gap-0 col-12"  # this will make the button take over full width
                 ),
@@ -100,7 +99,7 @@ def get_jiq_form():
     ]
 
 
-def get_card_histogram():
+def get_card_histogram_jiq():
     """Wrapper function for the histogram component in a card layout"""
     card = dbc.Card(
         id='id-card-histogram',
@@ -109,13 +108,13 @@ def get_card_histogram():
                 [
                     dbc.Row(
                         [
-                            components.get_switch_log_psi_histogram()
+                            components.get_switch(switch_id='id-switch-jiq-log-histogram', switch_label=gs.switch_log)
                         ],
                         style={'border': styles.border_column}
                     ),
                     dbc.Row(
                         [
-                            html.Div(dcc.Graph(id="id-histogram"))
+                            html.Div(dcc.Graph(id="id-histogram-jiq"))
                         ],
                         style={'border': styles.border_column}
                     )
@@ -127,7 +126,7 @@ def get_card_histogram():
     return card
 
 
-def get_card_box_plot():
+def get_card_box_plot_jiq():
     """Wrapper function for the box plot component in a card layout"""
     card = dbc.Card(
         id='id-card-box-plot',
@@ -140,21 +139,23 @@ def get_card_box_plot():
                                 width=1
                             ),
                             dbc.Col(
-                                components.get_switch_log_psi_box_plot(),
+                                components.get_switch(switch_id='id-switch-jiq-log-box-plot',
+                                                      switch_label=gs.switch_log),
                                 width=3
                             ),
                             dbc.Col(
-                                components.get_switch_violin_box_plot(),
+                                components.get_switch(switch_id='id-switch-jiq-violin-box-plot',
+                                                      switch_label=gs.switch_violin),
                                 width=3
                             )
 
                         ],
                         style={'border': styles.border_column},
-                        className = "g-0 form-control-sm"
+                        className="g-0 form-control-sm"
                     ),
                     dbc.Row(
                         [
-                           dcc.Graph(id="id-box-plot")
+                            dcc.Graph(id="id-box-plot-jiq")
                         ],
                         style={'border': styles.border_column},
                         className="g-0"
@@ -167,7 +168,7 @@ def get_card_box_plot():
     return card
 
 
-def get_card_table():
+def get_card_table_jiq():
     """Wrapper function for the table component
     """
     card = dmc.Card(
@@ -177,14 +178,14 @@ def get_card_table():
                 [
                     dbc.Col(
                         [
-                            components.get_button_download()
+                            components_jiq.get_button_download()
                         ],
                         width=2,
                         style={'border': styles.border_column}
                     ),
                     dbc.Col(
                         [
-                            components.get_switch_lock_data_with_table()
+                            components.get_switch_lock_data_with_table('id-switch-jiq-lock-with-table', gs.switch_lock)
                         ],
                         width=3,
                         align='end',
@@ -198,7 +199,7 @@ def get_card_table():
                 [
                     dbc.Container(
                         [
-                            components.get_table_jiq()
+                            components_jiq.get_table_jiq()
                         ],
                         className="ag-theme-alpine dbc dbc-ag-grid"
                     )
@@ -211,7 +212,7 @@ def get_card_table():
     return card
 
 
-def get_accordian_jiq():
+def get_accordian_form_jiq():
     return dbc.Accordion(
         [
             dbc.AccordionItem(
@@ -220,7 +221,7 @@ def get_accordian_jiq():
                         [
                             dbc.Col(
                                 [
-                                    html.Div(get_jiq_form())
+                                    html.Div(get_form_jiq())
                                 ],
                                 width=8
                             ),
@@ -237,13 +238,13 @@ def get_accordian_jiq():
                         justify="start",
                     ),
                 ],
-                title=global_strings.jiq_form_title,
+                title=gs.jiq_form_title,
             ),
         ]
     )
 
 
-def get_accordian_graphs():
+def get_accordian_graphs_jiq():
     return dbc.Accordion(
         [
             dbc.AccordionItem(
@@ -252,15 +253,15 @@ def get_accordian_graphs():
                         [
                             # row equally divided for the plots
                             dbc.Col(
-                                [html.Div(get_card_box_plot())]
+                                [html.Div(get_card_box_plot_jiq())]
                             ),
                             dbc.Col(
-                                [html.Div(get_card_histogram())]
+                                [html.Div(get_card_histogram_jiq())]
                             )
                         ]
                     ),
                 ],
-                title=global_strings.jiq_graphs_group_title
+                title=gs.graphs_group_title
             ),
         ]
     )
@@ -274,7 +275,7 @@ def get_layout_junction_inclusion():
             dmc.Space(h=30),  # this will create a space with the tab above it
             dbc.Row(
                 [
-                    get_accordian_jiq(),
+                    get_accordian_form_jiq(),
                 ],
                 style={"box-shadow": "1px 2px 7px 0px grey",
                        "border-radius": "10px"},
@@ -285,7 +286,7 @@ def get_layout_junction_inclusion():
             dmc.Space(h=20),
             dbc.Row(
                 [
-                    get_accordian_graphs(),
+                    get_accordian_graphs_jiq(),
                 ],
                 style={"box-shadow": "1px 2px 7px 0px grey",
                        "border-radius": "10px"},
@@ -298,7 +299,7 @@ def get_layout_junction_inclusion():
                 [
                     dbc.Col(
                         [
-                            get_card_table()
+                            get_card_table_jiq()
                         ],
                         style={'border': styles.border_column}
                     )

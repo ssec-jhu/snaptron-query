@@ -18,13 +18,13 @@ compilation_names_dict = {
 drop_compilation = 'Select the organism of interest'
 drop_compilation_placeholder = 'Select a compilation'
 jiq_form_title = 'Junction Information'
-jiq_graphs_group_title = 'Graphs'
+graphs_group_title = 'Graphs'
 button_download = 'Download'
-switch_log = 'Log₂(y)'
+switch_log = 'Log₂(y)+1'
 switch_violin = 'Violin Mode'
 switch_lock = 'Lock Table with Graphs'
 button_add_junction = 'Add Junction'
-button_run = 'Run Query'
+button_run = 'Calculate PSI'
 input_inc_placeholder = 'ex: chr19:4491836-4492014'
 input_inc_txt = 'Inclusion Junction'
 input_exc_placeholder = 'ex: chr19:4491836-4493702'
@@ -33,9 +33,27 @@ input_junction_txt_list = ['Junction 1', 'Junction 2', 'Junction 3', 'Junction 4
 
 """Strings used in the Graphs and Tables """
 
-histogram_title = 'PSI Histogram'
-boxplot_label = 'Rail ID'
-box_plot_title = 'PSI Box Plot'
+psi_histogram_title = 'PSI Histogram'
+psi_box_plot_title = 'PSI Box Plot'
+plot_label_rail_id = 'Rail ID'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+            Gene Expression Query 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+geq_form_title = 'Gene Information'
+geq_query = 'Query Information'
+geq_normalized_info = 'Normalization Information'
+geq_gene_id = 'Gene ENSG ID'
+geq_gene_coord = 'Gene Coordinates'
+geq_normalized = 'Normalized GEX'
+geq_button_run = 'Calculate GEX'
+geq_gene_id_placeholder = 'ex: ENSG00000120948'
+geq_gene_coord_placeholder = 'ex: chr1:11012654-11025492'
+geq_gene_id_norm_placeholder = 'ex: ENSG00000107223'
+geq_gene_coord_norm_placeholder = 'chr9:136862119-136866308'
+raw_count_box_plot_title = 'Raw Count Box Plot'
+raw_vs_normalized_count_box_plot_title = 'Raw vs Normalized Count Box Plot'
+plot_label_raw_count = 'Raw Count'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     Strings beyond this point are related to the snaptron interface
@@ -45,6 +63,7 @@ box_plot_title = 'PSI Box Plot'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 snaptron_col_rail_id = 'rail_id'
 snaptron_col_external_id = 'external_id'
+snaptron_col_gene_id = 'gene_id:gene_name:gene_type:bp_length'
 srav3h_meta_data_required_list = [snaptron_col_rail_id, snaptron_col_external_id,
                                   'study', 'study_title', 'library_layout',
                                   'sample_description', 'sample_name', 'sample_title']
@@ -67,3 +86,4 @@ table_jiq_col_inc = 'inc'
 table_jiq_col_exc = 'exc'
 table_jiq_col_total = 'total'
 table_jiq_col_psi = 'psi'
+table_geq_col_raw_count = 'raw_count'
