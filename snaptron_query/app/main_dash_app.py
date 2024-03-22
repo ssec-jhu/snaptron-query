@@ -318,8 +318,7 @@ def update_table_geq(data_from_store, current_style, normalized_gex):
 
 
 @app.callback(
-    # Output('id-histogram', 'figure'),
-    Output('id-box-plot-geq', 'figure'),
+    Output('id-row-graph-geq', 'children'),
     Input('id-ag-grid-geq', 'rowData'),
     Input('id-ag-grid-geq', 'virtualRowData'),
     Input('id-switch-geq-lock-with-table', 'value'),
@@ -340,9 +339,23 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
     else:
         df = pd.DataFrame(row_data_from_table)
 
-    # histogram = graphs.get_histogram(df)
+    if normalized_data:
+        histogram = graphs.get_histogram_geq(df)
+    else:
+        histogram = None
+
     box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
-    return box_plot
+
+    if normalized_data:
+        # One option is also to have an html.DIV in the layout and send over the Row as
+        # but them you need to also send the styling of the row here
+        # child = dbc.Row([ dbc.Col(dcc.Graph the graph you want),dbc.Col(dcc.Graph the other graph)], className="g-0")
+        row_child = [dbc.Col(dcc.Graph(figure=box_plot), width=6), dbc.Col(dcc.Graph(figure=histogram), width=6)]
+    else:
+        row_child = [dbc.Col(dcc.Graph(figure=box_plot), width=12)]
+
+    # return dcc.Graph(figure=box_plot), dcc.Graph(figure=histogram), child
+    return row_child
 
 
 # Run the app

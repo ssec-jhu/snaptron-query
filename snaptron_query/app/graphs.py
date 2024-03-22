@@ -1,6 +1,7 @@
 """This file includes the graph components used in the queries."""
 import numpy as np
 import plotly.express as px
+import plotly.graph_objects as go
 from snaptron_query.app import global_strings as gs
 import pandas as pd
 
@@ -31,7 +32,7 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay):
     y_values = gs.table_jiq_col_psi
     range_y_axis = [0, 110]
     if log_psi_values:
-        y_values = np.log2(df[y_values]+1)
+        y_values = np.log2(df[y_values+1])
         range_y_axis = None
 
     if violin_overlay:
@@ -65,6 +66,22 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay):
     return fig
 
 
+def get_histogram_geq(df):
+    """Wrapper for plotly express histogram given a df - for clarity
+
+    fig.update traces using below
+    https://plotly.com/python/reference/histogram/
+    https://plotly.com/python/histograms/
+    """
+    fig = px.histogram(df,
+                       x='normalized_count',
+                       nbins=50,
+                       )
+    fig.update_layout(title='Histogram Tittle', title_x=0.5)
+    fig.update_traces(marker_color='darkblue')
+    return fig
+
+
 def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=False):
     """Wrapper for plotly express box plot given a df
 
@@ -75,46 +92,51 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
     y_values = gs.table_geq_col_raw_count
     labels = {gs.snaptron_col_rail_id: gs.plot_label_rail_id,
               gs.table_geq_col_raw_count: gs.plot_label_raw_count}
-    hover_data = {gs.snaptron_col_rail_id}
+    hover_data = {gs.snaptron_col_rail_id: gs.plot_label_rail_id}
+    box_plot_title = gs.raw_count_box_plot_title
 
     if normalized:
-        df_melt = pd.melt(df, id_vars=['rail_id'], value_vars=['raw_count', 'normalized_count'])
-        df = df_melt
-        y_values = 'value'
-        labels = {gs.snaptron_col_rail_id: gs.plot_label_rail_id,
-                  'value': gs.plot_label_raw_count,
-                  'raw_count': 'Raw Count',
-                  'normalized_count':'Normalized Count'}
-
-        #hover_data = {'raw_count': 'Raw Count','normalized_count':'Normalized Count'}
+        box_plot_title = gs.raw_vs_normalized_count_box_plot_title
 
     if log_values:
         y_values = np.log2(df[y_values]+1)
 
     # pick the box plot mode
     if violin_overlay:
-        fig = px.violin(df, y=y_values, hover_data=hover_data, labels=labels,
-                        box=True,
-                        # points='all'
-                        )  # show all points
-
+        fig = px.violin(df, y=y_values, hover_data=hover_data, labels=labels, box=True, points='all')
         # if you want to add the mean set mean-line_visible=True
-        fig.update_traces(jitter=0.1, pointpos=0, line_color='royalblue', marker_color='darkblue')
-
     else:
         if normalized:
-            fig = px.box(df, y=y_values, hover_data=hover_data, labels=labels, color="variable", boxmode='group')
-            fig.update_traces(jitter=0.9, pointpos=0, col=0)
-            fig.update_traces(jitter=0.9, pointpos=0, col=1)
+            raw_count = go.Box(y=df['raw_count'],
+                               name='Raw Count',
+                               hoverinfo='text',
+                               text=df['rail_id'],
+                               hovertemplate="Rail ID:%{text}<br>Raw Count: %{y}")
+            if log_values:
+                y_norm = np.log2(df['normalized_count']+1)
+            else:
+                y_norm = df['normalized_count']
+
+            normalized_count = go.Box(y=y_norm, name='Normalized Count',
+                                      hoverinfo='text',
+                                      text=df['rail_id'],
+                                      hovertemplate="Rail ID:%{text}<br>Normalized Count: %{y}")
+            fig = go.Figure(data=[raw_count, normalized_count])
+
         else:
             fig = px.box(df, y=y_values, hover_data=hover_data, labels=labels)
-            fig.update_traces(jitter=0.1, pointpos=0, boxmean=True, line_color='royalblue', marker_color='darkblue')
 
     # update the y-axis title if log switch is on
     if log_values:
-        fig.update_yaxes(title_text='Log₂(count)+1')
+        fig.update_yaxes(title_text='Log₂(Gene Expression Count+1)')
+    else:
+        fig.update_yaxes(title_text='Gene Expression Count')
 
-    fig.update_layout(title=f'<b>{gs.raw_count_box_plot_title}</b>', title_x=0.5)
+    if normalized:
+        fig.update_layout(legend=dict(orientation="h", yanchor="bottom", xanchor="center",x=0.5, y=1.02))
+
+    fig.update_traces(jitter=0.1, pointpos=0, line_color='royalblue', marker_color='darkblue')
+    fig.update_layout(title=f'<b>{box_plot_title}</b>',title_x=0.5)
 
     return fig
 

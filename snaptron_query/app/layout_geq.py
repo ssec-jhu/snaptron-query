@@ -2,7 +2,8 @@
 
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
-from dash import html, dcc
+from dash import html
+
 from snaptron_query.app import components, components_geq, global_strings as gs, inline_styles as styles
 
 
@@ -76,48 +77,6 @@ def get_form_geq():
     ]
 
 
-def get_card_box_plot_geq():
-    """Wrapper function for the box plot component in a card layout"""
-    card = dbc.Card(
-        id='id-card-box-plot-geq',
-        children=[
-            dbc.CardBody(
-                [
-                    dbc.Row(
-                        [
-                            dbc.Col(
-                                width=1
-                            ),
-                            dbc.Col(
-                                components.get_switch(switch_id='id-switch-geq-log-raw-box-plot',
-                                                      switch_label=gs.switch_log),
-                                width=3
-                            ),
-                            dbc.Col(
-                                components.get_switch(switch_id='id-switch-geq-violin-raw-box-plot',
-                                                      switch_label=gs.switch_violin),
-                                width=3
-                            )
-
-                        ],
-                        style={'border': styles.border_column},
-                        className="g-0 form-control-sm"
-                    ),
-                    dbc.Row(
-                        [
-                            dcc.Graph(id="id-box-plot-geq")
-                        ],
-                        style={'border': styles.border_column},
-                        className="g-0"
-                    )
-                ]
-            ),
-        ],
-        style=styles.boundary_style,
-    )
-    return card
-
-
 def get_accordian_form_geq():
     return dbc.Accordion(
         [
@@ -149,15 +108,25 @@ def get_accordian_graphs_geq():
                 [
                     dbc.Row(
                         [
-                            # row equally divided for the plots
                             dbc.Col(
-                                [html.Div(get_card_box_plot_geq())]
+                                width=1
                             ),
-                            # dbc.Col(
-                            #     [html.Div(get_card_histogram())]
-                            # )
-                        ]
+                            dbc.Col(
+                                components.get_switch(switch_id='id-switch-geq-log-raw-box-plot',
+                                                      switch_label=gs.switch_log),
+                                width=3
+                            ),
+                            dbc.Col(
+                                components.get_switch(switch_id='id-switch-geq-violin-raw-box-plot',
+                                                      switch_label=gs.switch_violin),
+                                width=3
+                            )
+
+                        ],
+                        style={'border': styles.border_column},
+                        className="g-0 form-control-sm"
                     ),
+                    dbc.Row(id='id-row-graph-geq', style={'border': styles.border_column}, class_name="g-0")
                 ],
                 title=gs.graphs_group_title
             ),
