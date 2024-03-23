@@ -51,9 +51,11 @@ geq_gene_id_placeholder = 'ex: ENSG00000120948'
 geq_gene_coord_placeholder = 'ex: chr1:11012654-11025492'
 geq_gene_id_norm_placeholder = 'ex: ENSG00000107223'
 geq_gene_coord_norm_placeholder = 'chr9:136862119-136866308'
-raw_count_box_plot_title = 'Raw Count Box Plot'
-raw_vs_normalized_count_box_plot_title = 'Raw vs Normalized Count Box Plot'
-plot_label_raw_count = 'Raw Count'
+geq_plot_title_raw_count_box_plot = 'Raw Count Box Plot'
+geq_plot_title_raw_vs_normalized_count = 'Raw vs Normalized Count Box Plot'
+geq_plot_title_raw_vs_normalized_count_hist = 'Raw vs Normalized Count Histogram'
+geq_plot_label_raw_count = 'Raw Count'
+geq_plot_label_norm_count = 'Normalized Count'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     Strings beyond this point are related to the snaptron interface
