@@ -151,7 +151,7 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
     else:
         fig.update_yaxes(title_text='Gene Expression Count')
 
-    fig.update_traces(jitter=0.01, pointpos=0, line_color='royalblue', marker_color='darkblue')
+    fig.update_traces(jitter=0, pointpos=0, line_color='royalblue', marker_color='darkblue')
     fig.update_layout(title=f'<b>{box_plot_title}</b>', title_x=0.5)
 
     # update the legend location for the normalized case so it doesn't take space in
