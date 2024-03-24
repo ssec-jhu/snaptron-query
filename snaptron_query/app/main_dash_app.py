@@ -163,7 +163,8 @@ def update_table(data_from_store, current_style):
     Input('id-ag-grid-jiq', 'virtualRowData'),
     Input('id-switch-jiq-lock-with-table', 'value'),
     Input('id-switch-jiq-log-box-plot', 'value'),
-    Input('id-switch-jiq-violin-box-plot', 'value')
+    Input('id-switch-jiq-violin-box-plot', 'value'),
+    prevent_initial_call=True
 )
 def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_data_with_table,
                   log_psi_values, violin_overlay):
@@ -187,6 +188,7 @@ def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_
     Output('id-input-geq-gene-id-norm', 'disabled'),
     Output('id-input-geq-gene-coord-norm', 'disabled'),
     Input('id-switch-geq-normalize', 'value'),
+    prevent_initial_call=True
 )
 def enable_normalization(normalize_value):
     # if normalize_value is on, then the inputs for the normalization gene should be turned
