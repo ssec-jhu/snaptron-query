@@ -136,15 +136,28 @@ def get_card_box_plot():
                 [
                     dbc.Row(
                         [
-                            components.get_switch_log_psi_box_plot()
+                            dbc.Col(
+                                width=1
+                            ),
+                            dbc.Col(
+                                components.get_switch_log_psi_box_plot(),
+                                width=3
+                            ),
+                            dbc.Col(
+                                components.get_switch_violin_box_plot(),
+                                width=3
+                            )
+
                         ],
-                        style={'border': styles.border_column}
+                        style={'border': styles.border_column},
+                        className = "g-0 form-control-sm"
                     ),
                     dbc.Row(
                         [
-                            html.Div(dcc.Graph(id="id-box-plot"))
+                           dcc.Graph(id="id-box-plot")
                         ],
-                        style={'border': styles.border_column}
+                        style={'border': styles.border_column},
+                        className="g-0"
                     )
                 ]
             ),

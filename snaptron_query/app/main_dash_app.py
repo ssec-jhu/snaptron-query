@@ -4,15 +4,26 @@ import pandas as pd
 from dash import Dash, html, dcc, Input, Output
 from dash.exceptions import PreventUpdate
 
-from snaptron_query.app import graphs, layout, global_strings
+from snaptron_query.app import graphs, layout, global_strings, exceptions, snaptron_client as sc
+from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager
 
 # Initialize the app
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 bs_cdn = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 app = Dash(__name__,
-           external_stylesheets=[dbc.themes.SANDSTONE,
-                                 dbc_css,
-                                 ])
+           external_stylesheets=[dbc.themes.SANDSTONE, dbc_css])
+
+
+def read_srav3h():
+    # TODO: read the rest of the meta data files here as they become available
+    # read the file and make sure index is set to the rail id for fast lookup
+    return pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
+                       usecols=global_strings.srav3h_meta_data_required_list,
+                       dtype={'sample_description': 'string'}).set_index(global_strings.snaptron_col_rail_id)
+
+
+# Meta data loaded in global space
+df_srav3h = read_srav3h()
 
 # this is the main layout of the page with all tabs
 app.layout = dbc.Container(
@@ -22,7 +33,7 @@ app.layout = dbc.Container(
         dcc.Store(id="id-store-info"),
         dcc.Store(id="id-store-jiq-df"),
 
-        # navbar,# Top row with titles and all
+        # navbar, top row with titles and all
         layout.get_navbar_top(),
 
         # Next row is are the tabs and their content
@@ -48,7 +59,7 @@ app.layout = dbc.Container(
     Input('id-store-info', 'data'),
     prevent_initial_call=True
 )
-def on_button_click_gen_results(n_clicks, compilation, inc, exc, datasets):
+def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclusion_interval, datasets):
     #  this function gets called with every input change, not just the button click
     if not datasets:
         datasets = dict(clicks=0, log='')
@@ -57,37 +68,63 @@ def on_button_click_gen_results(n_clicks, compilation, inc, exc, datasets):
     if n_clicks <= datasets.get('clicks', 0):
         raise PreventUpdate
     else:
-        # ----------------------------------------
-        #       Work In Progress Here
-        # ----------------------------------------
-        # Gather the form data and create the URL
-        # TODO: hardcode URL for now
-        chromosome_number = 19
-        host = 'https://snaptron.cs.jhu.edu'
-        query_type_string = 'snaptron'  # vs 'genes' for gene expression
-        head = f'{host}/{compilation}/{query_type_string}?regions=chr{chromosome_number}' + ':'
-        url = f'{head}{exc}{inc}'
-        # url = 'https://snaptron.cs.jhu.edu/srav3h/snaptron?regions=chr19:4491836-4493702'
-        # TODO: run the query and return result's data frame here
-        # putting example data for now
-        data_dict = {
-            'rail_id': [1, 2, 3, 4, 5],
-            'external_id': [10, 20, 30, 40, 50],
-            'study': ['AA', 'BB', 'CC', 'DD', 'EE'],
-            'inc': [25, 30, 22, 28, 35],
-            'exc': [25, 30, 22, 28, 35],
-            'total': [25, 30, 22, 28, 35],
-            'psi': [15, 26, 34, 5, 17],
-        }
+        try:
+            if compilation and inclusion_interval and exclusion_interval:
 
-        # ----------------------------------------
+                # make sure chromosome numbers match
+                # if there is any error in the intervals, an exception will be thrown
+                (exc_chr, exc_start, exc_end), (inc_chr, inc_start, inc_end) = (
+                    sc.jiq_verify_coordinate_pairs(exclusion_interval, inclusion_interval))
+
+                # RUN the URL and get results back from SNAPTRON
+                df = sc.get_snaptron_query_results_df(compilation=compilation,
+                                                      junction_coordinates=exclusion_interval,
+                                                      query_mode='snaptron')
+                # make sure you get results back
+                if df.empty:
+                    raise exceptions.EmptyResponse
+
+                # Select the meta data that must be used
+                # TODO: add the rest of the meta data as PI provides list
+                if compilation == global_strings.compilation_srav3h:
+                    df_meta_data = df_srav3h
+                else:
+                    raise PreventUpdate
+
+                # # Set upt the JIQ manager then run the Junction Inclusion Query
+                jqm = JunctionInclusionQueryManager(exc_start, exc_end, inc_start, inc_end)
+                results_list_of_dict = jqm.run_junction_inclusion_query(df, df_meta_data)
+
+                # Performance Note: ag-grid will load much faster with a lists of dictionaries, so I am storing
+                # it as such. Once can convert a dataframe to dict with orient set to records for the ag-grid as well.
+                table_data = results_list_of_dict
+            else:
+                raise exceptions.MissingUserInputs
+
+        # TODO: setup UI for error messages
+        except exceptions.BadURL:
+            print("URL was bad")
+            raise PreventUpdate
+        except exceptions.EmptyResponse:
+            print("URL was correct but server returned empty response")
+            raise PreventUpdate
+        except exceptions.MissingUserInputs or exceptions.BadCoordinates:
+            print("Some user input error")
+            raise PreventUpdate
+        except exceptions.EmptyJunction:
+            print("Requested Junction has no sample data")
+            raise PreventUpdate
+        except Exception as e:
+            # Any other exception happens I want it forwarded to the front end for handling
+            print(f"Exception: {e}")
+            raise PreventUpdate
 
         # keep track of any log needed
-        log_msg = f'Click= {n_clicks}-URL={url[0]}'
+        log_msg = f'Click= {n_clicks}'
         datasets['log'] = log_msg
         datasets['clicks'] = n_clicks
 
-    return datasets, data_dict
+    return datasets, table_data
 
 
 @app.callback(
@@ -102,8 +139,8 @@ def update_table(data_from_store, current_style):
     if not data_from_store:
         raise PreventUpdate
 
-    # convert data from storage to data frame and make sure the psi column is float type
-    row_data = pd.DataFrame(data_from_store).astype({'psi': float}).to_dict('records')
+    # ag-grid accepts list of dicts so passing in the data from storage that is saved as list of dict saves times here.
+    row_data = data_from_store
 
     # Set the columnDefs for the ag-grid
     column_defs = graphs.get_junction_query_column_def()
@@ -121,9 +158,12 @@ def update_table(data_from_store, current_style):
     Output('id-box-plot', 'figure'),
     Input('id-ag-grid', 'rowData'),
     Input('id-ag-grid', 'virtualRowData'),
-    Input('id-switch-lock-with-table', 'value')
+    Input('id-switch-lock-with-table', 'value'),
+    Input('id-switch-log-psi-box-plot', 'value'),
+    Input('id-switch-violin-box-plot', 'value')
 )
-def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_data_with_table):
+def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_data_with_table,
+                  log_psi_values,violin_overlay):
     """
         Given the table data as input, it will update the relative graphs
     """
@@ -135,9 +175,8 @@ def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_
     else:
         df = pd.DataFrame(row_data_from_table)
 
-    df[global_strings.table_jiq_col_psi] = df[global_strings.table_jiq_col_psi].astype('float')
     histogram = graphs.get_histogram(df)
-    box_plot = graphs.get_box_plot(df)
+    box_plot = graphs.get_box_plot(df, log_psi_values, violin_overlay)
     return histogram, box_plot
 
 
