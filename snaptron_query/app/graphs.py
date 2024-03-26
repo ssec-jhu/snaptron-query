@@ -79,7 +79,7 @@ def get_histogram_geq(df):
     """
     labels = {gs.snpt_col_rail_id: gs.plot_label_rail_id,
               gs.table_geq_col_norm_count: gs.geq_plot_label_norm_count}
-    fig = px.histogram(df, x=gs.table_geq_col_norm_count, nbins=30)
+    fig = px.histogram(df, x=gs.table_geq_col_norm_count, labels=labels, nbins=30)
     fig.update_layout(title=f'<b>{gs.geq_plot_title_hist}</b>', title_x=0.5)
     fig.update_traces(marker_color='darkblue')
     return fig
