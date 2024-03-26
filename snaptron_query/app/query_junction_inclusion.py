@@ -89,7 +89,7 @@ class JunctionInclusionQueryManager:
              meta_data[gs.table_jiq_col_total]) = self._calculate_percent_spliced_in(rail_id)
 
             # add the rail id information
-            meta_data[gs.snaptron_col_rail_id] = rail_id
+            meta_data[gs.snpt_col_rail_id] = rail_id
 
             # append to the rest of the data
             self.gathered_rail_id_meta_data_and_psi.append(meta_data)

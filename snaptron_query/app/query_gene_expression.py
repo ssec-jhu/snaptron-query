@@ -4,17 +4,15 @@ from snaptron_query.app import exceptions, global_strings as gs, query_junction_
 
 
 class GeneExpressionQueryManager:
-    """Module that processes the junction inclusion query given the dataframe output from snaptron"""
-
-    def __init__(self, gene_id):
-        self._gene_id = gene_id
+    def __init__(self):
         self.rail_id_dictionary = collections.defaultdict(int)
         self.normalization_factor_table = collections.defaultdict(int)
         self.gathered_rail_id_meta_data_and_counts = []
         self.normalize_counts = False
 
-    def setup_normalization_data(self, normalization_gene_id, df_normalization):
-        row_df = df_normalization.loc[df_normalization[gs.snaptron_col_gene_id].str.contains(normalization_gene_id)]
+    def setup_normalization_data(self, gene_id_norm, df_snaptron_results_norm):
+        row_df = df_snaptron_results_norm.loc[
+            df_snaptron_results_norm[gs.snpt_col_gene_id].str.contains(gene_id_norm)]
 
         if row_df.empty:
             raise exceptions.GeneNotFound
@@ -34,38 +32,99 @@ class GeneExpressionQueryManager:
         self.normalize_counts = True
         return
 
+    def setup_normalization_data_method_2(self, gene_id_norm, df_snaptron_results_norm, df_meta_data):
+
+        # extract the row with the normalization gene ID
+        row_df = df_snaptron_results_norm.loc[
+            df_snaptron_results_norm[gs.snpt_col_gene_id].str.contains(gene_id_norm)]
+
+        if row_df.empty:
+            raise exceptions.GeneNotFound
+
+        study_dictionary = collections.defaultdict(list)
+        # extract the 'sample' column form the row this is where all the samples and their count is
+        gene_samples = (row_df['samples']).tolist()
+        for sample in gene_samples:
+            # samples are separated by commas then each sample is separated with a colon from its count as railID:count
+            for each_sample in sample.split(','):
+                if each_sample:
+                    (rail_id, count) = jiq.split_and_cast(each_sample)
+                    try:  # you need the try because railID may not be in the metadata
+                        # get the study title for this rail id
+                        study = (df_meta_data.loc[rail_id])['study']
+                        t = (rail_id, count)
+                        study_dictionary[study].append(t)
+                    except KeyError:
+                        # TODO: look into the rail ids that are not found in the meta data file.
+                        pass
+
+        # this is slow
+        # import pandas as pd
+        # import time
+        # start_time = time.time()
+        # df = pd.concat([pd.DataFrame(lst) for lst in study_dictionary.values()],
+        #                keys=study_dictionary.keys()).reset_index(level=1, drop=True)
+        # max_counts = df.groupby(level=0)['count'].max()
+        # elapsed_time = time.time() - start_time
+
+        study_max_count_dict = collections.defaultdict(int)
+        for study in study_dictionary.keys():
+            # calculate the max count for each list
+            max_value = max(d[1] for d in study_dictionary[study])
+            study_max_count_dict[study] = max_value
+
+        # Now divide each rail id's count by the max associated with its study to normalize the count per study max.
+        for study in study_dictionary.keys():
+            max_value = study_max_count_dict[study]
+            for item in study_dictionary[study]:
+                rail_id = item[0]
+                raw_count = item[1]
+                factor = raw_count / max_value
+                if rail_id not in self.normalization_factor_table:
+                    self.normalization_factor_table[rail_id] = factor
+                else:
+                    print("ERROR: why are we here, can a similar rail id come from different samples???")
+                    pass
+
+        self.normalize_counts = True
+        return
+
     def _gather_samples_rail_id_and_counts(self, samples):
         for gene_samples in samples:
             # samples are separated by commas then each sample is separated with a colon from its count as railID:count
             for each_sample in gene_samples.split(','):
                 if each_sample:
-                    (rail_id, count) = jiq.split_and_cast(each_sample)
-
+                    (rail_id, raw_count) = jiq.split_and_cast(each_sample)
                     # keep the item in a defaultdict(int)
-                    self.rail_id_dictionary[rail_id] = count
+                    self.rail_id_dictionary[rail_id] = raw_count
 
     def _gather_rail_id_meta_data(self, rail_id, df_meta_data):
         """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
-        rail ids
+        rail ids and any other quantities calculated
         """
         # look up the rail id and extract the information
         try:
             # gather the metadata associated with this rail id
             meta_data = (df_meta_data.loc[rail_id]).to_dict()
 
-            # add counts data
+            # add the raw count data
             raw_count = self.rail_id_dictionary[rail_id]
             meta_data[gs.table_geq_col_raw_count] = raw_count
+
+            # add the normalized count if needed
             if self.normalize_counts:
                 if rail_id in self.normalization_factor_table:
                     factor = self.normalization_factor_table[rail_id]
-                    meta_data['factor'] = factor
+                    meta_data[gs.table_geq_col_factor] = factor
                     meta_data['normalized_count'] = raw_count / factor
+                else:
+                    meta_data[gs.table_geq_col_factor] = -1
+                    meta_data['normalized_count'] = -1
 
             # add the rail id information
-            meta_data[gs.snaptron_col_rail_id] = rail_id
+            meta_data[gs.snpt_col_rail_id] = rail_id
 
-            # append to the rest of the data
+            # append to the rest of the gathered data
             self.gathered_rail_id_meta_data_and_counts.append(meta_data)
 
         except (KeyError, IndexError):
@@ -75,13 +134,15 @@ class GeneExpressionQueryManager:
             # code must continue and not stop
             pass
 
-    def run_gene_expression_query(self, df, df_meta_data):
-        row_df = df.loc[df[gs.snaptron_col_gene_id].str.contains(self._gene_id)]
+    def run_gene_expression_query(self, gene_id_query, df_snaptron_results_query, df_meta_data):
+        # extract the row in the results that matches the query gene ID
+        row_df = df_snaptron_results_query.loc[
+            df_snaptron_results_query[gs.snpt_col_gene_id].str.contains(gene_id_query)]
 
         if row_df.empty:
             raise exceptions.GeneNotFound
 
-        # extract the 'sample' column form the row this is where all the samples and their count is
+        # extract the 'sample' column form the row this is where all the rail_id:count are
         samples = (row_df['samples']).tolist()
         self._gather_samples_rail_id_and_counts(samples)
 

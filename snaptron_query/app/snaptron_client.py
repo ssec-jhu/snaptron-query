@@ -41,7 +41,7 @@ def geq_verify_coordinate(gene_coordinate):
     return coord_chr, coord_start, coord_end
 
 
-def get_snaptron_query_results_df(compilation, junction_coordinates, query_mode):
+def get_snpt_query_results_df(compilation, junction_coordinates, query_mode):
     """Will run the url and return the response
     :param compilation: from the list box selection
     :param junction_coordinates: the interval of the query

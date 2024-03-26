@@ -33,14 +33,14 @@ def get_form_jiq():
                     align='center',  # vertical alignment: center start end
                 ),
                 dbc.Col(
-                    components.get_text('dmc', gs.input_inc_txt),
+                    components.get_text('dmc', gs.jiq_input_inc_txt),
                     width=4,
                     style={"border": styles.border_column},
                     align='center',
                     className='mx-0.5'
                 ),
                 dbc.Col(
-                    components.get_text('dmc', gs.input_exc_txt),
+                    components.get_text('dmc', gs.jiq_input_exc_txt),
                     width=4,
                     style={"border": styles.border_column},
                     align='center',
@@ -63,14 +63,14 @@ def get_form_jiq():
                     align='center',
                 ),
                 dbc.Col(
-                    components.get_input(gs.input_inc_placeholder, 'id-input-jiq-inc-junc'),
+                    components.get_input(gs.jiq_input_inc_placeholder, 'id-input-jiq-inc-junc'),
                     width=4,
                     style={"border": styles.border_column},
                     align='center',
                     className='mx-0.5'
                 ),
                 dbc.Col(
-                    components.get_input(gs.input_exc_placeholder, 'id-input-jiq-exc-junc'),
+                    components.get_input(gs.jiq_input_exc_placeholder, 'id-input-jiq-exc-junc'),
                     width=4,
                     style={"border": styles.border_column},
                     align='center',

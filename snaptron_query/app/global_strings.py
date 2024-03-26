@@ -1,9 +1,11 @@
 """General Strings"""
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+            General
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 tab_jiq = "Junction PSI Query"
 tab_geq = "Gene Expression Query"
-
-"""Strings used in the Junction Inclusion Query Form"""
+graphs_group_title = 'Graphs'
 
 compilation_srav3h = 'SRAv3h'
 compilation_gtexv2 = 'GTEXv2'
@@ -17,25 +19,28 @@ compilation_names_dict = {
 }
 drop_compilation = 'Select the organism of interest'
 drop_compilation_placeholder = 'Select a compilation'
-jiq_form_title = 'Junction Information'
-graphs_group_title = 'Graphs'
-button_download = 'Download'
-switch_log = 'Log₂(y+1)'
+
 switch_violin = 'Violin Mode'
+switch_log = 'Log₂(y+1)'
 switch_lock = 'Lock Table with Graphs'
-button_add_junction = 'Add Junction'
-button_run = 'Calculate PSI'
-input_inc_placeholder = 'ex: chr19:4491836-4492014'
-input_inc_txt = 'Inclusion Junction'
-input_exc_placeholder = 'ex: chr19:4491836-4493702'
-input_exc_txt = 'Exclusion Junction'
-input_junction_txt_list = ['Junction 1', 'Junction 2', 'Junction 3', 'Junction 4', 'Junction 5']
-
-"""Strings used in the Graphs and Tables """
-
-psi_histogram_title = 'PSI Histogram'
-psi_box_plot_title = 'PSI Box Plot'
 plot_label_rail_id = 'Rail ID'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+            Junction Inclusion Query 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+jiq_form_title = 'Junction Information'
+button_download = 'Download'
+jiq_button_add_junction = 'Add Junction'
+jiq_button_run = 'Calculate PSI'
+jiq_input_inc_placeholder = 'ex: chr19:4491836-4492014'
+jiq_input_inc_txt = 'Inclusion Junction'
+jiq_input_exc_placeholder = 'ex: chr19:4491836-4493702'
+jiq_input_exc_txt = 'Exclusion Junction'
+jiq_input_junction_txt_list = ['Junction 1', 'Junction 2', 'Junction 3', 'Junction 4', 'Junction 5']
+jiq_plot_title_hist = 'PSI Histogram'
+jiq_plot_title_box = 'PSI Box Plot'
+jiq_box_plot_y_axes = 'PSI'
+jiq_box_plot_log_y_axes = 'Log₂(PSI+1)'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             Gene Expression Query 
@@ -51,11 +56,13 @@ geq_gene_id_placeholder = 'ex: ENSG00000120948'
 geq_gene_coord_placeholder = 'ex: chr1:11012654-11025492'
 geq_gene_id_norm_placeholder = 'ex: ENSG00000107223'
 geq_gene_coord_norm_placeholder = 'chr9:136862119-136866308'
-geq_plot_title_raw_count_box_plot = 'Raw Count Box Plot'
-geq_plot_title_raw_vs_normalized_count = 'Raw vs Normalized Count Box Plot'
-geq_plot_title_raw_vs_normalized_count_hist = 'Raw vs Normalized Count Histogram'
+geq_plot_title_box_raw = 'Raw Count Box Plot'
+geq_plot_title_box_norm = 'Raw vs Normalized Count Box Plot'
+geq_plot_title_hist = 'Normalized Count Histogram'
 geq_plot_label_raw_count = 'Raw Count'
 geq_plot_label_norm_count = 'Normalized Count'
+geq_box_plot_y_axes = 'Gene Expression Count'
+geq_box_plot_y_axes_log = 'Log₂(Gene Expression Count+1)'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     Strings beyond this point are related to the snaptron interface
@@ -63,16 +70,16 @@ geq_plot_label_norm_count = 'Normalized Count'
     Strings here exists solely for the purpose of potential changes in the 
     snaptron client web interface and its internal data
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-snaptron_col_rail_id = 'rail_id'
-snaptron_col_external_id = 'external_id'
-snaptron_col_gene_id = 'gene_id:gene_name:gene_type:bp_length'
-srav3h_meta_data_required_list = [snaptron_col_rail_id, snaptron_col_external_id,
+snpt_col_rail_id = 'rail_id'
+snpt_col_external_id = 'external_id'
+snpt_col_gene_id = 'gene_id:gene_name:gene_type:bp_length'
+srav3h_meta_data_required_list = [snpt_col_rail_id, snpt_col_external_id,
                                   'study', 'study_title', 'library_layout',
                                   'sample_description', 'sample_name', 'sample_title']
 
 srav1m_meta_data_required_list = srav3h_meta_data_required_list  # SRA mouse and SRA human are similar
 
-tcgav2_meta_data_required_list = [snaptron_col_rail_id,
+tcgav2_meta_data_required_list = [snpt_col_rail_id,
                                   "tcga_barcode", "study", "gdc_cases.project.name",
                                   "gdc_cases.project.primary_site", "cgc_sample_sample_type",
                                   "gdc_state", "gdc_cases.demographic.race",
@@ -82,7 +89,7 @@ tcgav2_meta_data_required_list = [snaptron_col_rail_id,
                                   "cgc_sample_country_of_sample_procurement", "cgc_case_tumor_status",
                                   "cgc_drug_therapy_pharmaceutical_therapy_type", "cgc_follow_up_tumor_status"]
 
-gtexv2_meta_data_required_list = [snaptron_col_rail_id, "run_acc", "study", "SEX", "AGE", "SAMPID", "SMTS", "SMTSD"]
+gtexv2_meta_data_required_list = [snpt_col_rail_id, "run_acc", "study", "SEX", "AGE", "SAMPID", "SMTS", "SMTSD"]
 
 table_jiq_col_inc = 'inc'
 table_jiq_col_exc = 'exc'
@@ -90,3 +97,4 @@ table_jiq_col_total = 'total'
 table_jiq_col_psi = 'psi'
 table_geq_col_raw_count = 'raw_count'
 table_geq_col_norm_count = 'normalized_count'
+table_geq_col_factor = 'factor'

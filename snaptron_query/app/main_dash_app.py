@@ -1,10 +1,10 @@
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 import pandas as pd
-from dash import Dash, html, dcc, Input, Output
+from dash import Dash, html, dcc, Input, Output, callback_context
 from dash.exceptions import PreventUpdate
 
-from snaptron_query.app import graphs, layout, global_strings, exceptions, snaptron_client as sc
+from snaptron_query.app import graphs, layout, global_strings as gs, exceptions, snaptron_client as sc
 from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager
 from snaptron_query.app.query_gene_expression import GeneExpressionQueryManager
 
@@ -19,8 +19,8 @@ def read_srav3h():
     # TODO: read the rest of the meta data files here as they become available
     # read the file and make sure index is set to the rail id for fast lookup
     return pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
-                       usecols=global_strings.srav3h_meta_data_required_list,
-                       dtype={'sample_description': 'string'}).set_index(global_strings.snaptron_col_rail_id)
+                       usecols=gs.srav3h_meta_data_required_list,
+                       dtype={'sample_description': 'string'}).set_index(gs.snpt_col_rail_id)
 
 
 # Meta data loaded in global space
@@ -60,7 +60,8 @@ app.layout = dbc.Container(
     Input(component_id="id-input-jiq-inc-junc", component_property="value"),
     Input(component_id="id-input-jiq-exc-junc", component_property="value"),
     Input('id-store-info', 'data'),
-    prevent_initial_call=True
+    prevent_initial_call=True,
+    running=[(Output("id-input-compilation-jiq", "disabled"), True, False)]
 )
 def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclusion_interval, datasets):
     #  this function gets called with every input change, not just the button click
@@ -80,23 +81,21 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
                     sc.jiq_verify_coordinate_pairs(exclusion_interval, inclusion_interval))
 
                 # RUN the URL and get results back from SNAPTRON
-                df = sc.get_snaptron_query_results_df(compilation=compilation,
-                                                      junction_coordinates=exclusion_interval,
-                                                      query_mode='snaptron')
                 # make sure you get results back
-                if df.empty:
+                df_snpt_results = sc.get_snpt_query_results_df(compilation, exclusion_interval, 'snaptron')
+                if df_snpt_results.empty:
                     raise exceptions.EmptyResponse
 
                 # Select the meta data that must be used
                 # TODO: add the rest of the meta data as PI provides list
-                if compilation == global_strings.compilation_srav3h:
+                if compilation == gs.compilation_srav3h:
                     df_meta_data = df_srav3h
                 else:
                     raise PreventUpdate
 
                 # # Set upt the JIQ manager then run the Junction Inclusion Query
                 jqm = JunctionInclusionQueryManager(exc_start, exc_end, inc_start, inc_end)
-                results_list_of_dict = jqm.run_junction_inclusion_query(df, df_meta_data)
+                results_list_of_dict = jqm.run_junction_inclusion_query(df_snpt_results, df_meta_data)
 
                 # Performance Note: ag-grid will load much faster with a lists of dictionaries, so I am storing
                 # it as such. Once can convert a dataframe to dict with orient set to records for the ag-grid as well.
@@ -209,59 +208,53 @@ def enable_normalization(normalize_value):
     Input(component_id="id-input-geq-gene-id-norm", component_property="value"),
     Input(component_id="id-input-geq-gene-coord-norm", component_property="value"),
     Input('id-store-info', 'data'),
-    prevent_initial_call=True
+    prevent_initial_call=True,
+    running=[(Output("id-button-geq-run-query", "disabled"), True, False)]
 )
-def on_button_click_gene_expression(n_clicks, compilation, gene_id, gene_coordinates,
-                                    normalize_data, normalization_gene_id, normalization_gene_coordinates, datasets):
+def on_button_click_gene_expression(n_clicks, compilation, query_gene_id, query_gene_coordinates,
+                                    normalize_data, gene_id_norm, norm_gene_coordinates, datasets):
     #  this function gets called with every input change, not just the button click
     if not datasets:
         datasets = dict(clicks=0, log='')
 
     # compare old clicks with the new clicks
-    if n_clicks <= datasets.get('clicks', 0):
+    # if n_clicks <= datasets.get('clicks', 0):
+    input_id = callback_context.triggered_id
+    if input_id != 'id-button-geq-run-query':
         raise PreventUpdate
     else:
         try:
-            if compilation and gene_id and gene_coordinates:
+            if compilation and query_gene_id and query_gene_coordinates:
 
-                if normalize_data and (not normalization_gene_coordinates or not normalization_gene_id):
+                if normalize_data and (not norm_gene_coordinates or not gene_id_norm):
                     raise PreventUpdate
 
                 # Verify the gene coordinates string, we don't need the return values for this query
-                sc.geq_verify_coordinate(gene_coordinates)
+                sc.geq_verify_coordinate(query_gene_coordinates)
 
                 # RUN the URL and get results back from SNAPTRON
-                df = sc.get_snaptron_query_results_df(compilation=compilation,
-                                                      junction_coordinates=gene_coordinates,
-                                                      query_mode='genes')
-                # make sure you get results back
-                if df.empty:
+                df_snpt_results_query = sc.get_snpt_query_results_df(compilation, query_gene_coordinates, 'genes')
+                if df_snpt_results_query.empty:
                     raise exceptions.EmptyResponse
 
                 # Select the meta data that must be used
                 # TODO: add the rest of the meta data as PI provides list
-                if compilation == global_strings.compilation_srav3h:
+                if compilation == gs.compilation_srav3h:
                     df_meta_data = df_srav3h
                 else:
                     raise PreventUpdate
 
-                # # Set upt the JIQ manager then run the Junction Inclusion Query
-                geq = GeneExpressionQueryManager(gene_id)
+                # Set upt the GEX manager then run the Query
+                # Create normalization table if needed
+                geq = GeneExpressionQueryManager()
                 if normalize_data:
-                    sc.geq_verify_coordinate(normalization_gene_coordinates)
+                    sc.geq_verify_coordinate(norm_gene_coordinates)
+                    df_snpt_results_norm = sc.get_snpt_query_results_df(compilation, norm_gene_coordinates, 'genes')
+                    if df_snpt_results_norm.empty:
+                        raise exceptions.EmptyResponse
+                    geq.setup_normalization_data_method_2(gene_id_norm, df_snpt_results_norm, df_meta_data)
 
-                    # RUN the URL and get results back from SNAPTRON
-                    df_normalization = sc.get_snaptron_query_results_df(
-                        compilation=compilation,
-                        junction_coordinates=normalization_gene_coordinates,
-                        query_mode='genes')
-                    geq.setup_normalization_data(normalization_gene_id, df_normalization)
-
-                results_list_of_dict = geq.run_gene_expression_query(df, df_meta_data)
-
-                # Performance Note: ag-grid will load much faster with a lists of dictionaries, so I am storing
-                # it as such. Once can convert a dataframe to dict with orient set to records for the ag-grid as well.
-                table_data = results_list_of_dict
+                table_data = geq.run_gene_expression_query(query_gene_id, df_snpt_results_query, df_meta_data)
 
             else:
                 raise exceptions.MissingUserInputs
@@ -342,6 +335,8 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
         df = pd.DataFrame(row_data_from_table)
 
     if normalized_data:
+        df = df.loc[df[gs.table_geq_col_factor] != -1]
+    if normalized_data:
         histogram = graphs.get_histogram_geq(df)
     else:
         histogram = None
@@ -349,7 +344,7 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
     box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
 
     if normalized_data:
-        # One option is also to have an html.DIV in the layout and send over the Row as
+        # One option is also to have a html.DIV in the layout and send over the Row as
         # but them you need to also send the styling of the row here
         # child = dbc.Row([ dbc.Col(dcc.Graph the graph you want),dbc.Col(dcc.Graph the other graph)], className="g-0")
         row_child = [dbc.Col(dcc.Graph(figure=box_plot), width=6), dbc.Col(dcc.Graph(figure=histogram), width=6)]

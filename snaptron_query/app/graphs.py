@@ -6,6 +6,11 @@ import plotly.graph_objects as go
 from snaptron_query.app import global_strings as gs
 
 
+def log_2_function(df, y):
+    # add th plus 1
+    return np.log2(df[y] + 1)
+
+
 def get_histogram_jiq(df):
     """Wrapper for plotly express histogram given a df - for clarity
 
@@ -13,11 +18,8 @@ def get_histogram_jiq(df):
     https://plotly.com/python/reference/histogram/
     https://plotly.com/python/histograms/
     """
-    fig = px.histogram(df,
-                       x=gs.table_jiq_col_psi,
-                       nbins=50,
-                       )
-    fig.update_layout(title=f'<b>{gs.psi_histogram_title}</b>', title_x=0.5)
+    fig = px.histogram(df, x=gs.table_jiq_col_psi, nbins=50)
+    fig.update_layout(title=f'<b>{gs.jiq_plot_title_hist}</b>', title_x=0.5)
     fig.update_traces(marker_color='darkblue')
     return fig
 
@@ -32,22 +34,22 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay):
     y_values = gs.table_jiq_col_psi
     range_y_axis = [0, 110]
     if log_psi_values:
-        y_values = np.log2(df[y_values + 1])
+        y_values = log_2_function(df, y_values)
         range_y_axis = None
 
     if violin_overlay:
-        fig = px.violin(df, y=y_values, hover_data=[gs.snaptron_col_rail_id],
-                        labels={gs.snaptron_col_rail_id: gs.plot_label_rail_id},
+        fig = px.violin(df, y=y_values, hover_data=[gs.snpt_col_rail_id],
+                        labels={gs.snpt_col_rail_id: gs.plot_label_rail_id},
                         box=True,
                         points='all')  # show all points
 
         # if you want to add the mean set mean-line_visible=True
-        fig.update_traces(jitter=0.1, pointpos=0,
+        fig.update_traces(jitter=0.01, pointpos=0,
                           line_color='royalblue', marker_color='darkblue')
 
     else:
-        fig = px.box(df, y=y_values, hover_data=[gs.snaptron_col_rail_id],
-                     labels={gs.snaptron_col_rail_id: gs.plot_label_rail_id,
+        fig = px.box(df, y=y_values, hover_data=[gs.snpt_col_rail_id],
+                     labels={gs.snpt_col_rail_id: gs.plot_label_rail_id,
                              gs.table_jiq_col_psi: gs.table_jiq_col_psi.upper()},
                      # Request to not snap with table changes.
                      # If provided, overrides auto-scaling on the y-axis in cartesian coordinates.
@@ -59,9 +61,11 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay):
 
     # update the y-axis title if log switch is on
     if log_psi_values:
-        fig.update_yaxes(title_text='Log₂(PSI)')
+        fig.update_yaxes(title_text=gs.jiq_box_plot_log_y_axes)
+    else:
+        fig.update_yaxes(title_text=gs.jiq_box_plot_y_axes)
 
-    fig.update_layout(title=f'<b>{gs.psi_box_plot_title}</b>', title_x=0.5)
+    fig.update_layout(title=f'<b>{gs.jiq_plot_title_box}</b>', title_x=0.5)
 
     return fig
 
@@ -73,11 +77,10 @@ def get_histogram_geq(df):
     https://plotly.com/python/reference/histogram/
     https://plotly.com/python/histograms/
     """
-    fig = px.histogram(df,
-                       x='normalized_count',
-                       nbins=50,
-                       )
-    fig.update_layout(title='Histogram Tittle', title_x=0.5)
+    labels = {gs.snpt_col_rail_id: gs.plot_label_rail_id,
+              gs.table_geq_col_norm_count: gs.geq_plot_label_norm_count}
+    fig = px.histogram(df, x=gs.table_geq_col_norm_count, nbins=30)
+    fig.update_layout(title=f'<b>{gs.geq_plot_title_hist}</b>', title_x=0.5)
     fig.update_traces(marker_color='darkblue')
     return fig
 
@@ -93,22 +96,22 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
     if normalized:
         y_raw = df[gs.table_geq_col_raw_count]
         y_normalized = df[gs.table_geq_col_norm_count]
-        box_plot_title = gs.geq_plot_title_raw_vs_normalized_count
+        box_plot_title = gs.geq_plot_title_box_norm
         if log_values:
-            y_raw = np.log2(df[gs.table_geq_col_raw_count] + 1)
-            y_normalized = np.log2(df[gs.table_geq_col_norm_count] + 1)
+            y_raw = log_2_function(df, gs.table_geq_col_raw_count)
+            y_normalized = log_2_function(df, gs.table_geq_col_norm_count)
     else:
         y_raw = df[gs.table_geq_col_raw_count]
-        box_plot_title = gs.geq_plot_title_raw_count_box_plot
+        box_plot_title = gs.geq_plot_title_box_raw
         if log_values:
-            y_raw = np.log2(df[gs.table_geq_col_raw_count] + 1)
+            y_raw = log_2_function(df, gs.table_geq_col_raw_count)
 
     if normalized:
         # to get the hover templates in graphics pobject working use customdata
         # combination of hoverinfo='text', text=df['rail_id'], hovertemplate="Rail ID:%{text}<br>Raw Count: %{y}"
         # creates an extra box next to the original hover box with the trace title.
         # https://stackoverflow.com/questions/69278251/plotly-including-additional-data-in-hovertemplate
-        custom_data = np.stack((df['rail_id'], df['factor']), axis=-1)
+        custom_data = np.stack((df[gs.snpt_col_rail_id], df[gs.table_geq_col_factor]), axis=-1)
         if log_values:
             hover_template = 'Rail ID: %{customdata[0]}<br>Log(count+1): %{y} <br><extra></extra>'
         else:
@@ -125,7 +128,7 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
                                  'customdata': custom_data}
         if violin_overlay:
             trace_raw_count = go.Violin(raw_plot_params_dict, box_visible=True)
-            trace_normalized_count = go.Violin(norm_plot_params_dict,box_visible=True)
+            trace_normalized_count = go.Violin(norm_plot_params_dict, box_visible=True)
         else:
             trace_raw_count = go.Box(raw_plot_params_dict)
             trace_normalized_count = go.Box(norm_plot_params_dict)
@@ -133,9 +136,9 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
         fig = go.Figure(data=[trace_raw_count, trace_normalized_count])
 
     else:  # not normalized data then use plotly express
-        hover_data = [gs.snaptron_col_rail_id]
-        labels = {gs.snaptron_col_rail_id: gs.plot_label_rail_id,
-                  gs. table_geq_col_raw_count: gs.geq_plot_label_raw_count}
+        hover_data = [gs.snpt_col_rail_id]
+        labels = {gs.snpt_col_rail_id: gs.plot_label_rail_id,
+                  gs.table_geq_col_raw_count: gs.geq_plot_label_raw_count}
 
         # Note:plotly express doesn't like the values sent in as a dictionary like the graphics object
         if violin_overlay:
@@ -147,14 +150,14 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
 
     # update the y-axis title if log switch is on
     if log_values:
-        fig.update_yaxes(title_text='Log₂(Gene Expression Count+1)')
+        fig.update_yaxes(title_text=gs.geq_box_plot_y_axes_log)
     else:
-        fig.update_yaxes(title_text='Gene Expression Count')
+        fig.update_yaxes(title_text=gs.geq_box_plot_y_axes)
 
     fig.update_traces(jitter=0, pointpos=0, line_color='royalblue', marker_color='darkblue')
     fig.update_layout(title=f'<b>{box_plot_title}</b>', title_x=0.5)
 
-    # update the legend location for the normalized case so it doesn't take space in
+    # update the legend location for the normalized case, so it doesn't take space in
     # between the box plots and the histogram
     if normalized:
         fig.update_layout(legend=dict(orientation="h", yanchor="bottom", xanchor="center", x=0.5, y=1.02))
@@ -168,7 +171,7 @@ def get_junction_query_column_def():
     # TODO: different compilation are going to have different headers
     # this function needs to be dynamic
     return [
-        {"field": 'rail_id', "headerName": "Rail ID", "filter": "agNumberColumnFilter", },
+        {"field": gs.snpt_col_rail_id, "headerName": "Rail ID", "filter": "agNumberColumnFilter", },
         {"field": 'external_id', "headerName": "External ID"},
         {"field": 'study', "headerName": "Study"},
         {"field": 'study_title', "headerName": "Study Title"},
@@ -188,12 +191,12 @@ def get_gene_expression_query_column_def(normalized):
 
     # TODO: different compilation are going to have different headers
     # this function needs to be dynamic
-    column_def = [{"field": 'rail_id', "headerName": "Rail ID", "filter": "agNumberColumnFilter"},
+    column_def = [{"field": gs.snpt_col_rail_id, "headerName": "Rail ID", "filter": "agNumberColumnFilter"},
                   {"field": 'external_id', "headerName": "External ID"},
                   {"field": 'raw_count', "headerName": "Raw Count", "filter": "agNumberColumnFilter"}]
 
     if normalized:
-        norm_data = [{"field": 'factor', "headerName": "Factor", "filter": "agNumberColumnFilter"},
+        norm_data = [{"field": gs.table_geq_col_factor, "headerName": "Factor", "filter": "agNumberColumnFilter"},
                      {"field": 'normalized_count', "headerName": "Normalized Count", "filter": "agNumberColumnFilter"}]
         column_def.extend(norm_data)
 
