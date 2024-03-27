@@ -20,7 +20,8 @@ def get_histogram_jiq(df):
     """
     fig = px.histogram(df, x=gs.table_jiq_col_psi, nbins=50)
     fig.update_layout(title=f'<b>{gs.jiq_plot_title_hist}</b>', title_x=0.5)
-    fig.update_traces(marker_color='darkblue')
+    # fig.update_traces(marker_color='darkblue')
+    fig.update_layout(template=gs.dbc_template_name)
     return fig
 
 
@@ -45,7 +46,8 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay):
 
         # if you want to add the mean set mean-line_visible=True
         fig.update_traces(jitter=0.01, pointpos=0,
-                          line_color='royalblue', marker_color='darkblue')
+                          # line_color='royalblue', marker_color='darkblue'
+                          )
 
     else:
         fig = px.box(df, y=y_values, hover_data=[gs.snpt_col_rail_id],
@@ -57,7 +59,8 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay):
                      points='all')  # show all points
 
         fig.update_traces(jitter=0.1, pointpos=0, boxmean=True,
-                          line_color='royalblue', marker_color='darkblue')
+                          # line_color='royalblue', marker_color='darkblue'
+                          )
 
     # update the y-axis title if log switch is on
     if log_psi_values:
@@ -66,7 +69,7 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay):
         fig.update_yaxes(title_text=gs.jiq_box_plot_y_axes)
 
     fig.update_layout(title=f'<b>{gs.jiq_plot_title_box}</b>', title_x=0.5)
-
+    fig.update_layout(template=gs.dbc_template_name)
     return fig
 
 
@@ -81,7 +84,8 @@ def get_histogram_geq(df):
               gs.table_geq_col_norm_count: gs.geq_plot_label_norm_count}
     fig = px.histogram(df, x=gs.table_geq_col_norm_count, labels=labels, nbins=30)
     fig.update_layout(title=f'<b>{gs.geq_plot_title_hist}</b>', title_x=0.5)
-    fig.update_traces(marker_color='darkblue')
+    # fig.update_traces(marker_color='darkblue')
+    fig.update_layout(template=gs.dbc_template_name)
     return fig
 
 
@@ -154,13 +158,16 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
     else:
         fig.update_yaxes(title_text=gs.geq_box_plot_y_axes)
 
-    fig.update_traces(jitter=0, pointpos=0, line_color='royalblue', marker_color='darkblue')
+    # fig.update_traces(jitter=0, pointpos=0, line_color='royalblue', marker_color='darkblue')
+    fig.update_traces(jitter=0, pointpos=0)
     fig.update_layout(title=f'<b>{box_plot_title}</b>', title_x=0.5)
 
     # update the legend location for the normalized case, so it doesn't take space in
     # between the box plots and the histogram
     if normalized:
         fig.update_layout(legend=dict(orientation="h", yanchor="bottom", xanchor="center", x=0.5, y=1.02))
+
+    fig.update_layout(template=gs.dbc_template_name)
 
     return fig
 

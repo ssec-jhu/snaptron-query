@@ -3,6 +3,7 @@ import dash_mantine_components as dmc
 import pandas as pd
 from dash import Dash, html, dcc, Input, Output, callback_context
 from dash.exceptions import PreventUpdate
+from dash_bootstrap_templates import load_figure_template
 
 from snaptron_query.app import graphs, layout, global_strings as gs, exceptions, snaptron_client as sc
 from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager
@@ -13,6 +14,8 @@ dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.mi
 bs_cdn = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 app = Dash(__name__,
            external_stylesheets=[dbc.themes.SANDSTONE, dbc_css])
+
+load_figure_template(gs.dbc_template_name)
 
 
 def read_srav3h():
@@ -184,6 +187,21 @@ def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_
 
 
 @app.callback(
+    Output('id-row-query-gene-coordinates', 'style'),
+    Output('id-row-norm-gene-coordinates', 'style'),
+    Input('id-checkbox-use-coordinates', 'value'),
+    prevent_initial_call=True
+)
+def enable_coordinate_inputs(use_coordinates):
+    if use_coordinates:
+        display = {'display': 'block'}
+    else:
+        display = {'display': 'none'}
+
+    return display, display
+
+
+@app.callback(
     Output('id-input-geq-gene-id-norm', 'disabled'),
     Output('id-input-geq-gene-coord-norm', 'disabled'),
     Input('id-switch-geq-normalize', 'value'),
@@ -201,18 +219,23 @@ def enable_normalization(normalize_value):
     Output('id-store-info-geq', 'data'),
     Output('id-store-geq-df', 'data'),
     Input('id-button-geq-run-query', 'n_clicks'),
-    Input(component_id="id-input-compilation-geq", component_property="value"),
-    Input(component_id="id-input-geq-gene-id", component_property="value"),
-    Input(component_id="id-input-geq-gene-coord", component_property="value"),
-    Input(component_id="id-switch-geq-normalize", component_property='value'),
-    Input(component_id="id-input-geq-gene-id-norm", component_property="value"),
-    Input(component_id="id-input-geq-gene-coord-norm", component_property="value"),
+    Input("id-input-compilation-geq", "value"),
+    Input("id-checkbox-use-coordinates", 'value'),
+    # Query Gene Info
+    Input("id-input-geq-gene-id", "value"),
+    Input("id-input-geq-gene-coord", "value"),
+    # Norm Gene Info
+    Input("id-switch-geq-normalize", 'value'),
+    Input("id-input-geq-gene-id-norm", "value"),
+    Input("id-input-geq-gene-coord-norm", "value"),
     Input('id-store-info', 'data'),
     prevent_initial_call=True,
-    running=[(Output("id-button-geq-run-query", "disabled"), True, False)]
+    # TODO: figure this out, why doesn't it turn gray?
+    # running=[(Output("id-button-geq-run-query", "disabled"), True, False)]
 )
-def on_button_click_gene_expression(n_clicks, compilation, query_gene_id, query_gene_coordinates,
-                                    normalize_data, gene_id_norm, norm_gene_coordinates, datasets):
+def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
+                                    query_gene_id, query_gene_coordinates,
+                                    normalize_data, norm_gene_id, norm_gene_coordinates, datasets):
     #  this function gets called with every input change, not just the button click
     if not datasets:
         datasets = dict(clicks=0, log='')
@@ -224,16 +247,29 @@ def on_button_click_gene_expression(n_clicks, compilation, query_gene_id, query_
         raise PreventUpdate
     else:
         try:
-            if compilation and query_gene_id and query_gene_coordinates:
+            if compilation and query_gene_id:
 
-                if normalize_data and (not norm_gene_coordinates or not gene_id_norm):
-                    raise PreventUpdate
+                # if normalize_data and (not norm_gene_coordinates or not gene_id_norm):
+                #     raise PreventUpdate
+                if normalize_data and (not norm_gene_id):
+                    raise exceptions.MissingUserInputs
+
+                if use_coordinates:
+                    if not query_gene_coordinates or (normalize_data and (not norm_gene_coordinates)):
+                        raise exceptions.MissingUserInputs
 
                 # Verify the gene coordinates string, we don't need the return values for this query
-                sc.geq_verify_coordinate(query_gene_coordinates)
-
-                # RUN the URL and get results back from SNAPTRON
-                df_snpt_results_query = sc.get_snpt_query_results_df(compilation, query_gene_coordinates, 'genes')
+                if use_coordinates:
+                    sc.geq_verify_coordinate(query_gene_coordinates)
+                    # RUN the URL and get results back from SNAPTRON
+                    df_snpt_results_query = sc.get_snpt_query_results_df(compilation=compilation,
+                                                                         region=query_gene_coordinates,
+                                                                         query_mode='genes')
+                else:
+                    # TODO: how do you verify the gene ID
+                    df_snpt_results_query = sc.get_snpt_query_results_df(compilation=compilation,
+                                                                         region=query_gene_id,
+                                                                         query_mode='genes')
                 if df_snpt_results_query.empty:
                     raise exceptions.EmptyResponse
 
@@ -248,11 +284,19 @@ def on_button_click_gene_expression(n_clicks, compilation, query_gene_id, query_
                 # Create normalization table if needed
                 geq = GeneExpressionQueryManager()
                 if normalize_data:
-                    sc.geq_verify_coordinate(norm_gene_coordinates)
-                    df_snpt_results_norm = sc.get_snpt_query_results_df(compilation, norm_gene_coordinates, 'genes')
+                    if use_coordinates:
+                        sc.geq_verify_coordinate(norm_gene_coordinates)
+                        df_snpt_results_norm = sc.get_snpt_query_results_df(compilation=compilation,
+                                                                            region=norm_gene_coordinates,
+                                                                            query_mode='genes')
+                    else:
+                        df_snpt_results_norm = sc.get_snpt_query_results_df(compilation=compilation,
+                                                                            region=norm_gene_id,
+                                                                            query_mode='genes')
                     if df_snpt_results_norm.empty:
                         raise exceptions.EmptyResponse
-                    geq.setup_normalization_data_method_2(gene_id_norm, df_snpt_results_norm, df_meta_data)
+
+                    geq.setup_normalization_data_method_2(norm_gene_id, df_snpt_results_norm, df_meta_data)
 
                 table_data = geq.run_gene_expression_query(query_gene_id, df_snpt_results_query, df_meta_data)
 
@@ -320,6 +364,7 @@ def update_table_geq(data_from_store, current_style, normalized_gex):
     Input('id-switch-geq-log-raw-box-plot', 'value'),
     Input('id-switch-geq-violin-raw-box-plot', 'value'),
     Input("id-switch-geq-normalize", 'value'),
+    prevent_initial_call=True
 )
 def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_graph_data_with_table,
                       log_values, violin_overlay, normalized_data):

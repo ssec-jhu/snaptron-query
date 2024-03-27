@@ -45,7 +45,7 @@ def test_jiq_results_size_cols(junction):
                                                              (2109561, 'SRR6873183', 12, 34, 26.09)])
 def test_jiq_results(junction, rail_id, external_id, inc, exc, psi):
     s = junction.get_results().loc[rail_id]
-    assert s[gs.snaptron_col_external_id] == external_id
+    assert s[gs.snpt_col_external_id] == external_id
     assert s[gs.table_jiq_col_inc] == inc
     assert s[gs.table_jiq_col_exc] == exc
     assert s[gs.table_jiq_col_psi] == psi
@@ -87,5 +87,24 @@ def test_split_and_verify_mismatch_chromosomes():
 def test_jiq_psi_results_vs_shinyapp_website(junction, ground_truth_df, rail_id):
     our_results = junction.get_results().loc[rail_id]
     ground_truth = ground_truth_df.loc[rail_id]
-    assert our_results[gs.snaptron_col_external_id] == ground_truth[gs.snaptron_col_external_id]
+    assert our_results[gs.snpt_col_external_id] == ground_truth[gs.snpt_col_external_id]
     assert our_results[gs.table_jiq_col_psi] == ground_truth[gs.table_jiq_col_psi]
+
+
+@pytest.mark.parametrize('rail_id, factor, normalized_count',
+                         [(135471, 1.0, 83064.0),  # DRP000366
+                          (123622, 1.0, 97738.0),  # DRP000425
+                          (158830, 1.0, 406092.0), (158850, 0.33, 562352.66),  # DRP000499
+                          (1000217, 1.0, 57605.0),  # SRP072835
+                          (1000316, 1.0, 2025923),  # SRP092075
+                          (1282825, 1.0, 634146),  # SRP072829
+                          (475278, 1.0, 746481.0),  # SRP072864
+                          (1282825, 1.0, 634146.0),  # ''SRR3330930''
+                          (1000283, 0.51, 2606573.21)  # 'SRR4450435'
+                          ])
+def test_gex(gene_query, rail_id, factor, normalized_count):
+    factors_df = gene_query.get_factor_table()
+    assert (round(factors_df[rail_id], 2) == factor)
+
+    s = gene_query.get_results().loc[rail_id]
+    assert (round(s[gs.table_geq_col_norm_count], 2) == normalized_count)

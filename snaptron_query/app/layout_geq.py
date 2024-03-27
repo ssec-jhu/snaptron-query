@@ -15,54 +15,93 @@ def get_form_geq():
             className="g-5 form-control-sm",
             justify="start",
         ),
-        # ROW 2 has the titles of the text boxes
         dmc.Space(h=10),
         dbc.Row(
+            dbc.Col(
+                [
+                    dbc.Checklist(
+                        id="id-checkbox-use-coordinates",
+                        options=[
+                            {
+                                "label": "I want to provide gene coordinates in addition to Gene ID (use when Gene ID "
+                                         "is not"
+                                         "found).", "value": 1},
+                        ],
+                        label_checked_style={"color": "var(--bs-danger)"},
+                        input_checked_style={
+                            "backgroundColor": "var(--bs-danger)",
+                            "borderColor": "#ea6258",
+                        },
+                    ),
+                ]
+            ),
+            class_name="g-0 form-control-sm",
+            align='start'
+        ),
+        # ROW: Query Information
+        dmc.Space(h=20),
+        dbc.Row([dbc.Col([components.get_text('dbc', gs.geq_query_info)])], class_name="g-0"),
+        dbc.Row(
             [
-                dbc.Col(
-                    [
-                        dbc.Label(gs.geq_query, className='fs-6 fw-bold'),
-                        dmc.Grid(
-                            [
-                                dmc.Col(components.get_text('dmc', gs.geq_gene_id)),
-                                dmc.Col(components.get_input(gs.geq_gene_id_placeholder, 'id-input-geq-gene-id')),
-                                dmc.Col(components.get_text(dmc, gs.geq_gene_coord)),
-                                dmc.Col(components.get_input(gs.geq_gene_coord_placeholder, 'id-input-geq-gene-coord')),
-                            ],
-                            gutter="xsm",
-                            grow=True,  # each component will take the 12 width, don't need to do it manually
-                        )
-                    ],
-                ),
-                dbc.Col(
-                    [
-                        dmc.Grid(
-                            [dmc.Col(components_geq.get_switch_normalize(), span=12)],
-                            gutter="sm",
-                        ),
-                    ],
-                    width=2,
-                    className='d-flex align-items-center',
-                ),
-                dbc.Col(
-                    [
-                        dbc.Label(gs.geq_normalized_info, className='fs-6 fw-bold'),
-                        dmc.Grid(
-                            [
-                                dmc.Col(components.get_text('dmc', gs.geq_gene_id)),
-                                dmc.Col(components.get_input(gs.geq_gene_id_norm_placeholder,
-                                                             'id-input-geq-gene-id-norm', disabled='True')),
-                                dmc.Col(components.get_text('dmc', gs.geq_gene_coord)),
-                                dmc.Col(components.get_input(gs.geq_gene_coord_norm_placeholder,
-                                                             'id-input-geq-gene-coord-norm', disabled='True')),
-                            ],
-                            gutter="xsm",
-                            grow=True,  # each component will take the 12 width, don't need to do it manually
-                        ),
-                    ]
-                )
+                dbc.Col([components.get_text('dmc', gs.geq_gene_id)],
+                        width=3, align='center',  # this will align the text vertically wrt the text box next to it.
+                        style={"border": styles.border_column}),
+                dbc.Col([components.get_input(gs.geq_gene_id_placeholder, 'id-input-geq-gene-id')],
+                        width=4, align='center',
+                        style={"border": styles.border_column}),
+                dbc.Col([components_geq.get_switch_normalize()],
+                        class_name='mx-3',  # use d-flex justify-content-end  to right align it horizontally
+                        style={"border": styles.border_column})
             ],
-            className="g-5 form-control-sm",
+            class_name="g-0 form-control-sm",
+            align='start'
+        ),
+        # ROW: Query Information - Coordinates in failure cases
+        html.Div(
+            dbc.Row(
+                [
+                    dbc.Col([components.get_text('dmc', gs.geq_gene_coord)],
+                            width=3, align='center',
+                            style={"border": styles.border_column}),
+                    dbc.Col([components.get_input(gs.geq_gene_coord_placeholder, 'id-input-geq-gene-coord')],
+                            width=4, align='center',
+                            style={"border": styles.border_column})
+                ],
+                class_name="g-0 form-control-sm",
+                align='start',
+            ),
+            id='id-row-query-gene-coordinates',
+            style={'display': 'none'}
+        ),
+        dmc.Space(h=10),
+        # ROW 3 Normalization Information
+        dbc.Row([dbc.Col([components.get_text('dbc', gs.geq_normalized_info)])]),
+        dbc.Row(
+            [
+                dbc.Col([components.get_text('dmc', gs.geq_gene_id)],
+                        width=3, align='center',
+                        style={"border": styles.border_column}),
+                dbc.Col([components.get_input(gs.geq_gene_id_norm_placeholder,
+                                              'id-input-geq-gene-id-norm', disabled='True')],
+                        width=4, align='center',
+                        style={"border": styles.border_column}),
+            ],
+            class_name="g-0 form-control-sm",
+            align='start'
+        ),
+        # ROW Normalization Information - Coordinates in failure cases
+        html.Div(
+            dbc.Row([
+                dbc.Col([components.get_text('dmc', gs.geq_gene_coord)],
+                        width=3, align='center'),
+                dbc.Col([components.get_input(gs.geq_gene_coord_norm_placeholder,
+                                              'id-input-geq-gene-coord-norm', disabled='True')],
+                        width=4, align='center')
+            ],
+                class_name="g-0 form-control-sm"
+            ),
+            id='id-row-norm-gene-coordinates',
+            style={'display': 'none'}
         ),
         dbc.Row(
             [
@@ -72,7 +111,7 @@ def get_form_geq():
                     class_name="d-grid gap-0 col-12"  # this will make the button take over full width
                 ),
             ],
-            className="g-2 my-2",  # my-2: creates the padding at the top
+            class_name="g-2 my-2",  # my-2: creates the padding at the top
         ),
     ]
 
@@ -89,8 +128,17 @@ def get_accordian_form_geq():
                                     html.Div(get_form_geq())
                                 ],
                                 # TODO: picture may be inserted to the right when available
-                                # width=8
+                                width=7
                             ),
+                            dbc.Col(
+                                [
+                                    html.Img(
+                                        src='assets/240318_gex.png',
+                                        width='100%',  # this will force align the height to the column next to it
+                                    )
+                                ],
+                                style={"border": styles.border_column},
+                            )
                         ],
                         justify="start",
                     ),

@@ -41,16 +41,16 @@ def geq_verify_coordinate(gene_coordinate):
     return coord_chr, coord_start, coord_end
 
 
-def get_snpt_query_results_df(compilation, junction_coordinates, query_mode):
+def get_snpt_query_results_df(compilation, region, query_mode):
     """Will run the url and return the response
     :param compilation: from the list box selection
-    :param junction_coordinates: the interval of the query
+    :param region: the interval of the query
     :param query_mode:  'snaptron' or 'genes'
     :return: the result of the snaptron web interface converted into a dataframe
     """
     # TODO: move this to a config file when it's made
     host = 'https://snaptron.cs.jhu.edu'
-    url = f'{host}/{str(compilation).lower()}/{query_mode}?regions={str(junction_coordinates)}'
+    url = f'{host}/{str(compilation).lower()}/{query_mode}?regions={str(region)}'
     # url = 'https://snaptro.cs.jhu.edu/srav3h/snaptron?regions=chr19:4491836-4493702'
     # temp_url = 'https://snaptron.cs.jhu.edu/srav3h/genes?regions=chr1:11013716-11024183'
 
