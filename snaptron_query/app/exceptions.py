@@ -26,3 +26,21 @@ class EmptyJunction(Exception):
 class GeneNotFound(Exception):
     """Raised when the gene is not found in the results"""
     pass
+
+
+def handle_exception(exception):
+    e = type(exception)
+    if e == BadURL:
+        alert_message = 'Sorry, something must have gone wrong...try again in a couple minutes!'
+    elif e == EmptyResponse:
+        alert_message = 'Snaptron Empty response!'
+    elif e == MissingUserInputs:
+        alert_message = 'You are missing one or more required inputs...try again!'
+    elif e == BadCoordinates:
+        alert_message = 'Input coordinates are invalid!'
+    elif e == EmptyJunction:
+        alert_message = 'Junctions entered have no results!'
+    else:
+        alert_message = f'Exception Occurred: {e}'
+
+    return alert_message

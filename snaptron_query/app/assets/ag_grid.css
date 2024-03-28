@@ -24,3 +24,9 @@
     /*background-color: var(--bs-primary-bg-subtle);*/
     background-color: var(--bs-gray-200); /*same as bs-light*/
 }
+
+.user-alert {
+    background-color: var(--bs-danger-bg-subtle)!important; /*same as bs-light*/
+    color: var(--bs-danger-text-emphasis) !important;
+    border-color: var(--bs-danger-text-emphasis)!important;
+}

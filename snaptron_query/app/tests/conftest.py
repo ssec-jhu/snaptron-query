@@ -47,7 +47,7 @@ class GEXQuery:
             gs.snpt_col_rail_id)
 
         self.gex_mgr = gex.GeneExpressionQueryManager()
-        self.gex_mgr.setup_normalization_data_method_2(norm_gene_id, df_snaptron_norm, df_srav3h_meta_data)
+        self.gex_mgr.setup_normalization_data_method_2_opt(norm_gene_id, df_snaptron_norm, df_srav3h_meta_data)
         self.results_list_of_dict = self.gex_mgr.run_gene_expression_query(query_gene_id, df_snaptron_query,
                                                                            df_srav3h_meta_data)
 

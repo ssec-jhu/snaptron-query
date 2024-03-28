@@ -240,7 +240,7 @@ def get_layout_gene_expression_query():
                        "border-radius": "10px"},
                 className='g-0',  # no gutters in between the cards
             ),
-
+            html.Div(id='id-alert-geq'),
             # Second row  of the layout contains the plots and graphs
             dmc.Space(h=20),
             dbc.Row(

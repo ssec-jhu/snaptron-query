@@ -94,7 +94,8 @@ def test_jiq_psi_results_vs_shinyapp_website(junction, ground_truth_df, rail_id)
 @pytest.mark.parametrize('rail_id, factor, normalized_count',
                          [(135471, 1.0, 83064.0),  # DRP000366
                           (123622, 1.0, 97738.0),  # DRP000425
-                          (158830, 1.0, 406092.0), (158850, 0.33, 562352.66),  # DRP000499
+                          (158830, 1.0, 406092.0),  # DRP000499
+                          (158850, 0.33, 562352.66),  # DRP000499
                           (1000217, 1.0, 57605.0),  # SRP072835
                           (1000316, 1.0, 2025923),  # SRP092075
                           (1282825, 1.0, 634146),  # SRP072829

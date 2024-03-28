@@ -282,6 +282,7 @@ def get_layout_junction_inclusion():
                 className='g-0',  # no gutters in between the cards
             ),
 
+            html.Div(id='id-alert-jiq'),
             # Second row  of the layout contains the plots and graphs
             dmc.Space(h=20),
             dbc.Row(

@@ -60,3 +60,17 @@ def get_switch_lock_data_with_table(switch_id, switch_label):
             )
         ]
     )
+
+
+def get_alert(alert_message):
+    return [
+        dmc.Space(h=20),
+        dbc.Alert(
+            children=f'{alert_message}',
+            # id="id-alert-fade",
+            # color="var(--bs-danger-border-subtle)",
+            dismissable=True,
+            is_open=True,
+            class_name='user-alert'
+        )
+    ]

@@ -58,15 +58,6 @@ class GeneExpressionQueryManager:
                         # TODO: look into the rail ids that are not found in the meta data file.
                         pass
 
-        # this is slow
-        # import pandas as pd
-        # import time
-        # start_time = time.time()
-        # df = pd.concat([pd.DataFrame(lst) for lst in study_dictionary.values()],
-        #                keys=study_dictionary.keys()).reset_index(level=1, drop=True)
-        # max_counts = df.groupby(level=0)['count'].max()
-        # elapsed_time = time.time() - start_time
-
         study_max_count_dict = collections.defaultdict(int)
         for study in study_dictionary.keys():
             # calculate the max count for each list
@@ -85,6 +76,43 @@ class GeneExpressionQueryManager:
                 else:
                     print("ERROR: why are we here, can a similar rail id come from different samples???")
                     pass
+
+        self.normalize_counts = True
+        return
+
+    def setup_normalization_data_method_2_opt(self, gene_id_norm, df_snaptron_results_norm, df_meta_data):
+
+        # extract the row with the normalization gene ID
+        row_df = df_snaptron_results_norm.loc[
+            df_snaptron_results_norm[gs.snpt_col_gene_id].str.contains(gene_id_norm)]
+
+        if row_df.empty:
+            raise exceptions.GeneNotFound
+
+        study_dictionary = collections.defaultdict(list)
+        # Extract the 'sample' column from the DataFrame
+        gene_samples = row_df['samples'].tolist()
+
+        # if I convert it to a dictionary, instead of using a dataframe there is a big performance boost
+        meta_data_dict = df_meta_data['study'].to_dict()
+
+        for sample in gene_samples:
+            # Samples are separated by commas, each sample is separated with a colon from its count as railID:count
+            for each_sample in sample.split(','):
+                if each_sample:
+                    rail_id, count = jiq.split_and_cast(each_sample)
+                    study = meta_data_dict.get(rail_id)
+                    if study:
+                        study_dictionary[study].append((rail_id, count))
+
+        for study in study_dictionary:
+            # calculate the max count for each list
+            max_value = max(d[1] for d in study_dictionary[study])
+            # Now divide each rail id's count by the max associated with its study to normalize the count per study max.
+            for rail_id, raw_count in study_dictionary[study]:
+                factor = raw_count / max_value
+                # self.normalization_factor_table.setdefault(rail_id, factor)
+                self.normalization_factor_table[rail_id] = factor
 
         self.normalize_counts = True
         return
@@ -113,13 +141,12 @@ class GeneExpressionQueryManager:
 
             # add the normalized count if needed
             if self.normalize_counts:
-                if rail_id in self.normalization_factor_table:
-                    factor = self.normalization_factor_table[rail_id]
-                    meta_data[gs.table_geq_col_factor] = factor
-                    meta_data['normalized_count'] = raw_count / factor
-                else:
-                    meta_data[gs.table_geq_col_factor] = -1
-                    meta_data['normalized_count'] = -1
+                # if rail id is in the table then compute the normalized count
+                # if it's not in the factor table, then set it as -1
+                # using get method will return -1 if the rail_id is not found
+                factor = self.normalization_factor_table.get(rail_id, -1)
+                meta_data[gs.table_geq_col_factor] = factor
+                meta_data['normalized_count'] = raw_count / factor if factor != -1 else -1
 
             # add the rail id information
             meta_data[gs.snpt_col_rail_id] = rail_id
