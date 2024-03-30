@@ -199,7 +199,7 @@ def get_card_table_jiq():
                 [
                     dbc.Container(
                         [
-                            components_jiq.get_table_jiq()
+                            components.get_table(table_id='id-ag-grid-jiq')
                         ],
                         className="ag-theme-alpine dbc dbc-ag-grid"
                     )

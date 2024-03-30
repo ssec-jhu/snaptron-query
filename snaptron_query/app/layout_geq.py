@@ -213,7 +213,7 @@ def get_card_table_geq():
                 [
                     dbc.Container(
                         [
-                            components_geq.get_table_geq()
+                            components.get_table(table_id='id-ag-grid-geq')
                         ],
                         className="ag-theme-alpine dbc dbc-ag-grid"
                     )
