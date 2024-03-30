@@ -1,6 +1,4 @@
 """This file includes components related to the junction inclusion query"""
-
-import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 from dash import html
@@ -32,9 +30,6 @@ def get_button_jiq_results():
     )
 
 
-"""Functions Below: Wrapper functions to to dynamically create text components given their string, and style"""
-
-
 def get_text_junction(component_style):
     # the size of this is bigger, may change it to sm later
     # TODO: MultiJunction query: id fields for the text boxes need to be generated dynamically
@@ -55,20 +50,3 @@ def get_button_download():
         size="md",  # button size
         class_name="d-grid gap-2 col-8 btn-primary",  # bg-secondary text-light #mx-auto
     )
-
-
-def get_table_jiq():
-    table = dag.AgGrid(
-        id="id-ag-grid-jiq",
-        persistence=True,  # https://community.plotly.com/t/how-to-add-persistence-to-dash-ag-grid/74944
-        style={'height': 600},
-        defaultColDef={"flex": 1,  # snaps the end
-                       "sortable": True, "resizable": True, "filter": True,
-                       },
-        dashGridOptions={'rowSelection': 'multiple',
-                         'checkboxSelection': 'True',
-                         'isRowSelectable': {"function": "log(params)"},
-                         'pagination': True,
-                         },
-    )
-    return table

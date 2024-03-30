@@ -1,6 +1,7 @@
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 from dash import html, dcc
+import dash_ag_grid as dag
 
 from snaptron_query.app import global_strings as gs
 
@@ -74,3 +75,21 @@ def get_alert(alert_message):
             class_name='user-alert'
         )
     ]
+
+
+def get_table(table_id):
+    table = dag.AgGrid(
+        id=table_id,
+        persistence=True,  # https://community.plotly.com/t/how-to-add-persistence-to-dash-ag-grid/74944
+        style={'height': 700},
+        defaultColDef={"flex": 1,  # snaps the end
+                       "sortable": True, "resizable": True, "filter": True,
+                       },
+        dashGridOptions={'rowSelection': 'multiple',
+                         'checkboxSelection': 'True',
+                         'isRowSelectable': {"function": "log(params)"},
+                         'pagination': True,
+                         'paginationAutoPageSize': True
+                         },
+    )
+    return table
