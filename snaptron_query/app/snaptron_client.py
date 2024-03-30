@@ -54,18 +54,13 @@ def get_snpt_query_results_df(compilation, region, query_mode):
     # url = 'https://snaptro.cs.jhu.edu/srav3h/snaptron?regions=chr19:4491836-4493702'
     # temp_url = 'https://snaptron.cs.jhu.edu/srav3h/genes?regions=chr1:11013716-11024183'
 
-    try:
-        resp = httpx.get(url)
-        # this will raise an HTTPError, if the response was a http error.
-        resp.raise_for_status()
-
-        data_bytes = resp.read()
-        if data_bytes:
-            df = pd.read_csv(BytesIO(data_bytes), sep='\t')
-            return df
-        else:
-            raise exceptions.EmptyResponse
-    except Exception as e:
-        # Any other exception happens I want it forwarded to the front end for handling
-        print(f"HTTP Exception: {e}")
-        raise exceptions.BadURL
+    resp = httpx.get(url)
+    # this will raise an HTTPError, if the response was a http error.
+    # any exceptions thrown here will be captured by the client: Dash UI in this case
+    resp.raise_for_status()
+    data_bytes = resp.read()
+    if data_bytes:
+        df = pd.read_csv(BytesIO(data_bytes), sep='\t')
+        return df
+    else:
+        raise exceptions.EmptyResponse

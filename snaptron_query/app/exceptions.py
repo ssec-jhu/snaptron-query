@@ -1,3 +1,6 @@
+import httpx
+
+
 class BadURL(Exception):
     """Raised when the url is invalid"""
     pass
@@ -40,6 +43,8 @@ def handle_exception(exception):
         alert_message = 'Input coordinates are invalid!'
     elif e == EmptyJunction:
         alert_message = 'Junctions entered have no results!'
+    elif e == httpx.ConnectError or httpx.ConnectTimeout:
+        alert_message = 'Failed to establish a connection with Snaptron Web API!'
     else:
         alert_message = f'Exception Occurred: {e}'
 
