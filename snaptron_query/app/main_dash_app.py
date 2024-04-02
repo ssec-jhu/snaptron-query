@@ -83,7 +83,7 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
                 # RUN the URL and get results back from SNAPTRON
                 # make sure you get results back
                 df_snpt_results = sc.get_snpt_query_results_df(compilation, exclusion_interval, 'snaptron')
-                #df_snpt_results = pd.read_csv('./tests/data/test_srav3h_chr19_4491836_4493702.tsv', sep='\t')
+                # df_snpt_results = pd.read_csv('./tests/data/test_srav3h_chr19_4491836_4493702.tsv', sep='\t')
 
                 if df_snpt_results.empty:
                     raise exceptions.EmptyResponse
@@ -91,7 +91,7 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
                 # Select the meta data that must be used
                 # TODO: add the rest of the meta data as PI provides list
                 if compilation == gs.compilation_srav3h:
-                    meta_data_df = df_srav3h
+                    # meta_data_df = df_srav3h
                     meta_data_dict = dict_srav3h
                 else:
                     raise PreventUpdate
@@ -230,7 +230,7 @@ def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
                 # Select the meta data that must be used
                 # TODO: add the rest of the meta data as PI provides list
                 if compilation == gs.compilation_srav3h:
-                    meta_data_df = df_srav3h
+                    # meta_data_df = df_srav3h
                     meta_data_dict = dict_srav3h
                 else:
                     raise PreventUpdate
