@@ -82,8 +82,8 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
 
                 # RUN the URL and get results back from SNAPTRON
                 # make sure you get results back
-                # df_snpt_results = sc.get_snpt_query_results_df(compilation, exclusion_interval, 'snaptron')
-                df_snpt_results = pd.read_csv('./tests/data/test_srav3h_chr19_4491836_4493702.tsv', sep='\t')
+                df_snpt_results = sc.get_snpt_query_results_df(compilation, exclusion_interval, 'snaptron')
+                #df_snpt_results = pd.read_csv('./tests/data/test_srav3h_chr19_4491836_4493702.tsv', sep='\t')
 
                 if df_snpt_results.empty:
                     raise exceptions.EmptyResponse
@@ -100,7 +100,7 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
                 jqm = JunctionInclusionQueryManager(exc_start, exc_end, inc_start, inc_end)
                 # results returned are list of dictionaries which makes ag-grid load much faster,
                 # Once can convert a dataframe to dict with orient set to records for the ag-grid as well.
-                row_data = jqm.run_junction_inclusion_query(df=df_snpt_results, meta_data=meta_data_dict)
+                row_data = jqm.run_junction_inclusion_query(df_snpt_results, meta_data_dict)
 
                 # Set the columnDefs for the ag-grid
                 column_defs = graphs.get_junction_query_column_def()
