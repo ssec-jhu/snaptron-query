@@ -24,8 +24,7 @@ def get_form_geq():
                         options=[
                             {
                                 "label": "I want to provide gene coordinates in addition to Gene ID (use when Gene ID "
-                                         "is not"
-                                         "found).", "value": 1},
+                                         "is not found).", "value": 1},
                         ],
                         label_checked_style={"color": "var(--bs-danger)"},
                         input_checked_style={

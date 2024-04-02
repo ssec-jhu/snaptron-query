@@ -17,7 +17,7 @@ class GeneExpressionQueryManager:
             df_snaptron_results_norm[gs.snpt_col_gene_id].str.contains(gene_id_norm)]
 
         if row_df.empty:
-            raise exceptions.GeneNotFound
+            raise exceptions.NormalizationGeneNotFound
 
         study_dictionary = collections.defaultdict(list)
         # extract the 'sample' column form the row this is where all the samples and their count is
@@ -65,7 +65,7 @@ class GeneExpressionQueryManager:
             df_snaptron_results_norm[gs.snpt_col_gene_id].str.contains(gene_id_norm)]
 
         if row_df.empty:
-            raise exceptions.GeneNotFound
+            raise exceptions.NormalizationGeneNotFound
 
         study_dictionary = collections.defaultdict(list)
         # Extract the 'sample' column from the DataFrame
@@ -147,7 +147,7 @@ class GeneExpressionQueryManager:
             df_snaptron_results_query[gs.snpt_col_gene_id].str.contains(gene_id_query)]
 
         if row_df.empty:
-            raise exceptions.GeneNotFound
+            raise exceptions.QueryGeneNotFound
 
         # extract the 'sample' column form the row this is where all the rail_id:count are
         samples = (row_df['samples']).tolist()
@@ -163,7 +163,9 @@ class GeneExpressionQueryManager:
         row_df = df_snaptron_results_query.loc[
             df_snaptron_results_query[gs.snpt_col_gene_id].str.contains(gene_id_query)]
 
-        # meta_data = collections.defaultdict(list)
+        if row_df.empty:
+            raise exceptions.QueryGeneNotFound
+
         # extract the 'sample' column form the row this is where all the rail_id:count are
         samples = (row_df['samples']).tolist()
         for gene_samples in samples:

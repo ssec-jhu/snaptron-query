@@ -26,7 +26,12 @@ class EmptyJunction(Exception):
     pass
 
 
-class GeneNotFound(Exception):
+class QueryGeneNotFound(Exception):
+    """Raised when the gene is not found in the results"""
+    pass
+
+
+class NormalizationGeneNotFound(Exception):
     """Raised when the gene is not found in the results"""
     pass
 
@@ -43,6 +48,13 @@ def handle_exception(exception):
         alert_message = 'Input coordinates are invalid!'
     elif e == EmptyJunction:
         alert_message = 'Junctions entered have no results!'
+    elif e == QueryGeneNotFound:
+        alert_message = 'Query gene was not found. Add gene coordinates or double check coordinates if provided!'
+    elif e == NormalizationGeneNotFound:
+        alert_message = ('Normalization gene was not found. Add gene coordinates or double check coordinates if '
+                         'provided!')
+    elif e == httpx.RemoteProtocolError:
+        alert_message = f'Remote Protocol Error: {exception.args[0]}.'
     elif e == httpx.ConnectError or httpx.ConnectTimeout:
         alert_message = 'Failed to establish a connection with Snaptron Web API!'
     else:
