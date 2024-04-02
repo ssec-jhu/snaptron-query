@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 
 from snaptron_query.app import global_strings as gs
 
+graph_margin_dict = dict(l=0, r=0, t=30, b=0)
 
 def log_2_function(df, y):
     # add th plus 1
@@ -22,6 +23,7 @@ def get_histogram_jiq(df):
     fig.update_layout(title=f'<b>{gs.jiq_plot_title_hist}</b>', title_x=0.5)
     # fig.update_traces(marker_color='darkblue')
     fig.update_layout(template=gs.dbc_template_name)
+    fig.update_layout(margin=graph_margin_dict)
     return fig
 
 
@@ -70,6 +72,7 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay):
 
     fig.update_layout(title=f'<b>{gs.jiq_plot_title_box}</b>', title_x=0.5)
     fig.update_layout(template=gs.dbc_template_name)
+    fig.update_layout(margin=graph_margin_dict)
     return fig
 
 
@@ -86,6 +89,7 @@ def get_histogram_geq(df):
     fig.update_layout(title=f'<b>{gs.geq_plot_title_hist}</b>', title_x=0.5)
     # fig.update_traces(marker_color='darkblue')
     fig.update_layout(template=gs.dbc_template_name)
+    fig.update_layout(margin=graph_margin_dict)
     return fig
 
 
@@ -167,6 +171,7 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
         fig.update_layout(legend=dict(orientation="h", yanchor="bottom", xanchor="center", x=0.5, y=1.02))
 
     fig.update_layout(template=gs.dbc_template_name)
+    fig.update_layout(margin=graph_margin_dict)
 
     return fig
 

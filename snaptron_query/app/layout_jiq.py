@@ -108,9 +108,19 @@ def get_card_histogram_jiq():
                 [
                     dbc.Row(
                         [
-                            components.get_switch(switch_id='id-switch-jiq-log-histogram', switch_label=gs.switch_log)
+                            dbc.Col( width=7, style={'border': styles.border_column}),
+                            dbc.Col(
+                                [
+                                    components.get_switch(switch_id='id-switch-jiq-log-histogram', switch_label=gs.switch_log),
+                                ],
+                                width=5,
+                                align='center',
+                                className='d-flex justify-content-end',
+                                style={'border': styles.border_column},
+                            ),
                         ],
-                        style={'border': styles.border_column}
+                        style={'border': styles.border_column},
+                        className="g-0 form-control-sm"
                     ),
                     dbc.Row(
                         [
@@ -135,19 +145,20 @@ def get_card_box_plot_jiq():
                 [
                     dbc.Row(
                         [
+                            dbc.Col(width=7, style={'border': styles.border_column}),
                             dbc.Col(
-                                width=1
+                                [
+                                    components.get_switch(switch_id='id-switch-jiq-log-box-plot',
+                                                          switch_label=gs.switch_log),
+                                    dmc.Space(w=10),
+                                    components.get_switch(switch_id='id-switch-jiq-violin-box-plot',
+                                                          switch_label=gs.switch_violin)
+                                 ],
+                                width=5,
+                                align='center',
+                                className='d-flex justify-content-end',
+                                style={'border': styles.border_column},
                             ),
-                            dbc.Col(
-                                components.get_switch(switch_id='id-switch-jiq-log-box-plot',
-                                                      switch_label=gs.switch_log),
-                                width=3
-                            ),
-                            dbc.Col(
-                                components.get_switch(switch_id='id-switch-jiq-violin-box-plot',
-                                                      switch_label=gs.switch_violin),
-                                width=3
-                            )
 
                         ],
                         style={'border': styles.border_column},

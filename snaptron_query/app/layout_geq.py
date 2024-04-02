@@ -157,17 +157,24 @@ def get_accordian_graphs_geq():
                     dbc.Row(
                         [
                             dbc.Col(
-                                width=1
+                                [
+                                    components.get_switch(switch_id='id-switch-geq-log-raw-box-plot',
+                                                          switch_label=gs.switch_log),
+                                    dmc.Space(w=10),
+                                    components.get_switch(switch_id='id-switch-geq-violin-raw-box-plot',
+                                                          switch_label=gs.switch_violin),
+
+                                 ],
+                                width=6,
+                                align='center',
+                                className='d-flex justify-content-end',
+                                style={'border': styles.border_column},
                             ),
                             dbc.Col(
-                                components.get_switch(switch_id='id-switch-geq-log-raw-box-plot',
-                                                      switch_label=gs.switch_log),
-                                width=3
-                            ),
-                            dbc.Col(
-                                components.get_switch(switch_id='id-switch-geq-violin-raw-box-plot',
-                                                      switch_label=gs.switch_violin),
-                                width=3
+                                width=6,
+                                align='center',
+                                className='d-flex justify-content-end',
+                                style={'border': styles.border_column},
                             )
 
                         ],
