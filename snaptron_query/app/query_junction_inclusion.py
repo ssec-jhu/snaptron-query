@@ -73,15 +73,17 @@ class JunctionInclusionQueryManager:
 
         return psi, inclusion_count, exclusion_count, total_count
 
-    def _gather_rail_id_meta_data(self, rail_id, df_meta_data):
+    def _gather_rail_id_meta_data(self, rail_id, meta_data_dict):
         """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
         rail ids
         """
         # look up the rail id and extract the information
         try:
-            # gather the metadata associated with this rail id
-            # note: loc will return a data series not a frame
-            meta_data = (df_meta_data.loc[rail_id]).to_dict()
+            # gather the metadata associated with this rail id note: loc will return a data series not a frame
+            # Performance note: using data frame as (meta_data_df.loc[rail_id]).to_dict() had a bad performance as
+            # this was called for all rail_ids. Replaced the code to use dictionaries and made a significant
+            # difference.
+            meta_data = meta_data_dict[rail_id]
 
             # TODO: for multi junction query the data may be different here
             # append the calculated results such as PSI and other counts
@@ -105,7 +107,7 @@ class JunctionInclusionQueryManager:
     def _find_junction(df, start, end):
         return df.loc[(df['start'] == start) & (df['end'] == end)]
 
-    def run_junction_inclusion_query(self, df, df_meta_data):
+    def run_junction_inclusion_query(self, df, meta_data_dict):
         """Given the snaptron interface results, this function calculates the Percent Spliced In (PSI)
         given the inclusion junction and the exclusion junction
         """
@@ -128,7 +130,7 @@ class JunctionInclusionQueryManager:
         # For each rail id found, gather its metadata and calculate PSI values
         # this will populate self.gathered_rail_id_meta_data_and_psi
         for rail_id in self.rail_id_dictionary:
-            self._gather_rail_id_meta_data(rail_id, df_meta_data)
+            self._gather_rail_id_meta_data(rail_id, meta_data_dict)
 
         # returning a list of dictionaries not a dataframe for better coexistence with the front-end UI
         return self.gathered_rail_id_meta_data_and_psi

@@ -5,7 +5,6 @@ from snaptron_query.app import global_strings as gs
 from snaptron_query.app import query_junction_inclusion as jiq
 from snaptron_query.app import query_gene_expression as gex
 
-# path_srav3h_meta = os.path.join(os.path.dirname(__file__), 'data/test_samples_SRAv3h.csv')
 path_srav3h_meta = Path(__file__).parent / 'data/test_samples_SRAv3h.csv'
 path_ground_truth_data = Path(__file__).parent / 'data/test_shinyapp_chr19_4491836_4492014_chr19_4491836_4493702.csv'
 path_sample_junction_data = Path(__file__).parent / 'data/test_srav3h_chr19_4491836_4493702.tsv'
@@ -17,8 +16,9 @@ path_sample_gex_query_data = Path(__file__).parent / 'data/test_srav3h_gene_quer
 
 class JunctionQuery:
     def __init__(self, exclusion_start, exclusion_end, inclusion_start, inclusion_end, file):
-        df_srav3h_meta_data = pd.read_csv(path_srav3h_meta, usecols=gs.srav3h_meta_data_required_list).set_index(
+        meta_data_df = pd.read_csv(path_srav3h_meta, usecols=gs.srav3h_meta_data_required_list).set_index(
             gs.snpt_col_rail_id)
+        meta_data_dict = meta_data_df.to_dict(orient='index')
 
         df_from_snaptron = pd.read_csv(file, sep='\t')
 
@@ -26,7 +26,7 @@ class JunctionQuery:
         self.query_mgr = jiq.JunctionInclusionQueryManager(exclusion_start, exclusion_end,
                                                            inclusion_start, inclusion_end)
 
-        df = pd.DataFrame(self.query_mgr.run_junction_inclusion_query(df_from_snaptron, df_srav3h_meta_data))
+        df = pd.DataFrame(self.query_mgr.run_junction_inclusion_query(df_from_snaptron, meta_data_dict))
         self.df_jiq_results = df.set_index(gs.snpt_col_rail_id)
 
     def get_query_mgr(self):
@@ -45,11 +45,18 @@ class GEXQuery:
         df_snaptron_query = pd.read_csv(path_sample_gex_query_data)  # Note: query_gene_coord = 'chr1:11012654-11025492'
         df_srav3h_meta_data = pd.read_csv(path_gex_srav3h_meta, usecols=gs.srav3h_meta_data_required_list).set_index(
             gs.snpt_col_rail_id)
+        meta_data_dict = df_srav3h_meta_data.to_dict(orient='index')
 
         self.gex_mgr = gex.GeneExpressionQueryManager()
-        self.gex_mgr.setup_normalization_data_method_2_opt(norm_gene_id, df_snaptron_norm, df_srav3h_meta_data)
-        self.results_list_of_dict = self.gex_mgr.run_gene_expression_query(query_gene_id, df_snaptron_query,
-                                                                           df_srav3h_meta_data)
+
+        # calculate factors
+        self.gex_mgr.setup_normalization_data_method_2_opt(norm_gene_id, df_snaptron_norm, meta_data_dict)
+
+
+        # self.results_list_of_dict = self.gex_mgr.run_gene_expression_query(query_gene_id, df_snaptron_query,
+        #                                                                    meta_data_df=df_srav3h_meta_data)
+        self.results_list_of_dict = self.gex_mgr.run_gene_expression_query_opt(query_gene_id,
+                                                                               df_snaptron_query,meta_data_dict)
 
     def get_factor_table(self):
         return self.gex_mgr.normalization_factor_table

@@ -41,12 +41,3 @@ def get_text_junction(component_style):
     else:
         return html.Label(string)
 
-
-def get_button_download():
-    return dbc.Button(
-        gs.button_download,
-        id='id-button-jiq-download',
-        n_clicks=0,
-        size="md",  # button size
-        class_name="d-grid gap-2 col-8 btn-primary",  # bg-secondary text-light #mx-auto
-    )

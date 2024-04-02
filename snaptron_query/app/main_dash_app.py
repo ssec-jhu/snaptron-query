@@ -5,15 +5,16 @@ from dash import Dash, html, dcc, Input, Output, callback_context
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 
-from snaptron_query.app import graphs, layout, global_strings as gs, exceptions, snaptron_client as sc
-from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager
+from snaptron_query.app import graphs, layout, global_strings as gs, exceptions, snaptron_client as sc, components
 from snaptron_query.app.query_gene_expression import GeneExpressionQueryManager
+from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager
 
 # Initialize the app
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 bs_cdn = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+dbc_icon = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 app = Dash(__name__,
-           external_stylesheets=[dbc.themes.SANDSTONE, dbc_css])
+           external_stylesheets=[dbc.themes.SANDSTONE, dbc_css, dbc_icon])
 
 load_figure_template(gs.dbc_template_name)
 
@@ -27,18 +28,13 @@ def read_srav3h():
 
 
 # Meta data loaded in global space
+# TODO: how can I read this as a dict
 df_srav3h = read_srav3h()
+dict_srav3h = df_srav3h.to_dict(orient='index')
 
 # this is the main layout of the page with all tabs
 app.layout = dbc.Container(
     [
-        # app uses a dcc.store to store information needed between components from callbacks
-
-        dcc.Store(id="id-store-info"),
-        dcc.Store(id="id-store-info-geq"),
-        dcc.Store(id="id-store-jiq-df"),
-        dcc.Store(id="id-store-geq-df"),
-
         # navbar, top row with titles and all
         layout.get_navbar_top(),
 
@@ -56,26 +52,27 @@ app.layout = dbc.Container(
 
 
 @app.callback(
-    Output('id-store-info', 'data'),
-    Output('id-store-jiq-df', 'data'),
-    Input('id-button-jiq-generate-results', 'n_clicks'),
-    Input(component_id="id-input-compilation-jiq", component_property="value"),
-    Input(component_id="id-input-jiq-inc-junc", component_property="value"),
-    Input(component_id="id-input-jiq-exc-junc", component_property="value"),
-    Input('id-store-info', 'data'),
-    prevent_initial_call=True,
-    running=[(Output("id-input-compilation-jiq", "disabled"), True, False)]
-)
-def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclusion_interval, datasets):
-    #  this function gets called with every input change, not just the button click
-    if not datasets:
-        datasets = dict(clicks=0, log='')
+    Output('id-ag-grid-jiq', 'rowData'),
+    Output('id-ag-grid-jiq', 'columnDefs'),
+    Output('id-alert-jiq', 'children'),
 
-    # compare old clicks with the new clicks
-    if n_clicks <= datasets.get('clicks', 0):
+    Input('id-button-jiq-generate-results', 'n_clicks'),
+    Input("id-input-compilation-jiq", "value"),
+    Input("id-input-jiq-inc-junc", "value"),
+    Input("id-input-jiq-exc-junc", "value"),
+    prevent_initial_call=True,
+    # TODO: why doesn't this work?
+    # running=[(Output("id-input-compilation-jiq", "disabled"), True, False)]
+)
+def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclusion_interval):
+    #  this function gets called with every input change
+    if callback_context.triggered_id != 'id-button-jiq-generate-results':
         raise PreventUpdate
     else:
         try:
+            alert_message = None
+            row_data = None
+            column_defs = None
             if compilation and inclusion_interval and exclusion_interval:
 
                 # make sure chromosome numbers match
@@ -85,77 +82,39 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
 
                 # RUN the URL and get results back from SNAPTRON
                 # make sure you get results back
-                df_snpt_results = sc.get_snpt_query_results_df(compilation, exclusion_interval, 'snaptron')
+                # df_snpt_results = sc.get_snpt_query_results_df(compilation, exclusion_interval, 'snaptron')
+                df_snpt_results = pd.read_csv('./tests/data/test_srav3h_chr19_4491836_4493702.tsv', sep='\t')
+
                 if df_snpt_results.empty:
                     raise exceptions.EmptyResponse
 
                 # Select the meta data that must be used
                 # TODO: add the rest of the meta data as PI provides list
                 if compilation == gs.compilation_srav3h:
-                    df_meta_data = df_srav3h
+                    meta_data_df = df_srav3h
+                    meta_data_dict = dict_srav3h
                 else:
                     raise PreventUpdate
 
                 # # Set upt the JIQ manager then run the Junction Inclusion Query
                 jqm = JunctionInclusionQueryManager(exc_start, exc_end, inc_start, inc_end)
-                results_list_of_dict = jqm.run_junction_inclusion_query(df_snpt_results, df_meta_data)
+                # results returned are list of dictionaries which makes ag-grid load much faster,
+                # Once can convert a dataframe to dict with orient set to records for the ag-grid as well.
+                row_data = jqm.run_junction_inclusion_query(df=df_snpt_results, meta_data=meta_data_dict)
 
-                # Performance Note: ag-grid will load much faster with a lists of dictionaries, so I am storing
-                # it as such. Once can convert a dataframe to dict with orient set to records for the ag-grid as well.
-                table_data = results_list_of_dict
+                # Set the columnDefs for the ag-grid
+                column_defs = graphs.get_junction_query_column_def()
             else:
                 raise exceptions.MissingUserInputs
 
-        # TODO: setup UI for error messages
-        except exceptions.BadURL:
-            print("URL was bad")
-            raise PreventUpdate
-        except exceptions.EmptyResponse:
-            print("URL was correct but server returned empty response")
-            raise PreventUpdate
-        except exceptions.MissingUserInputs or exceptions.BadCoordinates:
-            print("Some user input error")
-            raise PreventUpdate
-        except exceptions.EmptyJunction:
-            print("Requested Junction has no sample data")
-            raise PreventUpdate
         except Exception as e:
-            # Any other exception happens I want it forwarded to the front end for handling
-            print(f"Exception: {e}")
-            raise PreventUpdate
+            alert_message = exceptions.handle_exception(e)
 
-        # keep track of any log needed
-        log_msg = f'Click= {n_clicks}'
-        datasets['log'] = log_msg
-        datasets['clicks'] = n_clicks
+    if alert_message:
+        alert = components.get_alert(alert_message)
+        return None, None, alert
 
-    return datasets, table_data
-
-
-@app.callback(
-    Output('id-ag-grid-jiq', 'rowData'),
-    Output('id-ag-grid-jiq', 'columnDefs'),
-    Output('id-card-table', 'style'),
-    Input('id-store-jiq-df', 'data'),
-    Input('id-card-table', 'style'),
-    prevent_initial_call=True
-)
-def update_table(data_from_store, current_style):
-    if not data_from_store:
-        raise PreventUpdate
-
-    # ag-grid accepts list of dicts so passing in the data from storage that is saved as list of dict saves times here.
-    row_data = data_from_store
-
-    # Set the columnDefs for the ag-grid
-    column_defs = graphs.get_junction_query_column_def()
-
-    # TODO: other components' style needs to be none by default and turned on here
-    # set component visibility
-    current_style['display'] = 'block'
-
-    # parentheses must be here, dash does not like it without it
-    return row_data, column_defs, current_style  # grid
+    return row_data, column_defs, None
 
 
 @app.callback(
@@ -216,8 +175,9 @@ def enable_normalization(normalize_value):
 
 
 @app.callback(
-    Output('id-store-info-geq', 'data'),
-    Output('id-store-geq-df', 'data'),
+    Output('id-ag-grid-geq', 'rowData'),
+    Output('id-ag-grid-geq', 'columnDefs'),
+    Output('id-alert-geq', 'children'),
     Input('id-button-geq-run-query', 'n_clicks'),
     Input("id-input-compilation-geq", "value"),
     Input("id-checkbox-use-coordinates", 'value'),
@@ -228,25 +188,19 @@ def enable_normalization(normalize_value):
     Input("id-switch-geq-normalize", 'value'),
     Input("id-input-geq-gene-id-norm", "value"),
     Input("id-input-geq-gene-coord-norm", "value"),
-    Input('id-store-info', 'data'),
     prevent_initial_call=True,
     # TODO: figure this out, why doesn't it turn gray?
     # running=[(Output("id-button-geq-run-query", "disabled"), True, False)]
 )
 def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
                                     query_gene_id, query_gene_coordinates,
-                                    normalize_data, norm_gene_id, norm_gene_coordinates, datasets):
-    #  this function gets called with every input change, not just the button click
-    if not datasets:
-        datasets = dict(clicks=0, log='')
-
-    # compare old clicks with the new clicks
-    # if n_clicks <= datasets.get('clicks', 0):
-    input_id = callback_context.triggered_id
-    if input_id != 'id-button-geq-run-query':
+                                    normalize_data, norm_gene_id, norm_gene_coordinates):
+    #  this function gets called with every input change
+    if callback_context.triggered_id != 'id-button-geq-run-query':
         raise PreventUpdate
     else:
         try:
+            alert_message = None
             if compilation and query_gene_id:
 
                 # if normalize_data and (not norm_gene_coordinates or not gene_id_norm):
@@ -276,7 +230,8 @@ def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
                 # Select the meta data that must be used
                 # TODO: add the rest of the meta data as PI provides list
                 if compilation == gs.compilation_srav3h:
-                    df_meta_data = df_srav3h
+                    meta_data_df = df_srav3h
+                    meta_data_dict = dict_srav3h
                 else:
                     raise PreventUpdate
 
@@ -296,64 +251,30 @@ def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
                     if df_snpt_results_norm.empty:
                         raise exceptions.EmptyResponse
 
-                    geq.setup_normalization_data_method_2(norm_gene_id, df_snpt_results_norm, df_meta_data)
+                    # if (old_norm):
+                    #     geq.setup_normalization_data_method_2(norm_gene_id, df_snpt_results_norm, meta_data_df)
+                    # else:
+                    geq.setup_normalization_data_method_2_opt(norm_gene_id, df_snpt_results_norm, meta_data_dict)
 
-                table_data = geq.run_gene_expression_query(query_gene_id, df_snpt_results_query, df_meta_data)
+                # if (old_gen):
+                #     row_data = geq.run_gene_expression_query(query_gene_id, df_snpt_results_query, meta_data_df)
+                # else:
+                row_data = geq.run_gene_expression_query_opt(query_gene_id, df_snpt_results_query, meta_data_dict)
 
+                # ag-grid accepts list of dicts so passing in the data from storage that is saved as list of dict
+                # saves times here. store_data = row_data.df.to_dict("records") Set the columnDefs for the ag-grid
+                column_defs = graphs.get_gene_expression_query_column_def(normalize_data)
             else:
                 raise exceptions.MissingUserInputs
 
-        # TODO: setup UI for error messages
-        except exceptions.BadURL:
-            print("URL was bad")
-            raise PreventUpdate
-        except exceptions.EmptyResponse:
-            print("URL was correct but server returned empty response")
-            raise PreventUpdate
-        except exceptions.MissingUserInputs or exceptions.BadCoordinates:
-            print("Some user input error")
-            raise PreventUpdate
-        except exceptions.EmptyJunction:
-            print("Requested Junction has no sample data")
-            raise PreventUpdate
         except Exception as e:
-            # Any other exception happens I want it forwarded to the front end for handling
-            print(f"Exception: {e}")
-            raise PreventUpdate
+            alert_message = exceptions.handle_exception(e)
 
-        # keep track of any log needed
-        log_msg = f'Click= {n_clicks}'
-        datasets['log'] = log_msg
-        datasets['clicks'] = n_clicks
-
-    return datasets, table_data
-
-
-@app.callback(
-    Output('id-ag-grid-geq', 'rowData'),
-    Output('id-ag-grid-geq', 'columnDefs'),
-    Output('id-card-table-geq', 'style'),
-    Input('id-store-geq-df', 'data'),
-    Input('id-card-table-geq', 'style'),
-    Input("id-switch-geq-normalize", 'value'),
-    prevent_initial_call=True
-)
-def update_table_geq(data_from_store, current_style, normalized_gex):
-    if not data_from_store:
-        raise PreventUpdate
-
-    # ag-grid accepts list of dicts so passing in the data from storage that is saved as list of dict saves times here.
-    row_data = data_from_store
-
-    # Set the columnDefs for the ag-grid
-    column_defs = graphs.get_gene_expression_query_column_def(normalized_gex)
-
-    # TODO: other components' style needs to be none by default and turned on here
-    # set component visibility
-    current_style['display'] = 'block'
-
-    # parentheses must be here, dash does not like it without it
-    return row_data, column_defs, current_style  # grid
+    if alert_message:
+        alert = components.get_alert(alert_message)
+        return None, None, alert
+    else:
+        return row_data, column_defs, None
 
 
 @app.callback(
@@ -375,29 +296,52 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
         raise PreventUpdate
 
     if lock_graph_data_with_table:
-        df = pd.DataFrame(filtered_row_data_from_table)
+        data = filtered_row_data_from_table
     else:
-        df = pd.DataFrame(row_data_from_table)
+        data = row_data_from_table
 
     if normalized_data:
-        df = df.loc[df[gs.table_geq_col_factor] != -1]
-    if normalized_data:
+        # Filter out the -1 factors directly
+        data = [row for row in data if row[gs.table_geq_col_factor] != -1]
+        df = pd.DataFrame(data)
+        # Make histogram
         histogram = graphs.get_histogram_geq(df)
-    else:
-        histogram = None
-
-    box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
-
-    if normalized_data:
+        box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
         # One option is also to have a html.DIV in the layout and send over the Row as
         # but them you need to also send the styling of the row here
         # child = dbc.Row([ dbc.Col(dcc.Graph the graph you want),dbc.Col(dcc.Graph the other graph)], className="g-0")
         row_child = [dbc.Col(dcc.Graph(figure=box_plot), width=6), dbc.Col(dcc.Graph(figure=histogram), width=6)]
     else:
+        df = pd.DataFrame(data)
+        box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
         row_child = [dbc.Col(dcc.Graph(figure=box_plot), width=12)]
 
     # return dcc.Graph(figure=box_plot), dcc.Graph(figure=histogram), child
     return row_child
+
+
+@app.callback(
+    Output("id-ag-grid-jiq", "exportDataAsCsv"),
+    Output("id-ag-grid-jiq", "csvExportParams"),
+    Input("id-button-jiq-download", "n_clicks"),
+)
+def jiq_export_data_as_csv(n_clicks):
+    if callback_context.triggered_id == 'id-button-jiq-download':
+        return True, {"fileName": "psi_query_data.csv"}
+    else:
+        raise PreventUpdate
+
+
+@app.callback(
+    Output("id-ag-grid-geq", "exportDataAsCsv"),
+    Output("id-ag-grid-geq", "csvExportParams"),
+    Input("id-button-geq-download", "n_clicks"),
+)
+def jiq_export_data_as_csv(n_clicks):
+    if callback_context.triggered_id == 'id-button-geq-download':
+        return True, {"fileName": "gene_expression_query_data.csv"}
+    else:
+        raise PreventUpdate
 
 
 # Run the app

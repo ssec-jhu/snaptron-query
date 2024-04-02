@@ -1,12 +1,16 @@
+
 .ag-header-cell-filtered {
-    /*  https://getbootstrap.com/docs/5.1/customize/css-variables/*/
-    /*background-color: var(--bs-success);*/
-    background-color: #1b6d85 !important;
-    color: #fff !important;
+    background-color: var(--bs-secondary) !important;
 }
 
 .ag-header-cell-filtered span {
-  color: #fff !important;
+    /*
+        color in ag-header-cell-filtered does not change the filtered cell text color,
+        this component does
+        https://ag-grid.com/angular-data-grid/global-style-customisation-headers/#style-header-on-filter
+    */
+    color: var(--bs-white)!important;
+    font-weight: bold;
 }
 
 .accordion-button:not(.collapsed) {
@@ -30,3 +34,37 @@
     color: var(--bs-danger-text-emphasis) !important;
     border-color: var(--bs-danger-text-emphasis)!important;
 }
+
+.cell-wrap-dash-ag-grid{
+    /*background-color: rgb(99, 133, 185) !important;*/
+    word-break: normal !important;
+    white-space: normal !important;
+    line-height:130% !important;
+    /*padding: 10 !important;*/
+    /*font-size: 10px !important;*/
+
+    /*line-height:200% !important;*/
+
+    /*padding: 10 !important;*/
+    /*font-size: 10px !important;*/
+
+    /*max-width: 500px;*/
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+    /*white-space: nowrap;*/
+
+}
+
+
+/*input:checked + .mantine-7to5cv{*/
+/*    background-color: rgb(101 73 230);*/
+/*    border-color: rgb(230, 73, 128);*/
+/*    color: rgb(64 67 215);*/
+/*    transition: color 150ms ease 0s;*/
+/*}*/
+/*.mantine-Switch-track{*/
+/*    background-color: rgb(70, 128, 7) !important;*/
+/*    !*border-color: rgb(227, 9, 100);*!*/
+/*    color: rgb(93, 7, 128)!important;*/
+/*    transition: color 150ms ease 0s;*/
+/*}*/

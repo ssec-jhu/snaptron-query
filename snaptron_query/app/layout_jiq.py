@@ -178,32 +178,39 @@ def get_card_table_jiq():
                 [
                     dbc.Col(
                         [
-                            components_jiq.get_button_download()
+                            components.get_button_download('id-button-jiq-download')
                         ],
                         width=2,
+                        align='center',  # vertical alignment of the column
                         style={'border': styles.border_column}
                     ),
+                    dbc.Col(),
                     dbc.Col(
                         [
-                            components.get_switch_lock_data_with_table('id-switch-jiq-lock-with-table', gs.switch_lock)
+                            components.get_switch_lock_data_with_table('id-switch-jiq-lock-with-table', gs.switch_lock),
+                            dmc.Space(w=10),
+                            components.get_text('dmc', gs.switch_lock)
                         ],
                         width=3,
-                        align='end',
+                        align='center',
+                        className='d-flex justify-content-end',
                         style={'border': styles.border_column},
                     ),
                 ],
                 className="g-1",  # button too close to the table, needs some gutter
-                justify='between'
+                justify='end'
             ),
+            dmc.Space(h=10),
             dbc.Row(
                 [
                     dbc.Container(
                         [
                             components.get_table(table_id='id-ag-grid-jiq')
                         ],
-                        className="ag-theme-alpine dbc dbc-ag-grid"
+                        className="dbc dbc-ag-grid"
                     )
-                ]
+                ],
+                # className="gy-4",  # button too close to the table, needs some gutter
             )
         ],
         radius="md",

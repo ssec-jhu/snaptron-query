@@ -58,7 +58,7 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay):
                      range_y=range_y_axis,
                      points='all')  # show all points
 
-        fig.update_traces(jitter=0.1, pointpos=0, boxmean=True,
+        fig.update_traces(jitter=0.01, pointpos=0, boxmean=True,
                           # line_color='royalblue', marker_color='darkblue'
                           )
 
@@ -96,7 +96,6 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
     https://plotly.com/python-api-reference/generated/plotly.express.box
     https://plotly.com/python/reference/box/
     """
-    global y_normalized
     if normalized:
         y_raw = df[gs.table_geq_col_raw_count]
         y_normalized = df[gs.table_geq_col_norm_count]
@@ -159,7 +158,7 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
         fig.update_yaxes(title_text=gs.geq_box_plot_y_axes)
 
     # fig.update_traces(jitter=0, pointpos=0, line_color='royalblue', marker_color='darkblue')
-    fig.update_traces(jitter=0, pointpos=0)
+    fig.update_traces(jitter=0.01, pointpos=0)
     fig.update_layout(title=f'<b>{box_plot_title}</b>', title_x=0.5)
 
     # update the legend location for the normalized case, so it doesn't take space in
@@ -172,49 +171,68 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
     return fig
 
 
+def get_col_meta_a():
+    return [
+        {"field": gs.snpt_col_rail_id, "headerName": "Rail ID", "filter": "agNumberColumnFilter",
+         'width': 100, "pinned": "left"},
+        {"field": gs.snpt_col_external_id, "headerName": "External ID", 'width': 125},
+        {"field": 'study', "headerName": "Study", 'width': 120, "cellRenderer": "StudyLink"},
+    ]
+
+
+def get_col_meta_b():
+    return [
+        {"field": 'study_title', "headerName": "Study Title", 'width': 350,
+         'autoHeight': True,  # must have this here, it is not a style option
+         'cellClass': 'cell-wrap-dash-ag-grid'
+         },
+        {"field": 'sample_name', "headerName": "Sample Name", 'width': 150 + 20, "tooltipField": 'sample_name'},
+        {"field": 'sample_title', "headerName": "Sample Title", 'width': 150, "tooltipField": 'sample_title'},
+        {"field": 'library_layout', "headerName": "Library", 'width': 100},
+        {"field": 'sample_description', "headerName": "Sample Description", 'width': 200,
+         "tooltipField": "sample_description"},
+    ]
+
+
+def get_col_jiq():
+    return [
+        {"field": 'inc', "headerName": "Inc", "filter": "agNumberColumnFilter", 'width': 100,
+         # TODO: adding header tooltips creates a horizontal scroll performance issue!
+         # "headerTooltip": "Inclusion Count"
+         },
+        {"field": 'exc', "headerName": "Exc", "filter": "agNumberColumnFilter", 'width': 100,
+         # "headerTooltip": "Exclusion Count"
+         },
+        {"field": 'total', "headerName": "Total", "filter": "agNumberColumnFilter", 'width': 120,
+         # "headerTooltip": "Inclusion Count + Exclusion Count"
+         },
+        {"field": 'psi', "headerName": "PSI", "filter": "agNumberColumnFilter", 'initialSort': 'desc', 'width': 120}
+    ]
+
+
 def get_junction_query_column_def():
     """Wrapper for ag-grid column definitions and their individual style"""
 
     # TODO: different compilation are going to have different headers
-    # this function needs to be dynamic
-    return [
-        {"field": gs.snpt_col_rail_id, "headerName": "Rail ID", "filter": "agNumberColumnFilter", },
-        {"field": 'external_id', "headerName": "External ID"},
-        {"field": 'study', "headerName": "Study"},
-        {"field": 'study_title', "headerName": "Study Title"},
-        {"field": 'library_layout', "headerName": "Library"},
-        {"field": 'sample_description', "headerName": "Desc"},
-        {"field": 'sample_name', "headerName": "Name"},
-        {"field": 'sample_title', "headerName": "Title"},
-        {"field": 'inc', "headerName": "Inclusion Count", "filter": "agNumberColumnFilter", },
-        {"field": 'exc', "headerName": "Exclusion Count", "filter": "agNumberColumnFilter", },
-        {"field": 'total', "headerName": "Total Count", "filter": "agNumberColumnFilter", },
-        {"field": 'psi', "headerName": "PSI", "filter": "agNumberColumnFilter", 'initialSort': 'desc'},
-    ]
+    return get_col_meta_a() + get_col_jiq() + get_col_meta_b()
 
 
-def get_gene_expression_query_column_def(normalized):
+def get_gene_expression_query_column_def(normalized=False):
     """Wrapper for ag-grid column definitions and their individual style"""
 
-    # TODO: different compilation are going to have different headers
-    # this function needs to be dynamic
-    column_def = [{"field": gs.snpt_col_rail_id, "headerName": "Rail ID", "filter": "agNumberColumnFilter"},
-                  {"field": 'external_id', "headerName": "External ID"},
-                  {"field": 'raw_count', "headerName": "Raw Count", "filter": "agNumberColumnFilter"}]
-
+    column_def = get_col_meta_a()
     if normalized:
-        norm_data = [{"field": gs.table_geq_col_factor, "headerName": "Factor", "filter": "agNumberColumnFilter"},
-                     {"field": 'normalized_count', "headerName": "Normalized Count", "filter": "agNumberColumnFilter"}]
-        column_def.extend(norm_data)
+        column_def += [
+            {"field": 'raw_count', "headerName": "Raw Count", "filter": "agNumberColumnFilter", 'width': 130},
+            {"field": gs.table_geq_col_factor, "headerName": "Factor", "filter": "agNumberColumnFilter", 'width': 130},
+            {"field": 'normalized_count', "headerName": "Normalized Count", "filter": "agNumberColumnFilter",
+             'width': 170, 'initialSort': 'desc'}
+        ]
+    else:
+        column_def += [
+            {"field": 'raw_count', "headerName": "Raw Count", "filter": "agNumberColumnFilter", 'width': 130}
+        ]
 
-    # append the meta data
-    meta_data = [{"field": 'study', "headerName": "Study"},
-                 {"field": 'study_title', "headerName": "Study Title"},
-                 {"field": 'library_layout', "headerName": "Library"},
-                 {"field": 'sample_description', "headerName": "Desc"},
-                 {"field": 'sample_name', "headerName": "Name"},
-                 {"field": 'sample_title', "headerName": "Title"}]
-
-    column_def.extend(meta_data)
+    column_def += get_col_meta_b()
 
     return column_def
