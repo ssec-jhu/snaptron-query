@@ -324,6 +324,7 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
     Output("id-ag-grid-jiq", "exportDataAsCsv"),
     Output("id-ag-grid-jiq", "csvExportParams"),
     Input("id-button-jiq-download", "n_clicks"),
+    prevent_initial_call=True
 )
 def jiq_export_data_as_csv(n_clicks):
     if callback_context.triggered_id == 'id-button-jiq-download':
@@ -336,8 +337,9 @@ def jiq_export_data_as_csv(n_clicks):
     Output("id-ag-grid-geq", "exportDataAsCsv"),
     Output("id-ag-grid-geq", "csvExportParams"),
     Input("id-button-geq-download", "n_clicks"),
+    prevent_initial_call=True
 )
-def jiq_export_data_as_csv(n_clicks):
+def geq_export_data_as_csv(n_clicks):
     if callback_context.triggered_id == 'id-button-geq-download':
         return True, {"fileName": "gene_expression_query_data.csv"}
     else:
