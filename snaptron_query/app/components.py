@@ -42,10 +42,11 @@ def get_dropdown_compilation(component_id):
     return dropdown
 
 
-def get_switch(switch_id, switch_label):
+def get_switch(switch_id, switch_label, switch_on=False):
     return dbc.Switch(
         id=switch_id,
-        label=switch_label
+        label=switch_label,
+        value = switch_on
     )
 
 

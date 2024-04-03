@@ -21,9 +21,9 @@ drop_compilation = 'Select the organism of interest'
 drop_compilation_placeholder = 'Select a compilation'
 
 switch_violin = 'Violin Mode'
-switch_log = 'Log₂(y+1)'
 switch_lock = 'Lock Table with Graphs'
 plot_label_rail_id = 'Rail ID'
+switch_log_geq_hist_y = 'Log Y axis'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             Junction Inclusion Query 
@@ -39,8 +39,8 @@ jiq_input_exc_txt = 'Exclusion Junction'
 jiq_input_junction_txt_list = ['Junction 1', 'Junction 2', 'Junction 3', 'Junction 4', 'Junction 5']
 jiq_plot_title_hist = 'PSI Histogram'
 jiq_plot_title_box = 'PSI Box Plot'
-jiq_box_plot_y_axes = 'PSI'
-jiq_box_plot_log_y_axes = 'Log₂(PSI+1)'
+jiq_psi_plot_axes = 'PSI'
+jiq_log_psi = 'Log₂(psi+1)'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             Gene Expression Query 
@@ -64,6 +64,7 @@ geq_plot_label_raw_count = 'Raw Count'
 geq_plot_label_norm_count = 'Normalized Count'
 geq_box_plot_y_axes = 'Gene Expression Count'
 geq_box_plot_y_axes_log = 'Log₂(Gene Expression Count+1)'
+geq_log_count = 'Log₂(count+1)'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     Strings beyond this point are related to the snaptron interface

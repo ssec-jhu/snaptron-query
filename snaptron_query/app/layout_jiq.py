@@ -108,10 +108,15 @@ def get_card_histogram_jiq():
                 [
                     dbc.Row(
                         [
-                            dbc.Col( width=7, style={'border': styles.border_column}),
+                            dbc.Col(width=7, style={'border': styles.border_column}),
                             dbc.Col(
                                 [
-                                    components.get_switch(switch_id='id-switch-jiq-log-histogram', switch_label=gs.switch_log),
+                                    components.get_switch(switch_id='id-switch-jiq-log-psi-histogram',
+                                                          switch_label=gs.jiq_log_psi, switch_on=True),
+                                    dmc.Space(w=10),
+                                    components.get_switch(switch_id='id-switch-jiq-log-y-histogram',
+                                                          switch_label=gs.switch_log_geq_hist_y)
+
                                 ],
                                 width=5,
                                 align='center',
@@ -148,12 +153,12 @@ def get_card_box_plot_jiq():
                             dbc.Col(width=7, style={'border': styles.border_column}),
                             dbc.Col(
                                 [
-                                    components.get_switch(switch_id='id-switch-jiq-log-box-plot',
-                                                          switch_label=gs.switch_log),
+                                    components.get_switch(switch_id='id-switch-jiq-log-psi-box-plot',
+                                                          switch_label=gs.jiq_log_psi, switch_on=True),
                                     dmc.Space(w=10),
                                     components.get_switch(switch_id='id-switch-jiq-violin-box-plot',
                                                           switch_label=gs.switch_violin)
-                                 ],
+                                ],
                                 width=5,
                                 align='center',
                                 className='d-flex justify-content-end',

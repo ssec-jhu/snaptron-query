@@ -12,9 +12,8 @@ from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryMa
 # Initialize the app
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 bs_cdn = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-dbc_icon = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 app = Dash(__name__,
-           external_stylesheets=[dbc.themes.SANDSTONE, dbc_css, dbc_icon])
+           external_stylesheets=[dbc.themes.SANDSTONE, dbc_css])
 
 load_figure_template(gs.dbc_template_name)
 
@@ -22,15 +21,14 @@ load_figure_template(gs.dbc_template_name)
 def read_srav3h():
     # TODO: read the rest of the meta data files here as they become available
     # read the file and make sure index is set to the rail id for fast lookup
-    return pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
-                       usecols=gs.srav3h_meta_data_required_list,
-                       dtype={'sample_description': 'string'}).set_index(gs.snpt_col_rail_id)
+    df = pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
+                     usecols=gs.srav3h_meta_data_required_list,
+                     dtype={'sample_description': 'string'}).set_index(gs.snpt_col_rail_id)
+    return df.to_dict(orient='index')
 
 
 # Meta data loaded in global space
-# TODO: how can I read this as a dict
-df_srav3h = read_srav3h()
-dict_srav3h = df_srav3h.to_dict(orient='index')
+dict_srav3h = read_srav3h()
 
 # this is the main layout of the page with all tabs
 app.layout = dbc.Container(
@@ -123,12 +121,15 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
     Input('id-ag-grid-jiq', 'rowData'),
     Input('id-ag-grid-jiq', 'virtualRowData'),
     Input('id-switch-jiq-lock-with-table', 'value'),
-    Input('id-switch-jiq-log-box-plot', 'value'),
+    Input('id-switch-jiq-log-psi-box-plot', 'value'),
     Input('id-switch-jiq-violin-box-plot', 'value'),
+    Input('id-switch-jiq-log-psi-histogram', 'value'),
+    Input('id-switch-jiq-log-y-histogram', 'value'),
     prevent_initial_call=True
 )
 def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_data_with_table,
-                  log_psi_values, violin_overlay):
+                  log_psi_values, violin_overlay,
+                  histogram_log_psi, histogram_log_y):
     """
         Given the table data as input, it will update the relative graphs
     """
@@ -140,7 +141,7 @@ def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_
     else:
         df = pd.DataFrame(row_data_from_table)
 
-    histogram = graphs.get_histogram_jiq(df)
+    histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y)
     box_plot = graphs.get_box_plot_jiq(df, log_psi_values, violin_overlay)
     return histogram, box_plot
 
@@ -285,14 +286,21 @@ def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
     Input('id-switch-geq-log-raw-box-plot', 'value'),
     Input('id-switch-geq-violin-raw-box-plot', 'value'),
     Input("id-switch-geq-normalize", 'value'),
+    Input("id-switch-geq-log-count-histogram", 'value'),
+    Input("id-switch-geq-log-y-histogram", 'value'),
     prevent_initial_call=True
 )
 def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_graph_data_with_table,
-                      log_values, violin_overlay, normalized_data):
+                      log_values, violin_overlay, normalized_data,
+                      histogram_log_x, histogram_log_y):
     """
         Given the table data as input, it will update the relative graphs
     """
     if not row_data_from_table or not filtered_row_data_from_table:
+        raise PreventUpdate
+
+    # don't update on these switches, their value is only important, not their trigger
+    if callback_context.triggered_id == 'id-switch-geq-normalize':
         raise PreventUpdate
 
     if lock_graph_data_with_table:
@@ -305,7 +313,7 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
         data = [row for row in data if row[gs.table_geq_col_factor] != -1]
         df = pd.DataFrame(data)
         # Make histogram
-        histogram = graphs.get_histogram_geq(df)
+        histogram = graphs.get_histogram_geq(df, histogram_log_x, histogram_log_y)
         box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
         # One option is also to have a html.DIV in the layout and send over the Row as
         # but them you need to also send the styling of the row here

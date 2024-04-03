@@ -5,25 +5,35 @@ import plotly.graph_objects as go
 
 from snaptron_query.app import global_strings as gs
 
-graph_margin_dict = dict(l=0, r=0, t=30, b=0)
 
 def log_2_function(df, y):
     # add th plus 1
     return np.log2(df[y] + 1)
 
 
-def get_histogram_jiq(df):
+def get_histogram_jiq(df, log_psi_values, log_y):
     """Wrapper for plotly express histogram given a df - for clarity
 
     fig.update traces using below
     https://plotly.com/python/reference/histogram/
     https://plotly.com/python/histograms/
     """
-    fig = px.histogram(df, x=gs.table_jiq_col_psi, nbins=50)
-    fig.update_layout(title=f'<b>{gs.jiq_plot_title_hist}</b>', title_x=0.5)
+    x_values = gs.table_jiq_col_psi
+    if log_psi_values:
+        x_values = log_2_function(df, x_values)
+
+    fig = px.histogram(df, x=x_values, log_y=log_y)
+    fig.update_layout(title=f'<b>{gs.jiq_plot_title_hist}</b>',
+                      title_x=0.5,
+                      template=gs.dbc_template_name)
     # fig.update_traces(marker_color='darkblue')
-    fig.update_layout(template=gs.dbc_template_name)
-    fig.update_layout(margin=graph_margin_dict)
+
+    # update the y-axis title if log switch is on
+    if log_psi_values:
+        fig.update_xaxes(title_text=gs.jiq_log_psi)
+    else:
+        fig.update_yaxes(title_text=gs.jiq_psi_plot_axes)
+
     return fig
 
 
@@ -64,19 +74,20 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay):
                           # line_color='royalblue', marker_color='darkblue'
                           )
 
+    fig.update_layout(title=f'<b>{gs.jiq_plot_title_box}</b>',
+                      title_x=0.5,
+                      template=gs.dbc_template_name)
+
     # update the y-axis title if log switch is on
     if log_psi_values:
-        fig.update_yaxes(title_text=gs.jiq_box_plot_log_y_axes)
+        fig.update_yaxes(title_text=gs.jiq_log_psi)
     else:
-        fig.update_yaxes(title_text=gs.jiq_box_plot_y_axes)
+        fig.update_yaxes(title_text=gs.jiq_psi_plot_axes)
 
-    fig.update_layout(title=f'<b>{gs.jiq_plot_title_box}</b>', title_x=0.5)
-    fig.update_layout(template=gs.dbc_template_name)
-    fig.update_layout(margin=graph_margin_dict)
     return fig
 
 
-def get_histogram_geq(df):
+def get_histogram_geq(df, log_count_values, log_y):
     """Wrapper for plotly express histogram given a df - for clarity
 
     fig.update traces using below
@@ -85,11 +96,24 @@ def get_histogram_geq(df):
     """
     labels = {gs.snpt_col_rail_id: gs.plot_label_rail_id,
               gs.table_geq_col_norm_count: gs.geq_plot_label_norm_count}
-    fig = px.histogram(df, x=gs.table_geq_col_norm_count, labels=labels, nbins=30)
-    fig.update_layout(title=f'<b>{gs.geq_plot_title_hist}</b>', title_x=0.5)
+
+    x_values = gs.table_geq_col_norm_count
+
+    if log_count_values:  # log2 the values
+        x_values = log_2_function(df, gs.table_geq_col_norm_count)
+
+    fig = px.histogram(df, x=x_values, labels=labels, log_y=log_y)
+
+    fig.update_layout(title=f'<b>{gs.geq_plot_title_hist}</b>',
+                      title_x=0.5,
+                      template=gs.dbc_template_name)
     # fig.update_traces(marker_color='darkblue')
-    fig.update_layout(template=gs.dbc_template_name)
-    fig.update_layout(margin=graph_margin_dict)
+
+    if log_count_values:
+        fig.update_xaxes(title_text=gs.geq_log_count)
+    else:
+        fig.update_xaxes(title_text=gs.geq_plot_label_norm_count)
+
     return fig
 
 
@@ -163,15 +187,17 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
 
     # fig.update_traces(jitter=0, pointpos=0, line_color='royalblue', marker_color='darkblue')
     fig.update_traces(jitter=0.01, pointpos=0)
-    fig.update_layout(title=f'<b>{box_plot_title}</b>', title_x=0.5)
+    fig.update_layout(title=f'<b>{box_plot_title}</b>',
+                      title_x=0.5,
+                      template=gs.dbc_template_name,
+                      # graphics object have different margins than plotly express
+                      # so this box plot needs to bring the margin down a bit
+                      margin=dict(t=55))
 
     # update the legend location for the normalized case, so it doesn't take space in
     # between the box plots and the histogram
     if normalized:
-        fig.update_layout(legend=dict(orientation="h", yanchor="bottom", xanchor="center", x=0.5, y=1.02))
-
-    fig.update_layout(template=gs.dbc_template_name)
-    fig.update_layout(margin=graph_margin_dict)
+        fig.update_layout(legend=dict(orientation="h", yanchor="bottom", xanchor="center", x=0.5, y=0.98))
 
     return fig
 
