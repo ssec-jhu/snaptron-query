@@ -22,7 +22,7 @@ def get_histogram_jiq(df, log_psi_values, log_y):
     if log_psi_values:
         x_values = log_2_function(df, x_values)
 
-    fig = px.histogram(df, x=x_values, log_y=log_y)
+    fig = px.histogram(df, x=x_values, log_y=log_y, nbins=25)
     fig.update_layout(title=f'<b>{gs.jiq_plot_title_hist}</b>',
                       title_x=0.5,
                       template=gs.dbc_template_name)
