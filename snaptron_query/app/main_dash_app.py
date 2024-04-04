@@ -1,7 +1,7 @@
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 import pandas as pd
-from dash import Dash, html, dcc, Input, Output, callback_context
+from dash import Dash, html, dcc, Input, Output, callback_context, no_update
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 
@@ -50,6 +50,7 @@ app.layout = dbc.Container(
 
 
 @app.callback(
+    Output('id-ag-grid-display-jiq', 'style'),
     Output('id-ag-grid-jiq', 'rowData'),
     Output('id-ag-grid-jiq', 'columnDefs'),
     Output('id-alert-jiq', 'children'),
@@ -110,9 +111,9 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
 
     if alert_message:
         alert = components.get_alert(alert_message)
-        return None, None, alert
+        return no_update, no_update, no_update, alert
 
-    return row_data, column_defs, None
+    return {'display': 'block'}, row_data, column_defs, no_update
 
 
 @app.callback(
@@ -176,6 +177,7 @@ def enable_normalization(normalize_value):
 
 
 @app.callback(
+    Output('id-ag-grid-display-geq', 'style'),
     Output('id-ag-grid-geq', 'rowData'),
     Output('id-ag-grid-geq', 'columnDefs'),
     Output('id-alert-geq', 'children'),
@@ -273,9 +275,9 @@ def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
 
     if alert_message:
         alert = components.get_alert(alert_message)
-        return None, None, alert
+        return no_update, no_update, no_update, alert
     else:
-        return row_data, column_defs, None
+        return {'display': 'block'}, row_data, column_defs, no_update
 
 
 @app.callback(

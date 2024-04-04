@@ -188,7 +188,6 @@ def get_card_table_jiq():
     """Wrapper function for the table component
     """
     card = dmc.Card(
-        id='id-card-table',
         children=[
             dbc.Row(
                 [
@@ -321,13 +320,10 @@ def get_layout_junction_inclusion():
             dmc.Space(h=20),
             dbc.Row(
                 [
-                    dbc.Col(
-                        [
-                            get_card_table_jiq()
-                        ],
-                        style={'border': styles.border_column}
-                    )
-                ]
+                    html.Div(get_card_table_jiq())
+                ],
+                id='id-ag-grid-display-jiq',
+                style={'display': 'None'}
             ),
         ],
     )

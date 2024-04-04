@@ -275,13 +275,10 @@ def get_layout_gene_expression_query():
             dmc.Space(h=20),
             dbc.Row(
                 [
-                    dbc.Col(
-                        [
-                            get_card_table_geq()
-                        ],
-                        style={'border': styles.border_column}
-                    )
-                ]
+                    html.Div(get_card_table_geq())
+                ],
+                id='id-ag-grid-display-geq',
+                style={'display': 'None'}
             ),
         ],
     )
