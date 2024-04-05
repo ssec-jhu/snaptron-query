@@ -274,12 +274,12 @@ def get_accordian_graphs_jiq():
                     dbc.Row(
                         [
                             # row equally divided for the plots
-                            dbc.Col(
-                                [html.Div(get_card_box_plot_jiq())]
-                            ),
-                            dbc.Col(
-                                [html.Div(get_card_histogram_jiq())]
-                            )
+                            dbc.Col(id='id-jiq-box-plot-col',
+                                    children=[html.Div(get_card_box_plot_jiq())]
+                                    ),
+                            dbc.Col(id='id-jiq-histogram-col',
+                                    children=[html.Div(get_card_histogram_jiq())]
+                                    )
                         ]
                     ),
                 ],
@@ -311,8 +311,14 @@ def get_layout_junction_inclusion():
                 [
                     get_accordian_graphs_jiq(),
                 ],
+                id='id-display-graphs-jiq',
                 style={"box-shadow": "1px 2px 7px 0px grey",
-                       "border-radius": "10px"},
+                       "border-radius": "10px",
+                       # Note: Setting the 'display': 'None' creates a delay in the rendering of the plots. They
+                       # render to the screen then shift to their position.
+                       # visibility will keep the space, so when the plots come in, they render fast
+                       'visibility': 'hidden'
+                       },
                 className='g-0',  # no gutters in between the cards
             ),
 

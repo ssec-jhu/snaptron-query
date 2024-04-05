@@ -119,6 +119,10 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
 @app.callback(
     Output('id-histogram-jiq', 'figure'),
     Output('id-box-plot-jiq', 'figure'),
+    Output('id-jiq-box-plot-col', 'width'),
+    Output('id-jiq-histogram-col', 'width'),
+    Output('id-display-graphs-jiq', 'style'),
+
     Input('id-ag-grid-jiq', 'rowData'),
     Input('id-ag-grid-jiq', 'virtualRowData'),
     Input('id-switch-jiq-lock-with-table', 'value'),
@@ -144,7 +148,11 @@ def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_
 
     histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y)
     box_plot = graphs.get_box_plot_jiq(df, log_psi_values, violin_overlay)
-    return histogram, box_plot
+    col_width = {'size': 6}
+    # when the component is hidden, then becomes visible, the original style is lost,
+    # so I am putting it back again.
+    display_style = {"box-shadow": "1px 2px 7px 0px grey", "border-radius": "10px", }
+    return histogram, box_plot, col_width, col_width, display_style
 
 
 @app.callback(
