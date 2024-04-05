@@ -2,7 +2,7 @@
 
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
-from dash import html
+from dash import html, dcc
 
 from snaptron_query.app import components, components_geq, global_strings as gs, inline_styles as styles
 
@@ -148,10 +148,10 @@ def get_accordian_form_geq():
     )
 
 
-def get_accordian_graphs_geq():
-    return dbc.Accordion(
-        [
-            dbc.AccordionItem(
+def get_card_box_plot_geq():
+    card = dbc.Card(
+        children=[
+            dbc.CardBody(
                 [
                     dbc.Row(
                         [
@@ -162,13 +162,37 @@ def get_accordian_graphs_geq():
                                     dmc.Space(w=10),
                                     components.get_switch(switch_id='id-switch-geq-violin-raw-box-plot',
                                                           switch_label=gs.switch_violin),
-
                                 ],
-                                width=6,
                                 align='center',
                                 className='d-flex justify-content-end',
                                 style={'border': styles.border_column},
                             ),
+                        ],
+                        style={'border': styles.border_column},
+                        className="g-0 form-control-sm"
+                    ),
+                    dbc.Row(
+                        [
+                            dcc.Graph(id='id-row-graph-geq-box')
+                        ],
+                        style={'border': styles.border_column},
+                        class_name="g-0"
+                    )
+                ]
+            )
+        ],
+        style=styles.boundary_style,
+    )
+    return card
+
+
+def get_card_histogram_geq():
+    card = dbc.Card(
+        children=[
+            dbc.CardBody(
+                [
+                    dbc.Row(
+                        [
                             dbc.Col(
                                 [
                                     components.get_switch(switch_id='id-switch-geq-log-count-histogram',
@@ -177,21 +201,46 @@ def get_accordian_graphs_geq():
                                     components.get_switch(switch_id='id-switch-geq-log-y-histogram',
                                                           switch_label=gs.switch_log_geq_hist_y)
                                 ],
-                                width=6,
                                 align='center',
                                 className='d-flex justify-content-end',
-                                style={'border': styles.border_column},
                             )
-
                         ],
                         style={'border': styles.border_column},
                         className="g-0 form-control-sm"
                     ),
-                    dbc.Row(id='id-row-graph-geq', style={'border': styles.border_column}, class_name="g-0")
+                    dbc.Row(
+                        [
+                            html.Div(dcc.Graph(id="id-row-graph-geq-hist"))
+                        ],
+                        class_name="g-0"
+                    ),
+                ]
+            )
+        ],
+        style=styles.boundary_style,
+    ),
+    return card
+
+
+def get_accordian_graphs_geq():
+    return dbc.Accordion(
+        [
+            dbc.AccordionItem(
+                [
+                    dbc.Row(
+                        [
+                            dbc.Col(id='id-geq-box-plot-col',
+                                    children=[html.Div(get_card_box_plot_geq())],
+                            ),
+                            dbc.Col(id='id-geq-histogram-col',
+                                    children=[html.Div(get_card_histogram_geq())],
+                            )
+                        ],
+                    ),
                 ],
                 title=gs.graphs_group_title
             ),
-        ]
+        ],
     )
 
 
@@ -266,8 +315,11 @@ def get_layout_gene_expression_query():
                 [
                     get_accordian_graphs_geq(),
                 ],
+                id='id-display-graphs-geq',
                 style={"box-shadow": "1px 2px 7px 0px grey",
-                       "border-radius": "10px"},
+                       "border-radius": "10px",
+                       'visibility': 'hidden'
+                       },
                 className='g-0',  # no gutters in between the cards
             ),
 

@@ -132,9 +132,9 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
     Input('id-switch-jiq-log-y-histogram', 'value'),
     prevent_initial_call=True
 )
-def update_charts(row_data_from_table, filtered_row_data_from_table, lock_graph_data_with_table,
-                  log_psi_values, violin_overlay,
-                  histogram_log_psi, histogram_log_y):
+def update_charts_jiq(row_data_from_table, filtered_row_data_from_table, lock_graph_data_with_table,
+                      log_psi_values, violin_overlay,
+                      histogram_log_psi, histogram_log_y):
     """
         Given the table data as input, it will update the relative graphs
     """
@@ -289,7 +289,13 @@ def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
 
 
 @app.callback(
-    Output('id-row-graph-geq', 'children'),
+    Output('id-row-graph-geq-box', 'figure'),
+    Output('id-row-graph-geq-hist', 'figure'),
+    Output('id-geq-box-plot-col', 'width'),
+    Output('id-geq-histogram-col', 'width'),
+    Output('id-geq-histogram-col', 'style'),
+    Output('id-display-graphs-geq', 'style'),
+
     Input('id-ag-grid-geq', 'rowData'),
     Input('id-ag-grid-geq', 'virtualRowData'),
     Input('id-switch-geq-lock-with-table', 'value'),
@@ -318,6 +324,7 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
     else:
         data = row_data_from_table
 
+    style = {"box-shadow": "1px 2px 7px 0px grey", "border-radius": "10px"}
     if normalized_data:
         # Filter out the -1 factors directly
         data = [row for row in data if row[gs.table_geq_col_factor] != -1]
@@ -328,14 +335,15 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
         # One option is also to have a html.DIV in the layout and send over the Row as
         # but them you need to also send the styling of the row here
         # child = dbc.Row([ dbc.Col(dcc.Graph the graph you want),dbc.Col(dcc.Graph the other graph)], className="g-0")
-        row_child = [dbc.Col(dcc.Graph(figure=box_plot), width=6), dbc.Col(dcc.Graph(figure=histogram), width=6)]
+        width = {'size': 6}
+        hist_display = {'display': 'Block'}
+        return box_plot, histogram, width, width, hist_display, style
     else:
         df = pd.DataFrame(data)
         box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
-        row_child = [dbc.Col(dcc.Graph(figure=box_plot), width=12)]
-
-    # return dcc.Graph(figure=box_plot), dcc.Graph(figure=histogram), child
-    return row_child
+        width = {'size': 8, 'offset': 2}
+        hist_display = {'display': 'None'}
+        return box_plot, None, width, no_update, hist_display, style
 
 
 @app.callback(

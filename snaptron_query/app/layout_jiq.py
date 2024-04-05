@@ -108,7 +108,6 @@ def get_card_histogram_jiq():
                 [
                     dbc.Row(
                         [
-                            dbc.Col(width=7, style={'border': styles.border_column}),
                             dbc.Col(
                                 [
                                     components.get_switch(switch_id='id-switch-jiq-log-psi-histogram',
@@ -118,7 +117,6 @@ def get_card_histogram_jiq():
                                                           switch_label=gs.switch_log_geq_hist_y)
 
                                 ],
-                                width=5,
                                 align='center',
                                 className='d-flex justify-content-end',
                                 style={'border': styles.border_column},
@@ -150,7 +148,6 @@ def get_card_box_plot_jiq():
                 [
                     dbc.Row(
                         [
-                            dbc.Col(width=7, style={'border': styles.border_column}),
                             dbc.Col(
                                 [
                                     components.get_switch(switch_id='id-switch-jiq-log-psi-box-plot',
@@ -159,7 +156,6 @@ def get_card_box_plot_jiq():
                                     components.get_switch(switch_id='id-switch-jiq-violin-box-plot',
                                                           switch_label=gs.switch_violin)
                                 ],
-                                width=5,
                                 align='center',
                                 className='d-flex justify-content-end',
                                 style={'border': styles.border_column},
