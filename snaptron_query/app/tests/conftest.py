@@ -50,13 +50,10 @@ class GEXQuery:
         self.gex_mgr = gex.GeneExpressionQueryManager()
 
         # calculate factors
-        self.gex_mgr.setup_normalization_data_method_2_opt(norm_gene_id, df_snaptron_norm, meta_data_dict)
+        self.gex_mgr.setup_normalization_data_method(norm_gene_id, df_snaptron_norm, meta_data_dict)
 
-
-        # self.results_list_of_dict = self.gex_mgr.run_gene_expression_query(query_gene_id, df_snaptron_query,
-        #                                                                    meta_data_df=df_srav3h_meta_data)
-        self.results_list_of_dict = self.gex_mgr.run_gene_expression_query_opt(query_gene_id,
-                                                                               df_snaptron_query,meta_data_dict)
+        self.results_list_of_dict = self.gex_mgr.run_gene_expression_query(query_gene_id,
+                                                                           df_snaptron_query, meta_data_dict)
 
     def get_factor_table(self):
         return self.gex_mgr.normalization_factor_table

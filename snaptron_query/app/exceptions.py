@@ -49,10 +49,11 @@ def handle_exception(exception):
     elif e == EmptyJunction:
         alert_message = 'Junctions entered have no results!'
     elif e == QueryGeneNotFound:
-        alert_message = 'Query gene was not found. Add gene coordinates or double check coordinates if provided!'
+        alert_message = ('Query gene was not found. Try adding gene coordinates to your query or double check '
+                         'coordinates if provided!')
     elif e == NormalizationGeneNotFound:
-        alert_message = ('Normalization gene was not found. Add gene coordinates or double check coordinates if '
-                         'provided!')
+        alert_message = ('Normalization gene was not found. Try adding gene coordinates to your query or double check '
+                         'coordinates if provided!')
     elif e == httpx.RemoteProtocolError:
         alert_message = f'Remote Protocol Error: {exception.args[0]}.'
     elif e == httpx.ConnectError or httpx.ConnectTimeout:

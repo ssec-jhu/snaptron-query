@@ -1,7 +1,7 @@
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 import pandas as pd
-from dash import Dash, html, dcc, Input, Output, callback_context, no_update
+from dash import Dash, html, Input, Output, callback_context, no_update
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 
@@ -262,15 +262,9 @@ def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
                     if df_snpt_results_norm.empty:
                         raise exceptions.EmptyResponse
 
-                    # if (old_norm):
-                    #     geq.setup_normalization_data_method_2(norm_gene_id, df_snpt_results_norm, meta_data_df)
-                    # else:
-                    geq.setup_normalization_data_method_2_opt(norm_gene_id, df_snpt_results_norm, meta_data_dict)
+                    geq.setup_normalization_data_method(norm_gene_id, df_snpt_results_norm, meta_data_dict)
 
-                # if (old_gen):
-                #     row_data = geq.run_gene_expression_query(query_gene_id, df_snpt_results_query, meta_data_df)
-                # else:
-                row_data = geq.run_gene_expression_query_opt(query_gene_id, df_snpt_results_query, meta_data_dict)
+                row_data = geq.run_gene_expression_query(query_gene_id, df_snpt_results_query, meta_data_dict)
 
                 # ag-grid accepts list of dicts so passing in the data from storage that is saved as list of dict
                 # saves times here. store_data = row_data.df.to_dict("records") Set the columnDefs for the ag-grid

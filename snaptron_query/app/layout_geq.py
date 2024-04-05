@@ -231,10 +231,10 @@ def get_accordian_graphs_geq():
                         [
                             dbc.Col(id='id-geq-box-plot-col',
                                     children=[html.Div(get_card_box_plot_geq())],
-                            ),
+                                    ),
                             dbc.Col(id='id-geq-histogram-col',
                                     children=[html.Div(get_card_histogram_geq())],
-                            )
+                                    )
                         ],
                     ),
                 ],

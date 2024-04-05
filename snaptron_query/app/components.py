@@ -46,7 +46,7 @@ def get_switch(switch_id, switch_label, switch_on=False):
     return dbc.Switch(
         id=switch_id,
         label=switch_label,
-        value = switch_on
+        value=switch_on
     )
 
 
@@ -61,7 +61,6 @@ def get_switch_lock_data_with_table(switch_id, switch_label):
                 # dbc switch follows the text size of its label, so you can use something like class_name="fs-6"
                 # https://community.plotly.com/t/dbc-switch-make-larger/80146
                 value=True,
-
 
             )
             # dmc.Switch(
