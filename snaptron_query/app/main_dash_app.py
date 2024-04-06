@@ -60,8 +60,8 @@ app.layout = dbc.Container(
     Input("id-input-jiq-inc-junc", "value"),
     Input("id-input-jiq-exc-junc", "value"),
     prevent_initial_call=True,
-    # TODO: why doesn't this work?
-    # running=[(Output("id-input-compilation-jiq", "disabled"), True, False)]
+    # Note: this requires the latest Dash 2.16
+    running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)]
 )
 def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclusion_interval):
     #  this function gets called with every input change
@@ -200,8 +200,8 @@ def enable_normalization(normalize_value):
     Input("id-input-geq-gene-id-norm", "value"),
     Input("id-input-geq-gene-coord-norm", "value"),
     prevent_initial_call=True,
-    # TODO: figure this out, why doesn't it turn gray?
-    # running=[(Output("id-button-geq-run-query", "disabled"), True, False)]
+    # Note: this requires latest Dash 2.16
+    running=[(Output("id-button-geq-run-query", "disabled"), True, False)]
 )
 def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
                                     query_gene_id, query_gene_coordinates,

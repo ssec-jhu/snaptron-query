@@ -12,3 +12,4 @@ matplotlib==3.8.4
 plotly==5.22.0
 plotly-express==0.4.1
 numpy==1.26.4
+dash-loading-spinners==1.0.3
