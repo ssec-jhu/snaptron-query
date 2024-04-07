@@ -2,6 +2,7 @@
 
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
+import dash_loading_spinners as dls
 from dash import html, dcc
 
 from snaptron_query.app import components, components_geq, global_strings as gs, inline_styles as styles
@@ -311,27 +312,36 @@ def get_layout_gene_expression_query():
             html.Div(id='id-alert-geq'),
             # Second row  of the layout contains the plots and graphs
             dmc.Space(h=20),
-            dbc.Row(
-                [
-                    get_accordian_graphs_geq(),
-                ],
-                id='id-display-graphs-geq',
-                style={"box-shadow": "1px 2px 7px 0px grey",
-                       "border-radius": "10px",
-                       'visibility': 'hidden'
-                       },
-                className='g-0',  # no gutters in between the cards
+            dls.Propagate(
+                show_initially=False,
+                color='var(--bs-secondary)',
+                children=dbc.Row(
+                    [
+                        get_accordian_graphs_geq(),
+                    ],
+                    id='id-display-graphs-geq',
+                    style={"box-shadow": "1px 2px 7px 0px grey",
+                           "border-radius": "10px",
+                           'visibility': 'hidden',
+                           "height": "70px"
+                           },
+                    className='g-0',  # no gutters in between the cards
+                )
             ),
 
             # Third row is the row containing the table
             dmc.Space(h=20),
-            dbc.Row(
-                [
-                    html.Div(get_card_table_geq())
-                ],
-                id='id-ag-grid-display-geq',
-                style={'display': 'None'}
-            ),
+            dls.Fade(
+                show_initially=False,
+                color='var(--bs-secondary)',
+                children=dbc.Row(
+                    [
+                        get_card_table_geq()
+                    ],
+                    id='id-ag-grid-display-geq',
+                    style={'display': 'None'}
+                )
+            )
         ],
     )
     return layout

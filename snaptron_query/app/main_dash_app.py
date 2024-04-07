@@ -1,7 +1,7 @@
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 import pandas as pd
-from dash import Dash, html, Input, Output, callback_context, no_update
+from dash import Dash, html, Input, Output, callback_context, no_update, State
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 
@@ -56,9 +56,9 @@ app.layout = dbc.Container(
     Output('id-alert-jiq', 'children'),
 
     Input('id-button-jiq-generate-results', 'n_clicks'),
-    Input("id-input-compilation-jiq", "value"),
-    Input("id-input-jiq-inc-junc", "value"),
-    Input("id-input-jiq-exc-junc", "value"),
+    State("id-input-compilation-jiq", "value"),
+    State("id-input-jiq-inc-junc", "value"),
+    State("id-input-jiq-exc-junc", "value"),
     prevent_initial_call=True,
     # Note: this requires the latest Dash 2.16
     running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)]
@@ -190,15 +190,15 @@ def enable_normalization(normalize_value):
     Output('id-ag-grid-geq', 'columnDefs'),
     Output('id-alert-geq', 'children'),
     Input('id-button-geq-run-query', 'n_clicks'),
-    Input("id-input-compilation-geq", "value"),
-    Input("id-checkbox-use-coordinates", 'value'),
+    State("id-input-compilation-geq", "value"),
+    State("id-checkbox-use-coordinates", 'value'),
     # Query Gene Info
-    Input("id-input-geq-gene-id", "value"),
-    Input("id-input-geq-gene-coord", "value"),
+    State("id-input-geq-gene-id", "value"),
+    State("id-input-geq-gene-coord", "value"),
     # Norm Gene Info
-    Input("id-switch-geq-normalize", 'value'),
-    Input("id-input-geq-gene-id-norm", "value"),
-    Input("id-input-geq-gene-coord-norm", "value"),
+    State("id-switch-geq-normalize", 'value'),
+    State("id-input-geq-gene-id-norm", "value"),
+    State("id-input-geq-gene-coord-norm", "value"),
     prevent_initial_call=True,
     # Note: this requires latest Dash 2.16
     running=[(Output("id-button-geq-run-query", "disabled"), True, False)]
@@ -344,7 +344,9 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
     Output("id-ag-grid-jiq", "exportDataAsCsv"),
     Output("id-ag-grid-jiq", "csvExportParams"),
     Input("id-button-jiq-download", "n_clicks"),
-    prevent_initial_call=True
+    prevent_initial_call=True,
+    # Note: this requires the latest Dash 2.16
+    running=[(Output("id-button-jiq-download", "disabled"), True, False)]
 )
 def jiq_export_data_as_csv(n_clicks):
     if callback_context.triggered_id == 'id-button-jiq-download':
@@ -357,7 +359,9 @@ def jiq_export_data_as_csv(n_clicks):
     Output("id-ag-grid-geq", "exportDataAsCsv"),
     Output("id-ag-grid-geq", "csvExportParams"),
     Input("id-button-geq-download", "n_clicks"),
-    prevent_initial_call=True
+    prevent_initial_call=True,
+    # Note: this requires the latest Dash 2.16
+    running=[(Output("id-button-geq-download", "disabled"), True, False)]
 )
 def geq_export_data_as_csv(n_clicks):
     if callback_context.triggered_id == 'id-button-geq-download':

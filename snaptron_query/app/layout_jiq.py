@@ -2,6 +2,7 @@
 
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
+import dash_loading_spinners as dls
 from dash import html, dcc
 
 from snaptron_query.app import components, components_jiq, global_strings as gs
@@ -303,29 +304,38 @@ def get_layout_junction_inclusion():
             html.Div(id='id-alert-jiq'),
             # Second row  of the layout contains the plots and graphs
             dmc.Space(h=20),
-            dbc.Row(
-                [
-                    get_accordian_graphs_jiq(),
-                ],
-                id='id-display-graphs-jiq',
-                style={"box-shadow": "1px 2px 7px 0px grey",
-                       "border-radius": "10px",
-                       # Note: Setting the 'display': 'None' creates a delay in the rendering of the plots. They
-                       # render to the screen then shift to their position.
-                       # visibility will keep the space, so when the plots come in, they render fast
-                       'visibility': 'hidden'
-                       },
-                className='g-0',  # no gutters in between the cards
+            dls.Propagate(
+                show_initially=False,
+                color='var(--bs-secondary)',
+                children=dbc.Row(
+                    [
+                        get_accordian_graphs_jiq(),
+                    ],
+                    id='id-display-graphs-jiq',
+                    style={"box-shadow": "1px 2px 7px 0px grey",
+                           "border-radius": "10px",
+                           # Note: Setting the 'display': 'None' creates a delay in the rendering of the plots. They
+                           # render to the screen then shift to their position.
+                           # visibility will keep the space, so when the plots come in, they render fast
+                           'visibility': 'hidden',
+                           "height": "70px"
+                           },
+                    className='g-0',  # no gutters in between the cards
+                ),
             ),
 
             # Third row is the row containing the table
             dmc.Space(h=20),
-            dbc.Row(
-                [
-                    html.Div(get_card_table_jiq())
-                ],
-                id='id-ag-grid-display-jiq',
-                style={'display': 'None'}
+            dls.Fade(
+                show_initially=False,
+                color='var(--bs-secondary)',
+                children=dbc.Row(
+                    [
+                        get_card_table_jiq()
+                    ],
+                    id='id-ag-grid-display-jiq',
+                    style={'display': 'None'}
+                ),
             ),
         ],
     )

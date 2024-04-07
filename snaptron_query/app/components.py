@@ -22,7 +22,8 @@ def get_input(input_placeholder, input_id, disabled=False):
         id=input_id,
         placeholder=input_placeholder,
         size="sm",
-        disabled=disabled
+        disabled=disabled,
+        debounce=True
         # className="mr-5"
     )
 
@@ -90,6 +91,7 @@ def get_alert(alert_message):
             children=f'{alert_message}',
             # id="id-alert-fade",
             # color="var(--bs-danger-border-subtle)",
+            duration=4000,
             dismissable=True,
             is_open=True,
             class_name='user-alert'
