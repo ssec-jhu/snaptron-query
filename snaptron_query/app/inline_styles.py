@@ -10,7 +10,7 @@ border_card = f'0px solid {dmc.theme.DEFAULT_COLORS["indigo"][4]}'
 border_column = f'0px solid {dmc.theme.DEFAULT_COLORS["green"][4]}'
 
 boundary_style = {
-    # 'display': 'block',  # TODO: switch to none after dev
+    # 'display': 'block',
     # 'width': '100%',
     # 'border': border_card,
     'box-shadow': "1px 2px 7px 0px grey"  # 'shadow-sm' does not work here

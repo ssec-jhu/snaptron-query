@@ -312,21 +312,22 @@ def get_layout_gene_expression_query():
             html.Div(id='id-alert-geq'),
             # Second row  of the layout contains the plots and graphs
             dmc.Space(h=20),
-            dls.Propagate(
-                show_initially=False,
-                color='var(--bs-secondary)',
-                children=dbc.Row(
-                    [
-                        get_accordian_graphs_geq(),
-                    ],
-                    id='id-display-graphs-geq',
-                    style={"box-shadow": "1px 2px 7px 0px grey",
-                           "border-radius": "10px",
-                           'visibility': 'hidden',
-                           "height": "70px"
-                           },
-                    className='g-0',  # no gutters in between the cards
-                )
+            dls.Propagate(show_initially=False,
+                          color='var(--bs-secondary)',
+                          children=[html.Div(id="id-loading-graph-geq")]
+                          ),
+
+            dbc.Row(
+                [
+                    get_accordian_graphs_geq(),
+                ],
+                id='id-display-graphs-geq',
+                style={"box-shadow": "1px 2px 7px 0px grey",
+                       "border-radius": "10px",
+                       'visibility': 'hidden',
+                       "height": "70px"
+                       },
+                className='g-0',  # no gutters in between the cards
             ),
 
             # Third row is the row containing the table

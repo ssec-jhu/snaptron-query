@@ -122,6 +122,7 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
     Output('id-jiq-box-plot-col', 'width'),
     Output('id-jiq-histogram-col', 'width'),
     Output('id-display-graphs-jiq', 'style'),
+    Output('id-loading-graph-jiq', 'children'),
 
     Input('id-ag-grid-jiq', 'rowData'),
     Input('id-ag-grid-jiq', 'virtualRowData'),
@@ -141,6 +142,7 @@ def update_charts_jiq(row_data_from_table, filtered_row_data_from_table, lock_gr
     if not row_data_from_table or not filtered_row_data_from_table:
         raise PreventUpdate
 
+    # start = timer()
     if lock_graph_data_with_table:
         df = pd.DataFrame(filtered_row_data_from_table)
     else:
@@ -148,11 +150,25 @@ def update_charts_jiq(row_data_from_table, filtered_row_data_from_table, lock_gr
 
     histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y)
     box_plot = graphs.get_box_plot_jiq(df, log_psi_values, violin_overlay)
+    # callback_context.record_timing('update_charts_jiq', timer() - start, 'update_charts_jiq')
+
+    # start = timer()
+    # if lock_graph_data_with_table:
+    #     data = filtered_row_data_from_table
+    # else:
+    #     data = row_data_from_table
+    #
+    # psi_values = [item[gs.table_jiq_col_psi] for item in data]
+    # rail_id_list = [item[gs.snpt_col_rail_id] for item in data]
+    # histogram = graphs.get_histogram_jiq_lists(psi_values, histogram_log_psi, histogram_log_y)
+    # box_plot = graphs.get_box_plot_jiq_lists(psi_values, rail_id_list, log_psi_values, violin_overlay)
+    # callback_context.record_timing('update_charts_jiq', timer() - start, 'New')
+
     col_width = {'size': 6}
     # when the component is hidden, then becomes visible, the original style is lost,
     # so I am putting it back again.
     display_style = {"box-shadow": "1px 2px 7px 0px grey", "border-radius": "10px", }
-    return histogram, box_plot, col_width, col_width, display_style
+    return histogram, box_plot, col_width, col_width, display_style, {}
 
 
 @app.callback(
@@ -231,7 +247,6 @@ def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
                                                                          region=query_gene_coordinates,
                                                                          query_mode='genes')
                 else:
-                    # TODO: how do you verify the gene ID
                     df_snpt_results_query = sc.get_snpt_query_results_df(compilation=compilation,
                                                                          region=query_gene_id,
                                                                          query_mode='genes')
@@ -289,6 +304,7 @@ def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
     Output('id-geq-histogram-col', 'width'),
     Output('id-geq-histogram-col', 'style'),
     Output('id-display-graphs-geq', 'style'),
+    Output('id-loading-graph-geq', 'children'),
 
     Input('id-ag-grid-geq', 'rowData'),
     Input('id-ag-grid-geq', 'virtualRowData'),
@@ -329,15 +345,26 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
         # One option is also to have a html.DIV in the layout and send over the Row as
         # but them you need to also send the styling of the row here
         # child = dbc.Row([ dbc.Col(dcc.Graph the graph you want),dbc.Col(dcc.Graph the other graph)], className="g-0")
+
+        # norm_count_values = [item[gs.table_geq_col_norm_count] for item in data]
+        # raw_count_values = [item[gs.table_geq_col_raw_count] for item in data]
+        # rail_id_list = [item[gs.snpt_col_rail_id] for item in data]
+        # factor_list = [item[gs.table_geq_col_factor] for item in data]
+        # histogram = graphs.get_histogram_geq_lists(norm_count_values,
+        #                                            histogram_log_x, histogram_log_y)
+        # box_plot = graphs.get_box_plot_gene_expression_lists(raw_count_values,norm_count_values,
+        #                                                      rail_id_list,factor_list,
+        #                                                      log_values, violin_overlay, normalized_data)
+
         width = {'size': 6}
         hist_display = {'display': 'Block'}
-        return box_plot, histogram, width, width, hist_display, style
+        return box_plot, histogram, width, width, hist_display, style, {}
     else:
         df = pd.DataFrame(data)
         box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
         width = {'size': 8, 'offset': 2}
         hist_display = {'display': 'None'}
-        return box_plot, None, width, no_update, hist_display, style
+        return box_plot, None, width, no_update, hist_display, style, {}
 
 
 @app.callback(

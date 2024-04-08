@@ -98,7 +98,6 @@ class JunctionInclusionQueryManager:
 
         except (KeyError, IndexError):
             # TODO: look into the rail ids that are not found in the meta data file.
-            # TODO: IT MUST BE IN THE META FILE, is this a snaptron error? discuss with PI
             # print(f"{rail_id} not in meta data file.  Moving on to the next iteration.")
             # code must continue and not stop
             pass
