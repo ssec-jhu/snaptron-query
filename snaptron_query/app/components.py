@@ -125,6 +125,8 @@ def get_table(table_id):
                          "tooltipShowDelay": 0,  # Makes tooltip show immediately.  Default 2000ms
                          # "tooltipHideDelay": 3000,  # Hides tooltip after 3000ms
                          "tooltipInteraction": True,  # Won't hide when hover on toolip.  Can select and copy content.
+                         # https://ag-grid.com/javascript-data-grid/selection-overview/#cell-text-selection
+                         "enableCellTextSelection": True, "ensureDomOrder": True,
                          },
         # NOTE: don't put the className="ag-theme-alpine dbc dbc-ag-grid" here,
         # assign it to the outer container that's holding the grid.
