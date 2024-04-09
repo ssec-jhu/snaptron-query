@@ -34,7 +34,7 @@ def get_histogram_jiq(df, log_psi_values, log_y):
     """
     x_values = gs.table_jiq_col_psi
     if log_psi_values:
-        x_values = gs.table_jiq_col_log_2  #utils.log_2_function(df, x_values)
+        x_values = gs.table_jiq_col_log_2  # utils.log_2_function(df, x_values)
 
     fig = px.histogram(df, x=x_values, log_y=log_y, nbins=25)
     fig.update_layout(title=f'<b>{gs.jiq_plot_title_hist}</b>',
@@ -51,7 +51,7 @@ def get_histogram_jiq(df, log_psi_values, log_y):
     return fig
 
 
-def get_box_plot_jiq_lists(y_values, rail_id_list,log_values, log_psi_values, violin_overlay):
+def get_box_plot_jiq_lists(y_values, rail_id_list, log_values, log_psi_values, violin_overlay):
     """Wrapper for plotly express box plot given a df
 
     https://plotly.com/python/box-plots/
@@ -61,7 +61,7 @@ def get_box_plot_jiq_lists(y_values, rail_id_list,log_values, log_psi_values, vi
     # y_values = gs.table_jiq_col_psi
     range_y_axis = [0, 110]
     if log_psi_values:
-        y_values = log_values #utils.log_2_function_lists(y_values)
+        y_values = log_values  # utils.log_2_function_lists(y_values)
         range_y_axis = None
 
     if violin_overlay:
@@ -387,36 +387,47 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
 
 def get_col_meta_a():
     return [
-        {"field": gs.snpt_col_rail_id, "headerName": "Rail ID", 'width': 100, "pinned": "left"},
-        {"field": gs.snpt_col_external_id, "headerName": "External ID", 'width': 125},
-        {"field": 'study', "headerName": "Study", 'width': 120, "cellRenderer": "StudyLink"},
+        {"field": gs.snpt_col_rail_id, "headerName": "Rail ID", 'width': 100, "pinned": "left",
+         "filterParams": {"buttons": ["reset"]}},
+        {"field": gs.snpt_col_external_id, "headerName": "External ID", 'width': 125,
+         "filterParams": {"buttons": ["reset"]}},
+        {"field": 'study', "headerName": "Study", 'width': 120, "cellRenderer": "StudyLink",
+         "filterParams": {"buttons": ["reset"]}},
     ]
 
 
 def get_col_meta_b():
     return [
-        {"field": 'study_title', "headerName": "Study Title", 'width': 350,
+        {"field": 'study_title', "headerName": "Study Title", 'width': 350, "filterParams": {"buttons": ["reset"]},
          'autoHeight': True,  # must have this here, it is not a style option
          'cellClass': 'cell-wrap-dash-ag-grid'
          },
-        {"field": 'sample_name', "headerName": "Sample Name", 'width': 150 + 20, "tooltipField": 'sample_name'},
-        {"field": 'sample_title', "headerName": "Sample Title", 'width': 150, "tooltipField": 'sample_title'},
-        {"field": 'library_layout', "headerName": "Library", 'width': 100},
+        {"field": 'sample_name', "headerName": "Sample Name", 'width': 150 + 20, "filterParams": {"buttons": ["reset"]},
+         "tooltipField": 'sample_name'},
+        {"field": 'sample_title', "headerName": "Sample Title", 'width': 150, "filterParams": {"buttons": ["reset"]},
+         "tooltipField": 'sample_title'},
+        {"field": 'library_layout', "headerName": "Library", 'width': 100, "filterParams": {"buttons": ["reset"]}},
         {"field": 'sample_description', "headerName": "Sample Description", 'width': 200,
+         "filterParams": {"buttons": ["reset"]},
          "tooltipField": "sample_description"},
     ]
 
 
 def get_col_jiq():
     return [
-        {"field": gs.table_jiq_col_inc, "headerName": "Inc", "filter": "agNumberColumnFilter", 'width': 100},
-        {"field": gs.table_jiq_col_exc, "headerName": "Exc", "filter": "agNumberColumnFilter", 'width': 100},
+        {"field": gs.table_jiq_col_inc, "headerName": "Inc", "filter": "agNumberColumnFilter", 'width': 100,
+         "filterParams": {"buttons": ["reset"]}, },
+        {"field": gs.table_jiq_col_exc, "headerName": "Exc", "filter": "agNumberColumnFilter", 'width': 100,
+         "filterParams": {"buttons": ["reset"]}, },
         {"field": gs.table_jiq_col_total, "headerName": "Total", "filter": "agNumberColumnFilter", 'width': 120,
+         "filterParams": {"buttons": ["reset"]},
          # Performance Note: adding header tooltips creates a horizontal scroll performance issue!
          # "headerTooltip": "Inclusion Count + Exclusion Count"
          },
-        {"field": gs.table_jiq_col_psi, "headerName": "PSI", "filter": "agNumberColumnFilter", 'initialSort': 'desc', 'width': 120},
-        {"field": gs.table_jiq_col_log_2, "headerName": gs.jiq_log_psi, "filter": "agNumberColumnFilter", 'width': 120}
+        {"field": gs.table_jiq_col_psi, "headerName": "PSI", "filter": "agNumberColumnFilter", 'initialSort': 'desc',
+         'width': 120, "filterParams": {"buttons": ["reset"]}},
+        {"field": gs.table_jiq_col_log_2, "headerName": gs.jiq_log_psi, "filter": "agNumberColumnFilter",
+         'width': 120, "filterParams": {"buttons": ["reset"]}}
     ]
 
 
@@ -433,14 +444,17 @@ def get_gene_expression_query_column_def(normalized=False):
     column_def = get_col_meta_a()
     if normalized:
         column_def += [
-            {"field": gs.table_geq_col_raw_count, "headerName": "Raw Count", "filter": "agNumberColumnFilter", 'width': 130},
-            {"field": gs.table_geq_col_factor, "headerName": "Factor", "filter": "agNumberColumnFilter", 'width': 130},
+            {"field": gs.table_geq_col_raw_count, "headerName": "Raw Count", "filter": "agNumberColumnFilter",
+             'width': 130, "filterParams": {"buttons": ["reset"]}, },
+            {"field": gs.table_geq_col_factor, "headerName": "Factor", "filter": "agNumberColumnFilter",
+             'width': 130, "filterParams": {"buttons": ["reset"]}, },
             {"field": gs.table_geq_col_norm_count, "headerName": "Normalized Count", "filter": "agNumberColumnFilter",
-             'width': 170, 'initialSort': 'desc'}
+             'width': 170, "filterParams": {"buttons": ["reset"]}, 'initialSort': 'desc'}
         ]
     else:
         column_def += [
-            {"field": gs.table_geq_col_raw_count, "headerName": "Raw Count", "filter": "agNumberColumnFilter", 'width': 130,
+            {"field": gs.table_geq_col_raw_count, "headerName": "Raw Count", "filter": "agNumberColumnFilter",
+             'width': 130, "filterParams": {"buttons": ["reset"]},
              'initialSort': 'desc'}
         ]
 
