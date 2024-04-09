@@ -134,7 +134,7 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
     prevent_initial_call=True
 )
 def update_charts_jiq(row_data_from_table, filtered_row_data_from_table, lock_graph_data_with_table,
-                      log_psi_values, violin_overlay,
+                      box_log_psi, violin_overlay,
                       histogram_log_psi, histogram_log_y):
     """
         Given the table data as input, it will update the relative graphs
@@ -142,6 +142,7 @@ def update_charts_jiq(row_data_from_table, filtered_row_data_from_table, lock_gr
     if not row_data_from_table or not filtered_row_data_from_table:
         raise PreventUpdate
 
+    # from timeit import default_timer as timer
     # start = timer()
     if lock_graph_data_with_table:
         df = pd.DataFrame(filtered_row_data_from_table)
@@ -149,7 +150,7 @@ def update_charts_jiq(row_data_from_table, filtered_row_data_from_table, lock_gr
         df = pd.DataFrame(row_data_from_table)
 
     histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y)
-    box_plot = graphs.get_box_plot_jiq(df, log_psi_values, violin_overlay)
+    box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay)
     # callback_context.record_timing('update_charts_jiq', timer() - start, 'update_charts_jiq')
 
     # start = timer()
@@ -160,8 +161,19 @@ def update_charts_jiq(row_data_from_table, filtered_row_data_from_table, lock_gr
     #
     # psi_values = [item[gs.table_jiq_col_psi] for item in data]
     # rail_id_list = [item[gs.snpt_col_rail_id] for item in data]
-    # histogram = graphs.get_histogram_jiq_lists(psi_values, histogram_log_psi, histogram_log_y)
-    # box_plot = graphs.get_box_plot_jiq_lists(psi_values, rail_id_list, log_psi_values, violin_overlay)
+    # log_psi = [item[gs.table_jiq_col_log_2] for item in data]
+    # if box_log_psi:
+    #     box_log_psi_values = log_psi
+    # else:
+    #     box_log_psi_values = []
+    #
+    # if histogram_log_psi:
+    #     hist_log_psi_values = log_psi
+    # else:
+    #     hist_log_psi_values = []
+    #
+    # histogram = graphs.get_histogram_jiq_lists(psi_values, hist_log_psi_values, histogram_log_psi, histogram_log_y)
+    # box_plot = graphs.get_box_plot_jiq_lists(psi_values, rail_id_list, box_log_psi_values, box_log_psi, violin_overlay)
     # callback_context.record_timing('update_charts_jiq', timer() - start, 'New')
 
     col_width = {'size': 6}

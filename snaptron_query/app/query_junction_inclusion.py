@@ -1,6 +1,6 @@
 import collections
 from enum import Enum
-from snaptron_query.app import exceptions, global_strings as gs
+from snaptron_query.app import exceptions, global_strings as gs, utils
 
 
 class JunctionType(Enum):
@@ -55,7 +55,6 @@ class JunctionInclusionQueryManager:
         sample_counts = self.rail_id_dictionary[rail_id]
         # make sure all values are 0
         inclusion_count = exclusion_count = 0
-        psi = 0.0
         for s in sample_counts:
             inclusion_junction_type = s.get('type')
             if inclusion_junction_type == JunctionType.INCLUSION:
@@ -67,11 +66,14 @@ class JunctionInclusionQueryManager:
         total_count = inclusion_count + exclusion_count
 
         # TODO: PSI calculation tolerance of 15, PI must verify?
+        psi = 0.0
         if total_count > 0:
             # calculate the percent spliced in
             psi = round(((100 * inclusion_count) / float(total_count)), 2)
 
-        return psi, inclusion_count, exclusion_count, total_count
+        log2 = round(utils.log_2(psi + 1), 4)
+
+        return psi, inclusion_count, exclusion_count, total_count, log2
 
     def _gather_rail_id_meta_data(self, rail_id, meta_data_dict):
         """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
@@ -88,7 +90,7 @@ class JunctionInclusionQueryManager:
             # TODO: for multi junction query the data may be different here
             # append the calculated results such as PSI and other counts
             (meta_data[gs.table_jiq_col_psi], meta_data[gs.table_jiq_col_inc], meta_data[gs.table_jiq_col_exc],
-             meta_data[gs.table_jiq_col_total]) = self._calculate_percent_spliced_in(rail_id)
+             meta_data[gs.table_jiq_col_total], meta_data[gs.table_jiq_col_log_2]) = self._calculate_percent_spliced_in(rail_id)
 
             # add the rail id information
             meta_data[gs.snpt_col_rail_id] = rail_id
@@ -119,8 +121,8 @@ class JunctionInclusionQueryManager:
             raise exceptions.EmptyJunction
 
         # extract the 'sample' column form the row this is where all the samples and their count is
-        exclusion_junction_samples = (exc_junctions_df['samples']).tolist()
-        inclusion_junction_samples = (inc_junctions_df['samples']).tolist()
+        exclusion_junction_samples = (exc_junctions_df[gs.snpt_col_samples]).tolist()
+        inclusion_junction_samples = (inc_junctions_df[gs.snpt_col_samples]).tolist()
 
         # Gather results in a dictionary
         self._gather_samples_rail_id_and_counts(exclusion_junction_samples, JunctionType.EXCLUSION)

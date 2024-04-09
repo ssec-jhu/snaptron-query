@@ -3,23 +3,12 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 
-from snaptron_query.app import global_strings as gs
+from snaptron_query.app import global_strings as gs, utils
 
 
-def log_2_function(df, y):
-    # add th plus 1
-    return np.log2(df[y] + 1)
-
-
-def log_2_function_lists(array):
-    # add th plus 1
-    values_plus_one = np.array(array) + 1
-    return np.log2(values_plus_one)
-
-
-def get_histogram_jiq_lists(x_values, log_psi_values, log_y):
+def get_histogram_jiq_lists(x_values, log_values, log_psi_values, log_y):
     if log_psi_values:
-        x_values = log_2_function_lists(x_values)
+        x_values = log_values
 
     fig = px.histogram(x=x_values, log_y=log_y, nbins=25)
     fig.update_layout(title=f'<b>{gs.jiq_plot_title_hist}</b>',
@@ -45,7 +34,7 @@ def get_histogram_jiq(df, log_psi_values, log_y):
     """
     x_values = gs.table_jiq_col_psi
     if log_psi_values:
-        x_values = log_2_function(df, x_values)
+        x_values = gs.table_jiq_col_log_2  #utils.log_2_function(df, x_values)
 
     fig = px.histogram(df, x=x_values, log_y=log_y, nbins=25)
     fig.update_layout(title=f'<b>{gs.jiq_plot_title_hist}</b>',
@@ -62,7 +51,7 @@ def get_histogram_jiq(df, log_psi_values, log_y):
     return fig
 
 
-def get_box_plot_jiq_lists(y_values, rail_id_list, log_psi_values, violin_overlay):
+def get_box_plot_jiq_lists(y_values, rail_id_list,log_values, log_psi_values, violin_overlay):
     """Wrapper for plotly express box plot given a df
 
     https://plotly.com/python/box-plots/
@@ -72,7 +61,7 @@ def get_box_plot_jiq_lists(y_values, rail_id_list, log_psi_values, violin_overla
     # y_values = gs.table_jiq_col_psi
     range_y_axis = [0, 110]
     if log_psi_values:
-        y_values = log_2_function_lists(y_values)
+        y_values = log_values #utils.log_2_function_lists(y_values)
         range_y_axis = None
 
     if violin_overlay:
@@ -125,7 +114,7 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay):
     y_values = gs.table_jiq_col_psi
     range_y_axis = [0, 110]
     if log_psi_values:
-        y_values = log_2_function(df, y_values)
+        y_values = gs.table_jiq_col_log_2  # utils.log_2_function(df, y_values)
         range_y_axis = None
 
     if violin_overlay:
@@ -180,7 +169,7 @@ def get_histogram_geq_lists(x_values, log_count_values, log_y):
     # x_values = gs.table_geq_col_norm_count
 
     if log_count_values:  # log2 the values
-        x_values = log_2_function_lists(x_values)
+        x_values = utils.log_2_function_lists(x_values)
 
     fig = px.histogram(x=x_values, log_y=log_y, nbins=50)
 
@@ -210,7 +199,7 @@ def get_histogram_geq(df, log_count_values, log_y):
     x_values = gs.table_geq_col_norm_count
 
     if log_count_values:  # log2 the values
-        x_values = log_2_function(df, gs.table_geq_col_norm_count)
+        x_values = utils.log_2_function(df, gs.table_geq_col_norm_count)
 
     fig = px.histogram(df, x=x_values, labels=labels, log_y=log_y, nbins=50)
 
@@ -240,13 +229,13 @@ def get_box_plot_gene_expression_lists(y_raw, y_normalized, rail_id_list, factor
         # y_normalized = df[gs.table_geq_col_norm_count]
         box_plot_title = gs.geq_plot_title_box_norm
         if log_values:
-            y_raw = log_2_function_lists(y_raw)
-            y_normalized = log_2_function_lists(y_normalized)
+            y_raw = utils.log_2_function_lists(y_raw)
+            y_normalized = utils.log_2_function_lists(y_normalized)
     else:
         # y_raw = df[gs.table_geq_col_raw_count]
         box_plot_title = gs.geq_plot_title_box_raw
         if log_values:
-            y_raw = log_2_function_lists(y_raw)
+            y_raw = utils.log_2_function_lists(y_raw)
 
     if normalized:
         # to get the hover templates in graphics pobject working use customdata
@@ -324,13 +313,13 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
         y_normalized = df[gs.table_geq_col_norm_count]
         box_plot_title = gs.geq_plot_title_box_norm
         if log_values:
-            y_raw = log_2_function(df, gs.table_geq_col_raw_count)
-            y_normalized = log_2_function(df, gs.table_geq_col_norm_count)
+            y_raw = utils.log_2_function(df, gs.table_geq_col_raw_count)
+            y_normalized = utils.log_2_function(df, gs.table_geq_col_norm_count)
     else:
         y_raw = df[gs.table_geq_col_raw_count]
         box_plot_title = gs.geq_plot_title_box_raw
         if log_values:
-            y_raw = log_2_function(df, gs.table_geq_col_raw_count)
+            y_raw = utils.log_2_function(df, gs.table_geq_col_raw_count)
 
     if normalized:
         # to get the hover templates in graphics pobject working use customdata
@@ -420,13 +409,14 @@ def get_col_meta_b():
 
 def get_col_jiq():
     return [
-        {"field": 'inc', "headerName": "Inc", "filter": "agNumberColumnFilter", 'width': 100},
-        {"field": 'exc', "headerName": "Exc", "filter": "agNumberColumnFilter", 'width': 100},
-        {"field": 'total', "headerName": "Total", "filter": "agNumberColumnFilter", 'width': 120,
+        {"field": gs.table_jiq_col_inc, "headerName": "Inc", "filter": "agNumberColumnFilter", 'width': 100},
+        {"field": gs.table_jiq_col_exc, "headerName": "Exc", "filter": "agNumberColumnFilter", 'width': 100},
+        {"field": gs.table_jiq_col_total, "headerName": "Total", "filter": "agNumberColumnFilter", 'width': 120,
          # Performance Note: adding header tooltips creates a horizontal scroll performance issue!
          # "headerTooltip": "Inclusion Count + Exclusion Count"
          },
-        {"field": 'psi', "headerName": "PSI", "filter": "agNumberColumnFilter", 'initialSort': 'desc', 'width': 120}
+        {"field": gs.table_jiq_col_psi, "headerName": "PSI", "filter": "agNumberColumnFilter", 'initialSort': 'desc', 'width': 120},
+        {"field": gs.table_jiq_col_log_2, "headerName": gs.jiq_log_psi, "filter": "agNumberColumnFilter", 'width': 120}
     ]
 
 
@@ -443,14 +433,15 @@ def get_gene_expression_query_column_def(normalized=False):
     column_def = get_col_meta_a()
     if normalized:
         column_def += [
-            {"field": 'raw_count', "headerName": "Raw Count", "filter": "agNumberColumnFilter", 'width': 130},
+            {"field": gs.table_geq_col_raw_count, "headerName": "Raw Count", "filter": "agNumberColumnFilter", 'width': 130},
             {"field": gs.table_geq_col_factor, "headerName": "Factor", "filter": "agNumberColumnFilter", 'width': 130},
-            {"field": 'normalized_count', "headerName": "Normalized Count", "filter": "agNumberColumnFilter",
+            {"field": gs.table_geq_col_norm_count, "headerName": "Normalized Count", "filter": "agNumberColumnFilter",
              'width': 170, 'initialSort': 'desc'}
         ]
     else:
         column_def += [
-            {"field": 'raw_count', "headerName": "Raw Count", "filter": "agNumberColumnFilter", 'width': 130, 'initialSort': 'desc'}
+            {"field": gs.table_geq_col_raw_count, "headerName": "Raw Count", "filter": "agNumberColumnFilter", 'width': 130,
+             'initialSort': 'desc'}
         ]
 
     column_def += get_col_meta_b()

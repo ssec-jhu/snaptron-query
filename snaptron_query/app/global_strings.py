@@ -73,6 +73,7 @@ geq_log_count = 'Log₂(count+1)'
     snaptron client web interface and its internal data
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 snpt_col_rail_id = 'rail_id'
+snpt_col_samples = 'samples'
 snpt_col_external_id = 'external_id'
 snpt_col_gene_id = 'gene_id:gene_name:gene_type:bp_length'
 srav3h_meta_data_required_list = [snpt_col_rail_id, snpt_col_external_id,
@@ -97,6 +98,7 @@ table_jiq_col_inc = 'inc'
 table_jiq_col_exc = 'exc'
 table_jiq_col_total = 'total'
 table_jiq_col_psi = 'psi'
+table_jiq_col_log_2 = 'log_2'
 table_geq_col_raw_count = 'raw_count'
 table_geq_col_norm_count = 'normalized_count'
 table_geq_col_factor = 'factor'

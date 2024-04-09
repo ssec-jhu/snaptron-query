@@ -21,7 +21,7 @@ class GeneExpressionQueryManager:
 
         study_dictionary = collections.defaultdict(list)
         # Extract the 'sample' column from the DataFrame
-        gene_samples = row_df['samples'].tolist()
+        gene_samples = row_df[gs.snpt_col_samples].tolist()
 
         # if I convert it to a dictionary, instead of using a dataframe there is a big performance boost
         # meta_data_dict = meta_data_df['study'].to_dict()
@@ -58,7 +58,7 @@ class GeneExpressionQueryManager:
             raise exceptions.QueryGeneNotFound
 
         # extract the 'sample' column form the row this is where all the rail_id:count are
-        samples = (row_df['samples']).tolist()
+        samples = (row_df[gs.snpt_col_samples]).tolist()
         for gene_samples in samples:
             # samples are separated by commas then each sample is separated with a colon from its count as railID:count
             for each_sample in gene_samples.split(','):
@@ -67,7 +67,7 @@ class GeneExpressionQueryManager:
                     try:
                         # meta_data = collections.defaultdict(list)
                         meta_data = meta_data_dict[rail_id]
-                        meta_data['rail_id'] = rail_id
+                        meta_data[gs.snpt_col_rail_id] = rail_id
                         meta_data[gs.table_geq_col_raw_count] = raw_count
                         if self.normalize_counts:
                             # if rail id is in the table then compute the normalized count
@@ -75,7 +75,7 @@ class GeneExpressionQueryManager:
                             # using get method will return -1 if the rail_id is not found
                             factor = self.normalization_factor_table.get(rail_id, -1)
                             meta_data[gs.table_geq_col_factor] = factor
-                            meta_data['normalized_count'] = raw_count / factor if factor != -1 else -1
+                            meta_data[gs.table_geq_col_norm_count] = raw_count / factor if factor != -1 else -1
 
                         self.gathered_rail_id_meta_data_and_counts.append(meta_data)
                     except (KeyError, IndexError):

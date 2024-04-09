@@ -31,7 +31,7 @@ def test_jiq_rail_id_in_both_junctions(junction, rail_id, exc_count, inc_count):
 
 
 def test_jiq_results_size_cols(junction):
-    assert junction.get_results().shape[1] == 11
+    assert junction.get_results().shape[1] == 12
 
 
 @pytest.mark.parametrize('rail_id,external_id,inc,exc,psi', [(1000010, 'SRR3743424', 0, 11, 0.0),
