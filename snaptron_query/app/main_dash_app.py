@@ -53,6 +53,7 @@ app.layout = dbc.Container(
     Output('id-ag-grid-display-jiq', 'style'),
     Output('id-ag-grid-jiq', 'rowData'),
     Output('id-ag-grid-jiq', 'columnDefs'),
+    Output('id-ag-grid-jiq', 'filterModel'),
     Output('id-alert-jiq', 'children'),
 
     Input('id-button-jiq-generate-results', 'n_clicks'),
@@ -103,6 +104,13 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
 
                 # Set the columnDefs for the ag-grid
                 column_defs = graphs.get_junction_query_column_def()
+
+                # set the preset column filters requested
+                filter_model = {gs.table_jiq_col_total: {'filterType': 'number',
+                                                         'type': 'greaterThanOrEqual', 'filter': 15},
+                                gs.table_jiq_col_psi: {'filterType': 'number',
+                                                       'type': 'greaterThanOrEqual', 'filter': 5}}
+
             else:
                 raise exceptions.MissingUserInputs
 
@@ -111,9 +119,9 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
 
     if alert_message:
         alert = components.get_alert(alert_message)
-        return no_update, no_update, no_update, alert
+        return no_update, no_update, no_update, no_update, alert
 
-    return {'display': 'block'}, row_data, column_defs, no_update
+    return {'display': 'block'}, row_data, column_defs, filter_model, no_update
 
 
 @app.callback(
@@ -173,7 +181,8 @@ def update_charts_jiq(row_data_from_table, filtered_row_data_from_table, lock_gr
     #     hist_log_psi_values = []
     #
     # histogram = graphs.get_histogram_jiq_lists(psi_values, hist_log_psi_values, histogram_log_psi, histogram_log_y)
-    # box_plot = graphs.get_box_plot_jiq_lists(psi_values, rail_id_list, box_log_psi_values, box_log_psi, violin_overlay)
+    # box_plot = graphs.get_box_plot_jiq_lists(psi_values, rail_id_list,
+    # box_log_psi_values, box_log_psi, violin_overlay)
     # callback_context.record_timing('update_charts_jiq', timer() - start, 'New')
 
     col_width = {'size': 6}
@@ -389,7 +398,8 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
 )
 def jiq_export_data_as_csv(n_clicks):
     if callback_context.triggered_id == 'id-button-jiq-download':
-        return True, {"fileName": "psi_query_data.csv"}
+        # https://ag-grid.com/javascript-data-grid/csv-export/#reference-CsvExportParams-exportedRows
+        return True, {"fileName": "psi_query_data.csv", 'exportedRows': 'all'}
     else:
         raise PreventUpdate
 
@@ -404,7 +414,8 @@ def jiq_export_data_as_csv(n_clicks):
 )
 def geq_export_data_as_csv(n_clicks):
     if callback_context.triggered_id == 'id-button-geq-download':
-        return True, {"fileName": "gene_expression_query_data.csv"}
+        # https://ag-grid.com/javascript-data-grid/csv-export/#reference-CsvExportParams-exportedRows
+        return True, {"fileName": "gene_expression_query_data.csv", 'exportedRows': 'all'}
     else:
         raise PreventUpdate
 
