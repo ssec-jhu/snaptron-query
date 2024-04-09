@@ -174,7 +174,7 @@ def get_card_box_plot_geq():
                     ),
                     dbc.Row(
                         [
-                            dcc.Graph(id='id-row-graph-geq-box')
+                            dcc.Graph(id='id-box-plot-geq')
                         ],
                         style={'border': styles.border_column},
                         class_name="g-0"

@@ -319,7 +319,7 @@ def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
 
 
 @app.callback(
-    Output('id-row-graph-geq-box', 'figure'),
+    Output('id-box-plot-geq', 'figure'),
     Output('id-row-graph-geq-hist', 'figure'),
     Output('id-geq-box-plot-col', 'width'),
     Output('id-geq-histogram-col', 'width'),
@@ -419,6 +419,34 @@ def geq_export_data_as_csv(n_clicks):
     else:
         raise PreventUpdate
 
+@app.callback(
+    Output('id-ag-grid-jiq', 'filterModel', allow_duplicate=True),
+    Input('id-box-plot-jiq', "clickData"),
+    State('id-ag-grid-jiq', 'filterModel'),
+    prevent_initial_call=True
+)
+def on_jiq_box_plot_click(click_data, filter_model):
+    if not click_data:
+        return no_update
+
+    rail_id = click_data["points"][0]["customdata"][0]
+    filter_model[gs.snpt_col_rail_id] = {'filterType': 'number', 'type': 'equals', 'filter': rail_id}
+    return filter_model
+
+
+@app.callback(
+    Output('id-ag-grid-geq', 'filterModel', allow_duplicate=True),
+    Input("id-box-plot-geq", "clickData"),
+    State('id-ag-grid-geq', 'filterModel'),
+    prevent_initial_call=True
+)
+def on_geq_box_plot_click(click_data, filter_model):
+    if not click_data:
+        return no_update
+
+    rail_id = click_data["points"][0]["customdata"][0]
+    filter_model[gs.snpt_col_rail_id] = {'filterType': 'number', 'type': 'equals', 'filter': rail_id}
+    return filter_model
 
 # Run the app
 if __name__ == '__main__':
