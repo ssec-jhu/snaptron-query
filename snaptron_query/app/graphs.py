@@ -398,8 +398,7 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
 
 def get_col_meta_a():
     return [
-        {"field": gs.snpt_col_rail_id, "headerName": "Rail ID", "filter": "agNumberColumnFilter",
-         'width': 100, "pinned": "left"},
+        {"field": gs.snpt_col_rail_id, "headerName": "Rail ID", 'width': 100, "pinned": "left"},
         {"field": gs.snpt_col_external_id, "headerName": "External ID", 'width': 125},
         {"field": 'study', "headerName": "Study", 'width': 120, "cellRenderer": "StudyLink"},
     ]
@@ -421,14 +420,10 @@ def get_col_meta_b():
 
 def get_col_jiq():
     return [
-        {"field": 'inc', "headerName": "Inc", "filter": "agNumberColumnFilter", 'width': 100,
-         # Performance Note: adding header tooltips creates a horizontal scroll performance issue!
-         # "headerTooltip": "Inclusion Count"
-         },
-        {"field": 'exc', "headerName": "Exc", "filter": "agNumberColumnFilter", 'width': 100,
-         # "headerTooltip": "Exclusion Count"
-         },
+        {"field": 'inc', "headerName": "Inc", "filter": "agNumberColumnFilter", 'width': 100},
+        {"field": 'exc', "headerName": "Exc", "filter": "agNumberColumnFilter", 'width': 100},
         {"field": 'total', "headerName": "Total", "filter": "agNumberColumnFilter", 'width': 120,
+         # Performance Note: adding header tooltips creates a horizontal scroll performance issue!
          # "headerTooltip": "Inclusion Count + Exclusion Count"
          },
         {"field": 'psi', "headerName": "PSI", "filter": "agNumberColumnFilter", 'initialSort': 'desc', 'width': 120}
@@ -455,7 +450,7 @@ def get_gene_expression_query_column_def(normalized=False):
         ]
     else:
         column_def += [
-            {"field": 'raw_count', "headerName": "Raw Count", "filter": "agNumberColumnFilter", 'width': 130}
+            {"field": 'raw_count', "headerName": "Raw Count", "filter": "agNumberColumnFilter", 'width': 130, 'initialSort': 'desc'}
         ]
 
     column_def += get_col_meta_b()
