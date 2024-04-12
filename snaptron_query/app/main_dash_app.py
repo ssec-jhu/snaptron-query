@@ -6,7 +6,7 @@ from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 
 from snaptron_query.app import graphs, layout, global_strings as gs, exceptions, snaptron_client as sc, components
-from snaptron_query.app import inline_styles as st
+from snaptron_query.app import inline_styles as st, column_defs as cd
 from snaptron_query.app.query_gene_expression import GeneExpressionQueryManager
 from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager
 
@@ -105,7 +105,7 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
                 row_data = jqm.run_junction_inclusion_query(df_snpt_results, meta_data_dict)
 
                 # Set the columnDefs for the ag-grid
-                column_defs = graphs.get_junction_query_column_def()
+                column_defs = cd.get_junction_query_column_def()
 
                 # set the preset column filters requested
                 filter_model = {gs.table_jiq_col_total: {'filterType': 'number',
@@ -308,7 +308,7 @@ def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
 
                 # ag-grid accepts list of dicts so passing in the data from storage that is saved as list of dict
                 # saves times here. store_data = row_data.df.to_dict("records") Set the columnDefs for the ag-grid
-                column_defs = graphs.get_gene_expression_query_column_def(normalize_data)
+                column_defs = cd.get_gene_expression_query_column_def(normalize_data)
             else:
                 raise exceptions.MissingUserInputs
 
