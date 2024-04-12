@@ -21,9 +21,18 @@ drop_compilation = 'Select the organism of interest'
 drop_compilation_placeholder = 'Select a compilation'
 
 switch_violin = 'Violin Mode'
-switch_lock = 'Lock Table with Graphs'
+switch_lock = 'Lock Graphs and Table'
+switch_lock_help = "If locked, filters applied in the table below will be reflected in the graphs."
 plot_label_rail_id = 'Rail ID'
 switch_log_geq_hist_y = 'Log Y axis'
+
+# Keep the space here because these come before an icon
+download_original = " Original Results"
+download_filtered = " Filtered Results"
+download_original_help = "Download results <u>without</u> any table filters."
+download_filtered_help = "Download results <u>with</u> table filters."
+
+box_plot_click_help = "Click on the points in the box plot to filter table by Rail ID."
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             Junction Inclusion Query 

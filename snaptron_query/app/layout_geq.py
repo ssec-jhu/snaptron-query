@@ -255,7 +255,7 @@ def get_card_table_geq():
                 [
                     dbc.Col(
                         [
-                            components.get_button_download('id-button-geq-download')
+                            components.get_button_download('id-button-geq-download', gs.download_original)
                         ],
                         width=2,
                         align='center',  # vertical alignment of the column

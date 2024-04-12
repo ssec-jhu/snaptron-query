@@ -403,7 +403,9 @@ def get_col_meta_b():
          'cellClass': 'cell-wrap-dash-ag-grid'
          },
         {"field": 'sample_name', "headerName": "Sample Name", 'width': 150 + 20, "filterParams": {"buttons": ["reset"]},
-         "tooltipField": 'sample_name'},
+         "tooltipField": 'sample_name',
+         # "tooltipComponent": "CustomTooltip2"
+         },
         {"field": 'sample_title', "headerName": "Sample Title", 'width': 150, "filterParams": {"buttons": ["reset"]},
          "tooltipField": 'sample_title'},
         {"field": 'library_layout', "headerName": "Library", 'width': 100, "filterParams": {"buttons": ["reset"]}},
@@ -425,6 +427,10 @@ def get_col_jiq():
          # "headerTooltip": "Inclusion Count + Exclusion Count"
          },
         {"field": gs.table_jiq_col_psi, "headerName": "PSI", "filter": "agNumberColumnFilter", 'initialSort': 'desc',
+         #"tooltipField": 'psi',
+         #"tooltipComponent": "CustomTooltip",
+         #"headerTooltip": "this is the psi header tool tip",
+         #"cellRenderer": "CustomTooltip",
          'width': 120, "filterParams": {"buttons": ["reset"]}},
         {"field": gs.table_jiq_col_log_2, "headerName": gs.jiq_log_psi, "filter": "agNumberColumnFilter",
          'width': 120, "filterParams": {"buttons": ["reset"]}}

@@ -53,3 +53,6 @@ horizontal_tab_selected = {
     'transition': 'background-color 0.3s, color 0.3s, box-shadow 0.3s',
     'font-weight': "bold",
 }
+
+inactive_lock = {'color': 'var(--bs-gray-400)'}
+active_lock = {'color': 'var(--bs-primary)'}
