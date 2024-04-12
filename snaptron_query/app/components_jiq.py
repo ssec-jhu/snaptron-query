@@ -2,9 +2,8 @@
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 from dash import html
-from dash_iconify import DashIconify
 
-from snaptron_query.app import global_strings as gs
+from snaptron_query.app import global_strings as gs, icons
 
 
 def get_button_add_junction():
@@ -12,7 +11,7 @@ def get_button_add_junction():
     # search here for icon: https://icon-sets.iconify.design/
     return dbc.Button(
         id='id-button-jiq-add-more-junctions',
-        children=[html.I(DashIconify(icon="ic:round-add-box")), gs.jiq_button_add_junction],
+        children=[icons.add_box, gs.jiq_button_add_junction],
         size="sm",
         color="link",
         n_clicks=0,

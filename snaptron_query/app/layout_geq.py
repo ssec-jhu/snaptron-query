@@ -18,23 +18,7 @@ def get_form_geq():
         ),
         dmc.Space(h=10),
         dbc.Row(
-            dbc.Col(
-                [
-                    dbc.Checklist(
-                        id="id-checkbox-use-coordinates",
-                        options=[
-                            {
-                                "label": "I want to provide gene coordinates in addition to Gene ID (use when Gene ID "
-                                         "is not found).", "value": 1},
-                        ],
-                        label_checked_style={"color": "var(--bs-danger)"},
-                        input_checked_style={
-                            "backgroundColor": "var(--bs-danger)",
-                            "borderColor": "#ea6258",
-                        },
-                    ),
-                ]
-            ),
+            dbc.Col([components_geq.get_checkbox_geq_optional_coordinates()]),
             class_name="g-0 form-control-sm",
             align='start'
         ),

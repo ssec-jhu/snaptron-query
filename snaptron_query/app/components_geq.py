@@ -1,4 +1,3 @@
-
 import dash_bootstrap_components as dbc
 from snaptron_query.app import global_strings as gs
 
@@ -19,4 +18,16 @@ def get_button_geq_results():
         id='id-button-geq-run-query',
         size="md",  # button size
         class_name="btn-primary",
+    )
+
+
+def get_checkbox_geq_optional_coordinates():
+    return dbc.Checklist(
+        id="id-checkbox-use-coordinates",
+        options=[{"label": gs.jiq_provide_coordinates, "value": 1}],
+        label_checked_style={"color": "var(--bs-danger)"},
+        input_checked_style={
+            "backgroundColor": "var(--bs-danger)",
+            "borderColor": "#ea6258",
+        },
     )
