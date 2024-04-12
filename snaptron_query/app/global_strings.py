@@ -29,8 +29,8 @@ switch_log_geq_hist_y = 'Log Y axis'
 # Keep the space here because these come before an icon
 download_original = " Original Results"
 download_filtered = " Filtered Results"
-download_original_help = "Download results <u>without</u> any table filters."
-download_filtered_help = "Download results <u>with</u> table filters."
+download_original_help = "Download results without any table filters."
+download_filtered_help = "Download results with table filters."
 
 box_plot_click_help = "Click on the points in the box plot to filter table by Rail ID."
 
@@ -49,8 +49,9 @@ jiq_input_junction_txt_list = ['Junction 1', 'Junction 2', 'Junction 3', 'Juncti
 jiq_plot_title_hist = 'PSI Histogram'
 jiq_plot_title_box = 'PSI Box Plot'
 jiq_psi_plot_axes = 'PSI'
-jiq_log_psi = 'Log₂(psi+1)'
-
+jiq_log_psi = 'Log\u2082(psi+1)'
+jiq_provide_coordinates = "I want to provide gene coordinates in addition to Gene ID (use when Gene ID is not found)."
+jiq_table_help= " Table initially loads with PSI\u22655 and total counts\u226515."
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             Gene Expression Query 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
