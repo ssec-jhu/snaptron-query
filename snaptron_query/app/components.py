@@ -3,7 +3,7 @@ import dash_mantine_components as dmc
 from dash import html, dcc
 import dash_ag_grid as dag
 
-from snaptron_query.app import global_strings as gs
+from snaptron_query.app import global_strings as gs, icons
 
 
 def get_text(component_style, string):
@@ -56,30 +56,12 @@ def get_switch_lock_data_with_table(switch_id, switch_label):
         [
             # html.Label(switch_label),
             dbc.Switch(
-                # dbc switch follows the text size of it's label
                 id=switch_id,
                 # label=switch_label,
                 # dbc switch follows the text size of its label, so you can use something like class_name="fs-6"
                 # https://community.plotly.com/t/dbc-switch-make-larger/80146
                 value=True,
-
             )
-            # dmc.Switch(
-            #     id=switch_id,
-            #     left=True,
-            #     #label=switch_label,
-            #     #color="rgba(23, 8, 8, 1)",
-            #     # #color='var(--bs-primary)',
-            #     # styles={"track": {"background-color": 'var(--bs-primary)'},
-            #     #         "input:checked":  {"background-color": 'var(--bs-success)'},
-            #     # },
-            #     # style={'color': 'var(--bs-primary)'},
-            #     thumbIcon=DashIconify(
-            #         icon="mdi:lock-outline", width=16, color=dmc.theme.DEFAULT_COLORS["teal"][5]
-            #     ),
-            #     size="lg",
-            #     checked=True,
-            # )
         ]
     )
 
@@ -134,11 +116,37 @@ def get_table(table_id):
     return table
 
 
-def get_button_download(button_id):
+def get_button_download(button_id, label):
     return dbc.Button(
-        gs.button_download,
+        label,
         id=button_id,
         n_clicks=0,
         size="md",  # button size
-        class_name="d-grid gap-2 col-8 btn-primary",  # bg-secondary text-light #mx-auto
+        class_name="d-grid gap-2 col-12 btn-primary",  # bg-secondary text-light #mx-auto
+    )
+
+
+def get_radio_items_download_options(radio_id):
+    return dbc.RadioItems(
+        options=[
+            {"label": html.Span(icons.download, gs.download_original),
+             "value": 1},
+            {"label": html.Span(icons.download, gs.download_filtered),
+             "value": 2},
+        ],
+        value=1,
+        id=radio_id,
+        inline=True,
+    )
+
+
+def get_tooltip(target_id, string):
+    return dbc.Tooltip(
+            children=string,
+            is_open=False,
+            target=target_id,
+            placement='top',
+            # some style is overriding the tooltip and making the strings all caps
+            # overriding the text transform here
+            style={'text-transform': 'none'},
     )
