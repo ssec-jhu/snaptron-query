@@ -6,6 +6,7 @@ from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 
 from snaptron_query.app import graphs, layout, global_strings as gs, exceptions, snaptron_client as sc, components
+from snaptron_query.app import inline_styles as st
 from snaptron_query.app.query_gene_expression import GeneExpressionQueryManager
 from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager
 
@@ -13,7 +14,7 @@ from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryMa
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 bs_cdn = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 app = Dash(__name__,
-           external_stylesheets=[dbc.themes.SANDSTONE, dbc_css])
+           external_stylesheets=[dbc.themes.SANDSTONE, dbc_css, dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME])
 
 load_figure_template(gs.dbc_template_name)
 
@@ -54,6 +55,7 @@ app.layout = dbc.Container(
     Output('id-ag-grid-jiq', 'rowData'),
     Output('id-ag-grid-jiq', 'columnDefs'),
     Output('id-ag-grid-jiq', 'filterModel'),
+    # Output('id-jiq-box-plot-alert', 'is_open'),
     Output('id-alert-jiq', 'children'),
 
     Input('id-button-jiq-generate-results', 'n_clicks'),
@@ -119,8 +121,10 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
 
     if alert_message:
         alert = components.get_alert(alert_message)
+        # return no_update, no_update, no_update, no_update, no_update, alert
         return no_update, no_update, no_update, no_update, alert
 
+    # return {'display': 'block'}, row_data, column_defs, filter_model, True, no_update
     return {'display': 'block'}, row_data, column_defs, filter_model, no_update
 
 
@@ -391,17 +395,24 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
 @app.callback(
     Output("id-ag-grid-jiq", "exportDataAsCsv"),
     Output("id-ag-grid-jiq", "csvExportParams"),
-    Input("id-button-jiq-download", "n_clicks"),
+    Input("id-button-jiq-download-all", "n_clicks"),
+    Input("id-button-jiq-download-filtered", "n_clicks"),
+    # State('id-jiq-download-options', 'value'),
     prevent_initial_call=True,
     # Note: this requires the latest Dash 2.16
-    running=[(Output("id-button-jiq-download", "disabled"), True, False)]
+    running=[(Output("id-button-jiq-download-all", "disabled"), True, False),
+             (Output("id-button-jiq-download-filtered", "disabled"), True, False)]
 )
-def jiq_export_data_as_csv(n_clicks):
-    if callback_context.triggered_id == 'id-button-jiq-download':
-        # https://ag-grid.com/javascript-data-grid/csv-export/#reference-CsvExportParams-exportedRows
-        return True, {"fileName": "psi_query_data.csv", 'exportedRows': 'all'}
+def jiq_export_data_as_csv(n_clicks_1, n_clicks_2):
+    if callback_context.triggered_id == 'id-button-jiq-download-all':
+        exported_rows = 'all'
+    elif callback_context.triggered_id == 'id-button-jiq-download-filtered':
+        exported_rows = 'filteredAndSorted'
     else:
         raise PreventUpdate
+
+    # https://ag-grid.com/javascript-data-grid/csv-export/#reference-CsvExportParams-exportedRows
+    return True, {"fileName": f'psi_query_data_{exported_rows}.csv', "exportedRows": exported_rows}
 
 
 @app.callback(
@@ -413,11 +424,13 @@ def jiq_export_data_as_csv(n_clicks):
     running=[(Output("id-button-geq-download", "disabled"), True, False)]
 )
 def geq_export_data_as_csv(n_clicks):
+    # TODO: export data GEQ with the radio buttons
     if callback_context.triggered_id == 'id-button-geq-download':
         # https://ag-grid.com/javascript-data-grid/csv-export/#reference-CsvExportParams-exportedRows
         return True, {"fileName": "gene_expression_query_data.csv", 'exportedRows': 'all'}
     else:
         raise PreventUpdate
+
 
 @app.callback(
     Output('id-ag-grid-jiq', 'filterModel', allow_duplicate=True),
@@ -447,6 +460,23 @@ def on_geq_box_plot_click(click_data, filter_model):
     rail_id = click_data["points"][0]["customdata"][0]
     filter_model[gs.snpt_col_rail_id] = {'filterType': 'number', 'type': 'equals', 'filter': rail_id}
     return filter_model
+
+
+@app.callback(
+    Output('id-jiq-unlock', 'style'),
+    Output('id-jiq-lock', 'style'),
+    Input('id-switch-jiq-lock-with-table', 'value'),
+    prevent_initial_call=True
+)
+def on_lock_switch(lock):
+    if lock:
+        return st.inactive_lock, st.active_lock
+    else:
+        return st.active_lock, st.inactive_lock
+
+
+# TODO: call back for the GEQ lock
+# TODO: call back for GEQ download buttons filtered or the radio buttons per PI
 
 # Run the app
 if __name__ == '__main__':

@@ -5,7 +5,7 @@ import dash_mantine_components as dmc
 import dash_loading_spinners as dls
 from dash import html, dcc
 
-from snaptron_query.app import components, components_jiq, global_strings as gs
+from snaptron_query.app import components, components_jiq, global_strings as gs, icons
 from snaptron_query.app import inline_styles as styles
 
 
@@ -168,10 +168,28 @@ def get_card_box_plot_jiq():
                     ),
                     dbc.Row(
                         [
-                            dcc.Graph(id="id-box-plot-jiq")
+                            dcc.Graph(id="id-box-plot-jiq"),
+                            # dbc.Alert(
+                            #     [icons.point_up, gs.box_plot_click_help],
+                            #     id="id-jiq-box-plot-alert",
+                            #     is_open=False,
+                            #     # TODO: keep this dismissable or with duration?
+                            #     # duration=10000,
+                            #     dismissable=True,
+                            #     class_name='user-tip',
+                            # ),
                         ],
                         style={'border': styles.border_column},
                         className="g-0"
+                    ),
+                    dbc.Row(
+                        dbc.Col([
+                            components.get_text('dmc', [icons.info, gs.box_plot_click_help])
+                        ],
+                            className='d-flex justify-content-center',
+                            align='center',  # vertical alignment of the column
+                            style={'border': styles.border_column}
+                        ),
                     )
                 ]
             ),
@@ -190,18 +208,65 @@ def get_card_table_jiq():
                 [
                     dbc.Col(
                         [
-                            components.get_button_download('id-button-jiq-download')
+                            components.get_button_download('id-button-jiq-download-all',
+                                                           html.Span([icons.download, gs.download_original])),
+                            components.get_tooltip("id-button-jiq-download-all", gs.download_original_help)
                         ],
                         width=2,
                         align='center',  # vertical alignment of the column
                         style={'border': styles.border_column}
                     ),
-                    dbc.Col(),
+                    # dbc.Col(
+                    #     [
+                    #         dmc.Space(w=8),
+                    #         dbc.Checklist(
+                    #             id="id-checkbox-download_filtered",
+                    #             options=[{"label": "download results with table filters applied", "value": 1}],
+                    #             label_checked_style={"color": "var(--bs-danger)"},
+                    #             input_checked_style={
+                    #                 "backgroundColor": "var(--bs-danger)",
+                    #                 "borderColor": "#ea6258",
+                    #             }
+                    #         )
+                    #     ],
+                    #     align='center',  # vertical alignment of the column
+                    # ),
                     dbc.Col(
                         [
+                            components.get_button_download('id-button-jiq-download-filtered',
+                                                           html.Span([icons.download, gs.download_filtered])),
+                            components.get_tooltip("id-button-jiq-download-filtered", gs.download_filtered_help)
+                        ],
+                        width=2,
+                        align='center',  # vertical alignment of the column
+                        style={'border': styles.border_column}
+                    ),
+                    # dbc.Col(
+                    #     [
+                    #         components.get_radio_items_download_options("id-jiq-download-options")
+                    #     ],
+                    #     width=4,
+                    #     align='center',  # vertical alignment of the column
+                    #     className='d-flex justify-content-start',
+                    #     style={'border': styles.border_column}
+                    # ),
+                    dbc.Col([
+                        components.get_text('dmc', [icons.info, gs.jiq_table_help])
+                    ],
+                        className='d-flex justify-content-center',
+                        align='center',  # vertical alignment of the column
+                        style={'border': styles.border_column}
+                    ),
+                    dbc.Col(
+                        [
+                            components.get_text('dmc', icons.lock_open),
+                            dmc.Space(w=8),
                             components.get_switch_lock_data_with_table('id-switch-jiq-lock-with-table', gs.switch_lock),
+                            dmc.Space(w=3),
+                            components.get_text('dmc', icons.lock_closed),
                             dmc.Space(w=10),
-                            components.get_text('dmc', gs.switch_lock)
+                            components.get_text('dmc', gs.switch_lock),
+                            components.get_tooltip("id-switch-jiq-lock-with-table", gs.switch_lock_help)
                         ],
                         width=3,
                         align='center',

@@ -32,7 +32,8 @@ download_filtered = " Filtered Results"
 download_original_help = "Download results without any table filters."
 download_filtered_help = "Download results with table filters."
 
-box_plot_click_help = "Click on the points in the box plot to filter table by Rail ID."
+box_plot_click_help = (" You can click on the points in the box plot to filter table by that point. Reset the Rail ID "
+                       "column to go back.")
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             Junction Inclusion Query 
@@ -51,7 +52,7 @@ jiq_plot_title_box = 'PSI Box Plot'
 jiq_psi_plot_axes = 'PSI'
 jiq_log_psi = 'Log\u2082(psi+1)'
 jiq_provide_coordinates = "I want to provide gene coordinates in addition to Gene ID (use when Gene ID is not found)."
-jiq_table_help= " Table initially loads with PSI\u22655 and total counts\u226515."
+jiq_table_help = " Table initially loads with PSI\u22655 and Total\u226515."
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             Gene Expression Query 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -73,8 +74,8 @@ geq_plot_title_hist = 'Normalized Count Histogram'
 geq_plot_label_raw_count = 'Raw Count'
 geq_plot_label_norm_count = 'Normalized Count'
 geq_box_plot_y_axes = 'Gene Expression Count'
-geq_box_plot_y_axes_log = 'Log₂(Gene Expression Count+1)'
-geq_log_count = 'Log₂(count+1)'
+geq_box_plot_y_axes_log = 'Log\u2082(Gene Expression Count+1)'
+geq_log_count = 'Log\u2082(count+1)'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     Strings beyond this point are related to the snaptron interface
