@@ -36,6 +36,20 @@ box_plot_click_help = (" You can click on the points in the box plot to filter t
                        "column to go back.")
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+            ERROR MESSAGES
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+bad_url = 'Sorry, something must have gone wrong...try again in a couple minutes!'
+empty_response = 'Snaptron Empty response!'
+missing_user_input = 'You are missing one or more required inputs...try again!'
+bad_coordinates='Input coordinates are invalid!'
+empty_junction= 'Junctions entered have no results!'
+suggestion = ('Try running the query by adding gene coordinates to your query or double check gene coordinates if '
+              'provided!')
+query_gene_not_found= 'Query gene returned empty results.' + suggestion
+normalization_gene_not_found= 'Normalization gene was not found.' + suggestion
+httpx_remote_protocol_error='Snaptron could not identify the Gene.'+ suggestion
+httpx_connect_error='Failed to establish a connection with Snaptron Web API!'
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             Junction Inclusion Query 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 jiq_form_title = 'Junction Information'
@@ -76,7 +90,7 @@ geq_plot_label_norm_count = 'Normalized Count'
 geq_box_plot_y_axes = 'Gene Expression Count'
 geq_box_plot_y_axes_log = 'Log\u2082(Gene Expression Count+1)'
 geq_log_count = 'Log\u2082(count+1)'
-
+geq_checkbox_help = "Check this box if you need to enter gene coordinates in addition to gene name"
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     Strings beyond this point are related to the snaptron interface
     DO NOT TOUCH if you don't know what you are doing

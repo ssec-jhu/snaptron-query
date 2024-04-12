@@ -140,12 +140,12 @@ def get_radio_items_download_options(radio_id):
     )
 
 
-def get_tooltip(target_id, string):
+def get_tooltip(target_id, string, tip_placement):
     return dbc.Tooltip(
             children=string,
             is_open=False,
             target=target_id,
-            placement='top',
+            placement=tip_placement,
             # some style is overriding the tooltip and making the strings all caps
             # overriding the text transform here
             style={'text-transform': 'none'},

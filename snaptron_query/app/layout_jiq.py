@@ -210,7 +210,7 @@ def get_card_table_jiq():
                         [
                             components.get_button_download('id-button-jiq-download-all',
                                                            html.Span([icons.download, gs.download_original])),
-                            components.get_tooltip("id-button-jiq-download-all", gs.download_original_help)
+                            components.get_tooltip("id-button-jiq-download-all", gs.download_original_help,'top')
                         ],
                         width=2,
                         align='center',  # vertical alignment of the column
@@ -235,7 +235,7 @@ def get_card_table_jiq():
                         [
                             components.get_button_download('id-button-jiq-download-filtered',
                                                            html.Span([icons.download, gs.download_filtered])),
-                            components.get_tooltip("id-button-jiq-download-filtered", gs.download_filtered_help)
+                            components.get_tooltip("id-button-jiq-download-filtered", gs.download_filtered_help,'top')
                         ],
                         width=2,
                         align='center',  # vertical alignment of the column
@@ -266,7 +266,7 @@ def get_card_table_jiq():
                             components.get_text('dmc', icons.lock_closed),
                             dmc.Space(w=10),
                             components.get_text('dmc', gs.switch_lock),
-                            components.get_tooltip("id-switch-jiq-lock-with-table", gs.switch_lock_help)
+                            components.get_tooltip("id-switch-jiq-lock-with-table", gs.switch_lock_help,'top')
                         ],
                         width=3,
                         align='center',

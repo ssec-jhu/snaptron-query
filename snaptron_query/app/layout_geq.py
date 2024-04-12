@@ -18,7 +18,12 @@ def get_form_geq():
         ),
         dmc.Space(h=10),
         dbc.Row(
-            dbc.Col([components_geq.get_checkbox_geq_optional_coordinates()]),
+            dbc.Col(
+                [
+                    components_geq.get_checkbox_geq_optional_coordinates(),
+                    components.get_tooltip("id-checkbox-use-coordinates", gs.geq_checkbox_help, 'left')
+                ]
+            ),
             class_name="g-0 form-control-sm",
             align='start'
         ),

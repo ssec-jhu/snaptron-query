@@ -1,5 +1,5 @@
 import httpx
-
+from snaptron_query.app import global_strings as gs
 
 class BadURL(Exception):
     """Raised when the url is invalid"""
@@ -39,25 +39,23 @@ class NormalizationGeneNotFound(Exception):
 def handle_exception(exception):
     e = type(exception)
     if e == BadURL:
-        alert_message = 'Sorry, something must have gone wrong...try again in a couple minutes!'
+        alert_message = gs.bad_url
     elif e == EmptyResponse:
-        alert_message = 'Snaptron Empty response!'
+        alert_message = gs.empty_response
     elif e == MissingUserInputs:
-        alert_message = 'You are missing one or more required inputs...try again!'
+        alert_message =gs.missing_user_input
     elif e == BadCoordinates:
-        alert_message = 'Input coordinates are invalid!'
+        alert_message = gs.bad_coordinates
     elif e == EmptyJunction:
-        alert_message = 'Junctions entered have no results!'
+        alert_message = gs.empty_junction
     elif e == QueryGeneNotFound:
-        alert_message = ('Query gene was not found. Try adding gene coordinates to your query or double check '
-                         'coordinates if provided!')
+        alert_message = gs.query_gene_not_found
     elif e == NormalizationGeneNotFound:
-        alert_message = ('Normalization gene was not found. Try adding gene coordinates to your query or double check '
-                         'coordinates if provided!')
+        alert_message = gs.normalization_gene_not_found
     elif e == httpx.RemoteProtocolError:
-        alert_message = f'Remote Protocol Error: {exception.args[0]}.'
+        alert_message = gs.httpx_remote_protocol_error
     elif e == httpx.ConnectError or httpx.ConnectTimeout:
-        alert_message = 'Failed to establish a connection with Snaptron Web API!'
+        alert_message = gs.httpx_connect_error
     else:
         alert_message = f'Exception Occurred: {e}'
 
