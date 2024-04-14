@@ -3,7 +3,7 @@ from snaptron_query.app import global_strings as gs
 
 def get_col_meta_a():
     return [
-        {"field": gs.snpt_col_rail_id, "headerName": "Rail ID", 'width': 100, "pinned": "left",
+        {"field": gs.snpt_col_rail_id, "headerName": "Rail ID", 'width': 125, "pinned": "left",
          "filterParams": {"buttons": ["reset"]}},
         {"field": gs.snpt_col_external_id, "headerName": "External ID", 'width': 125,
          "filterParams": {"buttons": ["reset"]}},
