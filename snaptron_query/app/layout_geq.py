@@ -21,7 +21,7 @@ def get_form_geq():
             dbc.Col(
                 [
                     components_geq.get_checkbox_geq_optional_coordinates(),
-                    components.get_tooltip("id-checkbox-use-coordinates", gs.geq_checkbox_help, 'left')
+                    components.get_tooltip("id-checkbox-use-coordinates", gs.geq_help_checkbox, 'left')
                 ]
             ),
             class_name="g-0 form-control-sm",
