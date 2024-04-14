@@ -142,11 +142,25 @@ def get_radio_items_download_options(radio_id):
 
 def get_tooltip(target_id, string, tip_placement):
     return dbc.Tooltip(
-            children=string,
-            is_open=False,
-            target=target_id,
-            placement=tip_placement,
-            # some style is overriding the tooltip and making the strings all caps
-            # overriding the text transform here
-            style={'text-transform': 'none'},
+        children=string,
+        is_open=False,
+        target=target_id,
+        placement=tip_placement,
+        # some style is overriding the tooltip and making the strings all caps
+        # overriding the text transform here
+        style={'text-transform': 'none'},
+    )
+
+
+def get_button_reset(button_id, label):
+    return dbc.Button(
+        label,
+        id=button_id,
+        n_clicks=0,
+        outline=True,
+        size="md",  # button size
+        class_name="d-grid gap-0 col-12",
+        # Note: if you set the color using "color" parameter, it would not apply the outline
+        # and button will be a button with background. Setting it as style will remove the background and color the text
+        style={'color': 'var(--bs-primary)'}
     )
