@@ -29,26 +29,27 @@ switch_log_geq_hist_y = 'Log Y axis'
 # Keep the space here because these come before an icon
 download_original = " Original Results"
 download_filtered = " Filtered Results"
-download_original_help = "Download results without any table filters."
-download_filtered_help = "Download results with table filters."
 
-box_plot_click_help = (" You can click on the points in the box plot to filter table by that point. Reset the Rail ID "
+help_download_original = "Download results without any table filters."
+help_download_filtered = "Download results with table filters."
+help_box_plot_click = (" You can click on the points in the box plot to filter table by that point. Reset the Rail ID "
                        "column to go back.")
-
+help_reset = ("This will remove all filters applied to the table below. For individual columns, "
+              "click on the Reset button on the desired column")
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             ERROR MESSAGES
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 bad_url = 'Sorry, something must have gone wrong...try again in a couple minutes!'
 empty_response = 'Snaptron Empty response!'
 missing_user_input = 'You are missing one or more required inputs...try again!'
-bad_coordinates='Input coordinates are invalid!'
-empty_junction= 'Junctions entered have no results!'
+bad_coordinates = 'Input coordinates are invalid!'
+empty_junction = 'Junctions entered have no results!'
 suggestion = ('Try running the query by adding gene coordinates to your query or double check gene coordinates if '
               'provided!')
-query_gene_not_found= 'Query gene returned empty results.' + suggestion
-normalization_gene_not_found= 'Normalization gene was not found.' + suggestion
-httpx_remote_protocol_error='Snaptron could not identify the Gene.'+ suggestion
-httpx_connect_error='Failed to establish a connection with Snaptron Web API!'
+query_gene_not_found = 'Query gene returned empty results.' + suggestion
+normalization_gene_not_found = 'Normalization gene was not found.' + suggestion
+httpx_remote_protocol_error = 'Snaptron could not identify the Gene.' + suggestion
+httpx_connect_error = 'Failed to establish a connection with Snaptron Web API!'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             Junction Inclusion Query 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -65,8 +66,8 @@ jiq_plot_title_hist = 'PSI Histogram'
 jiq_plot_title_box = 'PSI Box Plot'
 jiq_psi_plot_axes = 'PSI'
 jiq_log_psi = 'Log\u2082(psi+1)'
-jiq_provide_coordinates = "I want to provide gene coordinates in addition to Gene ID (use when Gene ID is not found)."
-jiq_table_help = " Table initially loads with PSI\u22655 and Total\u226515."
+jiq_help_table = " Table initially loads with PSI\u22655 and Total\u226515."
+jiq_help_add_junction = "Add more inclusion or exclusion junctions (up to 5) to the PSI query"
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             Gene Expression Query 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -90,7 +91,8 @@ geq_plot_label_norm_count = 'Normalized Count'
 geq_box_plot_y_axes = 'Gene Expression Count'
 geq_box_plot_y_axes_log = 'Log\u2082(Gene Expression Count+1)'
 geq_log_count = 'Log\u2082(count+1)'
-geq_checkbox_help = "Check this box if you need to enter gene coordinates in addition to gene name"
+geq_help_checkbox = "Check this box if you need to enter gene coordinates in addition to gene name"
+geq_provide_coordinates = "I want to provide gene coordinates in addition to Gene ID (use when Gene ID is not found)."
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     Strings beyond this point are related to the snaptron interface
     DO NOT TOUCH if you don't know what you are doing
