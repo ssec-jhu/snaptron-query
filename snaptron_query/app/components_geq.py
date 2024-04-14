@@ -24,7 +24,7 @@ def get_button_geq_results():
 def get_checkbox_geq_optional_coordinates():
     return dbc.Checklist(
         id="id-checkbox-use-coordinates",
-        options=[{"label": gs.jiq_provide_coordinates, "value": 1}],
+        options=[{"label": gs.geq_provide_coordinates, "value": 1}],
         label_checked_style={"color": "var(--bs-danger)"},
         input_checked_style={
             "backgroundColor": "var(--bs-danger)",
