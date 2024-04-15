@@ -13,7 +13,10 @@ def get_button_add_junction():
         id='id-button-jiq-add-more-junctions',
         children=[icons.add_box, gs.jiq_button_add_junction],
         size="sm",
-        color="link",
+        #color="link",
+        #TODO: confirm with PI of the removal of the green link to make it actually look like a button
+        outline=True,
+        style={'color': 'var(--bs-primary)'},
         n_clicks=0,
     )
 
