@@ -129,10 +129,8 @@ def get_button_download(button_id, label):
 def get_radio_items_download_options(radio_id):
     return dbc.RadioItems(
         options=[
-            {"label": html.Span(icons.download, gs.download_original),
-             "value": 1},
-            {"label": html.Span(icons.download, gs.download_filtered),
-             "value": 2},
+            {"label": get_text('dmc', html.Span([icons.download, gs.download_original])), "value": 1},
+            {"label": get_text('dmc', html.Span([icons.download, gs.download_filtered])), "value": 2},
         ],
         value=1,
         id=radio_id,
@@ -159,8 +157,9 @@ def get_button_reset(button_id, label):
         n_clicks=0,
         outline=True,
         size="md",  # button size
-        class_name="d-grid gap-0 col-12",
+        # Note: setting the col-12 will fill the dbc column. since this is an icon I am removing that option.
         # Note: if you set the color using "color" parameter, it would not apply the outline
         # and button will be a button with background. Setting it as style will remove the background and color the text
-        style={'color': 'var(--bs-primary)'}
+        style={'color': 'var(--bs-primary)'},
+        class_name='icon-button'
     )

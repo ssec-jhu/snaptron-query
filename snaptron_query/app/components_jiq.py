@@ -13,10 +13,11 @@ def get_button_add_junction():
         id='id-button-jiq-add-more-junctions',
         children=[icons.add_box, gs.jiq_button_add_junction],
         size="sm",
-        #color="link",
-        #TODO: confirm with PI of the removal of the green link to make it actually look like a button
+        # color="link",
+        # TODO: confirm with PI of the removal of the green link to make it actually look like a button
         outline=True,
         style={'color': 'var(--bs-primary)'},
+        class_name='icon-button',
         n_clicks=0,
     )
 
@@ -42,4 +43,3 @@ def get_text_junction(component_style):
         return dbc.Label(string, className='text-primary me-1 sm')
     else:
         return html.Label(string)
-
