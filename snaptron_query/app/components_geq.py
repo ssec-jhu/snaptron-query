@@ -1,33 +1,15 @@
 import dash_bootstrap_components as dbc
-from snaptron_query.app import global_strings as gs
+from snaptron_query.app import global_strings as gs, components
 
 
 def get_switch_normalize():
-    return dbc.Switch(
-        id='id-switch-geq-normalize',
-        label=gs.geq_normalized,
-        className='text-success'
-    )
-
-
-def get_button_geq_results():
-    """Wrapper function to retrieve the button component"""
-    return dbc.Button(
-        gs.geq_button_run,
-        n_clicks=0,
-        id='id-button-geq-run-query',
-        size="md",  # button size
-        class_name="btn-primary",
-    )
+    return dbc.Switch(id='id-switch-geq-normalize', label=gs.geq_normalized, className='text-primary')
 
 
 def get_checkbox_geq_optional_coordinates():
-    return dbc.Checklist(
-        id="id-checkbox-use-coordinates",
-        options=[{"label": gs.geq_provide_coordinates, "value": 1}],
-        label_checked_style={"color": "var(--bs-danger)"},
-        input_checked_style={
-            "backgroundColor": "var(--bs-danger)",
-            "borderColor": "#ea6258",
-        },
-    )
+    return [
+        dbc.Checklist(id="id-checkbox-use-coordinates", options=[{"label": gs.geq_provide_coordinates, "value": 1}],
+                      label_checked_style={"color": "var(--bs-danger)"},
+                      input_checked_style={"backgroundColor": "var(--bs-danger)", "borderColor": "#ea6258"}),
+        components.get_tooltip("id-checkbox-use-coordinates", gs.geq_help_checkbox, 'left')
+    ]

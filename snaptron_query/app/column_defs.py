@@ -15,26 +15,21 @@ def get_col_meta_a():
 def get_col_meta_b():
     return [
         {"field": 'study_title', "headerName": "Study Title", 'width': 350, "filterParams": {"buttons": ["reset"]},
-         'autoHeight': True,  # must have this here, it is not a style option
-         'cellClass': 'cell-wrap-dash-ag-grid'
-         },
+         'cellClass': 'cell-wrap-dash-ag-grid', 'autoHeight': True},  # must have this here, it is not a style option
         {"field": 'sample_name', "headerName": "Sample Name", 'width': 150 + 20, "filterParams": {"buttons": ["reset"]},
-         "tooltipField": 'sample_name',
-         # "tooltipComponent": "CustomTooltip2"
-         },
+         "tooltipField": 'sample_name'},
         {"field": 'sample_title', "headerName": "Sample Title", 'width': 150, "filterParams": {"buttons": ["reset"]},
          "tooltipField": 'sample_title'},
         {"field": 'library_layout', "headerName": "Library", 'width': 100, "filterParams": {"buttons": ["reset"]}},
         {"field": 'sample_description', "headerName": "Sample Description", 'width': 200,
-         "filterParams": {"buttons": ["reset"]},
-         "tooltipField": "sample_description"},
+         "filterParams": {"buttons": ["reset"]}, "tooltipField": "sample_description"},
     ]
 
 
 def get_col_jiq():
     return [
         {"field": gs.table_jiq_col_inc, "headerName": "Inc", "filter": "agNumberColumnFilter", 'width': 100,
-         "filterParams": {"buttons": ["reset"]}, },
+         "filterParams": {"buttons": ["reset"]}},
         {"field": gs.table_jiq_col_exc, "headerName": "Exc", "filter": "agNumberColumnFilter", 'width': 100,
          "filterParams": {"buttons": ["reset"]}, },
         {"field": gs.table_jiq_col_total, "headerName": "Total", "filter": "agNumberColumnFilter", 'width': 120,
@@ -43,10 +38,6 @@ def get_col_jiq():
          # "headerTooltip": "Inclusion Count + Exclusion Count"
          },
         {"field": gs.table_jiq_col_psi, "headerName": "PSI", "filter": "agNumberColumnFilter", 'initialSort': 'desc',
-         # "tooltipField": 'psi',
-         # "tooltipComponent": "CustomTooltip",
-         # "headerTooltip": "this is the psi header tool tip",
-         # "cellRenderer": "CustomTooltip",
          'width': 120, "filterParams": {"buttons": ["reset"]}},
         {"field": gs.table_jiq_col_log_2, "headerName": gs.jiq_log_psi, "filter": "agNumberColumnFilter",
          'width': 120, "filterParams": {"buttons": ["reset"]}}
@@ -55,7 +46,6 @@ def get_col_jiq():
 
 def get_junction_query_column_def():
     """Wrapper for ag-grid column definitions and their individual style"""
-
     # TODO: different compilation are going to have different headers
     return get_col_meta_a() + get_col_jiq() + get_col_meta_b()
 
@@ -67,17 +57,16 @@ def get_gene_expression_query_column_def(normalized=False):
     if normalized:
         column_def += [
             {"field": gs.table_geq_col_raw_count, "headerName": "Raw Count", "filter": "agNumberColumnFilter",
-             'width': 130, "filterParams": {"buttons": ["reset"]}, },
+             'width': 130, "filterParams": {"buttons": ["reset"]}},
             {"field": gs.table_geq_col_factor, "headerName": "Factor", "filter": "agNumberColumnFilter",
-             'width': 130, "filterParams": {"buttons": ["reset"]}, },
+             'width': 130, "filterParams": {"buttons": ["reset"]}},
             {"field": gs.table_geq_col_norm_count, "headerName": "Normalized Count", "filter": "agNumberColumnFilter",
              'width': 170, "filterParams": {"buttons": ["reset"]}, 'initialSort': 'desc'}
         ]
     else:
         column_def += [
             {"field": gs.table_geq_col_raw_count, "headerName": "Raw Count", "filter": "agNumberColumnFilter",
-             'width': 130, "filterParams": {"buttons": ["reset"]},
-             'initialSort': 'desc'}
+             'width': 130, "filterParams": {"buttons": ["reset"]}, 'initialSort': 'desc'}
         ]
 
     column_def += get_col_meta_b()
