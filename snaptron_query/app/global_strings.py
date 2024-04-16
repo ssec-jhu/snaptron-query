@@ -57,7 +57,7 @@ httpx_connect_error = 'Failed to establish a connection with Snaptron Web API!'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 jiq_form_title = 'Junction Information'
 button_download = 'Download'
-jiq_button_add_junction = 'Add Junction'
+jiq_button_add_junction = ' Add Junction'
 jiq_button_run = 'Calculate PSI'
 jiq_input_inc_placeholder = 'ex: chr19:4491836-4492014'
 jiq_input_inc_txt = 'Inclusion Junction'

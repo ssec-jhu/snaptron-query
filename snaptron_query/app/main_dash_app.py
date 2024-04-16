@@ -6,13 +6,12 @@ from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 
 from snaptron_query.app import graphs, layout, global_strings as gs, exceptions, snaptron_client as sc, components
-from snaptron_query.app import inline_styles as st, column_defs as cd
+from snaptron_query.app import column_defs as cd, callback_common as callback, inline_styles as styles
 from snaptron_query.app.query_gene_expression import GeneExpressionQueryManager
 from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager
 
 # Initialize the app
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
-bs_cdn = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 app = Dash(__name__,
            external_stylesheets=[dbc.themes.SANDSTONE, dbc_css, dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME])
 
@@ -55,7 +54,7 @@ app.layout = dbc.Container(
     Output('id-ag-grid-jiq', 'rowData'),
     Output('id-ag-grid-jiq', 'columnDefs'),
     Output('id-ag-grid-jiq', 'filterModel'),
-    # Output('id-jiq-box-plot-alert', 'is_open'),
+    Output('id-loading-table-jiq', 'children'),
     Output('id-alert-jiq', 'children'),
 
     Input('id-button-jiq-generate-results', 'n_clicks'),
@@ -66,7 +65,7 @@ app.layout = dbc.Container(
     # Note: this requires the latest Dash 2.16
     running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)]
 )
-def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclusion_interval):
+def on_button_click_jiq(n_clicks, compilation, inclusion_interval, exclusion_interval):
     #  this function gets called with every input change
     if callback_context.triggered_id != 'id-button-jiq-generate-results':
         raise PreventUpdate
@@ -112,20 +111,18 @@ def on_button_click_gen_results(n_clicks, compilation, inclusion_interval, exclu
                                                          'type': 'greaterThanOrEqual', 'filter': 15},
                                 gs.table_jiq_col_psi: {'filterType': 'number',
                                                        'type': 'greaterThanOrEqual', 'filter': 5}}
-
             else:
                 raise exceptions.MissingUserInputs
-
         except Exception as e:
             alert_message = exceptions.handle_exception(e)
 
     if alert_message:
         alert = components.get_alert(alert_message)
         # return no_update, no_update, no_update, no_update, no_update, alert
-        return no_update, no_update, no_update, no_update, alert
+        return no_update, no_update, no_update, no_update, no_update, alert
 
     # return {'display': 'block'}, row_data, column_defs, filter_model, True, no_update
-    return {'display': 'block'}, row_data, column_defs, filter_model, no_update
+    return {'display': 'block'}, row_data, column_defs, filter_model, {}, no_update
 
 
 @app.callback(
@@ -229,24 +226,23 @@ def enable_normalization(normalize_value):
     Output('id-ag-grid-display-geq', 'style'),
     Output('id-ag-grid-geq', 'rowData'),
     Output('id-ag-grid-geq', 'columnDefs'),
+    Output('id-loading-table-geq', 'children'),
     Output('id-alert-geq', 'children'),
+
     Input('id-button-geq-run-query', 'n_clicks'),
     State("id-input-compilation-geq", "value"),
     State("id-checkbox-use-coordinates", 'value'),
-    # Query Gene Info
-    State("id-input-geq-gene-id", "value"),
+    State("id-input-geq-gene-id", "value"),  # Query Gene Info
     State("id-input-geq-gene-coord", "value"),
-    # Norm Gene Info
-    State("id-switch-geq-normalize", 'value'),
+    State("id-switch-geq-normalize", 'value'),  # Norm Gene Info
     State("id-input-geq-gene-id-norm", "value"),
     State("id-input-geq-gene-coord-norm", "value"),
     prevent_initial_call=True,
-    # Note: this requires latest Dash 2.16
-    running=[(Output("id-button-geq-run-query", "disabled"), True, False)]
+    running=[(Output("id-button-geq-run-query", "disabled"), True, False)]  # requires latest Dash 2.16
 )
-def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
-                                    query_gene_id, query_gene_coordinates,
-                                    normalize_data, norm_gene_id, norm_gene_coordinates):
+def on_button_click_geq(n_clicks, compilation, use_coordinates,
+                        query_gene_id, query_gene_coordinates,
+                        normalize_data, norm_gene_id, norm_gene_coordinates):
     #  this function gets called with every input change
     if callback_context.triggered_id != 'id-button-geq-run-query':
         raise PreventUpdate
@@ -311,15 +307,14 @@ def on_button_click_gene_expression(n_clicks, compilation, use_coordinates,
                 column_defs = cd.get_gene_expression_query_column_def(normalize_data)
             else:
                 raise exceptions.MissingUserInputs
-
         except Exception as e:
             alert_message = exceptions.handle_exception(e)
 
     if alert_message:
         alert = components.get_alert(alert_message)
-        return no_update, no_update, no_update, alert
+        return no_update, no_update, no_update, no_update, alert
     else:
-        return {'display': 'block'}, row_data, column_defs, no_update
+        return {'display': 'block'}, row_data, column_defs, {}, no_update
 
 
 @app.callback(
@@ -359,7 +354,6 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
     else:
         data = row_data_from_table
 
-    style = {"box-shadow": "1px 2px 7px 0px grey", "border-radius": "10px"}
     if normalized_data:
         # Filter out the -1 factors directly
         data = [row for row in data if row[gs.table_geq_col_factor] != -1]
@@ -367,69 +361,49 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
         # Make histogram
         histogram = graphs.get_histogram_geq(df, histogram_log_x, histogram_log_y)
         box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
-        # One option is also to have a html.DIV in the layout and send over the Row as
-        # but them you need to also send the styling of the row here
-        # child = dbc.Row([ dbc.Col(dcc.Graph the graph you want),dbc.Col(dcc.Graph the other graph)], className="g-0")
 
         # norm_count_values = [item[gs.table_geq_col_norm_count] for item in data]
         # raw_count_values = [item[gs.table_geq_col_raw_count] for item in data]
         # rail_id_list = [item[gs.snpt_col_rail_id] for item in data]
         # factor_list = [item[gs.table_geq_col_factor] for item in data]
-        # histogram = graphs.get_histogram_geq_lists(norm_count_values,
-        #                                            histogram_log_x, histogram_log_y)
+        # histogram = graphs.get_histogram_geq_lists(norm_count_values, histogram_log_x, histogram_log_y)
         # box_plot = graphs.get_box_plot_gene_expression_lists(raw_count_values,norm_count_values,
         #                                                      rail_id_list,factor_list,
         #                                                      log_values, violin_overlay, normalized_data)
 
         width = {'size': 6}
         hist_display = {'display': 'Block'}
-        return box_plot, histogram, width, width, hist_display, style, {}
+        return box_plot, histogram, width, width, hist_display, styles.section, {}
     else:
         df = pd.DataFrame(data)
         box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
         width = {'size': 8, 'offset': 2}
         hist_display = {'display': 'None'}
-        return box_plot, None, width, no_update, hist_display, style, {}
+        return box_plot, None, width, no_update, hist_display, styles.section, {}
 
 
 @app.callback(
     Output("id-ag-grid-jiq", "exportDataAsCsv"),
     Output("id-ag-grid-jiq", "csvExportParams"),
-    Input("id-button-jiq-download-all", "n_clicks"),
-    Input("id-button-jiq-download-filtered", "n_clicks"),
-    # State('id-jiq-download-options', 'value'),
+    Input("id-button-jiq-download", "n_clicks"),
+    State("id-jiq-download-options", 'value'),
     prevent_initial_call=True,
-    # Note: this requires the latest Dash 2.16
-    running=[(Output("id-button-jiq-download-all", "disabled"), True, False),
-             (Output("id-button-jiq-download-filtered", "disabled"), True, False)]
+    running=[(Output("id-button-jiq-download", "disabled"), True, False)]  # requires the latest Dash 2.16
 )
-def jiq_export_data_as_csv(n_clicks_1, n_clicks_2):
-    if callback_context.triggered_id == 'id-button-jiq-download-all':
-        exported_rows = 'all'
-    elif callback_context.triggered_id == 'id-button-jiq-download-filtered':
-        exported_rows = 'filteredAndSorted'
-    else:
-        raise PreventUpdate
-
-    # https://ag-grid.com/javascript-data-grid/csv-export/#reference-CsvExportParams-exportedRows
-    return True, {"fileName": f'psi_query_data_{exported_rows}.csv', "exportedRows": exported_rows}
+def export_data_as_csv_jiq(n_clicks, option):
+    return callback.export_data_as_csv(n_clicks, option, 'psi_query_data')
 
 
 @app.callback(
     Output("id-ag-grid-geq", "exportDataAsCsv"),
     Output("id-ag-grid-geq", "csvExportParams"),
     Input("id-button-geq-download", "n_clicks"),
+    State("id-geq-download-options", 'value'),
     prevent_initial_call=True,
-    # Note: this requires the latest Dash 2.16
-    running=[(Output("id-button-geq-download", "disabled"), True, False)]
+    running=[(Output("id-button-geq-download", "disabled"), True, False)]  # requires the latest Dash 2.16
 )
-def geq_export_data_as_csv(n_clicks):
-    # TODO: export data GEQ with the radio buttons
-    if callback_context.triggered_id == 'id-button-geq-download':
-        # https://ag-grid.com/javascript-data-grid/csv-export/#reference-CsvExportParams-exportedRows
-        return True, {"fileName": "gene_expression_query_data.csv", 'exportedRows': 'all'}
-    else:
-        raise PreventUpdate
+def export_data_as_csv_geq(n_clicks, option):
+    return callback.export_data_as_csv(n_clicks, option, 'gene_expression_query_data')
 
 
 @app.callback(
@@ -438,13 +412,8 @@ def geq_export_data_as_csv(n_clicks):
     State('id-ag-grid-jiq', 'filterModel'),
     prevent_initial_call=True
 )
-def on_jiq_box_plot_click(click_data, filter_model):
-    if not click_data:
-        return no_update
-
-    rail_id = click_data["points"][0]["customdata"][0]
-    filter_model[gs.snpt_col_rail_id] = {'filterType': 'number', 'type': 'equals', 'filter': rail_id}
-    return filter_model
+def on_box_plot_click_jiq(click_data, filter_model):
+    return callback.on_box_plot_click(click_data, filter_model)
 
 
 @app.callback(
@@ -453,13 +422,26 @@ def on_jiq_box_plot_click(click_data, filter_model):
     State('id-ag-grid-geq', 'filterModel'),
     prevent_initial_call=True
 )
-def on_geq_box_plot_click(click_data, filter_model):
-    if not click_data:
-        return no_update
+def on_box_plot_click_geq(click_data, filter_model):
+    return callback.on_box_plot_click(click_data, filter_model)
 
-    rail_id = click_data["points"][0]["customdata"][0]
-    filter_model[gs.snpt_col_rail_id] = {'filterType': 'number', 'type': 'equals', 'filter': rail_id}
-    return filter_model
+
+@app.callback(
+    Output('id-ag-grid-jiq', 'filterModel', allow_duplicate=True),
+    Input("id-button-jiq-reset", "n_clicks"),
+    prevent_initial_call=True
+)
+def on_reset_table_jiq(click_data):
+    return callback.on_reset_table(click_data)
+
+
+@app.callback(
+    Output('id-ag-grid-geq', 'filterModel', allow_duplicate=True),
+    Input("id-button-geq-reset", "n_clicks"),
+    prevent_initial_call=True
+)
+def on_reset_table_geq(click_data):
+    return callback.on_reset_table(click_data)
 
 
 @app.callback(
@@ -468,15 +450,19 @@ def on_geq_box_plot_click(click_data, filter_model):
     Input('id-switch-jiq-lock-with-table', 'value'),
     prevent_initial_call=True
 )
-def on_lock_switch(lock):
-    if lock:
-        return st.inactive_lock, st.active_lock
-    else:
-        return st.active_lock, st.inactive_lock
+def on_lock_switch_jiq(lock):
+    return callback.on_lock_switch(lock)
 
 
-# TODO: call back for the GEQ lock
-# TODO: call back for GEQ download buttons filtered or the radio buttons per PI
+@app.callback(
+    Output('id-geq-unlock', 'style'),
+    Output('id-geq-lock', 'style'),
+    Input('id-switch-geq-lock-with-table', 'value'),
+    prevent_initial_call=True
+)
+def on_lock_switch_geq(lock):
+    return callback.on_lock_switch(lock)
+
 
 # Run the app
 if __name__ == '__main__':

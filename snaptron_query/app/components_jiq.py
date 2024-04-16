@@ -11,8 +11,9 @@ def get_button_add_junction():
     button_id = 'id-button-jiq-add-more-junctions'
     return [dbc.Button(id=button_id, n_clicks=0, children=[icons.add_box, gs.jiq_button_add_junction],
                        # TODO: confirm with PI of the removal of the green link to make it actually look like a button
-                       # color="link",
-                       outline=True, style={'color': 'var(--bs-primary)'}, class_name='icon-button', size="sm"),
+                       color="link",
+                       # outline=True,
+                       style={'color': 'var(--bs-primary)'}, class_name='icon-button', size="sm"),
             components.get_tooltip(button_id, gs.jiq_help_add_junction, 'right')]
 
 
