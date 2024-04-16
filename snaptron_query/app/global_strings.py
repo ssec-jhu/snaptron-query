@@ -21,7 +21,7 @@ drop_compilation = 'Select the organism of interest'
 drop_compilation_placeholder = 'Select a compilation'
 
 switch_violin = 'Violin Mode'
-switch_lock = 'Lock Graphs and Table'
+# switch_lock = 'Lock Graphs and Table'
 switch_lock_help = "If locked, filters applied in the table below will be reflected in the graphs."
 plot_label_rail_id = 'Rail ID'
 switch_log_geq_hist_y = 'Log Y axis'
@@ -30,11 +30,10 @@ switch_log_geq_hist_y = 'Log Y axis'
 download_results = " Download Results"
 download_filtered = " Filtered"
 download_original = " Original"
-help_download = ("Download results in CSV format. Select \"Filtered\" Results if you wish to download data with the "
+help_download = ("Download results in CSV format. Select \"Filtered\" if you wish to download data with the "
                  "table filters applied.")
 help_download_mode = ("Select how you would like to download your results. \"Original\" will download results without "
                       "any curent table filters. \"Filtered\" will download with the current table filters.")
-# help_download_filtered = "Download results with table filters."
 help_box_plot_click = (" You can click on the points in the box plot to filter table by that point. "
                        "Reset the \"Rail ID\" column to go back.")
 help_reset = ("This will remove all filters applied to the table below. For individual columns, "

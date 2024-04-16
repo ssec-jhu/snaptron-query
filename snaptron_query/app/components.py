@@ -24,15 +24,15 @@ def get_input(input_placeholder, input_id, disabled=False):
 def get_dropdown_compilation(component_id):
     """Wrapper function to retrieve the dropdown component"""
     return html.Div([
-            dbc.Label(gs.drop_compilation, className='fw-bold'),
-            dcc.Dropdown(id=component_id, options=gs.compilation_names_dict)
-        ], className="dbc",
+        dbc.Label(gs.drop_compilation, className='fw-bold'),
+        dcc.Dropdown(id=component_id, options=gs.compilation_names_dict)
+    ], className="dbc",
     )
 
 
-def get_button_run_query(button_id):
+def get_button_run_query(button_id, button_string):
     """Wrapper function to retrieve the button component"""
-    return dbc.Button(id=button_id, n_clicks=0, class_name="btn-primary", size="md", children=gs.jiq_button_run)
+    return dbc.Button(id=button_id, n_clicks=0, class_name="btn-primary", size="md", children=button_string)
 
 
 def get_switch(switch_id, switch_label, switch_on=False):
