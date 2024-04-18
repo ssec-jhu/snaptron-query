@@ -23,6 +23,8 @@ dependencies = [
     "matplotlib",
     "plotly",
     "plotly-express",
+    "numpy",
+    "dash-loading-spinners"
 ]
 
 [project.optional-dependencies]
