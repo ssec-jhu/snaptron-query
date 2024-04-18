@@ -17,5 +17,5 @@ def get_button_add_junction():
             components.get_tooltip(button_id, gs.jiq_help_add_junction, 'right')]
 
 
-def get_text_junction():
-    return dmc.Text(gs.jiq_input_junction_txt_list[0], weight=500, size="sm")
+def get_text_junction(index):
+    return dmc.Text(gs.jiq_input_junction_txt_list[index], weight=500, size="sm")

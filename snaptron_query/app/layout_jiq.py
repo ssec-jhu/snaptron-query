@@ -9,6 +9,16 @@ from snaptron_query.app import components, components_jiq, global_strings as gs,
 from snaptron_query.app import inline_styles as styles
 
 
+def create_junction_row(index):
+    return [
+        dbc.Col(components_jiq.get_text_junction(index), width=2, align='center', style=styles.border_column),
+        dbc.Col(components.get_input(gs.jiq_input_inc_placeholder, f'id-input-jiq-inc-junc-{index}'),
+                width=4, className='mx-0.5', align='center', style=styles.border_column),
+        dbc.Col(components.get_input(gs.jiq_input_exc_placeholder, f'id-input-jiq-exc-junc-{index}'),
+                width=4, align='center', style=styles.border_column),
+    ]
+
+
 def get_form_jiq():
     """Wrapper function for the Junction Inclusion Query components.
     The width of the top and bottom row is set to fill the row
@@ -29,18 +39,65 @@ def get_form_jiq():
             className="g-0 form-control-sm", justify="start",
         ),
         # ROW 3 has the form components
-        dbc.Row(
-            [
-                dbc.Col(components_jiq.get_text_junction(),
-                        width=2, align='center', style=styles.border_column),
-                dbc.Col(components.get_input(gs.jiq_input_inc_placeholder, 'id-input-jiq-inc-junc'),
-                        width=4, className='mx-0.5', align='center', style=styles.border_column),
-                dbc.Col(components.get_input(gs.jiq_input_exc_placeholder, 'id-input-jiq-exc-junc'),
-                        width=4, align='center', style=styles.border_column),
-                dbc.Col(components_jiq.get_button_add_junction(),  # fit column to text
-                        width=2, className='col-md-auto', align='center', style=styles.border_column)
-            ],
-            className="g-1 form-control-sm", justify="start",
+        html.Div(
+            id='id-jiq-input-container',
+            children=[
+                dbc.Row(
+                    [
+                        dbc.Col(components_jiq.get_text_junction(0),
+                                width=2, align='center', style=styles.border_column),
+                        dbc.Col(components.get_input(gs.jiq_input_inc_placeholder, 'id-input-jiq-inc-junc-0'),
+                                width=4, className='mx-0.5', align='center', style=styles.border_column),
+                        dbc.Col(components.get_input(gs.jiq_input_exc_placeholder, 'id-input-jiq-exc-junc-0'),
+                                width=4, align='center', style=styles.border_column),
+                        dbc.Col(components_jiq.get_button_add_junction(),  # fit column to text
+                                width=2, className='col-md-auto', align='center', style=styles.border_column)
+                    ], className="g-1 form-control-sm", justify="start"),
+                dbc.Row(
+                    [
+                        dbc.Col(components_jiq.get_text_junction(1),
+                                width=2, align='center', style=styles.border_column),
+                        dbc.Col(components.get_input(gs.jiq_input_inc_placeholder, 'id-input-jiq-inc-junc-1'),
+                                width=4, className='mx-0.5', align='center', style=styles.border_column),
+                        dbc.Col(components.get_input(gs.jiq_input_exc_placeholder, 'id-input-jiq-exc-junc-1'),
+                                width=4, align='center', style=styles.border_column),
+                    ], className="g-1 form-control-sm", justify="start",
+                    id='id-row-input-jiq-1', style={'display': 'none'}
+                ),
+                dbc.Row(
+                    [
+                        dbc.Col(components_jiq.get_text_junction(2),
+                                width=2, align='center', style=styles.border_column),
+                        dbc.Col(components.get_input(gs.jiq_input_inc_placeholder, 'id-input-jiq-inc-junc-2'),
+                                width=4, className='mx-0.5', align='center', style=styles.border_column),
+                        dbc.Col(components.get_input(gs.jiq_input_exc_placeholder, 'id-input-jiq-exc-junc-2'),
+                                width=4, align='center', style=styles.border_column),
+                    ], className="g-1 form-control-sm", justify="start",
+                    id='id-row-input-jiq-2', style={'display': 'none'}
+                ),
+                dbc.Row(
+                    [
+                        dbc.Col(components_jiq.get_text_junction(3),
+                                width=2, align='center', style=styles.border_column),
+                        dbc.Col(components.get_input(gs.jiq_input_inc_placeholder, 'id-input-jiq-inc-junc-3'),
+                                width=4, className='mx-0.5', align='center', style=styles.border_column),
+                        dbc.Col(components.get_input(gs.jiq_input_exc_placeholder, 'id-input-jiq-exc-junc-3'),
+                                width=4, align='center', style=styles.border_column),
+                    ], className="g-1 form-control-sm", justify="start",
+                    id='id-row-input-jiq-3', style={'display': 'none'}
+                ),
+                dbc.Row(
+                    [
+                        dbc.Col(components_jiq.get_text_junction(4),
+                                width=2, align='center', style=styles.border_column),
+                        dbc.Col(components.get_input(gs.jiq_input_inc_placeholder, 'id-input-jiq-inc-junc-4'),
+                                width=4, className='mx-0.5', align='center', style=styles.border_column),
+                        dbc.Col(components.get_input(gs.jiq_input_exc_placeholder, 'id-input-jiq-exc-junc-4'),
+                                width=4, align='center', style=styles.border_column),
+                    ], className="g-1 form-control-sm", justify="start",
+                    id='id-row-input-jiq-4', style={'display': 'none'}
+                ),
+            ]
         ),
         dbc.Row(
             [

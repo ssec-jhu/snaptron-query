@@ -43,7 +43,8 @@ help_reset = ("This will remove all filters applied to the table below. For indi
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 bad_url = 'Sorry, something must have gone wrong...try again in a couple minutes!'
 empty_response = 'Snaptron Empty response!'
-missing_user_input = 'You are missing one or more required inputs...try again!'
+missing_user_input = ('You are missing one or more required inputs...did you select a compilation? For each junction, '
+                      'are both inclusion and exclusion coordinates defined?')
 bad_coordinates = 'Input coordinates are invalid!'
 empty_junction = 'Junctions entered have no results!'
 suggestion = ('Try running the query by adding gene coordinates to your query or double check gene coordinates if '

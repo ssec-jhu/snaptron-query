@@ -1,12 +1,13 @@
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 import pandas as pd
-from dash import Dash, html, Input, Output, callback_context, no_update, State
+from dash import Dash, Input, Output, callback_context, no_update, State, dcc
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 
-from snaptron_query.app import graphs, layout, global_strings as gs, exceptions, snaptron_client as sc, components
 from snaptron_query.app import column_defs as cd, callback_common as callback, inline_styles as styles
+from snaptron_query.app import (graphs, layout, components, utils, exceptions,
+                                global_strings as gs, snaptron_client as sc)
 from snaptron_query.app.query_gene_expression import GeneExpressionQueryManager
 from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager
 
@@ -17,18 +18,8 @@ app = Dash(__name__,
 
 load_figure_template(gs.dbc_template_name)
 
-
-def read_srav3h():
-    # TODO: read the rest of the meta data files here as they become available
-    # read the file and make sure index is set to the rail id for fast lookup
-    df = pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
-                     usecols=gs.srav3h_meta_data_required_list,
-                     dtype={'sample_description': 'string'}).set_index(gs.snpt_col_rail_id)
-    return df.to_dict(orient='index')
-
-
 # Meta data loaded in global space
-dict_srav3h = read_srav3h()
+dict_srav3h = utils.read_srav3h()
 
 # this is the main layout of the page with all tabs
 app.layout = dbc.Container(
@@ -42,7 +33,7 @@ app.layout = dbc.Container(
 
         # a space for log content if any
         dmc.Space(h=30),
-        html.Div(id="id-log-content"),
+        dcc.Store(id="id-store-jiq-junctions")
     ],
     # TODO: Keep this commented here, need to verify with PI rep to switch to full width or not
     # fluid=True,  # this will make the page use full screen width
@@ -59,13 +50,12 @@ app.layout = dbc.Container(
 
     Input('id-button-jiq-generate-results', 'n_clicks'),
     State("id-input-compilation-jiq", "value"),
-    State("id-input-jiq-inc-junc", "value"),
-    State("id-input-jiq-exc-junc", "value"),
+    State('id-jiq-input-container', 'children'),
+    State('id-store-jiq-junctions', 'data'),
     prevent_initial_call=True,
-    # Note: this requires the latest Dash 2.16
-    running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)]
+    running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)]  # requires the latest Dash 2.16
 )
-def on_button_click_jiq(n_clicks, compilation, inclusion_interval, exclusion_interval):
+def on_button_click_jiq(n_clicks, compilation, children, junction_count):
     #  this function gets called with every input change
     if callback_context.triggered_id != 'id-button-jiq-generate-results':
         raise PreventUpdate
@@ -74,45 +64,54 @@ def on_button_click_jiq(n_clicks, compilation, inclusion_interval, exclusion_int
             alert_message = None
             row_data = None
             column_defs = None
-            if compilation and inclusion_interval and exclusion_interval:
-
-                # make sure chromosome numbers match
-                # if there is any error in the intervals, an exception will be thrown
-                (exc_chr, exc_start, exc_end), (inc_chr, inc_start, inc_end) = (
-                    sc.jiq_verify_coordinate_pairs(exclusion_interval, inclusion_interval))
-
-                # RUN the URL and get results back from SNAPTRON
-                # make sure you get results back
-                df_snpt_results = sc.get_snpt_query_results_df(compilation, exclusion_interval, 'snaptron')
-                # df_snpt_results = pd.read_csv('./tests/data/test_srav3h_chr19_4491836_4493702.tsv', sep='\t')
-
-                if df_snpt_results.empty:
-                    raise exceptions.EmptyResponse
-
-                # Select the meta data that must be used
-                # TODO: add the rest of the meta data as PI provides list
-                if compilation == gs.compilation_srav3h:
-                    # meta_data_df = df_srav3h
-                    meta_data_dict = dict_srav3h
-                else:
-                    raise PreventUpdate
-
-                # # Set upt the JIQ manager then run the Junction Inclusion Query
-                jqm = JunctionInclusionQueryManager(exc_start, exc_end, inc_start, inc_end)
-                # results returned are list of dictionaries which makes ag-grid load much faster,
-                # Once can convert a dataframe to dict with orient set to records for the ag-grid as well.
-                row_data = jqm.run_junction_inclusion_query(df_snpt_results, meta_data_dict)
-
-                # Set the columnDefs for the ag-grid
-                column_defs = cd.get_junction_query_column_def()
-
-                # set the preset column filters requested
-                filter_model = {gs.table_jiq_col_total: {'filterType': 'number',
-                                                         'type': 'greaterThanOrEqual', 'filter': 15},
-                                gs.table_jiq_col_psi: {'filterType': 'number',
-                                                       'type': 'greaterThanOrEqual', 'filter': 5}}
-            else:
+            if not compilation:
                 raise exceptions.MissingUserInputs
+
+            if junction_count is None:  # first call
+                junction_count = 0
+
+            # count is indexed at 0
+            inc_junctions, exc_junctions = utils.get_element_id_and_value(children, junction_count)
+            if len(inc_junctions) == 0 or len(exc_junctions) == 0:
+                raise exceptions.MissingUserInputs
+
+            # TODO: MultiJunction: fix this for more than one junction, assume 1 for now
+            inclusion_interval = inc_junctions[0]
+            exclusion_interval = exc_junctions[0]
+            # make sure chromosome numbers match
+            # if there is any error in the intervals, an exception will be thrown
+            (exc_chr, exc_start, exc_end), (inc_chr, inc_start, inc_end) = (
+                sc.jiq_verify_coordinate_pairs(exclusion_interval, inclusion_interval))
+
+            # RUN the URL and get results back from SNAPTRON
+            # make sure you get results back
+            df_snpt_results = sc.get_snpt_query_results_df(compilation, exclusion_interval, 'snaptron')
+
+            if df_snpt_results.empty:
+                raise exceptions.EmptyResponse
+
+            # Select the meta data that must be used
+            # TODO: add the rest of the meta data as PI provides list
+            if compilation == gs.compilation_srav3h:
+                # meta_data_df = df_srav3h
+                meta_data_dict = dict_srav3h
+            else:
+                raise PreventUpdate
+
+            # # Set upt the JIQ manager then run the Junction Inclusion Query
+            jqm = JunctionInclusionQueryManager(exc_start, exc_end, inc_start, inc_end)
+            # results returned are list of dictionaries which makes ag-grid load much faster,
+            # Once can convert a dataframe to dict with orient set to records for the ag-grid as well.
+            row_data = jqm.run_junction_inclusion_query(df_snpt_results, meta_data_dict)
+
+            # Set the columnDefs for the ag-grid
+            column_defs = cd.get_junction_query_column_def()
+
+            # set the preset column filters requested
+            filter_model = {gs.table_jiq_col_total: {'filterType': 'number',
+                                                     'type': 'greaterThanOrEqual', 'filter': 15},
+                            gs.table_jiq_col_psi: {'filterType': 'number',
+                                                   'type': 'greaterThanOrEqual', 'filter': 5}}
         except Exception as e:
             alert_message = exceptions.handle_exception(e)
 
@@ -140,19 +139,18 @@ def on_button_click_jiq(n_clicks, compilation, inclusion_interval, exclusion_int
     Input('id-switch-jiq-violin-box-plot', 'value'),
     Input('id-switch-jiq-log-psi-histogram', 'value'),
     Input('id-switch-jiq-log-y-histogram', 'value'),
+    State('id-store-jiq-junctions', 'data'),
     prevent_initial_call=True
 )
 def update_charts_jiq(row_data_from_table, filtered_row_data_from_table, lock_graph_data_with_table,
                       box_log_psi, violin_overlay,
-                      histogram_log_psi, histogram_log_y):
+                      histogram_log_psi, histogram_log_y, junction_count):
     """
         Given the table data as input, it will update the relative graphs
     """
     if not row_data_from_table or not filtered_row_data_from_table:
         raise PreventUpdate
 
-    # from timeit import default_timer as timer
-    # start = timer()
     if lock_graph_data_with_table:
         df = pd.DataFrame(filtered_row_data_from_table)
     else:
@@ -160,37 +158,57 @@ def update_charts_jiq(row_data_from_table, filtered_row_data_from_table, lock_gr
 
     histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y)
     box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay)
-    # callback_context.record_timing('update_charts_jiq', timer() - start, 'update_charts_jiq')
-
-    # start = timer()
-    # if lock_graph_data_with_table:
-    #     data = filtered_row_data_from_table
-    # else:
-    #     data = row_data_from_table
-    #
-    # psi_values = [item[gs.table_jiq_col_psi] for item in data]
-    # rail_id_list = [item[gs.snpt_col_rail_id] for item in data]
-    # log_psi = [item[gs.table_jiq_col_log_2] for item in data]
-    # if box_log_psi:
-    #     box_log_psi_values = log_psi
-    # else:
-    #     box_log_psi_values = []
-    #
-    # if histogram_log_psi:
-    #     hist_log_psi_values = log_psi
-    # else:
-    #     hist_log_psi_values = []
-    #
-    # histogram = graphs.get_histogram_jiq_lists(psi_values, hist_log_psi_values, histogram_log_psi, histogram_log_y)
-    # box_plot = graphs.get_box_plot_jiq_lists(psi_values, rail_id_list,
-    # box_log_psi_values, box_log_psi, violin_overlay)
-    # callback_context.record_timing('update_charts_jiq', timer() - start, 'New')
 
     col_width = {'size': 6}
     # when the component is hidden, then becomes visible, the original style is lost,
     # so I am putting it back again.
     display_style = {"box-shadow": "1px 2px 7px 0px grey", "border-radius": "10px", }
     return histogram, box_plot, col_width, col_width, display_style, {}
+
+
+@app.callback(
+    Output('id-store-jiq-junctions', 'data'),
+    Input('id-button-jiq-add-more-junctions', 'n_clicks'),
+    State('id-store-jiq-junctions', 'data'),
+    # Don't prevent initial call back as this sets the junction count value
+)
+def on_add_junction_click(n_clicks, junction_counts):
+    if junction_counts is None:  # first call
+        return 0
+
+    if junction_counts < 5:
+        return junction_counts + 1
+    else:
+        raise PreventUpdate
+
+
+@app.callback(
+    Output('id-row-input-jiq-1', 'style'),
+    Output('id-row-input-jiq-2', 'style'),
+    Output('id-row-input-jiq-3', 'style'),
+    Output('id-row-input-jiq-4', 'style'),
+    Input('id-button-jiq-add-more-junctions', 'n_clicks'),
+    Input('id-store-jiq-junctions', 'data'),
+    prevent_initial_call=True
+)
+def update_junction_inputs(n_clicks, junction_counts):
+    # changing row style for visibility throws off the whole layout
+    # https://community.plotly.com/t/setting-style-causes-layout-issue/60403
+    # need to ensure I put back the original 'flex' not just a 'block' display
+    if junction_counts == 1:
+        style_1 = {'display': 'flex'}
+        return style_1, no_update, no_update, no_update
+    elif junction_counts == 2:
+        style_2 = {'display': 'flex'}
+        return no_update, style_2, no_update, no_update
+    elif junction_counts == 3:
+        style_3 = {'display': 'flex'}
+        return no_update, no_update, style_3, no_update
+    elif junction_counts == 4:
+        style_4 = {'display': 'flex'}
+        return no_update, no_update, no_update, style_4
+    else:
+        raise PreventUpdate
 
 
 @app.callback(
