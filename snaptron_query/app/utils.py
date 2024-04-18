@@ -1,13 +1,15 @@
+from pathlib import Path
 import numpy as np
 import pandas as pd
 
 from snaptron_query.app import exceptions, global_strings as gs
 
+path_srav3h_meta = Path(__file__).parent / 'data/samples_SRAv3h.tsv'
 
 def read_srav3h():
     # TODO: read the rest of the meta data files here as they become available
     # read the file and make sure index is set to the rail id for fast lookup
-    df = pd.read_csv('data/samples_SRAv3h.tsv', sep='\t',
+    df = pd.read_csv(path_srav3h_meta, sep='\t',
                      usecols=gs.srav3h_meta_data_required_list,
                      dtype={'sample_description': 'string'}).set_index(gs.snpt_col_rail_id)
     return df.to_dict(orient='index')
