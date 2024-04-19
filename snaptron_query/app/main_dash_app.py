@@ -16,6 +16,11 @@ dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.mi
 app = Dash(__name__,
            external_stylesheets=[dbc.themes.SANDSTONE, dbc_css, dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME])
 
+
+# VERY important line of code for running with gunicorn
+# you run the 'server' not the 'app'. VS. you run the 'app; with uvicorn
+server = app.server
+
 load_figure_template(gs.dbc_template_name)
 
 # Meta data loaded in global space
