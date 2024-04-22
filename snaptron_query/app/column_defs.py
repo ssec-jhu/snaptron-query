@@ -3,9 +3,9 @@ from snaptron_query.app import global_strings as gs
 
 def get_col_meta_a():
     return [
-        {"field": gs.snpt_col_rail_id, "headerName": "Rail ID", 'width': 125, "pinned": "left",
+        {"field": gs.snpt_col_rail_id, "headerName": gs.plot_label_rail_id, 'width': 125, "pinned": "left",
          "filterParams": {"buttons": ["reset"]}},
-        {"field": gs.snpt_col_external_id, "headerName": "External ID", 'width': 125,
+        {"field": gs.snpt_col_external_id, "headerName": "External ID", 'width': 130,
          "filterParams": {"buttons": ["reset"]}},
         {"field": 'study', "headerName": "Study", 'width': 120, "cellRenderer": "StudyLink",
          "filterParams": {"buttons": ["reset"]}},
@@ -40,7 +40,7 @@ def get_col_jiq():
         {"field": gs.table_jiq_col_psi, "headerName": "PSI", "filter": "agNumberColumnFilter", 'initialSort': 'desc',
          'width': 120, "filterParams": {"buttons": ["reset"]}},
         {"field": gs.table_jiq_col_log_2, "headerName": gs.jiq_log_psi, "filter": "agNumberColumnFilter",
-         'width': 120, "filterParams": {"buttons": ["reset"]}}
+         'width': 145, "filterParams": {"buttons": ["reset"]}}
     ]
 
 
@@ -56,17 +56,21 @@ def get_gene_expression_query_column_def(normalized=False):
     column_def = get_col_meta_a()
     if normalized:
         column_def += [
-            {"field": gs.table_geq_col_raw_count, "headerName": "Raw Count", "filter": "agNumberColumnFilter",
-             'width': 130, "filterParams": {"buttons": ["reset"]}},
+            {"field": gs.table_geq_col_raw_count, "headerName": gs.geq_plot_label_raw_count,
+             "filter": "agNumberColumnFilter", 'width': 130, "filterParams": {"buttons": ["reset"]}},
             {"field": gs.table_geq_col_factor, "headerName": "Factor", "filter": "agNumberColumnFilter",
              'width': 130, "filterParams": {"buttons": ["reset"]}},
-            {"field": gs.table_geq_col_norm_count, "headerName": "Normalized Count", "filter": "agNumberColumnFilter",
-             'width': 170, "filterParams": {"buttons": ["reset"]}, 'initialSort': 'desc'}
+            {"field": gs.table_geq_col_norm_count, "headerName": gs.geq_plot_label_norm_count, 'initialSort': 'desc',
+             "filter": "agNumberColumnFilter", 'width': 170, "filterParams": {"buttons": ["reset"]}},
+            {"field": gs.table_geq_col_log_2_norm, "headerName": gs.geq_log_count,
+             "filter": "agNumberColumnFilter", 'width': 145, "filterParams": {"buttons": ["reset"]}}
         ]
     else:
         column_def += [
-            {"field": gs.table_geq_col_raw_count, "headerName": "Raw Count", "filter": "agNumberColumnFilter",
-             'width': 130, "filterParams": {"buttons": ["reset"]}, 'initialSort': 'desc'}
+            {"field": gs.table_geq_col_raw_count, "headerName": gs.geq_plot_label_raw_count, 'initialSort': 'desc',
+             "filter": "agNumberColumnFilter", 'width': 130, "filterParams": {"buttons": ["reset"]}},
+            {"field": gs.table_geq_col_log_2_raw, "headerName": gs.geq_log_count,
+             "filter": "agNumberColumnFilter", 'width': 145, "filterParams": {"buttons": ["reset"]}}
         ]
 
     column_def += get_col_meta_b()

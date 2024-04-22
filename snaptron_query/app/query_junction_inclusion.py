@@ -71,7 +71,7 @@ class JunctionInclusionQueryManager:
             # calculate the percent spliced in
             psi = round(((100 * inclusion_count) / float(total_count)), 2)
 
-        log2 = round(utils.log_2(psi + 1), 4)
+        log2 = round(utils.log_2_plus(psi), 4)
 
         return psi, inclusion_count, exclusion_count, total_count, log2
 

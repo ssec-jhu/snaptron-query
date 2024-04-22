@@ -3,6 +3,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+log_epsilon = 0.01
 tab_jiq = "Junction PSI Query"
 tab_geq = "Gene Expression Query"
 graphs_group_title = 'Graphs'
@@ -29,11 +30,10 @@ switch_log_geq_hist_y = 'Log Y axis'
 # Keep the space here because these come before an icon
 download_results = " Download Results"
 download_filtered = " Filtered"
-download_original = " Original"
-help_download = ("Download results in CSV format. Select \"Filtered\" if you wish to download data with the "
-                 "table filters applied.")
-help_download_mode = ("Select how you would like to download your results. \"Original\" will download results without "
-                      "any curent table filters. \"Filtered\" will download with the current table filters.")
+download_original = " Unfiltered"
+help_download = "Download results in CSV format. Default is set to \"Unfiltered\" mode."
+help_download_mode_unfiltered = "Results will be downloaded without table filters applied."
+help_download_mode_filtered = "Results will be downloaded WITH table filters applied."
 help_box_plot_click = (" You can click on the points in the box plot to filter table by that point. "
                        "Reset the \"Rail ID\" column to go back.")
 help_reset = ("This will remove all filters applied to the table below. For individual columns, "
@@ -68,7 +68,7 @@ jiq_input_junction_txt_list = ['Junction 1', 'Junction 2', 'Junction 3', 'Juncti
 jiq_plot_title_hist = 'PSI Histogram'
 jiq_plot_title_box = 'PSI Box Plot'
 jiq_psi_plot_axes = 'PSI'
-jiq_log_psi = 'Log\u2082(psi+1)'
+jiq_log_psi = f'Log\u2082(psi+{log_epsilon})'
 jiq_help_table = " Table initially loads with PSI\u22655 and Total\u226515."
 jiq_help_add_junction = "Add more inclusion or exclusion junctions (up to 5) to the PSI query"
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -92,8 +92,8 @@ geq_plot_title_hist = 'Normalized Count Histogram'
 geq_plot_label_raw_count = 'Raw Count'
 geq_plot_label_norm_count = 'Normalized Count'
 geq_box_plot_y_axes = 'Gene Expression Count'
-geq_box_plot_y_axes_log = 'Log\u2082(Gene Expression Count+1)'
-geq_log_count = 'Log\u2082(count+1)'
+geq_box_plot_y_axes_log = f'Log\u2082(Gene Expression Count+{log_epsilon})'
+geq_log_count = f'Log\u2082(count+{log_epsilon})'
 geq_help_checkbox = "Check this box if you need to enter gene coordinates in addition to gene name"
 geq_provide_coordinates = "I want to provide gene coordinates in addition to Gene ID (use when Gene ID is not found)."
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -124,13 +124,17 @@ tcgav2_meta_data_required_list = [snpt_col_rail_id,
 
 gtexv2_meta_data_required_list = [snpt_col_rail_id, "run_acc", "study", "SEX", "AGE", "SAMPID", "SMTS", "SMTSD"]
 
+# JIQ
 table_jiq_col_inc = 'inc'
 table_jiq_col_exc = 'exc'
 table_jiq_col_total = 'total'
 table_jiq_col_psi = 'psi'
-table_jiq_col_log_2 = 'log_2'
+table_jiq_col_log_2 = 'log_2_plus'
+
+# GEQ
 table_geq_col_raw_count = 'raw_count'
 table_geq_col_norm_count = 'normalized_count'
 table_geq_col_factor = 'factor'
-
+table_geq_col_log_2_norm = 'log_2_plus_norm_count'
+table_geq_col_log_2_raw = 'log_2_plus_raw'
 dbc_template_name = 'sandstone'

@@ -103,15 +103,20 @@ def get_button_download(button_id):
 
 
 def get_radio_items_download_options(radio_id):
+    # Note: tooltips will only bind with the first radio_id that comes in, the GEQ one that comes after will not bind
+    # the tooltips because the tooltip id is the same as the radio item id not the radio button group as a whole
+    id_1 = f'{radio_id}_1'
+    id_2 = f'{radio_id}_2'
     return [
         dbc.RadioItems(
             options=[
-                {"label": get_text(html.Span([icons.download, gs.download_original])), "value": 1},
-                {"label": get_text(html.Span([icons.download, gs.download_filtered])), "value": 2},
+                {"label": get_text(html.Span(id=id_1, children=[icons.download, gs.download_original])), "value": 1},
+                {"label": get_text(html.Span(id=id_2, children=[icons.download, gs.download_filtered])), "value": 2},
             ],
             value=1, id=radio_id, inline=True,
         ),
-        get_tooltip(radio_id, gs.help_download_mode, 'top')
+        get_tooltip(id_1, gs.help_download_mode_unfiltered, 'top'),
+        get_tooltip(id_2, gs.help_download_mode_filtered, 'top')
     ]
 
 

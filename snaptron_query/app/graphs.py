@@ -3,7 +3,21 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 
-from snaptron_query.app import global_strings as gs, utils
+from snaptron_query.app import global_strings as gs
+
+
+def get_common_labels_jiq():
+    return {gs.snpt_col_rail_id: gs.plot_label_rail_id,
+            gs.table_jiq_col_psi: gs.table_jiq_col_psi.upper(),
+            gs.table_jiq_col_log_2: gs.jiq_log_psi}
+
+
+def get_common_labels_geq():
+    return {gs.snpt_col_rail_id: gs.plot_label_rail_id,
+            gs.table_geq_col_raw_count: gs.geq_plot_label_raw_count,
+            gs.table_geq_col_norm_count: gs.geq_plot_label_norm_count,
+            gs.table_geq_col_log_2_raw: gs.geq_log_count,
+            gs.table_geq_col_log_2_norm: gs.geq_log_count}
 
 
 def fig_common_update_box_plot_plot(fig, title, y_axes_title_text):
@@ -35,15 +49,12 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay):
         y_axes_title_text = gs.jiq_log_psi
 
     if violin_overlay:
-        fig = px.violin(df, y=y_values, hover_data=[gs.snpt_col_rail_id],
-                        labels={gs.snpt_col_rail_id: gs.plot_label_rail_id},
+        fig = px.violin(df, y=y_values, hover_data=[gs.snpt_col_rail_id], labels=get_common_labels_jiq(),
                         box=True,
                         # points='all'
                         )  # show all points
     else:
-        fig = px.box(df, y=y_values, hover_data=[gs.snpt_col_rail_id],
-                     labels={gs.snpt_col_rail_id: gs.plot_label_rail_id,
-                             gs.table_jiq_col_psi: gs.table_jiq_col_psi.upper()},
+        fig = px.box(df, y=y_values, hover_data=[gs.snpt_col_rail_id], labels=get_common_labels_jiq(),
                      # Request to not snap with table changes.
                      # If provided, overrides auto-scaling on the y-axis in cartesian coordinates.
                      range_y=range_y_axis,
@@ -69,13 +80,13 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
         y_normalized = df[gs.table_geq_col_norm_count]
         box_plot_title = gs.geq_plot_title_box_norm
         if log_values:
-            y_raw = utils.log_2_function(df, gs.table_geq_col_raw_count)
-            y_normalized = utils.log_2_function(df, gs.table_geq_col_norm_count)
+            y_raw = df[gs.table_geq_col_log_2_raw]
+            y_normalized = df[gs.table_geq_col_log_2_norm]
     else:
         y_raw = df[gs.table_geq_col_raw_count]
         box_plot_title = gs.geq_plot_title_box_raw
         if log_values:
-            y_raw = utils.log_2_function(df, gs.table_geq_col_raw_count)
+            y_raw = df[gs.table_geq_col_log_2_raw]
 
     if log_values:
         y_axes_title_text = gs.geq_box_plot_y_axes_log
@@ -88,10 +99,11 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
         # creates an extra box next to the original hover box with the trace title.
         # https://stackoverflow.com/questions/69278251/plotly-including-additional-data-in-hovertemplate
         custom_data = np.stack((df[gs.snpt_col_rail_id], df[gs.table_geq_col_factor]), axis=-1)
+        hover_template_pre = f'{gs.plot_label_rail_id}:' + ' %{customdata[0]}<br>'
         if log_values:
-            hover_template = 'Rail ID: %{customdata[0]}<br>Log(count+1): %{y} <br><extra></extra>'
+            hover_template = hover_template_pre + gs.geq_log_count + ': %{y} <br><extra></extra>'
         else:
-            hover_template = 'Rail ID: %{customdata[0]}<br>Count: %{y} <br><extra></extra>'
+            hover_template = hover_template_pre + 'Count: %{y} <br><extra></extra>'
 
         raw_plot_params_dict = {'y': y_raw,
                                 'name': gs.geq_plot_label_raw_count,
@@ -112,16 +124,14 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
 
     else:  # not normalized data then use plotly express
         hover_data = [gs.snpt_col_rail_id]
-        labels = {gs.snpt_col_rail_id: gs.plot_label_rail_id,
-                  gs.table_geq_col_raw_count: gs.geq_plot_label_raw_count}
 
         # Note:plotly express doesn't like the values sent in as a dictionary like the graphics object
         if violin_overlay:
             # to draw all points set point to all
-            fig = px.violin(df, y=y_raw, hover_data=hover_data, labels=labels, box=True)
+            fig = px.violin(df, y=y_raw, hover_data=hover_data, labels=get_common_labels_geq(), box=True)
         else:
             # with plotly express, provide the df, so it can extract the labels and hover data
-            fig = px.box(df, y=y_raw, hover_data=hover_data, labels=labels)
+            fig = px.box(df, y=y_raw, hover_data=hover_data, labels=get_common_labels_geq())
 
     # update the y-axis title if log switch is on
 
@@ -161,7 +171,7 @@ def get_histogram_jiq(df, log_psi_values, log_y):
         x_values = gs.table_jiq_col_log_2  # utils.log_2_function(df, x_values)
         y_title_text = gs.jiq_log_psi
 
-    fig = px.histogram(df, x=x_values, log_y=log_y, nbins=25)
+    fig = px.histogram(df, x=x_values, log_y=log_y, labels=get_common_labels_jiq(), nbins=25)
 
     fig_common_update_histogram(fig, gs.jiq_plot_title_hist, y_title_text)
 
@@ -175,17 +185,13 @@ def get_histogram_geq(df, log_count_values, log_y):
     https://plotly.com/python/reference/histogram/
     https://plotly.com/python/histograms/
     """
-    # labels = {gs.snpt_col_rail_id: gs.plot_label_rail_id,
-    #           gs.table_geq_col_norm_count: gs.geq_plot_label_norm_count}
-
     x_values = gs.table_geq_col_norm_count
     y_title_text = gs.geq_plot_label_norm_count
     if log_count_values:  # log2 the values
-        # TODO: update with log2 column
-        x_values = utils.log_2_function(df, gs.table_geq_col_norm_count)
+        x_values = gs.table_geq_col_log_2_norm
         y_title_text = gs.geq_log_count
 
-    fig = px.histogram(df, x=x_values, log_y=log_y, nbins=50)
+    fig = px.histogram(df, x=x_values, log_y=log_y, labels=get_common_labels_geq(), nbins=50)
 
     fig_common_update_histogram(fig, gs.geq_plot_title_hist, y_title_text)
 

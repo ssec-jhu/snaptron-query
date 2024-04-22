@@ -1,6 +1,10 @@
 
+.ag-header-cell{
+    background-color: var(--bs-gray-200);
+}
+
 .ag-header-cell-filtered {
-    background-color: var(--bs-secondary) !important;
+    background-color: var(--bs-gray-600) !important;
 }
 
 .ag-header-cell-filtered span {
@@ -51,4 +55,8 @@
 
 .icon-button:hover {
   background-color: var(--bs-primary-bg-subtle)
+}
+
+.study-link-color{
+    color: var(--bs-secondary) !important;
 }

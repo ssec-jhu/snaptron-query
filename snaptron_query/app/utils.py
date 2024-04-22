@@ -17,17 +17,17 @@ def read_srav3h():
 
 def log_2_function(df, y):
     # add th plus 1
-    return np.log2(df[y] + 1)
+    return np.log2(df[y] + gs.log_epsilon)
 
 
 def log_2_function_lists(array):
     # add th plus 1
-    values_plus_one = np.array(array) + 1
+    values_plus_one = np.array(array) + gs.log_epsilon
     return np.log2(values_plus_one)
 
 
-def log_2(x):
-    return np.log2(x)
+def log_2_plus(x):
+    return np.log2(x + gs.log_epsilon)
 
 
 def get_element_id_and_value(children, count):
