@@ -16,7 +16,6 @@ dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.mi
 app = Dash(__name__,
            external_stylesheets=[dbc.themes.SANDSTONE, dbc_css, dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME])
 
-
 # VERY important line of code for running with gunicorn
 # you run the 'server' not the 'app'. VS. you run the 'app; with uvicorn
 server = app.server
@@ -25,6 +24,23 @@ load_figure_template(gs.dbc_template_name)
 
 # Meta data loaded in global space
 dict_srav3h = utils.read_srav3h()
+dict_gtexv2 = utils.read_gtexv2()
+dict_tcgav2 = utils.read_tcgav2()
+dict_srav1m = utils.read_srav1m()
+
+
+def get_meta_data(compilation):
+    if compilation == gs.compilation_srav3h:
+        return dict_srav3h
+    elif compilation == gs.compilation_gtexv2:
+        return dict_gtexv2
+    elif compilation == gs.compilation_tcgav2:
+        return dict_tcgav2
+    elif compilation == gs.compilation_srav1m:
+        return dict_srav1m
+    else:
+        raise PreventUpdate
+
 
 # this is the main layout of the page with all tabs
 app.layout = dbc.Container(
@@ -95,13 +111,8 @@ def on_button_click_jiq(n_clicks, compilation, children, junction_count):
             if df_snpt_results.empty:
                 raise exceptions.EmptyResponse
 
-            # Select the meta data that must be used
-            # TODO: add the rest of the meta data as PI provides list
-            if compilation == gs.compilation_srav3h:
-                # meta_data_df = df_srav3h
-                meta_data_dict = dict_srav3h
-            else:
-                raise PreventUpdate
+            # Select the metadata that must be used
+            meta_data_dict = get_meta_data(compilation)
 
             # # Set upt the JIQ manager then run the Junction Inclusion Query
             jqm = JunctionInclusionQueryManager(exc_start, exc_end, inc_start, inc_end)
@@ -110,7 +121,7 @@ def on_button_click_jiq(n_clicks, compilation, children, junction_count):
             row_data = jqm.run_junction_inclusion_query(df_snpt_results, meta_data_dict)
 
             # Set the columnDefs for the ag-grid
-            column_defs = cd.get_junction_query_column_def()
+            column_defs = cd.get_junction_query_column_def(compilation)
 
             # set the preset column filters requested
             filter_model = {gs.table_jiq_col_total: {'filterType': 'number',
@@ -297,13 +308,8 @@ def on_button_click_geq(n_clicks, compilation, use_coordinates,
                 if df_snpt_results_query.empty:
                     raise exceptions.EmptyResponse
 
-                # Select the meta data that must be used
-                # TODO: add the rest of the meta data as PI provides list
-                if compilation == gs.compilation_srav3h:
-                    # meta_data_df = df_srav3h
-                    meta_data_dict = dict_srav3h
-                else:
-                    raise PreventUpdate
+                # Select the metadata that must be used
+                meta_data_dict = get_meta_data(compilation)
 
                 # Set upt the GEX manager then run the Query
                 # Create normalization table if needed
@@ -327,7 +333,7 @@ def on_button_click_geq(n_clicks, compilation, use_coordinates,
 
                 # ag-grid accepts list of dicts so passing in the data from storage that is saved as list of dict
                 # saves times here. store_data = row_data.df.to_dict("records") Set the columnDefs for the ag-grid
-                column_defs = cd.get_gene_expression_query_column_def(normalize_data)
+                column_defs = cd.get_gene_expression_query_column_def(compilation, normalize_data)
             else:
                 raise exceptions.MissingUserInputs
         except Exception as e:

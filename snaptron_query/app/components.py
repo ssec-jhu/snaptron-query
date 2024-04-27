@@ -87,6 +87,10 @@ def get_table(table_id):
                          "tooltipInteraction": True,  # Won't hide when hover on toolip.  Can select and copy content.
                          # https://ag-grid.com/javascript-data-grid/selection-overview/#cell-text-selection
                          "enableCellTextSelection": True, "ensureDomOrder": True,
+                         # aggrid has issues with headers with dots in the string, it will show empty cells. known
+                         # issue https://community.plotly.com/t/dash-ag-grid-showing-empty-cells-where-there-shouldnt
+                         # -be-empty-cells/76108/2
+                         "suppressFieldDotNotation": True
                          },
         # NOTE: don't put the className="ag-theme-alpine dbc dbc-ag-grid" here,
         # assign it to the outer container that's holding the grid.

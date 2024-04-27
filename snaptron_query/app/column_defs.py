@@ -1,18 +1,34 @@
 from snaptron_query.app import global_strings as gs
 
 
-def get_col_meta_a():
-    return [
-        {"field": gs.snpt_col_rail_id, "headerName": gs.plot_label_rail_id, 'width': 125, "pinned": "left",
-         "filterParams": {"buttons": ["reset"]}},
-        {"field": gs.snpt_col_external_id, "headerName": "External ID", 'width': 130,
-         "filterParams": {"buttons": ["reset"]}},
-        {"field": 'study', "headerName": "Study", 'width': 120, "cellRenderer": "StudyLink",
-         "filterParams": {"buttons": ["reset"]}},
-    ]
+def get_rail_id():
+    return [{"field": gs.snpt_col_rail_id, "headerName": gs.plot_label_rail_id, 'width': 125, "pinned": "left",
+             "filterParams": {"buttons": ["reset"]}}]
 
 
-def get_col_meta_b():
+def get_study():
+    return [{"field": 'study', "headerName": "Study", 'width': 120, "cellRenderer": "StudyLink",
+             "filterParams": {"buttons": ["reset"]}}]
+
+
+def get_col_meta_srav3h_a():
+    column_def = get_rail_id()
+    column_def += [{"field": gs.snpt_col_external_id, "headerName": "External ID", 'width': 130,
+                    "filterParams": {"buttons": ["reset"]}}]
+    column_def += get_study()
+
+    return column_def
+
+
+def get_col_meta_tcgav2_a():
+    return get_rail_id()
+
+
+def get_col_meta_gtexv2_a():
+    return get_rail_id()
+
+
+def get_col_meta_srav3h_b():
     return [
         {"field": 'study_title', "headerName": "Study Title", 'width': 350, "filterParams": {"buttons": ["reset"]},
          'cellClass': 'cell-wrap-dash-ag-grid', 'autoHeight': True},  # must have this here, it is not a style option
@@ -24,6 +40,18 @@ def get_col_meta_b():
         {"field": 'sample_description', "headerName": "Sample Description", 'width': 200,
          "filterParams": {"buttons": ["reset"]}, "tooltipField": "sample_description"},
     ]
+
+
+def get_col_meta_tcgav2_b():
+    meta_data = [{"field": item, "headerName": item, "tooltipField": item, "filterParams": {"buttons": ["reset"]}}
+                 for item in gs.tcgav2_meta_data_required_list[1:len(gs.tcgav2_meta_data_required_list)]]
+    return meta_data
+
+
+def get_col_meta_gtexv2_b():
+    meta_data = [{"field": item, "headerName": item, "tooltipField": item, "filterParams": {"buttons": ["reset"]}}
+                 for item in gs.gtexv2_meta_data_required_list[1:len(gs.gtexv2_meta_data_required_list)]]
+    return meta_data
 
 
 def get_col_jiq():
@@ -44,18 +72,23 @@ def get_col_jiq():
     ]
 
 
-def get_junction_query_column_def():
+def get_junction_query_column_def(compilation):
     """Wrapper for ag-grid column definitions and their individual style"""
-    # TODO: different compilation are going to have different headers
-    return get_col_meta_a() + get_col_jiq() + get_col_meta_b()
+    if compilation == gs.compilation_srav3h:
+        return get_col_meta_srav3h_a() + get_col_jiq() + get_col_meta_srav3h_b()
+    elif compilation == gs.compilation_gtexv2:
+        return get_col_meta_gtexv2_a() + get_col_jiq() + get_col_meta_gtexv2_b()
+    elif compilation == gs.compilation_tcgav2:
+        return get_col_meta_tcgav2_a() + get_col_jiq() + get_col_meta_tcgav2_b()
+    elif compilation == gs.compilation_srav1m:
+        # SRAV1m is similar to SRAV3h
+        return get_col_meta_srav3h_a() + get_col_jiq() + get_col_meta_srav3h_b()
 
 
-def get_gene_expression_query_column_def(normalized=False):
+def get_gene_expression_query_column_def(compilation, normalized=False):
     """Wrapper for ag-grid column definitions and their individual style"""
-
-    column_def = get_col_meta_a()
     if normalized:
-        column_def += [
+        gex_col = [
             {"field": gs.table_geq_col_raw_count, "headerName": gs.geq_plot_label_raw_count,
              "filter": "agNumberColumnFilter", 'width': 130, "filterParams": {"buttons": ["reset"]}},
             {"field": gs.table_geq_col_factor, "headerName": "Factor", "filter": "agNumberColumnFilter",
@@ -66,13 +99,19 @@ def get_gene_expression_query_column_def(normalized=False):
              "filter": "agNumberColumnFilter", 'width': 145, "filterParams": {"buttons": ["reset"]}}
         ]
     else:
-        column_def += [
+        gex_col = [
             {"field": gs.table_geq_col_raw_count, "headerName": gs.geq_plot_label_raw_count, 'initialSort': 'desc',
              "filter": "agNumberColumnFilter", 'width': 130, "filterParams": {"buttons": ["reset"]}},
             {"field": gs.table_geq_col_log_2_raw, "headerName": gs.geq_log_count,
              "filter": "agNumberColumnFilter", 'width': 145, "filterParams": {"buttons": ["reset"]}}
         ]
 
-    column_def += get_col_meta_b()
-
-    return column_def
+    if compilation == gs.compilation_srav3h:
+        return get_col_meta_srav3h_a() + gex_col + get_col_meta_srav3h_b()
+    elif compilation == gs.compilation_gtexv2:
+        return get_col_meta_gtexv2_a() + gex_col + get_col_meta_gtexv2_b()
+    elif compilation == gs.compilation_tcgav2:
+        return get_col_meta_tcgav2_a() + gex_col + get_col_meta_tcgav2_b()
+    elif compilation == gs.compilation_srav1m:
+        # SRAV1m is similar to SRAV3h
+        return get_col_meta_srav3h_a() + gex_col + get_col_meta_srav3h_b()

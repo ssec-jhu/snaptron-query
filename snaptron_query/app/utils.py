@@ -5,13 +5,40 @@ import pandas as pd
 from snaptron_query.app import exceptions, global_strings as gs
 
 path_srav3h_meta = Path(__file__).parent / 'data/samples_SRAv3h.tsv'
+path_gtexv2_meta = Path(__file__).parent / 'data/samples_GTEXv2.tsv'
+path_tcgav2_meta = Path(__file__).parent / 'data/samples_TCGAv2.tsv'
+path_SRAv1m_meta = Path(__file__).parent / 'data/samples_SRAV1m.tsv'
+
 
 def read_srav3h():
-    # TODO: read the rest of the meta data files here as they become available
     # read the file and make sure index is set to the rail id for fast lookup
     df = pd.read_csv(path_srav3h_meta, sep='\t',
                      usecols=gs.srav3h_meta_data_required_list,
                      dtype={'sample_description': 'string'}).set_index(gs.snpt_col_rail_id)
+    return df.to_dict(orient='index')
+
+
+def read_srav1m():
+    # read the file and make sure index is set to the rail id for fast lookup
+    df = pd.read_csv(path_SRAv1m_meta, sep='\t',
+                     usecols=gs.srav1m_meta_data_required_list,
+                     dtype={'sample_description': 'string'}).set_index(gs.snpt_col_rail_id)
+    return df.to_dict(orient='index')
+
+
+def read_gtexv2():
+    # read the file and make sure index is set to the rail id for fast lookup
+    col_types = {item: 'string' for item in gs.gtexv2_meta_data_required_list[1:len(gs.gtexv2_meta_data_required_list)]}
+    df = pd.read_csv(path_gtexv2_meta, sep='\t',
+                     usecols=gs.gtexv2_meta_data_required_list, dtype=col_types).set_index(gs.snpt_col_rail_id)
+    return df.to_dict(orient='index')
+
+
+def read_tcgav2():
+    # read the file and make sure index is set to the rail id for fast lookup
+    col_types = {item: 'string' for item in gs.tcgav2_meta_data_required_list[1:len(gs.tcgav2_meta_data_required_list)]}
+    df = pd.read_csv(path_tcgav2_meta, sep='\t',
+                     usecols=gs.tcgav2_meta_data_required_list, dtype=col_types).set_index(gs.snpt_col_rail_id)
     return df.to_dict(orient='index')
 
 
