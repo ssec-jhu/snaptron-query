@@ -24,7 +24,8 @@ dependencies = [
     "plotly",
     "plotly-express",
     "numpy",
-    "dash-loading-spinners"
+    "dash-loading-spinners",
+    "gunicorn"
 ]
 
 [project.optional-dependencies]

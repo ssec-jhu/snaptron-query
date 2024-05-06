@@ -495,4 +495,4 @@ def on_lock_switch_geq(lock):
 
 # Run the app
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

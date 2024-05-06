@@ -13,3 +13,4 @@ plotly==5.22.0
 plotly-express==0.4.1
 numpy==1.26.4
 dash-loading-spinners==1.0.3
+gunicorn==22.0.0
