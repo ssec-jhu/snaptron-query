@@ -56,11 +56,11 @@ def get_col_meta_gtexv2_b():
 
 def get_col_jiq():
     return [
-        {"field": gs.table_jiq_col_inc, "headerName": "Inc", "filter": "agNumberColumnFilter", 'width': 100,
+        {"field": gs.table_jiq_col_inc, "headerName": "Inc_Count", "filter": "agNumberColumnFilter", 'width': 130,
          "filterParams": {"buttons": ["reset"]}},
-        {"field": gs.table_jiq_col_exc, "headerName": "Exc", "filter": "agNumberColumnFilter", 'width': 100,
+        {"field": gs.table_jiq_col_exc, "headerName": "Exc_Count", "filter": "agNumberColumnFilter", 'width': 130,
          "filterParams": {"buttons": ["reset"]}, },
-        {"field": gs.table_jiq_col_total, "headerName": "Total", "filter": "agNumberColumnFilter", 'width': 120,
+        {"field": gs.table_jiq_col_total, "headerName": "Total_Count", "filter": "agNumberColumnFilter", 'width': 160,
          "filterParams": {"buttons": ["reset"]},
          # Performance Note: adding header tooltips creates a horizontal scroll performance issue!
          # "headerTooltip": "Inclusion Count + Exclusion Count"
