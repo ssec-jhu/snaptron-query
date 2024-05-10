@@ -122,11 +122,11 @@ def get_radio_items_download_options(radio_id):
         dbc.RadioItems(
             options=[
                 {"label": get_text(html.Span(id=id_1, children=[icons.download, gs.download_original])),
-                 "value": DownloadType.ORIGINAL},
+                 "value": DownloadType.ORIGINAL.value},
                 {"label": get_text(html.Span(id=id_2, children=[icons.download, gs.download_filtered])),
-                 "value": DownloadType.FILTERED},
+                 "value": DownloadType.FILTERED.value},
             ],
-            value=DownloadType.ORIGINAL, id=radio_id, inline=True,
+            value=DownloadType.ORIGINAL.value, id=radio_id, inline=True,
         ),
         get_tooltip(id_1, gs.help_download_mode_unfiltered, 'top'),
         get_tooltip(id_2, gs.help_download_mode_filtered, 'top')
