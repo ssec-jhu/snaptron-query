@@ -7,7 +7,6 @@ class GeneExpressionQueryManager:
     def __init__(self):
         self.rail_id_dictionary = collections.defaultdict(int)
         self.normalization_factor_table = collections.defaultdict(int)
-        self.gathered_rail_id_meta_data_and_counts = []
         self.normalize_counts = False
 
     def setup_normalization_data_method(self, gene_id_norm, df_snaptron_results_norm, meta_data_dict):
@@ -46,6 +45,9 @@ class GeneExpressionQueryManager:
         return
 
     def run_gene_expression_query(self, gene_id_query, df_snaptron_results_query, meta_data_dict):
+
+        gathered_rail_id_meta_data_and_counts = []
+
         # extract the row in the results that matches the query gene ID
         row_df = df_snaptron_results_query.loc[
             df_snaptron_results_query[gs.snpt_col_gene_id].str.contains(gene_id_query)]
@@ -76,8 +78,8 @@ class GeneExpressionQueryManager:
                             meta_data[gs.table_geq_col_log_2_norm] = (
                                 round(utils.log_2_plus(normalized_count), 4)) if factor != -1 else -1
 
-                        self.gathered_rail_id_meta_data_and_counts.append(meta_data)
+                        gathered_rail_id_meta_data_and_counts.append(meta_data)
                     except (KeyError, IndexError):
                         pass
 
-        return self.gathered_rail_id_meta_data_and_counts
+        return gathered_rail_id_meta_data_and_counts
