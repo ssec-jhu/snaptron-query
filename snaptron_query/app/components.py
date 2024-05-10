@@ -1,3 +1,5 @@
+from enum import Enum
+
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 from dash import html, dcc
@@ -12,7 +14,7 @@ def get_text(string, component_style='dmc'):
         return dmc.Text(string, weight=500, size="sm")  # 500=semi bold
     elif component_style == 'dbc':
         return dbc.Label(string, className='fw-bold')
-    elif component_style == 'dcc':
+    else:
         return html.Label(string)
 
 
@@ -41,7 +43,7 @@ def get_switch(switch_id, switch_label, switch_on=False):
 
 def get_switch_lock_data_with_table(switch_id, lock_id, unlock_id):
     return [
-        get_text(icons.get_lock_open(unlock_id)),
+        get_text(icons.get_lock_opened(unlock_id)),
         dmc.Space(w=8),
         dbc.Switch(id=switch_id,  # label=switch_label,
                    # dbc switch follows the text size of its label, so you can use something like class_name="fs-6"
@@ -87,7 +89,7 @@ def get_table(table_id):
                          "tooltipInteraction": True,  # Won't hide when hover on toolip.  Can select and copy content.
                          # https://ag-grid.com/javascript-data-grid/selection-overview/#cell-text-selection
                          "enableCellTextSelection": True, "ensureDomOrder": True,
-                         # aggrid has issues with headers with dots in the string, it will show empty cells. known
+                         # ag-grid has issues with headers with dots in the string, it will show empty cells. known
                          # issue https://community.plotly.com/t/dash-ag-grid-showing-empty-cells-where-there-shouldnt
                          # -be-empty-cells/76108/2
                          "suppressFieldDotNotation": True
@@ -106,6 +108,11 @@ def get_button_download(button_id):
     ]
 
 
+class DownloadType(Enum):
+    ORIGINAL = 1
+    FILTERED = 2
+
+
 def get_radio_items_download_options(radio_id):
     # Note: tooltips will only bind with the first radio_id that comes in, the GEQ one that comes after will not bind
     # the tooltips because the tooltip id is the same as the radio item id not the radio button group as a whole
@@ -114,10 +121,12 @@ def get_radio_items_download_options(radio_id):
     return [
         dbc.RadioItems(
             options=[
-                {"label": get_text(html.Span(id=id_1, children=[icons.download, gs.download_original])), "value": 1},
-                {"label": get_text(html.Span(id=id_2, children=[icons.download, gs.download_filtered])), "value": 2},
+                {"label": get_text(html.Span(id=id_1, children=[icons.download, gs.download_original])),
+                 "value": DownloadType.ORIGINAL},
+                {"label": get_text(html.Span(id=id_2, children=[icons.download, gs.download_filtered])),
+                 "value": DownloadType.FILTERED},
             ],
-            value=1, id=radio_id, inline=True,
+            value=DownloadType.ORIGINAL, id=radio_id, inline=True,
         ),
         get_tooltip(id_1, gs.help_download_mode_unfiltered, 'top'),
         get_tooltip(id_2, gs.help_download_mode_filtered, 'top')

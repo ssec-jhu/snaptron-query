@@ -36,7 +36,7 @@ class NormalizationGeneNotFound(Exception):
     pass
 
 
-def handle_exception(exception):
+def alert_message_from_exception(exception):
     e = type(exception)
     if e == BadURL:
         alert_message = gs.bad_url

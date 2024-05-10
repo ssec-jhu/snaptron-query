@@ -4,6 +4,8 @@ import pandas as pd
 from dash import Dash, Input, Output, callback_context, no_update, State, dcc
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
+import os
+from pathlib import Path
 
 from snaptron_query.app import column_defs as cd, callback_common as callback, inline_styles as styles
 from snaptron_query.app import (graphs, layout, components, utils, exceptions,
@@ -22,11 +24,17 @@ server = app.server
 
 load_figure_template(gs.dbc_template_name)
 
+# Sanity check for the metadata directory
+path = Path(__file__).parent / 'data/'
+dir_list = os.listdir(path)
+if len(dir_list) == 0:
+    print(f'**** WARNING **** Snaptron Meta data files are missing from:{path}')
+
 # Meta data loaded in global space
-dict_srav3h = utils.read_srav3h()
-dict_gtexv2 = utils.read_gtexv2()
-dict_tcgav2 = utils.read_tcgav2()
-dict_srav1m = utils.read_srav1m()
+dict_srav3h = utils.read_srav3h(utils.path_srav3h_meta)
+dict_gtexv2 = utils.read_gtexv2(utils.path_gtexv2_meta)
+dict_tcgav2 = utils.read_tcgav2(utils.path_tcgav2_meta)
+dict_srav1m = utils.read_srav1m(utils.path_srav1m_meta)
 
 
 def get_meta_data(compilation):
@@ -129,7 +137,7 @@ def on_button_click_jiq(n_clicks, compilation, children, junction_count):
                             gs.table_jiq_col_psi: {'filterType': 'number',
                                                    'type': 'greaterThanOrEqual', 'filter': 5}}
         except Exception as e:
-            alert_message = exceptions.handle_exception(e)
+            alert_message = exceptions.alert_message_from_exception(e)
 
     if alert_message:
         alert = components.get_alert(alert_message)
@@ -337,7 +345,7 @@ def on_button_click_geq(n_clicks, compilation, use_coordinates,
             else:
                 raise exceptions.MissingUserInputs
         except Exception as e:
-            alert_message = exceptions.handle_exception(e)
+            alert_message = exceptions.alert_message_from_exception(e)
 
     if alert_message:
         alert = components.get_alert(alert_message)
@@ -420,7 +428,7 @@ def update_charts_geq(row_data_from_table, filtered_row_data_from_table, lock_gr
     running=[(Output("id-button-jiq-download", "disabled"), True, False)]  # requires the latest Dash 2.16
 )
 def export_data_as_csv_jiq(n_clicks, option):
-    return callback.export_data_as_csv(n_clicks, option, 'psi_query_data')
+    return callback.export_data_as_csv(option, 'psi_query_data')
 
 
 @app.callback(
@@ -432,7 +440,7 @@ def export_data_as_csv_jiq(n_clicks, option):
     running=[(Output("id-button-geq-download", "disabled"), True, False)]  # requires the latest Dash 2.16
 )
 def export_data_as_csv_geq(n_clicks, option):
-    return callback.export_data_as_csv(n_clicks, option, 'gene_expression_query_data')
+    return callback.export_data_as_csv(option, 'gene_expression_query_data')
 
 
 @app.callback(

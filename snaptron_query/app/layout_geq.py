@@ -11,6 +11,7 @@ from snaptron_query.app import components, components_geq, global_strings as gs,
 def get_form_geq():
     """Wrapper function for the Gene Expression Query components."""
     return [
+        # ROW: Select Compilation Information
         dbc.Row(
             [components.get_dropdown_compilation('id-input-compilation-geq')],
             className="g-0 form-control-sm", justify="start", style=styles.border_column,
@@ -20,6 +21,8 @@ def get_form_geq():
             components_geq.get_checkbox_geq_optional_coordinates(),
             class_name="g-0 form-control-sm", align='start'
         ),
+
+        # ROW: Query Information - gene id and normalization switch
         dmc.Space(h=20),
         dbc.Row([dbc.Col([components.get_text(gs.geq_query_info, 'dbc')])], class_name="g-0"),
         dbc.Row(
@@ -33,6 +36,7 @@ def get_form_geq():
             ],
             class_name="g-0 form-control-sm", align='start'
         ),
+
         # ROW: Query Information - Coordinates in failure cases
         html.Div(
             dbc.Row(
@@ -46,8 +50,9 @@ def get_form_geq():
             ),
             id='id-row-query-gene-coordinates', style={'display': 'none'}
         ),
+
+        # ROW: Normalization Information - gene id
         dmc.Space(h=10),
-        # ROW 3 Normalization Information
         dbc.Row([dbc.Col([components.get_text(gs.geq_normalized_info, 'dbc')])]),
         dbc.Row(
             [
@@ -58,7 +63,8 @@ def get_form_geq():
             ],
             class_name="g-0 form-control-sm", align='start'
         ),
-        # ROW Normalization Information - Coordinates in failure cases
+
+        # ROW: Normalization Information - Coordinates in failure cases
         html.Div(
             dbc.Row(
                 [
@@ -71,6 +77,8 @@ def get_form_geq():
             ),
             id='id-row-norm-gene-coordinates', style={'display': 'none'}
         ),
+
+        # ROW: Main Calculate Button
         dbc.Row(
             [
                 dbc.Col(components.get_button_run_query("id-button-geq-run-query", gs.geq_button_run),

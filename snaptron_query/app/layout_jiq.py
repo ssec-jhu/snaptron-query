@@ -24,9 +24,11 @@ def get_form_jiq():
     The width of the top and bottom row is set to fill the row
     """
     return [
+        # ROW: Select Compilation Information
         dbc.Row([components.get_dropdown_compilation('id-input-compilation-jiq')],
                 className="g-0 form-control-sm", justify="start", style=styles.border_column),
-        # ROW 2 has the titles of the text boxes
+
+        # ROW: the titles of the text boxes
         dbc.Row(
             [
                 dbc.Col(width=2, style=styles.border_column),
@@ -38,7 +40,8 @@ def get_form_jiq():
             ],
             className="g-0 form-control-sm", justify="start",
         ),
-        # ROW 3 has the form components
+
+        # ROW: JIQ form components
         html.Div(
             id='id-jiq-input-container',
             children=[
@@ -99,6 +102,8 @@ def get_form_jiq():
                 ),
             ]
         ),
+
+        # ROW: Main Calculate Button
         dbc.Row(
             [
                 dbc.Col(components.get_button_run_query("id-button-jiq-generate-results", gs.jiq_button_run),
@@ -236,17 +241,18 @@ def get_layout_junction_inclusion():
             # ALERT
             html.Div(id='id-alert-jiq'),
 
-            # Second row  of the layout contains the plots and graphs
+            # spinners in the background until the graphs load
             dmc.Space(h=50),
             dls.Propagate(show_initially=False, color='var(--bs-secondary)',
                           children=[html.Div(id="id-loading-graph-jiq")]),
             dls.Fade(show_initially=False, color='var(--bs-secondary)',
                      children=[html.Div(id="id-loading-table-jiq")]),
-            # GRAPHS
+
+            # ROW: the plots and graphs
             dbc.Row([get_accordian_graphs_jiq()], id='id-display-graphs-jiq',
                     className='g-0', style={**styles.section, **styles.section_vis}),
 
-            # TABLE
+            # Row: Table
             dmc.Space(h=20),
             dbc.Row([get_card_table_jiq()], id='id-ag-grid-display-jiq', style={'display': 'None'})
         ],

@@ -20,30 +20,26 @@ class GeneExpressionQueryManager:
             raise exceptions.NormalizationGeneNotFound
 
         study_dictionary = collections.defaultdict(list)
-        # Extract the 'sample' column from the DataFrame
-        gene_samples = row_df[gs.snpt_col_samples].tolist()
 
         # if I convert it to a dictionary, instead of using a dataframe there is a big performance boost
         # meta_data_dict = meta_data_df['study'].to_dict()
         meta_data_dict = {key: inner_dict['study'] for key, inner_dict in meta_data_dict.items() if
                           'study' in inner_dict}
 
-        for sample in gene_samples:
+        for sample_set in row_df[gs.snpt_col_samples]:  # list_of_sample_count_pairs
             # Samples are separated by commas, each sample is separated with a colon from its count as railID:count
-            for each_sample in sample.split(','):
-                if each_sample:
-                    rail_id, count = jiq.split_and_cast(each_sample)
+            for rail_id_count_pair in sample_set.split(','):
+                if rail_id_count_pair:
+                    rail_id, count = jiq.split_and_cast(rail_id_count_pair)
                     study = meta_data_dict.get(rail_id)
                     if study:
                         study_dictionary[study].append((rail_id, count))
 
-        for study in study_dictionary:
-            # calculate the max count for each list
-            max_value = max(d[1] for d in study_dictionary[study])
+        for study_name, study_samples in study_dictionary.items():
+            max_value = max(d[1] for d in study_samples)
             # Now divide each rail id's count by the max associated with its study to normalize the count per study max.
-            for rail_id, raw_count in study_dictionary[study]:
+            for rail_id, raw_count in study_samples:
                 factor = raw_count / max_value
-                # self.normalization_factor_table.setdefault(rail_id, factor)
                 self.normalization_factor_table[rail_id] = factor
 
         self.normalize_counts = True
@@ -58,12 +54,11 @@ class GeneExpressionQueryManager:
             raise exceptions.QueryGeneNotFound
 
         # extract the 'sample' column form the row this is where all the rail_id:count are
-        samples = (row_df[gs.snpt_col_samples]).tolist()
-        for gene_samples in samples:
+        for sample_set in row_df[gs.snpt_col_samples]:
             # samples are separated by commas then each sample is separated with a colon from its count as railID:count
-            for each_sample in gene_samples.split(','):
-                if each_sample:
-                    (rail_id, raw_count) = jiq.split_and_cast(each_sample)
+            for rail_id_count_pair in sample_set.split(','):
+                if rail_id_count_pair:
+                    (rail_id, raw_count) = jiq.split_and_cast(rail_id_count_pair)
                     try:
                         # meta_data = collections.defaultdict(list)
                         meta_data = meta_data_dict[rail_id]

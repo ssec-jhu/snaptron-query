@@ -8,6 +8,12 @@ class JunctionType(Enum):
     INCLUSION = 1
 
 
+# note the fields in this named tuple must match the table column names of the JIQ
+JIQ_CALCULATIONS = collections.namedtuple('JIQ_CALCULATIONS',
+                                          [gs.table_jiq_col_psi, gs.table_jiq_col_inc,
+                                           gs.table_jiq_col_exc, gs.table_jiq_col_total, gs.table_jiq_col_log_2])
+
+
 def split_and_cast(sample):
     (rail_id, count) = sample.split(':')
     return int(rail_id), int(count)
@@ -73,7 +79,8 @@ class JunctionInclusionQueryManager:
 
         log2 = round(utils.log_2_plus(psi), 4)
 
-        return psi, inclusion_count, exclusion_count, total_count, log2
+        # return as a named tuple
+        return JIQ_CALCULATIONS(psi, inclusion_count, exclusion_count, total_count, log2)
 
     def _gather_rail_id_meta_data(self, rail_id, meta_data_dict):
         """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
@@ -89,8 +96,7 @@ class JunctionInclusionQueryManager:
 
             # TODO: for multi junction query the data may be different here
             # append the calculated results such as PSI and other counts
-            (meta_data[gs.table_jiq_col_psi], meta_data[gs.table_jiq_col_inc], meta_data[gs.table_jiq_col_exc],
-             meta_data[gs.table_jiq_col_total], meta_data[gs.table_jiq_col_log_2]) = self._calculate_percent_spliced_in(rail_id)
+            meta_data.update(self._calculate_percent_spliced_in(rail_id)._asdict())
 
             # add the rail id information
             meta_data[gs.snpt_col_rail_id] = rail_id
