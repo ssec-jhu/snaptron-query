@@ -1,0 +1,11 @@
+	external_id	study	study_title	sample_description	library_layout	sample_name	sample_title	rail_id
+0	SRR1971700	SRP057123	Profiling of soma and neurite transcriptomes		paired	GSM1656720	CtrlsiRNASoma1	3072016
+1	SRR2119716	SRP061340	Mus musculus strain:C57BL/6J Raw sequence reads		paired	MouseHippocampus(3mo)		669879
+2	SRR2119715	SRP061340	Mus musculus strain:C57BL/6J Raw sequence reads		paired	MouseHippocampus(3mo)		669871
+3	SRR2119714	SRP061340	Mus musculus strain:C57BL/6J Raw sequence reads		paired	MouseHippocampus(3mo)		669863
+4	SRR8242732	SRP170686	Gene expression analysis of mouse BNST and blood cells after chronic social defeat stress (CSDS)		single	GSM3486851	AGO2_mRNA_Control_1	3466847
+5	SRR10007646	SRP218930	Electroporation of mouse retina to study the functions of Msi1, Msi2 and Pcbp2 in photoreceptor splicing		paired	Ctrl_GFP_1	Control GFP (rep 1)	668214
+6	SRR10044397	SRP219859	Improved retinal organoid differentiation by modulating signaling pathways revealed by comparative transcriptome analyses with development in vivo		paired	GSM4047704	D26.LA.1	957629
+7	SRR5944046	SRP124512	Developmental Transcriptome Dynamics of Induced Pluripotent Stem Cell Retina Organoid		paired	GSM2746532	D32.3	2885847
+8	SRR5944044	SRP124512	Developmental Transcriptome Dynamics of Induced Pluripotent Stem Cell Retina Organoid		paired	GSM2746530	D32.1	2885781
+9	DRR042048	DRP005356	Mouse transcriptome analysis in in vitro neuronal differentiation	MB4 D8: strand-sensitive, poly(A)plus RNA (oligo dT priming), in vitro differentiation to neuron Day 8	paired	SAMD00035958	MB4-D8 Stranded polyAplus [RNA-seq] duplicate2 130724run	213136

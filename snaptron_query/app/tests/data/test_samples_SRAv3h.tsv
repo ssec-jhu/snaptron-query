@@ -1,0 +1,13 @@
+	external_id	study	study_title	sample_description	library_layout	sample_name	sample_title	rail_id
+0	SRR3469415	SRP013565	GSE35585: RIP-seq from ENCODE/SUNY Albany	Homo sapiens K562 immortalized cell line transiently expressing shRNA targeting TARDBP	paired	ENCODE biosample ENCBS011IBX	ENCODE biosample ENCBS011IBX: RNA-seq on K562 cells treated with an shRNA knockdown against TARDBP. (TARDBP-LV11-58)	499887
+1	SRR5461170	SRP104405	Transcriptome analysis on TDP43 and SRSF3 downstream genes and binding RNAs in MDA-MB231 cells by Next Generation Sequencing		paired	GSM2585554	sh-TDP43_+_sh-SRSF3_rep1	988942
+2	SRR5461171	SRP104405	Transcriptome analysis on TDP43 and SRSF3 downstream genes and binding RNAs in MDA-MB231 cells by Next Generation Sequencing		paired	GSM2585555	sh-TDP43_+_sh-SRSF3_rep2	988956
+3	SRR8083867	SRP166282	ALS implicated protein TDP-43 sustains levels of STMN2 a mediator of motor neuron growth and repair		paired	GSM3439292	TDP43 siRNA rep1	1641727
+4	SRR8083868	SRP166282	ALS implicated protein TDP-43 sustains levels of STMN2 a mediator of motor neuron growth and repair		paired	GSM3439293	TDP43 siRNA rep2	1641757
+5	SRR6873183	SRP136156	Leukaemic alteration of IKZF1 primes stemness and malignancy programs in human lymphocytes		paired	GSM3058176	CTR-G2_0	2109561
+6	SRR8992058	SRP194266	Transcriptome-wide analysis of wild-type and SRSF3-knockout glioma stem-like cells		paired	GSM3741482	GSC83-SRSF3-KO	4199971
+7	SRR8992060	SRP194266	Transcriptome-wide analysis of wild-type and SRSF3-knockout glioma stem-like cells		paired	GSM3741484	GSC528-SRSF3-KO	4200482
+8	SRR3743424	SRP077915	Reprogrammed neurons from adult dermal fibroblasts of patients with Huntington's disease		single	GSM2225655	Ctrl2-MSN-B	1000010
+9	SRR8769517	SRP133673	Coordinated Alterations in RNA Splicing and Epigenetic Regulation Drive Leukemogenesis		paired	TS51_5		1745655
+10	SRR5398327	SRP102807	Major hnRNP proteins act as general TDP-43 functional modifiers both in Drosophila and human neuronal cells.		single	GSM2560277	siTDP-43-01	1127039
+11	SRR5714918	SRP109786	RNA-seq reveals abundant circRNA, lncRNA and mRNA in blood exosomes of patients with pancreatic carcinoma		paired	GSM2675505	PAAD11	2171668
