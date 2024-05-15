@@ -2,14 +2,19 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+replicaCount: 2
 
 image:
-  repository: nginx
-  pullPolicy: IfNotPresent
+  repository: snapmine
+  pullPolicy: Never #https://minikube.sigs.k8s.io/docs/handbook/pushing/
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
-
+  tag: "data"
+  args:
+    - 'snaptron_query.app.main_dash_app:server'
+    - '--workers=3' # suggested workers is 2*Core+1 https://docs.gunicorn.org/en/latest/design.html#how-many-workers
+    - '--threads=1'
+    - '-b'
+    - '0.0.0.0'  # took the 80 out of 0.0.0.0:80
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -41,11 +46,13 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 80
+  port: 80  # container port
+  targetPort: gunicorn
+  containerPort: 8000
 
 ingress:
-  enabled: false
-  className: ""
+  enabled: true
+  className: "nginx"
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -53,7 +60,7 @@ ingress:
     - host: chart-example.local
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -72,13 +79,17 @@ resources: {}
   #   memory: 128Mi
 
 livenessProbe:
+  initialDelaySeconds: 15
+  timeoutSeconds: 20
   httpGet:
     path: /
-    port: http
+    port: gunicorn
 readinessProbe:
+  initialDelaySeconds: 15
+  timeoutSeconds: 20
   httpGet:
     path: /
-    port: http
+    port:  gunicorn
 
 autoscaling:
   enabled: false
@@ -89,17 +100,13 @@ autoscaling:
 
 # Additional volumes on the output Deployment definition.
 volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
-
+#  - name: my-volume
+#    persistentVolumeClaim:
+#      claimName: my-pvc
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
-
+#  - name: my-volume
+#    mountPath: /snaptron_query/app/data/
 nodeSelector: {}
 
 tolerations: []
