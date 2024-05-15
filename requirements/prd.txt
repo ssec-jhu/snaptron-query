@@ -5,10 +5,12 @@ dash-bootstrap-templates==1.1.2
 dash-core-components==2.0.0
 dash-html-components==2.0.0
 dash-iconify==0.1.2
-dash-mantine-components==0.14.2
+dash-mantine-components==0.13.0.a3
 pandas==2.2.2
 httpx==0.27.0
 matplotlib==3.8.4
 plotly==5.22.0
 plotly-express==0.4.1
 numpy==1.26.4
+dash-loading-spinners==1.0.3
+gunicorn==22.0.0

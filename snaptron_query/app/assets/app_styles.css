@@ -1,0 +1,55 @@
+
+.ag-header-cell{
+    background-color: var(--bs-gray-200);
+}
+
+.ag-header-cell-filtered {
+    background-color: var(--bs-gray-600) !important;
+}
+
+.ag-header-cell-filtered span {
+    /*
+        color in ag-header-cell-filtered does not change the filtered cell text color,
+        this component does
+        https://ag-grid.com/angular-data-grid/global-style-customisation-headers/#style-header-on-filter
+    */
+    color: var(--bs-white) !important;
+    font-weight: bold;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--bs-gray-200);
+}
+
+/*This is when it's closed'*/
+.accordion-button {
+    background-color: var(--bs-gray-200); /*same as bs-light*/
+}
+
+.user-alert {
+    background-color: var(--bs-danger-bg-subtle) !important;
+    color: var(--bs-danger-text-emphasis) !important;
+    border-color: var(--bs-danger-text-emphasis) !important;
+}
+
+.user-tip{
+    background-color: var(--bs-success-bg-subtle) !important;
+    color: var(--bs-info-text-emphasis) !important;
+    border-color: var(--bs-info-text-emphasis) !important;
+}
+
+.cell-wrap-dash-ag-grid{
+    word-break: normal !important;
+    white-space: normal !important;
+    line-height:130% !important;
+    /*padding: 10 !important;*/
+    /*font-size: 10px !important;*/
+}
+
+.icon-button:hover {
+  background-color: var(--bs-primary-bg-subtle)
+}
+
+.study-link-color{
+    color: var(--bs-secondary) !important;
+}

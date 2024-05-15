@@ -1,11 +1,17 @@
 import collections
 from enum import Enum
-from snaptron_query.app import exceptions, global_strings as gs
+from snaptron_query.app import exceptions, global_strings as gs, utils
 
 
 class JunctionType(Enum):
     EXCLUSION = 0
     INCLUSION = 1
+
+
+# note the fields in this named tuple must match the table column names of the JIQ
+JIQ_CALCULATIONS = collections.namedtuple('JIQ_CALCULATIONS',
+                                          [gs.table_jiq_col_psi, gs.table_jiq_col_inc,
+                                           gs.table_jiq_col_exc, gs.table_jiq_col_total, gs.table_jiq_col_log_2])
 
 
 def split_and_cast(sample):
@@ -55,7 +61,6 @@ class JunctionInclusionQueryManager:
         sample_counts = self.rail_id_dictionary[rail_id]
         # make sure all values are 0
         inclusion_count = exclusion_count = 0
-        psi = 0.0
         for s in sample_counts:
             inclusion_junction_type = s.get('type')
             if inclusion_junction_type == JunctionType.INCLUSION:
@@ -67,36 +72,40 @@ class JunctionInclusionQueryManager:
         total_count = inclusion_count + exclusion_count
 
         # TODO: PSI calculation tolerance of 15, PI must verify?
+        psi = 0.0
         if total_count > 0:
             # calculate the percent spliced in
             psi = round(((100 * inclusion_count) / float(total_count)), 2)
 
-        return psi, inclusion_count, exclusion_count, total_count
+        log2 = round(utils.log_2_plus(psi), 4)
 
-    def _gather_rail_id_meta_data(self, rail_id, df_meta_data):
+        # return as a named tuple
+        return JIQ_CALCULATIONS(psi, inclusion_count, exclusion_count, total_count, log2)
+
+    def _gather_rail_id_meta_data(self, rail_id, meta_data_dict):
         """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
         rail ids
         """
         # look up the rail id and extract the information
         try:
-            # gather the metadata associated with this rail id
-            # note: loc will return a data series not a frame
-            meta_data = (df_meta_data.loc[rail_id]).to_dict()
+            # gather the metadata associated with this rail id note: loc will return a data series not a frame
+            # Performance note: using data frame as (meta_data_df.loc[rail_id]).to_dict() had a bad performance as
+            # this was called for all rail_ids. Replaced the code to use dictionaries and made a significant
+            # difference.
+            meta_data = meta_data_dict[rail_id]
 
             # TODO: for multi junction query the data may be different here
             # append the calculated results such as PSI and other counts
-            (meta_data[gs.table_jiq_col_psi], meta_data[gs.table_jiq_col_inc], meta_data[gs.table_jiq_col_exc],
-             meta_data[gs.table_jiq_col_total]) = self._calculate_percent_spliced_in(rail_id)
+            meta_data.update(self._calculate_percent_spliced_in(rail_id)._asdict())
 
             # add the rail id information
-            meta_data[gs.snaptron_col_rail_id] = rail_id
+            meta_data[gs.snpt_col_rail_id] = rail_id
 
             # append to the rest of the data
             self.gathered_rail_id_meta_data_and_psi.append(meta_data)
 
         except (KeyError, IndexError):
             # TODO: look into the rail ids that are not found in the meta data file.
-            # TODO: IT MUST BE IN THE META FILE, is this a snaptron error? discuss with PI
             # print(f"{rail_id} not in meta data file.  Moving on to the next iteration.")
             # code must continue and not stop
             pass
@@ -105,7 +114,7 @@ class JunctionInclusionQueryManager:
     def _find_junction(df, start, end):
         return df.loc[(df['start'] == start) & (df['end'] == end)]
 
-    def run_junction_inclusion_query(self, df, df_meta_data):
+    def run_junction_inclusion_query(self, df, meta_data_dict):
         """Given the snaptron interface results, this function calculates the Percent Spliced In (PSI)
         given the inclusion junction and the exclusion junction
         """
@@ -118,8 +127,8 @@ class JunctionInclusionQueryManager:
             raise exceptions.EmptyJunction
 
         # extract the 'sample' column form the row this is where all the samples and their count is
-        exclusion_junction_samples = (exc_junctions_df['samples']).tolist()
-        inclusion_junction_samples = (inc_junctions_df['samples']).tolist()
+        exclusion_junction_samples = (exc_junctions_df[gs.snpt_col_samples]).tolist()
+        inclusion_junction_samples = (inc_junctions_df[gs.snpt_col_samples]).tolist()
 
         # Gather results in a dictionary
         self._gather_samples_rail_id_and_counts(exclusion_junction_samples, JunctionType.EXCLUSION)
@@ -128,7 +137,7 @@ class JunctionInclusionQueryManager:
         # For each rail id found, gather its metadata and calculate PSI values
         # this will populate self.gathered_rail_id_meta_data_and_psi
         for rail_id in self.rail_id_dictionary:
-            self._gather_rail_id_meta_data(rail_id, df_meta_data)
+            self._gather_rail_id_meta_data(rail_id, meta_data_dict)
 
         # returning a list of dictionaries not a dataframe for better coexistence with the front-end UI
         return self.gathered_rail_id_meta_data_and_psi

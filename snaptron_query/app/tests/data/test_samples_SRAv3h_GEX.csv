@@ -1,0 +1,110 @@
+,rail_id,external_id,study,study_title,sample_description,library_layout,sample_name,sample_title
+0,135471,DRR000897,DRP000366,Homo sapiens epigenomics,,single,SAMD00004140,Hela_RNASeq
+1,123622,DRR001173,DRP000425,Homo sapiens T24 human bladder cancer cell line Transcriptome,,single,SAMD00004024,T24_25mM_I
+2,123624,DRR001174,DRP000425,Homo sapiens T24 human bladder cancer cell line Transcriptome,,single,SAMD00004025,T24_25mM_II
+3,123626,DRR001175,DRP000425,Homo sapiens T24 human bladder cancer cell line Transcriptome,,single,SAMD00004023,T24_0mM_24h_I
+4,123628,DRR001176,DRP000425,Homo sapiens T24 human bladder cancer cell line Transcriptome,,single,SAMD00004026,T24_0mM_24h_II
+5,158788,DRR001622,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015766,Human ICESeq CE-
+6,158790,DRR001623,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015767,Human ICESeq CE+
+7,158792,DRR001624,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015768,Human ICESeq CE++
+8,158794,DRR001625,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015766,Human ICESeq CE-
+9,158796,DRR001626,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015767,Human ICESeq CE+
+10,158798,DRR001627,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015768,Human ICESeq CE++
+11,158800,DRR001628,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015766,Human ICESeq CE-
+12,158802,DRR001629,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015767,Human ICESeq CE+
+13,158816,DRR001630,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015768,Human ICESeq CE++
+14,158818,DRR001631,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015766,Human ICESeq CE-
+15,158821,DRR001632,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015767,Human ICESeq CE+
+16,158822,DRR001633,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015768,Human ICESeq CE++
+17,158824,DRR001634,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015766,Human ICESeq CE-
+18,158826,DRR001635,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015767,Human ICESeq CE+
+19,158828,DRR001636,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015768,Human ICESeq CE++
+20,158830,DRR001637,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015766,Human ICESeq CE-
+21,158832,DRR001638,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015767,Human ICESeq CE+
+22,158834,DRR001639,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015768,Human ICESeq CE++
+23,158848,DRR001640,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015768,Human ICESeq CE++
+24,158850,DRR001641,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015768,Human ICESeq CE++
+25,158852,DRR001642,DRP000499,Homo sapiens strain:Human ICESeq Genome sequencing,,paired,SAMD00015767,Human ICESeq CE+
+112969,1249592,SRR3331113,SRP072829,Transcriptome analysis of CNS leukemia,,paired,BM_5_ALLCNS1,
+112970,1282681,SRR3330927,SRP072829,Transcriptome analysis of CNS leukemia,,paired,Spl_1_ALLCNS1,
+112971,1282713,SRR3330929,SRP072829,Transcriptome analysis of CNS leukemia,,paired,CNS_2_ALLCNS1,
+112972,1282825,SRR3330930,SRP072829,Transcriptome analysis of CNS leukemia,,paired,Spl_2_ALLCNS1,
+112973,1283212,SRR3330948,SRP072829,Transcriptome analysis of CNS leukemia,,paired,BM_3_ALLCNS1,
+112974,1283370,SRR3330952,SRP072829,Transcriptome analysis of CNS leukemia,,paired,CNS_3_ALLCNS1,
+112975,1283388,SRR3330953,SRP072829,Transcriptome analysis of CNS leukemia,,paired,Spl_3_ALLCNS1,
+112976,1283673,SRR3330965,SRP072829,Transcriptome analysis of CNS leukemia,,paired,BM_4_ALLCNS1,
+112977,1283914,SRR3330974,SRP072829,Transcriptome analysis of CNS leukemia,,paired,CNS_4_ALLCNS1,
+112978,623044,SRR3331038,SRP072829,Transcriptome analysis of CNS leukemia,,paired,Spl_4_ALLCNS1,
+112979,625063,SRR3331134,SRP072829,Transcriptome analysis of CNS leukemia,,paired,CNS_5_ALLCNS1,
+112980,625438,SRR3331163,SRP072829,Transcriptome analysis of CNS leukemia,,paired,Spl_5_ALLCNS1,
+112981,639143,SRR3330814,SRP072829,Transcriptome analysis of CNS leukemia,,paired,BM_1_ALLCNS1,
+112982,640166,SRR3330894,SRP072829,Transcriptome analysis of CNS leukemia,,paired,CNS_1_ALLCNS1,
+112985,1000008,SRR3331424,SRP072835,The MLL-AF9 and MLL-AF4 oncofusion proteins bind a distinct enhancer repertoire and target the RUNX1 program in MLLr AML,,single,GSM2108043,MV4-11_RNA
+112986,1000217,SRR3331431,SRP072835,The MLL-AF9 and MLL-AF4 oncofusion proteins bind a distinct enhancer repertoire and target the RUNX1 program in MLLr AML,,paired,GSM2108050,THP-1_RNA_PE
+112987,499878,SRR3331414,SRP072835,The MLL-AF9 and MLL-AF4 oncofusion proteins bind a distinct enhancer repertoire and target the RUNX1 program in MLLr AML,,single,GSM2108033,AML_MLLAF9_1_RNA
+112988,499886,SRR3331415,SRP072835,The MLL-AF9 and MLL-AF4 oncofusion proteins bind a distinct enhancer repertoire and target the RUNX1 program in MLLr AML,,single,GSM2108034,AML_MLLAF9_2_RNA
+112989,499895,SRR3331416,SRP072835,The MLL-AF9 and MLL-AF4 oncofusion proteins bind a distinct enhancer repertoire and target the RUNX1 program in MLLr AML,,single,GSM2108035,AML_MLLAF9_3_RNA
+112990,499902,SRR3331417,SRP072835,The MLL-AF9 and MLL-AF4 oncofusion proteins bind a distinct enhancer repertoire and target the RUNX1 program in MLLr AML,,single,GSM2108036,AML_MLLAF9_4.1_RNA
+112991,499911,SRR3331418,SRP072835,The MLL-AF9 and MLL-AF4 oncofusion proteins bind a distinct enhancer repertoire and target the RUNX1 program in MLLr AML,,paired,GSM2108037,AML_MLLAF9_4.2_RNA_PE
+112992,500119,SRR3331432,SRP072835,The MLL-AF9 and MLL-AF4 oncofusion proteins bind a distinct enhancer repertoire and target the RUNX1 program in MLLr AML,,single,GSM2108051,THP-1_RNA
+113011,474276,SRR3335794,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108600,24H_L1
+113012,474284,SRR3335795,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108601,24H_L2
+113013,474292,SRR3335796,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108602,24H_L3
+113014,474301,SRR3335797,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108603,24H_M1
+113015,474311,SRR3335798,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108604,24H_M2
+113016,474318,SRR3335799,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108605,24H_M3
+113017,475142,SRR3335800,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108606,48H_L1
+113018,475159,SRR3335802,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108608,48H_L3
+113019,475167,SRR3335803,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108609,48H_M1
+113020,475183,SRR3335805,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108611,48H_M3
+113021,475190,SRR3335806,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108612,72H_L1
+113022,475198,SRR3335807,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108613,72H_L2
+113023,475207,SRR3335808,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108614,72H_L3
+113024,475215,SRR3335809,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108615,72H_M1
+113025,475278,SRR3335811,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108617,72H_M3
+113026,950296,SRR3335801,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108607,48H_L2
+113027,950344,SRR3335804,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108610,48H_M2
+113028,950536,SRR3335810,SRP072864,RNA-sequencing time course of Human Intestinal Epithelial Cells (HIECs) following knockdown of miR-30bcd using complementary locked nucleic acids,,paired,GSM2108616,72H_M2
+138902,1000077,SRR4450428,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360252,10318X2
+138903,1000093,SRR4450429,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360253,7028X2
+138904,1000205,SRR4450430,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360254,x2-1
+138905,1000222,SRR4450431,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360255,x2-2
+138906,1000235,SRR4450432,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360256,x2-3
+138907,1000251,SRR4450433,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360257,x2-4
+138908,1000267,SRR4450434,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360258,HPCCDI
+138909,1000283,SRR4450435,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360259,iHPC10318
+138910,1000298,SRR4450436,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360260,iHPC7028
+138911,1000316,SRR4450437,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360261,iPS10203
+138912,1000330,SRR4450438,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360262,iPS6160
+138913,1000346,SRR4450439,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360263,iPS7022
+138914,1000458,SRR4450440,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360264,iPS7028
+138915,1000476,SRR4450441,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360265,M-1
+138916,1000492,SRR4450442,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360266,M-2
+138917,1000506,SRR4450443,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360267,M-3
+138918,1000523,SRR4450444,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360268,M-4
+138919,1000539,SRR4450445,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360269,M-5
+138920,1000555,SRR4450446,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360270,IM-1
+138921,1000571,SRR4450447,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360271,IM-2
+138922,1000588,SRR4450448,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360272,IM-3
+138923,1000602,SRR4450449,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360273,IM-4
+138924,1000716,SRR4450450,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360274,A2
+138925,1000729,SRR4450451,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360275,A3
+138926,1000747,SRR4450452,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360276,A7
+138927,1000761,SRR4450453,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360277,A15
+138928,1000777,SRR4450454,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360278,A16
+138929,1000794,SRR4450455,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360279,A18
+138930,1000810,SRR4450456,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360280,S8
+138931,1000825,SRR4450457,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360281,S22
+138932,1000845,SRR4450458,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360282,S25
+138933,1000860,SRR4450459,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360283,HC-1
+138934,1000971,SRR4450460,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360284,HC-2
+138935,1000987,SRR4450461,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360285,HC-3
+138936,1001003,SRR4450462,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360286,HC-4
+138937,1001018,SRR4450463,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360287,HC-5
+138938,1001036,SRR4450464,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2360288,HC-6
+138939,1005722,SRR5381589,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2551704,iMGL nTGFb-1
+138940,1005834,SRR5381590,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2551705,iMGL nTGFb-2
+138941,1005851,SRR5381591,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2551706,iMGL nTGFb-3
+138942,992398,SRR5145248,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2445478,n200 -2
+138943,992414,SRR5145249,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2445479,n200 -3
+138944,992526,SRR5145250,SRP092075,Generation of human microglia-like cells to study neurological disease,,paired,GSM2445480,n200 -4

@@ -31,31 +31,36 @@ def jiq_verify_coordinate_pairs(exclusion_coordinates, inclusion_coordinates):
     return (exc_chr, exc_start, exc_end), (inc_chr, inc_start, inc_end)
 
 
-def get_snaptron_query_results_df(compilation, junction_coordinates, query_mode):
+def geq_verify_coordinate(gene_coordinate):
+    (coord_chr, coord_start, coord_end) = verify_coordinates(gene_coordinate)
+
+    # add sanity checks here for the pairs
+    if coord_start > coord_end:
+        raise exceptions.BadCoordinates
+
+    return coord_chr, coord_start, coord_end
+
+
+def get_snpt_query_results_df(compilation, region, query_mode):
     """Will run the url and return the response
     :param compilation: from the list box selection
-    :param junction_coordinates: the interval of the query
+    :param region: the interval of the query
     :param query_mode:  'snaptron' or 'genes'
     :return: the result of the snaptron web interface converted into a dataframe
     """
     # TODO: move this to a config file when it's made
     host = 'https://snaptron.cs.jhu.edu'
-    url = f'{host}/{str(compilation).lower()}/{query_mode}?regions={str(junction_coordinates)}'
+    url = f'{host}/{str(compilation).lower()}/{query_mode}?regions={str(region)}'
     # url = 'https://snaptro.cs.jhu.edu/srav3h/snaptron?regions=chr19:4491836-4493702'
     # temp_url = 'https://snaptron.cs.jhu.edu/srav3h/genes?regions=chr1:11013716-11024183'
 
-    try:
-        resp = httpx.get(url)
-        # this will raise an HTTPError, if the response was a http error.
-        resp.raise_for_status()
-
-        data_bytes = resp.read()
-        if data_bytes:
-            df = pd.read_csv(BytesIO(data_bytes), sep='\t')
-            return df
-        else:
-            raise exceptions.EmptyResponse
-    except Exception as e:
-        # Any other exception happens I want it forwarded to the front end for handling
-        print(f"HTTP Exception: {e}")
-        raise exceptions.BadURL
+    resp = httpx.get(url)
+    # this will raise an HTTPError, if the response was a http error.
+    # any exceptions thrown here will be captured by the client: Dash UI in this case
+    resp.raise_for_status()
+    data_bytes = resp.read()
+    if data_bytes:
+        df = pd.read_csv(BytesIO(data_bytes), sep='\t')
+        return df
+    else:
+        raise exceptions.EmptyResponse
