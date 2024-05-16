@@ -1,13 +1,7 @@
-from pathlib import Path
 import numpy as np
 import pandas as pd
 
 from snaptron_query.app import exceptions, global_strings as gs
-
-path_srav3h_meta = Path(__file__).parent / 'data/samples_SRAv3h.tsv'
-path_gtexv2_meta = Path(__file__).parent / 'data/samples_GTEXv2.tsv'
-path_tcgav2_meta = Path(__file__).parent / 'data/samples_TCGAv2.tsv'
-path_srav1m_meta = Path(__file__).parent / 'data/samples_SRAv1m.tsv'
 
 
 def read_srav3h(file_path):
