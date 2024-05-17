@@ -11,7 +11,7 @@ from snaptron_query.app import global_strings as gs, icons
 def get_text(string, component_style='dmc'):
     """Wrapper function to retrieve the text used  queries"""
     if component_style == 'dmc':
-        return dmc.Text(string, weight=500, size="sm")  # 500=semi bold
+        return dmc.Text(string, weight=500, size="sm", span=True)  # 500=semi bold
     elif component_style == 'dbc':
         return dbc.Label(string, className='fw-bold')
     else:

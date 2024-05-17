@@ -1,23 +1,7 @@
 """This file includes the general layout inside the tabs"""
 
 import dash_bootstrap_components as dbc
-from dash import html
 from snaptron_query.app import layout_jiq, layout_geq, global_strings as gs
-
-
-def get_navbar_top():
-    """This is the component at the top of the page."""
-    return html.Div(
-        dbc.Container(
-            [
-                html.P(gs.web_title),
-            ],
-            fluid=True,
-            className="display-4",
-        ),
-        style={'box-shadow': "0 5px 5px -5px #333"},
-        className="bg-primary bg-gradient text-light py-4 text-center fs-1 fw-light",
-    )
 
 
 def get_tabs():

@@ -53,3 +53,9 @@
 .study-link-color{
     color: var(--bs-secondary) !important;
 }
+
+.logos-size{
+    display: flex;
+    justify-content: center;
+    height: 120px !important;
+}
