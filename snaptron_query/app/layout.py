@@ -10,7 +10,7 @@ def get_navbar_top():
     return html.Div(
         dbc.Container(
             [
-                html.P("Snaptron Custom Query"),
+                html.P(gs.web_title),
             ],
             fluid=True,
             className="display-4",
