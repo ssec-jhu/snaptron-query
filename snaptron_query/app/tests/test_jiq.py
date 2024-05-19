@@ -126,19 +126,25 @@ def test_jiq_results_srav1m(junction_srav1m, rail_id, study, inc, exc, psi):
     assert s[gs.table_jiq_col_psi] == psi
 
 
-@pytest.mark.parametrize('pair_a,pair_b,chr_a,chr_b,start_a,end_a,start_b,end_b',
-                         [('chr3:5555-6666', 'chr3:4000-5000', 'chr3', 'chr3', 5555, 6666, 4000, 5000),
-                          ('chr19:5000-6000', 'chr19:4000-5000', 'chr19', 'chr19', 5000, 6000, 4000, 5000)]
-                         )
-def test_jiq_verify_coordinates(pair_a, pair_b, chr_a, chr_b, start_a, end_a, start_b, end_b):
+@pytest.mark.parametrize(
+    'pair_a,pair_b,chromosome,start_a,end_a,start_b,end_b',
+    [('chr3:5555-6666', 'chr3:4000-5000', 'chr3', 5555, 6666, 4000, 5000),
+     ('chr19:5000-6000', 'chr19:4000-5000', 'chr19', 5000, 6000, 4000, 5000),
+     ('chr7:100650136-100655018', 'chr7:100650136-100650574', 'chr7', 100650136, 100655018, 100650136, 100650574),
+     ('chr1:1044440-1045160', 'chr1:1044440-1044891', 'chr1', 1044440, 1045160, 1044440, 1044891),
+     ('chr5:112266331-112275325', 'chr5:112266331-112267209', 'chr5', 112266331, 112275325, 112266331, 112267209),
+     ('chr10:3099353-3101364', 'chr10:3099820-3101364', 'chr10', 3099353, 3101364, 3099820, 3101364),
+     ('chr20:19681992-19684175', 'chr20:19683961-19684175', 'chr20', 19681992, 19684175, 19683961, 19684175)]
+)
+def test_jiq_verify_coordinates(pair_a, pair_b, chromosome, start_a, end_a, start_b, end_b):
     junction_coordinates = sc.jiq_verify_coordinate_pairs(pair_a, pair_b)
-    assert junction_coordinates.exc_chr == chr_a
-    assert junction_coordinates.inc_chr == chr_b
+    assert junction_coordinates.exc_coordinates.chr == chromosome
+    assert junction_coordinates.inc_coordinates.chr == chromosome
     # make sure they are cast correctly
-    assert junction_coordinates.exc_start == start_a
-    assert junction_coordinates.exc_end == end_a
-    assert junction_coordinates.inc_start == start_b
-    assert junction_coordinates.inc_end == end_b
+    assert junction_coordinates.exc_coordinates.start == start_a
+    assert junction_coordinates.exc_coordinates.end == end_a
+    assert junction_coordinates.inc_coordinates.start == start_b
+    assert junction_coordinates.inc_coordinates.end == end_b
 
 
 @pytest.mark.parametrize('pair_a,pair_b', [('chr19:5000-6000', 'chr29:4000-5000')])
