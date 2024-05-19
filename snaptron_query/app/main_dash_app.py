@@ -111,12 +111,13 @@ def on_button_click_jiq(n_clicks, compilation, children, junction_count):
             exclusion_interval = exc_junctions[0]
             # make sure chromosome numbers match
             # if there is any error in the intervals, an exception will be thrown
-            (exc_chr, exc_start, exc_end), (inc_chr, inc_start, inc_end) = (
-                sc.jiq_verify_coordinate_pairs(exclusion_interval, inclusion_interval))
+            junction_coordinates = (sc.jiq_verify_coordinate_pairs(exclusion_interval, inclusion_interval))
 
             # RUN the URL and get results back from SNAPTRON
             # make sure you get results back
-            df_snpt_results = sc.get_snpt_query_results_df(compilation, exclusion_interval, 'snaptron')
+            df_snpt_results = sc.get_snpt_query_results_df(compilation=compilation,
+                                                           region=junction_coordinates.formatted_exc_coordinates,
+                                                           query_mode='snaptron')
 
             if df_snpt_results.empty:
                 raise exceptions.EmptyResponse
@@ -125,7 +126,8 @@ def on_button_click_jiq(n_clicks, compilation, children, junction_count):
             meta_data_dict = get_meta_data(compilation)
 
             # # Set upt the JIQ manager then run the Junction Inclusion Query
-            jqm = JunctionInclusionQueryManager(exc_start, exc_end, inc_start, inc_end)
+            jqm = JunctionInclusionQueryManager(junction_coordinates.exc_start, junction_coordinates.exc_end,
+                                                junction_coordinates.inc_start, junction_coordinates.inc_end)
             # results returned are list of dictionaries which makes ag-grid load much faster,
             # Once can convert a dataframe to dict with orient set to records for the ag-grid as well.
             row_data = jqm.run_junction_inclusion_query(df_snpt_results, meta_data_dict)

@@ -131,14 +131,14 @@ def test_jiq_results_srav1m(junction_srav1m, rail_id, study, inc, exc, psi):
                           ('chr19:5000-6000', 'chr19:4000-5000', 'chr19', 'chr19', 5000, 6000, 4000, 5000)]
                          )
 def test_jiq_verify_coordinates(pair_a, pair_b, chr_a, chr_b, start_a, end_a, start_b, end_b):
-    (A_chr, A_start, A_end), (B_chr, B_start, B_end) = sc.jiq_verify_coordinate_pairs(pair_a, pair_b)
-    assert A_chr == chr_a
-    assert B_chr == chr_b
+    junction_coordinates = sc.jiq_verify_coordinate_pairs(pair_a, pair_b)
+    assert junction_coordinates.exc_chr == chr_a
+    assert junction_coordinates.inc_chr == chr_b
     # make sure they are cast correctly
-    assert A_start == start_a
-    assert A_end == end_a
-    assert B_start == start_b
-    assert B_end == end_b
+    assert junction_coordinates.exc_start == start_a
+    assert junction_coordinates.exc_end == end_a
+    assert junction_coordinates.inc_start == start_b
+    assert junction_coordinates.inc_end == end_b
 
 
 @pytest.mark.parametrize('pair_a,pair_b', [('chr19:5000-6000', 'chr29:4000-5000')])

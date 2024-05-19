@@ -1,16 +1,28 @@
+import collections
 import httpx
 import pandas as pd
 from io import BytesIO
 from snaptron_query.app import exceptions
 import re
 
+JIQ_COORDINATES = collections.namedtuple('JIQ_COORDINATES', ['exc_chr', 'exc_start', 'exc_end',
+                                                             'inc_chr', 'inc_start', 'inc_end',
+                                                             'formatted_exc_coordinates'])
+
 
 def verify_coordinates(coordinates):
+    coordinates_str = str(coordinates)
+
+    # Another format used is: Chromosome 19: 4,472,297-4,502,208
+    # We want to handle this case as well and remove all commas and spaces
+    translation_table = str.maketrans("", "", ", ")
+    coordinates_str = coordinates_str.translate(translation_table).replace("Chromosome", "chr")
+
     # pattern used from snaptron code:
     # https://github.com/ChristopherWilks/snaptron/blob/75903c30d54708b19d91772142013687c74d88d8/snapconfshared.py#L196C31
     # https://docs.python.org/3/library/re.html#re.Match
     pattern = r'^(chr[12]?[0-9XYM]):(\d+)-(\d+)$'
-    m = re.match(pattern, str(coordinates))
+    m = re.match(pattern, coordinates_str)
     if m:  # group(0) is the entire match, will be None if there is no match
         # group(1) will be the chromosome
         # group(2) will be the start of the interval
@@ -28,7 +40,9 @@ def jiq_verify_coordinate_pairs(exclusion_coordinates, inclusion_coordinates):
     if inc_chr != exc_chr or inc_start > inc_end or exc_start > exc_end:
         raise exceptions.BadCoordinates
 
-    return (exc_chr, exc_start, exc_end), (inc_chr, inc_start, inc_end)
+    return JIQ_COORDINATES(exc_chr, exc_start, exc_end,
+                           inc_chr, inc_start, inc_end,
+                           f"{exc_chr}:{exc_start}-{exc_end}")
 
 
 def geq_verify_coordinate(gene_coordinate):
