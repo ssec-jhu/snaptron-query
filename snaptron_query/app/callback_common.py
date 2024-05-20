@@ -1,3 +1,4 @@
+from datetime import datetime
 from dash import no_update
 
 from snaptron_query.app import global_strings as gs, inline_styles as st, components
@@ -35,5 +36,9 @@ def export_data_as_csv(option, file_name):
     else:
         exported_rows = 'all'
 
+    # timestamp the file
+    timestamp = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+
     # https://ag-grid.com/javascript-data-grid/csv-export/#reference-CsvExportParams-exportedRows
-    return True, {"fileName": f'{file_name}_{exported_rows}.csv', "exportedRows": exported_rows}
+    return True, {"fileName": f'{file_name}_{exported_rows}_{timestamp}.csv',
+                  "exportedRows": exported_rows}
