@@ -3,6 +3,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
             General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+web_title = "SnapMine"
 log_epsilon = 0.01
 tab_jiq = "Junction PSI Query"
 tab_geq = "Gene Expression Query"
