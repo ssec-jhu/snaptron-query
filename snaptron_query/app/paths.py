@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 # path to the directory where the metadata for the compilations reside
@@ -11,7 +10,7 @@ filename_tcgav2 = 'tcgav2_samples.tsv'
 filename_srav1m = 'srav1m_samples.tsv'
 
 
-srav3h_meta = os.path.join(meta_data_directory, filename_srav3h)
-gtexv2_meta = os.path.join(meta_data_directory, filename_gtexv2)
-tcgav2_meta = os.path.join(meta_data_directory, filename_tcgav2)
-srav1m_meta = os.path.join(meta_data_directory, filename_srav3h)
+srav3h_meta = meta_data_directory / filename_srav3h
+gtexv2_meta = meta_data_directory / filename_gtexv2
+tcgav2_meta = meta_data_directory / filename_tcgav2
+srav1m_meta = meta_data_directory / filename_srav3h
