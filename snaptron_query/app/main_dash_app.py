@@ -7,7 +7,7 @@ from dash_bootstrap_templates import load_figure_template
 import os
 from pathlib import Path
 
-from snaptron_query.app import column_defs as cd, callback_common as callback, inline_styles as styles
+from snaptron_query.app import column_defs as cd, callback_common as callback, inline_styles as styles, navbars
 from snaptron_query.app import (graphs, layout, components, utils, exceptions,
                                 global_strings as gs, snaptron_client as sc)
 from snaptron_query.app.query_gene_expression import GeneExpressionQueryManager
@@ -54,12 +54,14 @@ def get_meta_data(compilation):
 app.layout = dbc.Container(
     [
         # navbar, top row with titles and all
-        layout.get_navbar_top(),
+        navbars.get_navbar_top(),
 
         # Next row is are the tabs and their content
         dmc.Space(h=30),
         layout.get_tabs(),
 
+        dmc.Space(h=30),
+        navbars.get_navbar_bottom(),
         # a space for log content if any
         dmc.Space(h=30),
         dcc.Store(id="id-store-jiq-junctions")
