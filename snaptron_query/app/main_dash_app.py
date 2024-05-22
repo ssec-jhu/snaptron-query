@@ -308,18 +308,11 @@ def on_button_click_geq(n_clicks, compilation, use_coordinates,
                         raise exceptions.MissingUserInputs
 
                 # Verify the gene coordinates string, we don't need the return values for this query
-                if use_coordinates:
-                    coordinates = sc.geq_verify_coordinate(query_gene_coordinates)
-                    # RUN the URL and get results back from SNAPTRON
-                    df_snpt_results_query = sc.get_snpt_query_results_df(
-                        compilation=compilation,
-                        region=sc.coordinates_to_formatted_string(coordinates),
-                        query_mode='genes')
-                else:
-                    df_snpt_results_query = sc.get_snpt_query_results_df(
-                        compilation=compilation,
-                        region=query_gene_id,
-                        query_mode='genes')
+                df_snpt_results_query = sc.get_snpt_query_results_df(
+                    compilation=compilation,
+                    region=sc.coordinates_to_formatted_string(sc.geq_verify_coordinate(query_gene_coordinates))
+                    if use_coordinates else query_gene_id,
+                    query_mode='genes')
                 if df_snpt_results_query.empty:
                     raise exceptions.EmptyResponse
 
