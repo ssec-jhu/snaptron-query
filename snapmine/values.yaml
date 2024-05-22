@@ -8,7 +8,7 @@ image:
   repository: snapmine
   pullPolicy: Never #https://minikube.sigs.k8s.io/docs/handbook/pushing/
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "data"
+  tag: "no-data"
   args:
     - 'snaptron_query.app.main_dash_app:server'
     - '--workers=3' # suggested workers is 2*Core+1 https://docs.gunicorn.org/en/latest/design.html#how-many-workers
@@ -99,17 +99,31 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes: []
+# use a hostPath volume to test on the local filesystem
+# https://kubernetes.io/docs/concepts/storage/volumes/#hostpath
+volumes:
+  - name: snapmine-samples
+    hostPath:
+      path: /minikube-volume/snaptron_samples #/Users/fatemeh/Desktop/meta-data
+      type: Directory # this field is optional
+      readOnly: true
 # - name: foo
 #   secret:
 #     secretName: mysecret
 #     optional: false
 
+# use a nfs volume for deployment on IDIES server
+# https://kubernetes.io/docs/concepts/storage/volumes/#nfs
+# volumes:
+    #nfs:
+    #  server: snaptron01
+    #  path: /srv/nvme2/snaptron_data/snaptron_samples
+    #  readOnly: true
+
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
+volumeMounts:
+  - name: snapmine-samples
+    mountPath: /snaptron_query/app/data # this is the path in the app
 
 nodeSelector: {}
 
