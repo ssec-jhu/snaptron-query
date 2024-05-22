@@ -22,13 +22,29 @@ path_sample_gex_query_data = Path(__file__).parent / 'data/test_srav3h_gene_quer
 
 
 class JunctionQuery:
-    def __init__(self, exclusion_start, exclusion_end, inclusion_start, inclusion_end,
-                 meta_data_dict, df_from_snaptron):
+    def __init__(self, junction_list, meta_data_dict, df_from_snaptron):
         # find the exclusion and inclusion junction rows
-        self.query_mgr = jiq.JunctionInclusionQueryManager(exclusion_start, exclusion_end,
-                                                           inclusion_start, inclusion_end)
+        self.query_mgr = jiq.JunctionInclusionQueryManager()
+        df = pd.DataFrame(jiq.convert_to_single_junction(self.query_mgr.run_junction_inclusion_query(df_from_snaptron,
+                                                                                                     meta_data_dict,
+                                                                                                     junction_list)))
+        self.df_jiq_results = df.set_index(gs.snpt_col_rail_id)
 
-        df = pd.DataFrame(self.query_mgr.run_junction_inclusion_query(df_from_snaptron, meta_data_dict))
+    def get_rail_id_dict(self):
+        return self.query_mgr.get_rail_id_dictionary()
+
+    def get_results(self):
+        return self.df_jiq_results
+
+
+class MultiJunctionQuery:
+    def __init__(self, junction_list, meta_data_dict, df_from_snaptron):
+        # find the exclusion and inclusion junction rows
+        self.query_mgr = jiq.JunctionInclusionQueryManager()
+        df = pd.DataFrame(jiq.convert_to_multi_junction(self.query_mgr.
+                                                        run_junction_inclusion_query(df_from_snaptron,
+                                                                                     meta_data_dict,
+                                                                                     junction_list)))
         self.df_jiq_results = df.set_index(gs.snpt_col_rail_id)
 
     def get_rail_id_dict(self):
@@ -65,8 +81,30 @@ class GEXQuery:
 def junction_srav3h():
     meta_data_dict = utils.read_srav3h(path_srav3h_meta)
     df_sample_junctions_from_snaptron = pd.read_csv(path_sample_junction_data, sep='\t')
-    jq = JunctionQuery(4491836, 4493702, 4491836, 4492014, meta_data_dict, df_sample_junctions_from_snaptron)
+    jq = JunctionQuery([tuple([4491836, 4493702, 4491836, 4492014])], meta_data_dict, df_sample_junctions_from_snaptron)
     return jq
+
+
+@pytest.fixture(scope='session')
+def multi_junction_srav3h():
+    meta_data_dict = utils.read_srav3h(path_srav3h_meta)
+    df_sample_junctions_from_snaptron = pd.read_csv(path_sample_junction_data, sep='\t')
+    junction_0 = tuple([4491836, 4493702, 4491836, 4492014])
+    junction_1 = tuple([4491836, 4493702, 4492153, 4493702])
+    junction_list = [junction_0, junction_1]
+    mjq = MultiJunctionQuery(junction_list, meta_data_dict, df_sample_junctions_from_snaptron)
+    return mjq
+
+
+@pytest.fixture(scope='session')
+def multi_junction_srav3h_2():
+    meta_data_dict = utils.read_srav3h(path_srav3h_meta)
+    df_sample_junctions_from_snaptron = pd.read_csv(path_sample_junction_data, sep='\t')
+    junction_0 = tuple([4491836, 4493702, 4491836, 4492014])
+    junction_1 = tuple([4491836, 4493702, 4492153, 4493702])
+    junction_list = [junction_1, junction_0]
+    mjq = MultiJunctionQuery(junction_list, meta_data_dict, df_sample_junctions_from_snaptron)
+    return mjq
 
 
 @pytest.fixture(scope='session')
@@ -75,7 +113,7 @@ def junction_gtexv2():
     meta_data_dict = utils.read_gtexv2(path_gtexv2_meta)
     path = Path(__file__).parent / 'data/test_chr19_4491836_4493702_gtexv2.tsv'
     df_sample_junctions_from_snaptron = pd.read_csv(path, sep='\t')
-    jq = JunctionQuery(4491836, 4493702, 4491836, 4492014, meta_data_dict, df_sample_junctions_from_snaptron)
+    jq = JunctionQuery([tuple([4491836, 4493702, 4491836, 4492014])], meta_data_dict, df_sample_junctions_from_snaptron)
     return jq
 
 
@@ -85,7 +123,7 @@ def junction_tcgav2():
     meta_data_dict = utils.read_tcgav2(path_tcgav2_meta)
     path = Path(__file__).parent / 'data/test_chr19_4491836_4493702_tcgav2.tsv'
     df_sample_junctions_from_snaptron = pd.read_csv(path, sep='\t')
-    jq = JunctionQuery(4491836, 4493702, 4491836, 4492014, meta_data_dict, df_sample_junctions_from_snaptron)
+    jq = JunctionQuery([tuple([4491836, 4493702, 4491836, 4492014])], meta_data_dict, df_sample_junctions_from_snaptron)
     return jq
 
 
@@ -95,7 +133,8 @@ def junction_srav1m():
     meta_data_dict = utils.read_srav1m(path_srav1m_meta)
     path = Path(__file__).parent / 'data/test_chr8_71666671_71671625_srav1m.tsv'
     df_sample_junctions_from_snaptron = pd.read_csv(path, sep='\t')
-    jq = JunctionQuery(71666671, 71671625, 71666671, 71667328, meta_data_dict, df_sample_junctions_from_snaptron)
+    jq = JunctionQuery([tuple([71666671, 71671625, 71666671, 71667328])], meta_data_dict,
+                       df_sample_junctions_from_snaptron)
     return jq
 
 

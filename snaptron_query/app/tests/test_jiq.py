@@ -11,22 +11,22 @@ def test_jiq_rail_id_size(junction_srav3h):
     assert len(rail_dict) == 160578
 
 
-@pytest.mark.parametrize('rail_id, count', [(992538, 100), (996729, 96)])
+@pytest.mark.parametrize('rail_id, count', [(992538, 100), (996729, 96),
+                                            (2000946, 35), (2000118, 64), (988765, 42),
+                                            (991272, 29), (2000946, 35), (1977105, 23)])
 def test_jiq_lookup_rail_id_inclusion(junction_srav3h, rail_id, count):
     rail_dict = junction_srav3h.get_rail_id_dict()
-    v_list = rail_dict.get(rail_id)
+    v_list = rail_dict.get(rail_id)['junctions']
     assert len(v_list) == 1
-    # assert (v_list[0])['count'] == count
-    # assert (v_list[0])['type'] == JunctionType.EXCLUSION
+    assert v_list[0][JunctionType.EXCLUSION] == count
 
 
 @pytest.mark.parametrize('rail_id,count', [(10044963, 39), (1198331, 86), (301619, 9), (1239258, 13), (1124564, 49)])
 def test_jiq_lookup_rail_id_inclusion_gtexv2(junction_gtexv2, rail_id, count):
     rail_dict = junction_gtexv2.get_rail_id_dict()
-    v_list = rail_dict.get(rail_id)
+    v_list = rail_dict.get(rail_id)['junctions']
     assert len(v_list) == 1
-    assert (v_list[0])['count'] == count
-    assert (v_list[0])['type'] == JunctionType.EXCLUSION
+    assert v_list[0][JunctionType.EXCLUSION] == count
 
 
 @pytest.mark.parametrize('rail_id,exc_count,inc_count', [(1001806, 34, 4), (100107, 15, 1), (100073, 7, 2),
@@ -34,11 +34,10 @@ def test_jiq_lookup_rail_id_inclusion_gtexv2(junction_gtexv2, rail_id, count):
                                                          (1975952, 86, 1)])
 def test_jiq_rail_id_in_both_junctions(junction_srav3h, rail_id, exc_count, inc_count):
     rail_dict = junction_srav3h.get_rail_id_dict()
-    v_list = rail_dict.get(rail_id)
-    assert (v_list[0])['count'] == exc_count
-    assert (v_list[0])['type'] == JunctionType.EXCLUSION
-    assert (v_list[1])['count'] == inc_count
-    assert (v_list[1])['type'] == JunctionType.INCLUSION
+    v_list = rail_dict.get(rail_id)['junctions']
+    assert len(v_list) == 1
+    assert v_list[0][JunctionType.EXCLUSION] == exc_count
+    assert v_list[0][JunctionType.INCLUSION] == inc_count
 
 
 @pytest.mark.parametrize('rail_id,exc_count,inc_count', [(10044980, 67, 1), (10045247, 43, 1), (1165564, 48, 1),
@@ -46,11 +45,10 @@ def test_jiq_rail_id_in_both_junctions(junction_srav3h, rail_id, exc_count, inc_
                                                          (4301568, 95, 2)])
 def test_jiq_rail_id_in_both_junctions_gtexv2(junction_gtexv2, rail_id, exc_count, inc_count):
     rail_dict = junction_gtexv2.get_rail_id_dict()
-    v_list = rail_dict.get(rail_id)
-    assert (v_list[0])['count'] == exc_count
-    assert (v_list[0])['type'] == JunctionType.EXCLUSION
-    assert (v_list[1])['count'] == inc_count
-    assert (v_list[1])['type'] == JunctionType.INCLUSION
+    v_list = rail_dict.get(rail_id)['junctions']
+    assert len(v_list) == 1
+    assert v_list[0][JunctionType.EXCLUSION] == exc_count
+    assert v_list[0][JunctionType.INCLUSION] == inc_count
 
 
 def test_jiq_results_size_cols(junction_srav3h):
@@ -169,4 +167,50 @@ def test_jiq_psi_results_vs_shinyapp_website(junction_srav3h, ground_truth_df, r
 def test_jiq_empty_junctions():
     with pytest.raises(exceptions.EmptyJunction):
         df_sample_junctions_from_snaptron = pd.read_csv(path_sample_junction_data, sep='\t')
-        JunctionQuery(4491836, 4493702, 0, 0, {}, df_sample_junctions_from_snaptron)
+        JunctionQuery([tuple([4491836, 4493702, 0, 0])], {}, df_sample_junctions_from_snaptron)
+
+
+@pytest.mark.parametrize('rail_id,external_id,inc_0,exc_0,psi_0,inc_1,exc_1,psi_1',
+                         [(1000010, 'SRR3743424', 0, 11, 0, 0, 11, 0),
+                          (2171668, 'SRR5714918', 35, 0, 100.0, 0, 0, 0),  # TODO: this has inc_0=-1?
+                          (988956, 'SRR5461171', 66, 102, 39.29, 81, 102, 44.26,),
+                          (1127039, 'SRR5398327', 4, 12, 25.0, 0, 12, 0),
+                          (499887, 'SRR3469415', 9, 23, 28.12, 1, 23, 4.17),
+                          (988942, 'SRR5461170', 65, 101, 39.16, 77, 101, 43.26,),
+                          (1641727, 'SRR8083867', 17, 55, 23.61, 15, 55, 21.43),
+                          (1641757, 'SRR8083868', 12, 45, 21.05, 10, 45, 18.18),
+                          (2109561, 'SRR6873183', 12, 34, 26.09, 0, 34, 0,),
+                          ])
+def test_mjq(multi_junction_srav3h, rail_id, external_id, inc_0, exc_0, psi_0, inc_1, exc_1, psi_1):
+    our_results = multi_junction_srav3h.get_results().loc[rail_id]
+    assert our_results[gs.snpt_col_external_id] == external_id
+    assert our_results[f"{gs.table_jiq_col_inc}_0"] == inc_0
+    assert our_results[f"{gs.table_jiq_col_exc}_0"] == exc_0
+    assert our_results[f"{gs.table_jiq_col_psi}_0"] == psi_0
+
+    assert our_results[f"{gs.table_jiq_col_inc}_1"] == inc_1
+    assert our_results[f"{gs.table_jiq_col_exc}_1"] == exc_1
+    assert our_results[f"{gs.table_jiq_col_psi}_1"] == psi_1
+
+
+@pytest.mark.parametrize('rail_id,external_id,inc_0,exc_0,psi_0,inc_1,exc_1,psi_1',
+                         [(1000010, 'SRR3743424', 0, 11, 0, 0, 11, 0),
+                          (2171668, 'SRR5714918', 0, 0, 0, 35, 0, 100.0),  # TODO: this has psi_0=nan?
+                          (988956, 'SRR5461171', 81, 102, 44.26, 66, 102, 39.29),
+                          (1127039, 'SRR5398327', 0, 12, 0, 4, 12, 25.0),
+                          (499887, 'SRR3469415', 1, 23, 4.17, 9, 23, 28.12),
+                          (988942, 'SRR5461170', 77, 101, 43.26, 65, 101, 39.16),
+                          (1641727, 'SRR8083867', 15, 55, 21.43, 17, 55, 23.61),
+                          (1641757, 'SRR8083868', 10, 45, 18.18, 12, 45, 21.05),
+                          (2109561, 'SRR6873183', 0, 34, 0, 12, 34, 26.09),
+                          ])
+def test_mjq_2(multi_junction_srav3h_2, rail_id, external_id, inc_0, exc_0, psi_0, inc_1, exc_1, psi_1):
+    our_results = multi_junction_srav3h_2.get_results().loc[rail_id]
+    assert our_results[gs.snpt_col_external_id] == external_id
+    assert our_results[f"{gs.table_jiq_col_inc}_0"] == inc_0
+    assert our_results[f"{gs.table_jiq_col_exc}_0"] == exc_0
+    assert our_results[f"{gs.table_jiq_col_psi}_0"] == psi_0
+
+    assert our_results[f"{gs.table_jiq_col_inc}_1"] == inc_1
+    assert our_results[f"{gs.table_jiq_col_exc}_1"] == exc_1
+    assert our_results[f"{gs.table_jiq_col_psi}_1"] == psi_1
