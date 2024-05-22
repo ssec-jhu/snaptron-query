@@ -7,10 +7,10 @@ from snaptron_query.app import global_strings as gs, utils
 from snaptron_query.app import query_gene_expression as gex
 from snaptron_query.app import query_junction_inclusion as jiq
 
-path_srav3h_meta = Path(__file__).parent / 'data/test_samples_SRAv3h.tsv'
-path_gtexv2_meta = Path(__file__).parent / 'data/test_samples_GTEXv2.tsv'
-path_tcgav2_meta = Path(__file__).parent / 'data/test_samples_TCGAv2.tsv'
-path_srav1m_meta = Path(__file__).parent / 'data/test_samples_SRAv1m.tsv'
+path_srav3h_meta = Path(__file__).parent / 'data/test_srav3h_samples.tsv'
+path_gtexv2_meta = Path(__file__).parent / 'data/test_gtexv2_samples.tsv'
+path_tcgav2_meta = Path(__file__).parent / 'data/test_tcgav2_samples.tsv'
+path_srav1m_meta = Path(__file__).parent / 'data/test_srav1m_samples.tsv'
 
 path_sample_junction_data = Path(__file__).parent / 'data/test_chr19_4491836_4493702_srav3h.tsv'
 

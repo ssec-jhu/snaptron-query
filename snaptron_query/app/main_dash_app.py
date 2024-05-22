@@ -5,9 +5,9 @@ from dash import Dash, Input, Output, callback_context, no_update, State, dcc
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 import os
-from pathlib import Path
 
-from snaptron_query.app import column_defs as cd, callback_common as callback, inline_styles as styles, navbars
+
+from snaptron_query.app import column_defs as cd, callback_common as callback, inline_styles as styles, navbars, paths
 from snaptron_query.app import (graphs, layout, components, utils, exceptions,
                                 global_strings as gs, snaptron_client as sc)
 from snaptron_query.app.query_gene_expression import GeneExpressionQueryManager
@@ -19,22 +19,22 @@ app = Dash(__name__,
            external_stylesheets=[dbc.themes.SANDSTONE, dbc_css, dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME])
 
 # VERY important line of code for running with gunicorn
-# you run the 'server' not the 'app'. VS. you run the 'app; with uvicorn
+# you run the 'server' not the 'app'. VS. you run the 'app' with uvicorn
 server = app.server
 
 load_figure_template(gs.dbc_template_name)
 
+# TODO: remove this code for final deployment
 # Sanity check for the metadata directory
-path = Path(__file__).parent / 'data/'
-dir_list = os.listdir(path)
+dir_list = os.listdir(paths.meta_data_directory)
 if len(dir_list) == 0:
-    print(f'**** WARNING **** Snaptron Meta data files are missing from:{path}')
+    print(f'**** WARNING **** Snaptron Meta data files are missing from:{paths.meta_data_directory}')
 
 # Meta data loaded in global space
-dict_srav3h = utils.read_srav3h(utils.path_srav3h_meta)
-dict_gtexv2 = utils.read_gtexv2(utils.path_gtexv2_meta)
-dict_tcgav2 = utils.read_tcgav2(utils.path_tcgav2_meta)
-dict_srav1m = utils.read_srav1m(utils.path_srav1m_meta)
+dict_srav3h = utils.read_srav3h(paths.srav3h_meta)
+dict_gtexv2 = utils.read_gtexv2(paths.gtexv2_meta)
+dict_tcgav2 = utils.read_tcgav2(paths.tcgav2_meta)
+dict_srav1m = utils.read_srav1m(paths.srav1m_meta)
 
 
 def get_meta_data(compilation):
