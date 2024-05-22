@@ -127,8 +127,10 @@ def on_button_click_jiq(n_clicks, compilation, children, junction_count):
             meta_data_dict = get_meta_data(compilation)
 
             # # Set upt the JIQ manager then run the Junction Inclusion Query
-            jqm = JunctionInclusionQueryManager(junction_coordinates.exc_start, junction_coordinates.exc_end,
-                                                junction_coordinates.inc_start, junction_coordinates.inc_end)
+            jqm = JunctionInclusionQueryManager(junction_coordinates.exc_coordinates.start,
+                                                junction_coordinates.exc_coordinates.end,
+                                                junction_coordinates.inc_coordinates.start,
+                                                junction_coordinates.inc_coordinates.end)
             # results returned are list of dictionaries which makes ag-grid load much faster,
             # Once can convert a dataframe to dict with orient set to records for the ag-grid as well.
             row_data = jqm.run_junction_inclusion_query(df_snpt_results, meta_data_dict)
