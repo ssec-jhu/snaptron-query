@@ -28,13 +28,22 @@ def test_gex(gene_query, rail_id, factor, normalized_count):
                          [('chr3:5555-6666', 'chr3', 5555, 6666),
                           ('chr3:4000-5000', 'chr3', 4000, 5000),
                           ('chr19:5000-6000', 'chr19', 5000, 6000),
-                          ('chr19:4000-5000', 'chr19', 4000, 5000)]
+                          ('chr19:4000-5000', 'chr19', 4000, 5000),
+                          ('chr1:1020120-1056116', 'chr1', 1020120, 1056116),
+                          ('Chromosome 19: 4,472,297-4,502,208', 'chr19', 4472297, 4502208),
+                          ('Chromosome19: 4,472,297-4,502,208', 'chr19', 4472297, 4502208),
+                          ('Chromosome19 :4,472,297-4,502,208', 'chr19', 4472297, 4502208),
+                          ('Chromosome19:4,472,297-4,502,208', 'chr19', 4472297, 4502208),
+                          ('Chromosome19:4,472297-4502,208', 'chr19', 4472297, 4502208),
+                          ('Chromosome 1: 16,567,708-16,567,893', 'chr1', 16567708, 16567893),
+                          ('chr22:20117650-20127052', 'chr22', 20117650, 20127052),
+                          ('chr2:1631887-1744515', 'chr2', 1631887, 1744515)]
                          )
 def test_geq_verify_coordinates(coordinates, chromosome, start, end):
-    (geq_chr, geq_start, geq_end) = sc.geq_verify_coordinate(coordinates)
-    assert geq_chr == chromosome
-    assert geq_start == start
-    assert geq_end == end
+    coordinates = sc.geq_verify_coordinate(coordinates)
+    assert coordinates.chr == chromosome
+    assert coordinates.start == start
+    assert coordinates.end == end
 
 
 @pytest.mark.parametrize('pair', ['chr19:7000-5000', 'chr19:6000-3000'])

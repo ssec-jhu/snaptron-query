@@ -1,44 +1,61 @@
+import collections
 import httpx
 import pandas as pd
 from io import BytesIO
 from snaptron_query.app import exceptions
 import re
 
+COORDINATES = collections.namedtuple('COORDINATES', ['chr', 'start', 'end'])
+
+JIQ_COORDINATES = collections.namedtuple('JIQ_COORDINATES', ['exc_coordinates',  # type COORDINATES
+                                                             'inc_coordinates'])  # type COORDINATES
+
+
+def coordinates_to_formatted_string(coordinates: COORDINATES):
+    return f"{coordinates.chr}:{coordinates.start}-{coordinates.end}"
+
 
 def verify_coordinates(coordinates):
+    # Another format used is: Chromosome 19: 4,472,297-4,502,208
+    # We want to handle this case as well and remove all commas and spaces
+    translation_table = str.maketrans("", "", ", ")
+    coordinates = coordinates.translate(translation_table).replace("Chromosome", "chr")
+
     # pattern used from snaptron code:
     # https://github.com/ChristopherWilks/snaptron/blob/75903c30d54708b19d91772142013687c74d88d8/snapconfshared.py#L196C31
     # https://docs.python.org/3/library/re.html#re.Match
     pattern = r'^(chr[12]?[0-9XYM]):(\d+)-(\d+)$'
-    m = re.match(pattern, str(coordinates))
+    m = re.match(pattern, coordinates)
     if m:  # group(0) is the entire match, will be None if there is no match
         # group(1) will be the chromosome
         # group(2) will be the start of the interval
         # group(3) will be the end of the interval
-        return m.group(1), int(m.group(2)), int(m.group(3))
+        return COORDINATES(m.group(1), int(m.group(2)), int(m.group(3)))
     else:  # if not re.match(pattern, (str(coordinates))):
         raise exceptions.BadCoordinates
 
 
 def jiq_verify_coordinate_pairs(exclusion_coordinates, inclusion_coordinates):
-    (exc_chr, exc_start, exc_end) = verify_coordinates(exclusion_coordinates)
-    (inc_chr, inc_start, inc_end) = verify_coordinates(inclusion_coordinates)
+    exc_coordinates = verify_coordinates(exclusion_coordinates)
+    inc_coordinates = verify_coordinates(inclusion_coordinates)
 
     # add sanity checks here for the pairs
-    if inc_chr != exc_chr or inc_start > inc_end or exc_start > exc_end:
+    if (inc_coordinates.chr != exc_coordinates.chr or
+            inc_coordinates.start > inc_coordinates.end or
+            exc_coordinates.start > exc_coordinates.end):
         raise exceptions.BadCoordinates
 
-    return (exc_chr, exc_start, exc_end), (inc_chr, inc_start, inc_end)
+    return JIQ_COORDINATES(exc_coordinates, inc_coordinates)
 
 
 def geq_verify_coordinate(gene_coordinate):
-    (coord_chr, coord_start, coord_end) = verify_coordinates(gene_coordinate)
+    coordinates = verify_coordinates(gene_coordinate)
 
     # add sanity checks here for the pairs
-    if coord_start > coord_end:
+    if coordinates.start > coordinates.end:
         raise exceptions.BadCoordinates
 
-    return coord_chr, coord_start, coord_end
+    return coordinates
 
 
 def get_snpt_query_results_df(compilation, region, query_mode):
