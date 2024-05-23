@@ -27,8 +27,8 @@ def default_junctions_dict():
 def insert_value(list_of_junctions, junction_index, dict_items_to_add):
     # Extend the list if the index is larger than the current size
     if junction_index >= len(list_of_junctions):
-        # fill it with default values list_of_junctions.extend([JIQ_CALCULATIONS(-1, 0, 0, 0, -1)._asdict() for _ in
-        # range(junction_index - len(list_of_junctions) + 1)])
+        # Note: I purposefully did not fill the junction with JIQ_CALCULATIONS default.
+        # All the other calculations are based upon these two values and are derived IF they exist for a junction
         list_of_junctions.extend([{'inc': 0, 'exc': 0} for _ in range(junction_index - len(list_of_junctions) + 1)])
 
     # Update the dictionary in the first list at the given index
@@ -144,8 +144,9 @@ class JunctionInclusionQueryManager:
             self._gather_samples_rail_id_and_counts(exclusion_junction_samples, 'exc', junction_index)
             self._gather_samples_rail_id_and_counts(inclusion_junction_samples, 'inc', junction_index)
 
-            # For each rail id found, gather its metadata and calculate PSI values
-            # this will populate self.gathered_rail_id_meta_data_and_psi
+        # For each rail id found, gather its metadata and calculate PSI values
+        # this will populate self.gathered_rail_id_meta_data_and_psi
+        for junction_index in range(0, len(junctions_list)):
             for rail_id in self.rail_id_dictionary:
                 self._gather_rail_id_meta_data(rail_id, meta_data_dict, junction_index)
 
