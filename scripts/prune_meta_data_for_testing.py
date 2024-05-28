@@ -20,7 +20,7 @@ def extract_meta_data_from_these_ids_only(meta_dict, rail_list):
 
 def generate_samples_srav3h(output_filename):
     rail_list = [499887, 988942, 988956, 1641727, 1641757, 2109561, 4199971, 4200482, 1000010, 1745655, 1127039,
-                 2171668]
+                 2171668, 2566685, 2566161, 988777, 2566328, 2566230]
     pruned_file = extract_meta_data_from_these_ids_only(utils.read_srav3h(paths.srav3h_meta), rail_list)
     pd.DataFrame.to_csv(pruned_file, output_filename, sep='\t')
 
@@ -46,9 +46,9 @@ def generate_samples_srav1m(output_filename):
 
 def generate_samples():
     generate_samples_srav3h(output_filename='test_samples_srav3h.tsv')
-    generate_samples_gtexv2(output_filename='test_samples_gtexv2.tsv')
-    generate_samples_tcgav2(output_filename='test_samples_tcgav2.tsv')
-    generate_samples_srav1m(output_filename='test_samples_srav1m.tsv')
+    # generate_samples_gtexv2(output_filename='test_samples_gtexv2.tsv')
+    # generate_samples_tcgav2(output_filename='test_samples_tcgav2.tsv')
+    # generate_samples_srav1m(output_filename='test_samples_srav1m.tsv')
 
 
 if __name__ == "__main__":
