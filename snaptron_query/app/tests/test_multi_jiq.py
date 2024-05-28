@@ -58,18 +58,14 @@ def test_mjq_2(multi_junction_srav3h_2, rail_id, external_id, inc_0, exc_0, psi_
                           (2109561, 'SRR6873183', 0, 0),
                           (1127039, 'SRR5398327', 0, 0),
                           (499887, 'SRR3469415', 3.12, 0),
-                          (1000010, 'SRR3743424', 0, 0)
-                          # (2566685, 'SRR8571950', 39.34, 0),  #failed
-                          # (2566230, 'SRR8571942', 39.29, 0),  # failed
-                          # (2566161, 'SRR8571940', 28.87, 0),  # failed
+                          (1000010, 'SRR3743424', 0, 0),
+                          (2566685, 'SRR8571950', 39.34, 0),
+                          (2566230, 'SRR8571942', 39.29, 0),
+                          (2566161, 'SRR8571940', 28.87, 0),
+                          (988777, 'SRR5461166', 23.57, 0),
                           ])
 def test_mjq_3(multi_junction_srav3h_3, rail_id, external_id, psi_0, psi_1):
     our_results = multi_junction_srav3h_3.get_results().loc[rail_id]
     assert our_results[gs.snpt_col_external_id] == external_id
-    # assert our_results[f"{gs.table_jiq_col_inc}_0"] == inc_0
-    # assert our_results[f"{gs.table_jiq_col_exc}_0"] == exc_0
     assert our_results[f"{gs.table_jiq_col_psi}_0"] == psi_0
-    #
-    # assert our_results[f"{gs.table_jiq_col_inc}_1"] == inc_1
-    # assert our_results[f"{gs.table_jiq_col_exc}_1"] == exc_1
     assert our_results[f"{gs.table_jiq_col_psi}_1"] == psi_1

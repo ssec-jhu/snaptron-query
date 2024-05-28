@@ -11,3 +11,8 @@
 9	SRR8769517	SRP133673	Coordinated Alterations in RNA Splicing and Epigenetic Regulation Drive Leukemogenesis		paired	TS51_5		1745655
 10	SRR5398327	SRP102807	Major hnRNP proteins act as general TDP-43 functional modifiers both in Drosophila and human neuronal cells.		single	GSM2560277	siTDP-43-01	1127039
 11	SRR5714918	SRP109786	RNA-seq reveals abundant circRNA, lncRNA and mRNA in blood exosomes of patients with pancreatic carcinoma		paired	GSM2675505	PAAD11	2171668
+12	SRR8571950	SRP185789	Loss of Nuclear TDP-43 Is Associated with Decondensation of LINE Retrotransposons [RNA-Seq]		paired	GSM3603276	RNA-Seq - NeuN positive/TDP-43 negative S6	2566685
+13	SRR8571940	SRP185789	Loss of Nuclear TDP-43 Is Associated with Decondensation of LINE Retrotransposons [RNA-Seq]		paired	GSM3603266	RNA-Seq - NeuN positive/TDP-43 negative S2	2566161
+14	SRR5461166	SRP104405	Transcriptome analysis on TDP43 and SRSF3 downstream genes and binding RNAs in MDA-MB231 cells by Next Generation Sequencing		paired	GSM2585550	sh-TDP43_rep1	988777
+15	SRR8571945	SRP185789	Loss of Nuclear TDP-43 Is Associated with Decondensation of LINE Retrotransposons [RNA-Seq]		paired	GSM3603271	RNA-Seq - NeuN positive/TDP-43 negative S4	2566328
+16	SRR8571942	SRP185789	Loss of Nuclear TDP-43 Is Associated with Decondensation of LINE Retrotransposons [RNA-Seq]		paired	GSM3603268	RNA-Seq - NeuN positive/TDP-43 negative S3	2566230
