@@ -108,6 +108,19 @@ def multi_junction_srav3h_2():
 
 
 @pytest.fixture(scope='session')
+def multi_junction_srav3h_3():
+    # this specific pair of junctions should have the psi_2 all 0
+    meta_data_dict = utils.read_srav3h(path_srav3h_meta)
+    df_sample_junctions_from_snaptron = pd.read_csv(
+        Path(__file__).parent / 'data/test_chr7_98881251_98881974_srav3h.tsv', sep='\t')
+    junction_0 = tuple([98881251, 98881974, 98881251, 98881694])
+    junction_1 = tuple([98881251, 98881974, 98881737, 98881974])
+    junction_list = [junction_0, junction_1]
+    mjq = MultiJunctionQuery(junction_list, meta_data_dict, df_sample_junctions_from_snaptron)
+    return mjq
+
+
+@pytest.fixture(scope='session')
 def junction_gtexv2():
     # this is extracted from the GTEXv2 compilation
     meta_data_dict = utils.read_gtexv2(path_gtexv2_meta)
