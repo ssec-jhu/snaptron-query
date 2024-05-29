@@ -16,3 +16,7 @@
 14	SRR5461166	SRP104405	Transcriptome analysis on TDP43 and SRSF3 downstream genes and binding RNAs in MDA-MB231 cells by Next Generation Sequencing		paired	GSM2585550	sh-TDP43_rep1	988777
 15	SRR8571945	SRP185789	Loss of Nuclear TDP-43 Is Associated with Decondensation of LINE Retrotransposons [RNA-Seq]		paired	GSM3603271	RNA-Seq - NeuN positive/TDP-43 negative S4	2566328
 16	SRR8571942	SRP185789	Loss of Nuclear TDP-43 Is Associated with Decondensation of LINE Retrotransposons [RNA-Seq]		paired	GSM3603268	RNA-Seq - NeuN positive/TDP-43 negative S3	2566230
+17	SRR5461167	SRP104405	Transcriptome analysis on TDP43 and SRSF3 downstream genes and binding RNAs in MDA-MB231 cells by Next Generation Sequencing		paired	GSM2585551	sh-TDP43_rep2	988795
+18	SRR10045018	SRP219885	Gene expression analysis of the impact of TDP-43 knockout in human cells.		paired	GSM4047466	TDP-43 KO rep. 3	491716
+19	SRR10045017	SRP219885	Gene expression analysis of the impact of TDP-43 knockout in human cells.		paired	GSM4047465	TDP-43 KO rep. 2	245855
+20	SRR8659838	SRP013565	GSE35585: RIP-seq from ENCODE/SUNY Albany	Homo sapiens K562 cell line genetically modified (interference) using CRISPR targeting TARDBP	paired	ENCODE biosample ENCBS559LFG	ENCODE biosample ENCBS559LFG	2033434

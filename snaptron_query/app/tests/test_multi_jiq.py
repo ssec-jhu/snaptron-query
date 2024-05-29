@@ -63,6 +63,9 @@ def test_mjq_2(multi_junction_srav3h_2, rail_id, external_id, inc_0, exc_0, psi_
                           (2566230, 'SRR8571942', 39.29, 0),
                           (2566161, 'SRR8571940', 28.87, 0),
                           (988777, 'SRR5461166', 23.57, 0),
+                          (988795, 'SRR5461167', 37.63, 0),
+                          (1641757, 'SRR8083868', 17.65, 0),
+                          (491716, 'SRR10045018', 16.67, 0),
                           ])
 def test_mjq_3(multi_junction_srav3h_3, rail_id, external_id, psi_0, psi_1):
     our_results = multi_junction_srav3h_3.get_results().loc[rail_id]
