@@ -20,7 +20,7 @@ def extract_meta_data_from_these_ids_only(meta_dict, rail_list):
 
 def generate_samples_srav3h(output_filename):
     rail_list = [499887, 988942, 988956, 1641727, 1641757, 2109561, 4199971, 4200482, 1000010, 1745655, 1127039,
-                 2171668, 2566685, 2566161, 988777, 2566328, 2566230,988795,1641757,491716,245855,2033434]
+                 2171668, 2566685, 2566161, 988777, 2566328, 2566230, 988795, 491716, 245855, 2033434]
     pruned_file = extract_meta_data_from_these_ids_only(utils.read_srav3h(paths.srav3h_meta), rail_list)
     pd.DataFrame.to_csv(pruned_file, output_filename, sep='\t')
 
