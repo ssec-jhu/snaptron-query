@@ -72,3 +72,22 @@ def test_mjq_3(multi_junction_srav3h_3, rail_id, external_id, psi_0, psi_1):
     assert our_results[gs.snpt_col_external_id] == external_id
     assert our_results[f"{gs.table_jiq_col_psi}_0"] == psi_0
     assert our_results[f"{gs.table_jiq_col_psi}_1"] == psi_1
+
+
+@pytest.mark.parametrize('rail_id,external_id,psi_0,psi_1',
+                         [
+                             (668214, 'SRR10007646', 27.27, 0),
+                             (669863, 'SRR2119714', 36.84, 27.27),
+                             (669879, 'SRR2119716', 37.38, 27.17),
+                             (669871, 'SRR2119715', 37.14, 18.52),
+                             (2885781, 'SRR5944044', 22.22, 0),
+                             (2885847, 'SRR5944046', 25, 0),
+                             (213136, 'DRR042048', 20, 0),
+                             (957629, 'SRR10044397', 26.09, 0),
+                             (3072016, 'SRR1971700', 100, 0),
+                         ])
+def test_mjq_4(multi_junction_srav1m_1, rail_id, external_id, psi_0, psi_1):
+    our_results = multi_junction_srav1m_1.get_results().loc[rail_id]
+    assert our_results[gs.snpt_col_external_id] == external_id
+    assert our_results[f"{gs.table_jiq_col_psi}_0"] == psi_0
+    assert our_results[f"{gs.table_jiq_col_psi}_1"] == psi_1

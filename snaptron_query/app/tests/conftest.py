@@ -152,6 +152,19 @@ def junction_srav1m():
 
 
 @pytest.fixture(scope='session')
+def multi_junction_srav1m_1():
+    # this specific pair of junctions should have the psi_2 all 0
+    meta_data_dict = utils.read_srav1m(path_srav1m_meta)
+    df_sample_junctions_from_snaptron = pd.read_csv(
+        Path(__file__).parent / 'data/test_chr8_71666671_71671625_srav1m.tsv', sep='\t')
+    junction_0 = tuple([71666671, 71671625, 71666671, 71667328])
+    junction_1 = tuple([71666671, 71671625, 71667373, 71671625])
+    junction_list = [junction_0, junction_1]
+    mjq = MultiJunctionQuery(junction_list, meta_data_dict, df_sample_junctions_from_snaptron)
+    return mjq
+
+
+@pytest.fixture(scope='session')
 def ground_truth_df():
     # sample data provided has been pruned to include samples with significant PSI>0
     # note when changing this data: rail_id is saved as sample_id from the PI website
