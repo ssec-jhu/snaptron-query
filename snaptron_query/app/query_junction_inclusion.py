@@ -9,9 +9,9 @@ class JunctionType(StrEnum):
 
 
 # note the fields in this named tuple must match the table column names of the JIQ
-JIQ_CALCULATIONS = collections.namedtuple('JIQ_CALCULATIONS',
-                                          [gs.table_jiq_col_psi, gs.table_jiq_col_inc,
-                                           gs.table_jiq_col_exc, gs.table_jiq_col_total, gs.table_jiq_col_log_2])
+JiqCalculations = collections.namedtuple('JiqCalculations',
+                                         [gs.table_jiq_col_psi, gs.table_jiq_col_inc,
+                                          gs.table_jiq_col_exc, gs.table_jiq_col_total, gs.table_jiq_col_log_2])
 
 
 def split_and_cast(sample):
@@ -27,7 +27,7 @@ def default_junctions_dict():
 def insert_value(list_of_junctions, junction_index, dict_items_to_add):
     # Extend the list if the index is larger than the current size
     if junction_index >= len(list_of_junctions):
-        # Note: I purposefully did not fill the junction with JIQ_CALCULATIONS default.
+        # Note: I purposefully did not fill the junction with JiqCalculations default.
         # All the other calculations are based upon these two values and are derived IF they exist for a junction
         list_of_junctions.extend([{'inc': 0, 'exc': 0} for _ in range(junction_index - len(list_of_junctions) + 1)])
 
@@ -85,14 +85,14 @@ class JunctionInclusionQueryManager:
 
             insert_value(list_of_junctions=self.rail_id_dictionary[rail_id]['junctions'],
                          junction_index=junction_index,
-                         dict_items_to_add=JIQ_CALCULATIONS(psi, inclusion_count, exclusion_count, total_count,
-                                                            log2)._asdict())
+                         dict_items_to_add=JiqCalculations(psi, inclusion_count, exclusion_count, total_count,
+                                                           log2)._asdict())
 
         except IndexError:
             # the rail id has no sample in the junction so populate with default values
             insert_value(list_of_junctions=self.rail_id_dictionary[rail_id]['junctions'],
                          junction_index=junction_index,
-                         dict_items_to_add=JIQ_CALCULATIONS(0, 0, 0, 0, 0)._asdict())
+                         dict_items_to_add=JiqCalculations(0, 0, 0, 0, 0)._asdict())
 
     def _gather_rail_id_meta_data(self, rail_id, meta_data_dict, junction_index):
         """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
@@ -121,16 +121,27 @@ class JunctionInclusionQueryManager:
     def _find_junction(df, start, end):
         return df.loc[(df['start'] == start) & (df['end'] == end)]
 
-    def run_junction_inclusion_query(self, df, meta_data_dict, junctions_list):
-        """Given the snaptron interface results, this function calculates the Percent Spliced In (PSI)
-        given the inclusion junction and the exclusion junction
+    def run_junction_inclusion_query(self, meta_data_dict, df_snpt_results_dict, junctions_list):
+        """Given the snaptron interface results in a map, this function calculates the Percent Spliced In (PSI)
+        given the inclusion junction and the exclusion junctions. If multiple junctions are provided,
+        each will be calculated separately.
         """
         # find the exclusion and inclusion junction rows
         for junction_index in range(0, len(junctions_list)):
-            (exclusion_start, exclusion_end, inclusion_start, inclusion_end) = junctions_list[junction_index]
 
-            exc_junctions_df = self._find_junction(df, exclusion_start, exclusion_end)
-            inc_junctions_df = self._find_junction(df, inclusion_start, inclusion_end)
+            splice_junction_pair = junctions_list[junction_index]
+            exc_junction_coordinates = splice_junction_pair[0]
+            inc_junction_coordinates = splice_junction_pair[1]
+            try:
+                df_snpt_results = df_snpt_results_dict[exc_junction_coordinates]
+            except KeyError:
+                # shouldn't come here ever the map was created based on the coordinates before
+                raise Exception  # TODO: fix this
+
+            exc_junctions_df = self._find_junction(df_snpt_results,
+                                                   exc_junction_coordinates.start, exc_junction_coordinates.end)
+            inc_junctions_df = self._find_junction(df_snpt_results,
+                                                   inc_junction_coordinates.start, inc_junction_coordinates.end)
 
             # if either one is empty the user has inputted wrong coordinates
             if exc_junctions_df.empty or inc_junctions_df.empty:
@@ -152,37 +163,3 @@ class JunctionInclusionQueryManager:
 
             # returning a list of dictionaries not a dataframe for better coexistence with the front-end UI
         return self.rail_id_dictionary
-
-
-def convert_to_single_junction(rail_id_dictionary):
-    """rail_id_dictionary contains information for all the samples an is independent of the UI.
-    Use this helper function to convert to extract what we want to show for the SINGLE junction query table.
-    """
-    single_junction = []
-    for rail_id in rail_id_dictionary:
-        if rail_id_dictionary[rail_id]['meta'] and len(rail_id_dictionary[rail_id]['junctions']) == 1:
-            data = {'rail_id': rail_id}
-            data.update(rail_id_dictionary[rail_id]['meta'])
-            data.update(rail_id_dictionary[rail_id]['junctions'][0])
-            single_junction.append(data)
-
-    return single_junction
-
-
-def convert_to_multi_junction(rail_id_dictionary):
-    """rail_id_dictionary contains information for all the samples an is independent of the UI.
-        Use this helper function to convert to extract what we want to show for the MULTI junction query table.
-        """
-    multi_junction = []
-    for rail_id in rail_id_dictionary:
-        if rail_id_dictionary[rail_id]['meta']:
-            data = {'rail_id': rail_id}
-            data.update(rail_id_dictionary[rail_id]['meta'])
-            for junction_index in range(0, len(rail_id_dictionary[rail_id]['junctions'])):
-                info = rail_id_dictionary[rail_id]['junctions'][junction_index]
-                modified_dict = {f"{key}_{junction_index}": value for key, value in info.items()}
-                data.update(modified_dict)
-
-            multi_junction.append(data)
-
-    return multi_junction
