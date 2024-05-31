@@ -1,11 +1,19 @@
 import collections
 from enum import StrEnum
+import pandas
+
 from snaptron_query.app import exceptions, global_strings as gs, utils
 
 
 class JunctionType(StrEnum):
     EXCLUSION = 'exc'
     INCLUSION = 'inc'
+
+
+class JiqReturnType(StrEnum):
+    LIST = 'list_of_dictionaries_for_ag_grid'
+    RAW = 'raw_rail_id_dictionary'
+    INDEXED_PD = 'pandas_data_frame'
 
 
 # note the fields in this named tuple must match the table column names of the JIQ
@@ -117,11 +125,44 @@ class JunctionInclusionQueryManager:
             # code must continue and not stop
             pass
 
+    def _convert_results_to_dictionary_list_single_jiq(self):
+        """rail_id_dictionary contains information for all the samples an is independent of the UI.
+        Use this helper function to convert to extract what we want to show for the SINGLE junction query table.
+        """
+        single_junction = []
+        for rail_id in self.rail_id_dictionary:
+            if self.rail_id_dictionary[rail_id]['meta'] and len(self.rail_id_dictionary[rail_id]['junctions']) == 1:
+                data = {'rail_id': rail_id}
+                data.update(self.rail_id_dictionary[rail_id]['meta'])
+                data.update(self.rail_id_dictionary[rail_id]['junctions'][0])
+                single_junction.append(data)
+
+        return single_junction
+
+    def _convert_results_to_dictionary_list_multi_jiq(self):
+        """rail_id_dictionary contains information for all the samples an is independent of the UI.
+        Use this helper function to convert to extract what we want to show for the MULTI junction query table.
+        """
+        multi_junction = []
+        for rail_id in self.rail_id_dictionary:
+            if self.rail_id_dictionary[rail_id]['meta']:
+                data = {'rail_id': rail_id}
+                data.update(self.rail_id_dictionary[rail_id]['meta'])
+                for junction_index in range(0, len(self.rail_id_dictionary[rail_id]['junctions'])):
+                    info = self.rail_id_dictionary[rail_id]['junctions'][junction_index]
+                    modified_dict = {f"{key}_{junction_index}": value for key, value in info.items()}
+                    data.update(modified_dict)
+
+                multi_junction.append(data)
+
+        return multi_junction
+
     @staticmethod
     def _find_junction(df, start, end):
         return df.loc[(df['start'] == start) & (df['end'] == end)]
 
-    def run_junction_inclusion_query(self, meta_data_dict, df_snpt_results_dict, junctions_list):
+    def run_junction_inclusion_query(self, meta_data_dict, df_snpt_results_dict, junctions_list,
+                                     return_type: JunctionType):
         """Given the snaptron interface results in a map, this function calculates the Percent Spliced In (PSI)
         given the inclusion junction and the exclusion junctions. If multiple junctions are provided,
         each will be calculated separately.
@@ -161,5 +202,13 @@ class JunctionInclusionQueryManager:
             for rail_id in self.rail_id_dictionary:
                 self._gather_rail_id_meta_data(rail_id, meta_data_dict, junction_index)
 
+        if return_type == JiqReturnType.RAW:
+            return self.rail_id_dictionary
+        elif return_type == JiqReturnType.LIST or return_type == JiqReturnType.INDEXED_PD:
             # returning a list of dictionaries not a dataframe for better coexistence with the front-end UI
-        return self.rail_id_dictionary
+            dict_list = self._convert_results_to_dictionary_list_single_jiq() if len(junctions_list) == 1 \
+                        else self._convert_results_to_dictionary_list_multi_jiq()
+
+            # convert to dataframe if needed
+            return dict_list if return_type == JiqReturnType.LIST \
+                else pandas.DataFrame(dict_list).set_index(gs.snpt_col_rail_id)

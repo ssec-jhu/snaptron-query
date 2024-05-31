@@ -26,11 +26,10 @@ class JunctionQuery:
     def __init__(self, junction_list, meta_data_dict, df_from_snaptron_map):
         # find the exclusion and inclusion junction rows
         self.query_mgr = jiq.JunctionInclusionQueryManager()
-        df = pd.DataFrame(jiq.convert_to_single_junction
-                          (self.query_mgr.run_junction_inclusion_query(meta_data_dict=meta_data_dict,
-                                                                       df_snpt_results_dict=df_from_snaptron_map,
-                                                                       junctions_list=junction_list)))
-        self.df_jiq_results = df.set_index(gs.snpt_col_rail_id)
+        self.df_jiq_results = self.query_mgr.run_junction_inclusion_query(meta_data_dict=meta_data_dict,
+                                                                          df_snpt_results_dict=df_from_snaptron_map,
+                                                                          junctions_list=junction_list,
+                                                                          return_type=jiq.JiqReturnType.INDEXED_PD)
 
     def get_rail_id_dict(self):
         return self.query_mgr.get_rail_id_dictionary()
@@ -43,11 +42,10 @@ class MultiJunctionQuery:
     def __init__(self, junction_list, meta_data_dict, df_from_snaptron_map):
         # find the exclusion and inclusion junction rows
         self.query_mgr = jiq.JunctionInclusionQueryManager()
-        df = pd.DataFrame(utils.convert_to_multi_junction
-                          (self.query_mgr.run_junction_inclusion_query(meta_data_dict=meta_data_dict,
-                                                                       df_snpt_results_dict=df_from_snaptron_map,
-                                                                       junctions_list=junction_list)))
-        self.df_jiq_results = df.set_index(gs.snpt_col_rail_id)
+        self.df_jiq_results = self.query_mgr.run_junction_inclusion_query(meta_data_dict=meta_data_dict,
+                                                                          df_snpt_results_dict=df_from_snaptron_map,
+                                                                          junctions_list=junction_list,
+                                                                          return_type=jiq.JiqReturnType.INDEXED_PD)
 
     def get_rail_id_dict(self):
         return self.query_mgr.get_rail_id_dictionary()
@@ -136,8 +134,8 @@ def junction_srav1m():
     df_sample_junctions_from_snaptron_map = {splice_pair.exc_coordinates: df_sample_junctions_from_snaptron}
 
     return JunctionQuery(junction_list=[splice_pair],
-                              meta_data_dict=meta_data_dict,
-                              df_from_snaptron_map=df_sample_junctions_from_snaptron_map)
+                         meta_data_dict=meta_data_dict,
+                         df_from_snaptron_map=df_sample_junctions_from_snaptron_map)
 
 
 @pytest.fixture(scope='session')
