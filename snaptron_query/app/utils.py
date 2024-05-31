@@ -23,8 +23,8 @@ def read_gtexv2(file_path):
     col_types = {item: 'string' for item in gs.gtexv2_meta_data_required_list[1:len(gs.gtexv2_meta_data_required_list)]}
 
     return pd.read_csv(file_path, sep='\t',
-                     usecols=gs.gtexv2_meta_data_required_list,
-                     dtype=col_types).set_index(gs.snpt_col_rail_id).to_dict(orient='index')
+                       usecols=gs.gtexv2_meta_data_required_list,
+                       dtype=col_types).set_index(gs.snpt_col_rail_id).to_dict(orient='index')
 
 
 def read_tcgav2(file_path):
@@ -69,3 +69,37 @@ def get_element_id_and_value(children, count):
             raise exceptions.MissingUserInputs
 
     return inc_junctions, exc_junctions
+
+
+def convert_to_single_junction(rail_id_dictionary):
+    """rail_id_dictionary contains information for all the samples an is independent of the UI.
+    Use this helper function to convert to extract what we want to show for the SINGLE junction query table.
+    """
+    single_junction = []
+    for rail_id in rail_id_dictionary:
+        if rail_id_dictionary[rail_id]['meta'] and len(rail_id_dictionary[rail_id]['junctions']) == 1:
+            data = {'rail_id': rail_id}
+            data.update(rail_id_dictionary[rail_id]['meta'])
+            data.update(rail_id_dictionary[rail_id]['junctions'][0])
+            single_junction.append(data)
+
+    return single_junction
+
+
+def convert_to_multi_junction(rail_id_dictionary):
+    """rail_id_dictionary contains information for all the samples an is independent of the UI.
+        Use this helper function to convert to extract what we want to show for the MULTI junction query table.
+        """
+    multi_junction = []
+    for rail_id in rail_id_dictionary:
+        if rail_id_dictionary[rail_id]['meta']:
+            data = {'rail_id': rail_id}
+            data.update(rail_id_dictionary[rail_id]['meta'])
+            for junction_index in range(0, len(rail_id_dictionary[rail_id]['junctions'])):
+                info = rail_id_dictionary[rail_id]['junctions'][junction_index]
+                modified_dict = {f"{key}_{junction_index}": value for key, value in info.items()}
+                data.update(modified_dict)
+
+            multi_junction.append(data)
+
+    return multi_junction

@@ -43,7 +43,7 @@ class MultiJunctionQuery:
     def __init__(self, junction_list, meta_data_dict, df_from_snaptron_map):
         # find the exclusion and inclusion junction rows
         self.query_mgr = jiq.JunctionInclusionQueryManager()
-        df = pd.DataFrame(jiq.convert_to_multi_junction
+        df = pd.DataFrame(utils.convert_to_multi_junction
                           (self.query_mgr.run_junction_inclusion_query(meta_data_dict=meta_data_dict,
                                                                        df_snpt_results_dict=df_from_snaptron_map,
                                                                        junctions_list=junction_list)))
