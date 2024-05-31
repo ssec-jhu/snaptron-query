@@ -167,4 +167,8 @@ def test_jiq_psi_results_vs_shinyapp_website(junction_srav3h, ground_truth_df, r
 def test_jiq_empty_junctions():
     with pytest.raises(exceptions.EmptyJunction):
         df_sample_junctions_from_snaptron = pd.read_csv(path_sample_junction_data, sep='\t')
-        JunctionQuery([tuple([4491836, 4493702, 0, 0])], {}, df_sample_junctions_from_snaptron)
+        splice_pair = sc.SpliceJunctionPair(exc_coordinates=sc.JunctionCoordinates(19, 4491836, 4493702),
+                                            inc_coordinates=sc.JunctionCoordinates(19, 0, 0))
+        JunctionQuery(junction_list=[splice_pair],
+                      meta_data_dict={},
+                      df_from_snaptron_map={splice_pair.exc_coordinates: df_sample_junctions_from_snaptron})
