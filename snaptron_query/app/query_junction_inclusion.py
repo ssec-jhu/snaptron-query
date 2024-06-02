@@ -29,10 +29,10 @@ def split_and_cast(sample):
 
 def default_junctions_dict():
     # Note: this acts like a "default constructor" for every value of a key not found
-    return {"meta": {}, "junctions": []}
+    return {"meta": {}, "junctions": [], "psi_sum": 0}
 
 
-def insert_value(list_of_junctions, junction_index, dict_items_to_add):
+def insert_junction_calculations(list_of_junctions, junction_index, dict_items_to_add):
     # Extend the list if the index is larger than the current size
     if junction_index >= len(list_of_junctions):
         # Note: I purposefully did not fill the junction with JiqCalculations default.
@@ -67,9 +67,9 @@ class JunctionInclusionQueryManager:
 
                     # create dictionary item
                     dict_value = {junction_type: count}
-                    insert_value(list_of_junctions=self.rail_id_dictionary[rail_id]['junctions'],
-                                 junction_index=junction_index,
-                                 dict_items_to_add=dict_value)
+                    insert_junction_calculations(list_of_junctions=self.rail_id_dictionary[rail_id]['junctions'],
+                                                 junction_index=junction_index,
+                                                 dict_items_to_add=dict_value)
 
     def _calculate_percent_spliced_in(self, rail_id, junction_index):
         # calculate Percent Spliced In
@@ -91,16 +91,18 @@ class JunctionInclusionQueryManager:
 
             log2 = round(utils.log_2_plus(psi), 4)
 
-            insert_value(list_of_junctions=self.rail_id_dictionary[rail_id]['junctions'],
-                         junction_index=junction_index,
+            insert_junction_calculations(list_of_junctions=self.rail_id_dictionary[rail_id]['junctions'],
+                                         junction_index=junction_index,
                          dict_items_to_add=JiqCalculations(psi, inclusion_count, exclusion_count, total_count,
-                                                           log2)._asdict())
+                                                                           log2)._asdict())
+
+            self.rail_id_dictionary[rail_id]["psi_sum"] += psi
 
         except IndexError:
             # the rail id has no sample in the junction so populate with default values
-            insert_value(list_of_junctions=self.rail_id_dictionary[rail_id]['junctions'],
-                         junction_index=junction_index,
-                         dict_items_to_add=JiqCalculations(0, 0, 0, 0, 0)._asdict())
+            insert_junction_calculations(list_of_junctions=self.rail_id_dictionary[rail_id]['junctions'],
+                                         junction_index=junction_index,
+                                         dict_items_to_add=JiqCalculations(0, 0, 0, 0, 0)._asdict())
 
     def _gather_rail_id_meta_data(self, rail_id, meta_data_dict, junction_index):
         """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
@@ -146,12 +148,17 @@ class JunctionInclusionQueryManager:
         multi_junction = []
         for rail_id in self.rail_id_dictionary:
             if self.rail_id_dictionary[rail_id]['meta']:
-                data = {'rail_id': rail_id}
+                data = {gs.snpt_col_rail_id: rail_id}
                 data.update(self.rail_id_dictionary[rail_id]['meta'])
-                for junction_index in range(0, len(self.rail_id_dictionary[rail_id]['junctions'])):
+
+                # add the average psi
+                num_junctions = len(self.rail_id_dictionary[rail_id]['junctions'])
+                data[gs.table_jiq_col_avg_psi] = self.rail_id_dictionary[rail_id]['psi_sum'] / num_junctions
+
+                for junction_index in range(0, num_junctions):
                     info = self.rail_id_dictionary[rail_id]['junctions'][junction_index]
                     # NOTE: the output junction indices starts with 1 not 0
-                    modified_dict = {f"{key}_{junction_index+1}": value for key, value in info.items()}
+                    modified_dict = {f"{key}_{junction_index + 1}": value for key, value in info.items()}
                     data.update(modified_dict)
 
                 multi_junction.append(data)
@@ -208,7 +215,7 @@ class JunctionInclusionQueryManager:
         elif return_type == JiqReturnType.LIST or return_type == JiqReturnType.INDEXED_PD:
             # returning a list of dictionaries not a dataframe for better coexistence with the front-end UI
             dict_list = self._convert_results_to_dictionary_list_single_jiq() if len(junctions_list) == 1 \
-                        else self._convert_results_to_dictionary_list_multi_jiq()
+                else self._convert_results_to_dictionary_list_multi_jiq()
 
             # convert to dataframe if needed
             return dict_list if return_type == JiqReturnType.LIST \
