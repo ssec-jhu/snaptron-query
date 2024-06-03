@@ -73,16 +73,25 @@ def get_col_jiq():
 
 
 def get_col_multi_jiq(junctions_count):
-    # get the last two items off the list: the PSI and the log2
-    multi_jiq_fields = get_col_jiq()[-2:]
+    # add the average PSI and set this column for sort
+    multi_jiq_fields_indexed = [{"field": gs.table_jiq_col_avg_psi, "headerName": "avg PSI",
+                                 "filter": "agNumberColumnFilter", 'initialSort': 'desc', 'width': 120,
+                                 "filterParams": {"buttons": ["reset"]}}]
 
-    multi_jiq_fields_indexed = []
+    # get the last two items off the list: the PSI and the log2
+    # multi_jiq_fields = get_col_jiq()[-2:]
+    multi_jiq_fields = [{"field": gs.table_jiq_col_psi, "headerName": "PSI", "filter": "agNumberColumnFilter",
+                         'width': 120, "filterParams": {"buttons": ["reset"]}},
+                        {"field": gs.table_jiq_col_log_2, "headerName": gs.jiq_log_psi,
+                         "filter": "agNumberColumnFilter", 'width': 145, "filterParams": {"buttons": ["reset"]}}
+                        ]
+
     for f in range(len(multi_jiq_fields)):
-        for i in range(0, junctions_count + 0):  # TODO: should this be 0 indexed or do they want 1 indexed?
+        for i in range(junctions_count):  # TODO: should this be 0 indexed or do they want 1 indexed?
             new_dict = multi_jiq_fields[f].copy()
             # Modify the values by appending the index
-            new_dict["field"] = f"{multi_jiq_fields[f]['field']}_{i}"
-            new_dict["headerName"] = f"{multi_jiq_fields[f]['headerName']}_{i}"
+            new_dict["field"] = f"{multi_jiq_fields[f]['field']}_{i + 1}"
+            new_dict["headerName"] = f"{multi_jiq_fields[f]['headerName']}_{i + 1}"
             # Append the modified dictionary to the list
             multi_jiq_fields_indexed.append(new_dict)
 
@@ -140,17 +149,16 @@ def get_gene_expression_query_column_def(compilation, normalized=False):
 
 
 def get_jiq_table_filter_model(junction_count):
-    base_filter = {gs.table_jiq_col_psi: {'filterType': 'number', 'type': 'greaterThanOrEqual', 'filter': 5}}
-
     # for single junction queries we also show total count in the tables
     if junction_count == 1:
-        base_filter.update(
-            {gs.table_jiq_col_total: {'filterType': 'number', 'type': 'greaterThanOrEqual', 'filter': 15}})
-        return base_filter
+        # filter psi and total_count
+        filter_model = {gs.table_jiq_col_total: {'filterType': 'number',
+                                                 'type': 'greaterThanOrEqual', 'filter': 15},
+                        gs.table_jiq_col_psi: {'filterType': 'number',
+                                               'type': 'greaterThanOrEqual', 'filter': 5}}
     else:
-        psi_filter_indexed = {}
-        for i in range(0, junction_count + 0):
-            for key, value in base_filter.items():
-                new_key = f"{key}_{i}"
-                psi_filter_indexed[new_key] = value
-        return psi_filter_indexed
+        # filter average psi
+        filter_model = {gs.table_jiq_col_avg_psi: {'filterType': 'number',
+                                                   'type': 'greaterThanOrEqual', 'filter': 5}}
+
+    return filter_model
