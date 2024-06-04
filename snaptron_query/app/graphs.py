@@ -1,5 +1,6 @@
 """This file includes the graph components used in the queries."""
 import numpy as np
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -33,40 +34,61 @@ def fig_common_update_box_plot(fig, title, y_axes_title_text):
     return fig
 
 
-def create_box_plot(violin_overlay, df, y_values, range_y_axis, labels):
+def convert_data_to_long_format(df, log_psi_values, list_of_calculated_junctions):
+    # we need to use df melt to overlay all the data into one histogram.
+    # use the log column or the psi columns pending switch value
+    df_melt_values = [col for col in df.columns if col.startswith(gs.table_jiq_col_log_2)] \
+        if log_psi_values else list_of_calculated_junctions
+    df_melt = pd.melt(df, id_vars=[gs.snpt_col_rail_id], value_vars=df_melt_values)
+
+    # this easy mapping fixes hover data and trace names all-in-one instead of fixing
+    # each one manually after the figure is created because the traces follow the df variables
+    replacement_mapping = {'psi_1': 'PSI_1', 'psi_2': 'PSI_2', 'psi_3': 'PSI_3', 'psi_4': 'PSI_4', 'psi_5': 'PSI_5',
+                           'log_2_plus_1': 'Log_1', 'log_2_plus_2': 'Log_2', 'log_2_plus_3': 'Log_3',
+                           'log_2_plus_4': 'Log_4', 'log_2_plus_5': 'Log_5',
+                           }
+    df_melt['variable'] = df_melt['variable'].map(replacement_mapping)
+
+    return df_melt
+
+
+def create_box_plot(violin_overlay, df, y_values, range_y_axis, labels, mode=None, color=None):
     hover_data = [gs.snpt_col_rail_id]
     if violin_overlay:
         # to draw all points set point to all
-        fig = px.violin(df, y=y_values, hover_data=hover_data, labels=labels,
-                        box=True,
-                        # points='all'
-                        )
+        fig = px.violin(df, y=y_values, hover_data=hover_data, labels=labels, box=True, color=color, violinmode=mode,
+                        points='outliers')
     else:
-        fig = px.box(df, y=y_values, hover_data=hover_data, labels=labels,
+        fig = px.box(df, y=y_values, hover_data=hover_data, labels=labels, color=color, boxmode=mode, points='outliers',
                      # Request to not snap with table changes for JIQ.
                      # If provided, overrides auto-scaling on the y-axis in cartesian coordinates.
-                     range_y=range_y_axis,
-                     # points='all'
-                     )  # show all points
+                     range_y=range_y_axis)
         fig.update_traces(boxmean=True)
 
     return fig
 
 
-def get_box_plot_jiq(df, log_psi_values, violin_overlay):
+def get_box_plot_jiq(df, log_psi_values, violin_overlay, list_of_calculated_junctions):
     """Wrapper for plotly express box plot given a df
 
     https://plotly.com/python/box-plots/
     https://plotly.com/python-api-reference/generated/plotly.express.box
     https://plotly.com/python/reference/box/
     """
-    # set up the titles and the values for the box plot
-    y_values = gs.table_jiq_col_log_2 if log_psi_values else gs.table_jiq_col_psi
+    junction_count = len(list_of_calculated_junctions)
     range_y_axis = None if log_psi_values else [0, 110]
     y_axes_title_text = gs.jiq_log_psi if log_psi_values else gs.jiq_psi_plot_axes
+    if junction_count == 1:
+        # set up the titles and the values for the box plot
+        y_values = gs.table_jiq_col_log_2 if log_psi_values else gs.table_jiq_col_psi
 
-    # now create the box plot with these values
-    fig = create_box_plot(violin_overlay, df, y_values, range_y_axis, get_common_labels_jiq())
+        # now create the box plot with these values
+        fig = create_box_plot(violin_overlay, df, y_values, range_y_axis, get_common_labels_jiq())
+
+    else:
+        df_melt = convert_data_to_long_format(df, log_psi_values, list_of_calculated_junctions)
+        fig = create_box_plot(violin_overlay, df_melt, "value", range_y_axis, get_common_labels_jiq(),
+                              color="variable", mode="group")  # TODO: mode="overlay"?
 
     # apply the common attributes for all box plots
     fig_common_update_box_plot(fig, gs.jiq_plot_title_box, y_axes_title_text)
@@ -148,23 +170,45 @@ def fig_common_update_histogram(fig, title, y_title_text):
     return fig
 
 
-def create_histogram(df, x_values, log_y, labels, bins, plot_title, y_title):
-    fig = px.histogram(df, x=x_values, log_y=log_y, labels=labels, nbins=bins)
+def create_histogram(df, x_values, log_y, labels, bins, plot_title, y_title, color=None):
+    fig = px.histogram(df, x=x_values, log_y=log_y, labels=labels, nbins=bins, color=color)
     fig_common_update_histogram(fig, plot_title, y_title)
     return fig
 
 
-def get_histogram_jiq(df, log_psi_values, log_y):
+def get_histogram_jiq(df, log_psi_values, log_y, list_of_calculated_junctions):
     """Wrapper for plotly express histogram given a df - for clarity
 
     fig.update traces using below
     https://plotly.com/python/reference/histogram/
     https://plotly.com/python/histograms/
     """
-    x_values = gs.table_jiq_col_log_2 if log_psi_values else gs.table_jiq_col_psi
+    junction_count = len(list_of_calculated_junctions)
     y_title_text = gs.jiq_log_psi if log_psi_values else gs.jiq_psi_plot_axes
+    if junction_count == 1:
+        x_values = gs.table_jiq_col_log_2 if log_psi_values else gs.table_jiq_col_psi
 
-    return create_histogram(df, x_values, log_y, get_common_labels_jiq(), 25, gs.jiq_plot_title_hist, y_title_text)
+        return create_histogram(df, x_values, log_y, get_common_labels_jiq(), 25, gs.jiq_plot_title_hist, y_title_text)
+
+    else:
+        df_melt = convert_data_to_long_format(df, log_psi_values, list_of_calculated_junctions)
+
+        return create_histogram(df_melt, "value", log_y, get_common_labels_jiq(), 25, gs.jiq_plot_title_hist,
+                                y_title_text,
+                                color="variable")
+
+        # TODO:change "variable" to something else? var_name='Junction Index', color would also have to be the same name
+        # # this will put them side to side
+        # fig1 = px.histogram(df_melt, x="value", color="variable", log_y=log_y, nbins=25, title=gs.jiq_plot_title_hist,
+        #                     facet_col='variable', )
+        # # this will show overlay on top of each other
+        # fig3 = px.histogram(df_melt, x="value", color="variable", log_y=log_y, nbins=25, title="overlay",
+        #                     barmode='overlay',opacity=0.75)
+        # fig3.data = fig3.data[::-1]
+        # # Set the opacity of the bars to ensure distinct colors
+        # for trace in fig3.data:
+        #     trace.opacity = 0.5
+        # fig_common_update_histogram(fig3, gs.jiq_plot_title_hist, y_title_text)
 
 
 def get_histogram_geq(df, log_count_values, log_y):
