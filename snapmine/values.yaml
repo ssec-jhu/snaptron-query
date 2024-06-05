@@ -107,18 +107,6 @@ volumes:
       path: /minikube-volume/snaptron_samples #/Users/fatemeh/Desktop/meta-data
       type: Directory # this field is optional
       readOnly: true
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
-
-# use a nfs volume for deployment on IDIES server
-# https://kubernetes.io/docs/concepts/storage/volumes/#nfs
-# volumes:
-    #nfs:
-    #  server: snaptron01
-    #  path: /srv/nvme2/snaptron_data/snaptron_samples
-    #  readOnly: true
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:

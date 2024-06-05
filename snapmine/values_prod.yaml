@@ -1,0 +1,37 @@
+image:
+  repository: containers.repo.sciserver.org/ssec-snaptron/snapmine
+  pullPolicy: Always
+  tag: beta-1-8dad4a7
+  args:
+    - 'snaptron_query.app.main_dash_app:server'
+    - '--workers=3' # suggested workers is 2*Core+1 https://docs.gunicorn.org/en/latest/design.html#how-many-workers
+    - '--threads=1'
+    - '--timeout=120' # https://docs.gunicorn.org/en/stable/settings.html#timeout
+    - '-b'
+    - '0.0.0.0'  # took the 80 out of 0.0.0.0:80
+
+imagePullSecrets:
+  - name: containers.repo-readonly
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+  hosts:
+    - host: snapmine.idies.jhu.edu
+      paths:
+        - path: /
+          pathType: Prefix
+
+volumes:
+- name: snapmine-samples
+  nfs:
+    path: /srv/
+    readOnly: true
+    server: snaptron01
+
+volumeMounts:
+- name: snapmine-samples
+  mountPath: /srv/
