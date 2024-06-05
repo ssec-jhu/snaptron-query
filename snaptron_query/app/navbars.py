@@ -51,15 +51,21 @@ def get_navbar_bottom():
                                 [
                                     dbc.Row(dbc.Col([
                                         components.get_text("Built using "),
-                                        html.A(components.get_text("Snaptron"), href=gs.url_snaptron,
+                                        html.A(components.get_text("Snaptron"),
+                                               href=gs.url_snaptron,
                                                className='text-light'),
                                         components.get_text(" and "),
-                                        html.A(components.get_text("Recount3"), href=gs.url_recount,
+                                        html.A(components.get_text("Recount3"),
+                                               href=gs.url_recount,
                                                className='text-light'),
 
                                     ], align='center')),
-
-                                    dbc.Row(children=[components.get_text("Please Cite: <TBD>")]),
+                                    dbc.Row(dbc.Col([
+                                        components.get_text("Please cite: "),
+                                        html.A(components.get_text("[Sinha et al. 2024]"),
+                                               href=gs.url_paper,
+                                               className='text-light')
+                                    ], align='center')),
                                     dbc.Row(children=[components.get_text(gs.contacts)])
                                 ]
                             ),
