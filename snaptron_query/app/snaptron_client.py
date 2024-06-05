@@ -1,14 +1,21 @@
 import collections
+import re
+from io import BytesIO
+
 import httpx
 import pandas as pd
-from io import BytesIO
+
 from snaptron_query.app import exceptions
-import re
 
-COORDINATES = collections.namedtuple('COORDINATES', ['chr', 'start', 'end'])
+COORDINATES = collections.namedtuple("COORDINATES", ["chr", "start", "end"])
 
-JIQ_COORDINATES = collections.namedtuple('JIQ_COORDINATES', ['exc_coordinates',  # type COORDINATES
-                                                             'inc_coordinates'])  # type COORDINATES
+JIQ_COORDINATES = collections.namedtuple(
+    "JIQ_COORDINATES",
+    [
+        "exc_coordinates",  # type COORDINATES
+        "inc_coordinates",
+    ],
+)  # type COORDINATES
 
 
 def coordinates_to_formatted_string(coordinates: COORDINATES):
@@ -24,7 +31,7 @@ def verify_coordinates(coordinates):
     # pattern used from snaptron code:
     # https://github.com/ChristopherWilks/snaptron/blob/75903c30d54708b19d91772142013687c74d88d8/snapconfshared.py#L196C31
     # https://docs.python.org/3/library/re.html#re.Match
-    pattern = r'^(chr[12]?[0-9XYM]):(\d+)-(\d+)$'
+    pattern = r"^(chr[12]?[0-9XYM]):(\d+)-(\d+)$"
     m = re.match(pattern, coordinates)
     if m:  # group(0) is the entire match, will be None if there is no match
         # group(1) will be the chromosome
@@ -40,9 +47,11 @@ def jiq_verify_coordinate_pairs(exclusion_coordinates, inclusion_coordinates):
     inc_coordinates = verify_coordinates(inclusion_coordinates)
 
     # add sanity checks here for the pairs
-    if (inc_coordinates.chr != exc_coordinates.chr or
-            inc_coordinates.start > inc_coordinates.end or
-            exc_coordinates.start > exc_coordinates.end):
+    if (
+        inc_coordinates.chr != exc_coordinates.chr
+        or inc_coordinates.start > inc_coordinates.end
+        or exc_coordinates.start > exc_coordinates.end
+    ):
         raise exceptions.BadCoordinates
 
     return JIQ_COORDINATES(exc_coordinates, inc_coordinates)
@@ -66,8 +75,8 @@ def get_snpt_query_results_df(compilation, region, query_mode):
     :return: the result of the snaptron web interface converted into a dataframe
     """
     # TODO: move this to a config file when it's made
-    host = 'https://snaptron.cs.jhu.edu'
-    url = f'{host}/{str(compilation).lower()}/{query_mode}?regions={str(region)}'
+    host = "https://snaptron.cs.jhu.edu"
+    url = f"{host}/{str(compilation).lower()}/{query_mode}?regions={str(region)}"
     # url = 'https://snaptro.cs.jhu.edu/srav3h/snaptron?regions=chr19:4491836-4493702'
     # temp_url = 'https://snaptron.cs.jhu.edu/srav3h/genes?regions=chr1:11013716-11024183'
 
@@ -77,7 +86,7 @@ def get_snpt_query_results_df(compilation, region, query_mode):
     resp.raise_for_status()
     data_bytes = resp.read()
     if data_bytes:
-        df = pd.read_csv(BytesIO(data_bytes), sep='\t')
+        df = pd.read_csv(BytesIO(data_bytes), sep="\t")
         return df
     else:
         raise exceptions.EmptyResponse

@@ -1,6 +1,8 @@
 import collections
 from enum import Enum
-from snaptron_query.app import exceptions, global_strings as gs, utils
+
+from snaptron_query.app import exceptions, utils
+from snaptron_query.app import global_strings as gs
 
 
 class JunctionType(Enum):
@@ -9,25 +11,21 @@ class JunctionType(Enum):
 
 
 # note the fields in this named tuple must match the table column names of the JIQ
-JIQ_CALCULATIONS = collections.namedtuple('JIQ_CALCULATIONS',
-                                          [gs.table_jiq_col_psi, gs.table_jiq_col_inc,
-                                           gs.table_jiq_col_exc, gs.table_jiq_col_total, gs.table_jiq_col_log_2])
+JIQ_CALCULATIONS = collections.namedtuple(
+    "JIQ_CALCULATIONS",
+    [gs.table_jiq_col_psi, gs.table_jiq_col_inc, gs.table_jiq_col_exc, gs.table_jiq_col_total, gs.table_jiq_col_log_2],
+)
 
 
 def split_and_cast(sample):
-    (rail_id, count) = sample.split(':')
+    (rail_id, count) = sample.split(":")
     return int(rail_id), int(count)
 
 
 class JunctionInclusionQueryManager:
     """Module that processes the junction inclusion query given the dataframe output from snaptron"""
 
-    def __init__(self,
-                 exclusion_start: int,
-                 exclusion_end: int,
-                 inclusion_start: int,
-                 inclusion_end: int) -> None:
-
+    def __init__(self, exclusion_start: int, exclusion_end: int, inclusion_start: int, inclusion_end: int) -> None:
         self.exclusion_start = exclusion_start
         self.exclusion_end = exclusion_end
         self.inclusion_start = inclusion_start
@@ -46,12 +44,12 @@ class JunctionInclusionQueryManager:
         # I am putting it in a for loop
         for junction_samples in samples:
             # samples are separated by commas then each sample is separated with a colon from its count as railID:count
-            for each_sample in junction_samples.split(','):
+            for each_sample in junction_samples.split(","):
                 if each_sample:
                     (rail_id, count) = split_and_cast(each_sample)
 
                     # create dictionary item
-                    dict_value = {'count': count, 'type': junction_type}
+                    dict_value = {"count": count, "type": junction_type}
 
                     # keep the item in a defaultdict(list)
                     self.rail_id_dictionary[rail_id].append(dict_value)
@@ -62,11 +60,11 @@ class JunctionInclusionQueryManager:
         # make sure all values are 0
         inclusion_count = exclusion_count = 0
         for s in sample_counts:
-            inclusion_junction_type = s.get('type')
+            inclusion_junction_type = s.get("type")
             if inclusion_junction_type == JunctionType.INCLUSION:
-                inclusion_count = s.get('count')
+                inclusion_count = s.get("count")
             if inclusion_junction_type == JunctionType.EXCLUSION:
-                exclusion_count = s.get('count')
+                exclusion_count = s.get("count")
 
         # count totals
         total_count = inclusion_count + exclusion_count
@@ -112,7 +110,7 @@ class JunctionInclusionQueryManager:
 
     @staticmethod
     def _find_junction(df, start, end):
-        return df.loc[(df['start'] == start) & (df['end'] == end)]
+        return df.loc[(df["start"] == start) & (df["end"] == end)]
 
     def run_junction_inclusion_query(self, df, meta_data_dict):
         """Given the snaptron interface results, this function calculates the Percent Spliced In (PSI)

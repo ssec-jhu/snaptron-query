@@ -1,7 +1,9 @@
 """This file includes the general layout inside the tabs"""
 
 import dash_bootstrap_components as dbc
-from snaptron_query.app import layout_jiq, layout_geq, global_strings as gs
+
+from snaptron_query.app import global_strings as gs
+from snaptron_query.app import layout_geq, layout_jiq
 
 
 def get_tabs():
@@ -14,7 +16,6 @@ def get_tabs():
                 label=gs.tab_jiq,
                 tab_id="id-tab-horizontal-bootstrap-jiq",
             ),
-
             # Gene Expression Query Tab
             dbc.Tab(
                 layout_geq.get_layout_gene_expression_query(),

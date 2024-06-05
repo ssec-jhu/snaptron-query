@@ -1,4 +1,5 @@
 """This file includes the graph components used in the queries."""
+
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
@@ -7,26 +8,31 @@ from snaptron_query.app import global_strings as gs
 
 
 def get_common_labels_jiq():
-    return {gs.snpt_col_rail_id: gs.plot_label_rail_id,
-            gs.table_jiq_col_psi: gs.table_jiq_col_psi.upper(),
-            gs.table_jiq_col_log_2: gs.jiq_log_psi}
+    return {
+        gs.snpt_col_rail_id: gs.plot_label_rail_id,
+        gs.table_jiq_col_psi: gs.table_jiq_col_psi.upper(),
+        gs.table_jiq_col_log_2: gs.jiq_log_psi,
+    }
 
 
 def get_common_labels_geq():
-    return {gs.snpt_col_rail_id: gs.plot_label_rail_id,
-            gs.table_geq_col_raw_count: gs.geq_plot_label_raw_count,
-            gs.table_geq_col_norm_count: gs.geq_plot_label_norm_count,
-            gs.table_geq_col_log_2_raw: gs.geq_log_count,
-            gs.table_geq_col_log_2_norm: gs.geq_log_count}
+    return {
+        gs.snpt_col_rail_id: gs.plot_label_rail_id,
+        gs.table_geq_col_raw_count: gs.geq_plot_label_raw_count,
+        gs.table_geq_col_norm_count: gs.geq_plot_label_norm_count,
+        gs.table_geq_col_log_2_raw: gs.geq_log_count,
+        gs.table_geq_col_log_2_norm: gs.geq_log_count,
+    }
 
 
 def fig_common_update_box_plot(fig, title, y_axes_title_text):
-    fig.update_layout(title=f'<b>{title}</b>',
-                      title_x=0.5,
-                      template=gs.dbc_template_name,
-                      margin=dict(b=0),
-                      # points='all'
-                      )
+    fig.update_layout(
+        title=f"<b>{title}</b>",
+        title_x=0.5,
+        template=gs.dbc_template_name,
+        margin=dict(b=0),
+        # points='all'
+    )
     # line_color='royalblue', marker_color='darkblue'
     fig.update_traces(jitter=0.01, pointpos=0)
     fig.update_yaxes(title_text=y_axes_title_text)
@@ -37,17 +43,25 @@ def create_box_plot(violin_overlay, df, y_values, range_y_axis, labels):
     hover_data = [gs.snpt_col_rail_id]
     if violin_overlay:
         # to draw all points set point to all
-        fig = px.violin(df, y=y_values, hover_data=hover_data, labels=labels,
-                        box=True,
-                        # points='all'
-                        )
+        fig = px.violin(
+            df,
+            y=y_values,
+            hover_data=hover_data,
+            labels=labels,
+            box=True,
+            # points='all'
+        )
     else:
-        fig = px.box(df, y=y_values, hover_data=hover_data, labels=labels,
-                     # Request to not snap with table changes for JIQ.
-                     # If provided, overrides auto-scaling on the y-axis in cartesian coordinates.
-                     range_y=range_y_axis,
-                     # points='all'
-                     )  # show all points
+        fig = px.box(
+            df,
+            y=y_values,
+            hover_data=hover_data,
+            labels=labels,
+            # Request to not snap with table changes for JIQ.
+            # If provided, overrides auto-scaling on the y-axis in cartesian coordinates.
+            range_y=range_y_axis,
+            # points='all'
+        )  # show all points
         fig.update_traces(boxmean=True)
 
     return fig
@@ -80,20 +94,24 @@ def create_box_plot_gene_expression_normalized(df, log_values, violin_overlay, y
     # creates an extra box next to the original hover box with the trace title.
     # https://stackoverflow.com/questions/69278251/plotly-including-additional-data-in-hovertemplate
     custom_data = np.stack((df[gs.snpt_col_rail_id], df[gs.table_geq_col_factor]), axis=-1)
-    hover_template_pre = f'{gs.plot_label_rail_id}:' + ' %{customdata[0]}<br>'
+    hover_template_pre = f"{gs.plot_label_rail_id}:" + " %{customdata[0]}<br>"
     if log_values:
-        hover_template = hover_template_pre + gs.geq_log_count + ': %{y} <br><extra></extra>'
+        hover_template = hover_template_pre + gs.geq_log_count + ": %{y} <br><extra></extra>"
     else:
-        hover_template = hover_template_pre + 'Count: %{y} <br><extra></extra>'
+        hover_template = hover_template_pre + "Count: %{y} <br><extra></extra>"
 
-    raw_plot_params_dict = {'y': y_raw,
-                            'name': gs.geq_plot_label_raw_count,
-                            'hovertemplate': hover_template,
-                            'customdata': custom_data}
-    norm_plot_params_dict = {'y': y_normalized,
-                             'name': gs.geq_plot_label_norm_count,
-                             'hovertemplate': hover_template,
-                             'customdata': custom_data}
+    raw_plot_params_dict = {
+        "y": y_raw,
+        "name": gs.geq_plot_label_raw_count,
+        "hovertemplate": hover_template,
+        "customdata": custom_data,
+    }
+    norm_plot_params_dict = {
+        "y": y_normalized,
+        "name": gs.geq_plot_label_norm_count,
+        "hovertemplate": hover_template,
+        "customdata": custom_data,
+    }
     if violin_overlay:
         trace_raw_count = go.Violin(raw_plot_params_dict, box_visible=True)
         trace_normalized_count = go.Violin(norm_plot_params_dict, box_visible=True)
@@ -126,9 +144,13 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
         fig = create_box_plot_gene_expression_normalized(df, log_values, violin_overlay, y_raw, y_normalized)
     else:
         # not normalized data then use plotly express
-        fig = create_box_plot(violin_overlay, df, y_raw,
-                              range_y_axis=None,  # gene expression has no boundaries
-                              labels=get_common_labels_geq())
+        fig = create_box_plot(
+            violin_overlay,
+            df,
+            y_raw,
+            range_y_axis=None,  # gene expression has no boundaries
+            labels=get_common_labels_geq(),
+        )
 
     fig_common_update_box_plot(fig, box_plot_title, y_axes_title_text)
     fig.update_layout(margin=dict(t=55))
@@ -137,10 +159,7 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
 
 
 def fig_common_update_histogram(fig, title, y_title_text):
-    fig.update_layout(title=f'<b>{title}</b>',
-                      title_x=0.5,
-                      template=gs.dbc_template_name,
-                      margin=dict(b=0))
+    fig.update_layout(title=f"<b>{title}</b>", title_x=0.5, template=gs.dbc_template_name, margin=dict(b=0))
 
     fig.update_xaxes(title_text=y_title_text)
     # fig.update_traces(marker_color='darkblue')

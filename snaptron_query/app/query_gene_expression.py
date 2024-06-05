@@ -1,6 +1,8 @@
 import collections
 
-from snaptron_query.app import exceptions, global_strings as gs, query_junction_inclusion as jiq, utils
+from snaptron_query.app import exceptions, utils
+from snaptron_query.app import global_strings as gs
+from snaptron_query.app import query_junction_inclusion as jiq
 
 
 class GeneExpressionQueryManager:
@@ -10,10 +12,8 @@ class GeneExpressionQueryManager:
         self.normalize_counts = False
 
     def setup_normalization_data_method(self, gene_id_norm, df_snaptron_results_norm, meta_data_dict):
-
         # extract the row with the normalization gene ID
-        row_df = df_snaptron_results_norm.loc[
-            df_snaptron_results_norm[gs.snpt_col_gene_id].str.contains(gene_id_norm)]
+        row_df = df_snaptron_results_norm.loc[df_snaptron_results_norm[gs.snpt_col_gene_id].str.contains(gene_id_norm)]
 
         if row_df.empty:
             raise exceptions.NormalizationGeneNotFound
@@ -22,12 +22,13 @@ class GeneExpressionQueryManager:
 
         # if I convert it to a dictionary, instead of using a dataframe there is a big performance boost
         # meta_data_dict = meta_data_df['study'].to_dict()
-        meta_data_dict = {key: inner_dict['study'] for key, inner_dict in meta_data_dict.items() if
-                          'study' in inner_dict}
+        meta_data_dict = {
+            key: inner_dict["study"] for key, inner_dict in meta_data_dict.items() if "study" in inner_dict
+        }
 
         for sample_set in row_df[gs.snpt_col_samples]:  # list_of_sample_count_pairs
             # Samples are separated by commas, each sample is separated with a colon from its count as railID:count
-            for rail_id_count_pair in sample_set.split(','):
+            for rail_id_count_pair in sample_set.split(","):
                 if rail_id_count_pair:
                     rail_id, count = jiq.split_and_cast(rail_id_count_pair)
                     study = meta_data_dict.get(rail_id)
@@ -45,12 +46,12 @@ class GeneExpressionQueryManager:
         return
 
     def run_gene_expression_query(self, gene_id_query, df_snaptron_results_query, meta_data_dict):
-
         gathered_rail_id_meta_data_and_counts = []
 
         # extract the row in the results that matches the query gene ID
         row_df = df_snaptron_results_query.loc[
-            df_snaptron_results_query[gs.snpt_col_gene_id].str.contains(gene_id_query)]
+            df_snaptron_results_query[gs.snpt_col_gene_id].str.contains(gene_id_query)
+        ]
 
         if row_df.empty:
             raise exceptions.QueryGeneNotFound
@@ -58,7 +59,7 @@ class GeneExpressionQueryManager:
         # extract the 'sample' column form the row this is where all the rail_id:count are
         for sample_set in row_df[gs.snpt_col_samples]:
             # samples are separated by commas then each sample is separated with a colon from its count as railID:count
-            for rail_id_count_pair in sample_set.split(','):
+            for rail_id_count_pair in sample_set.split(","):
                 if rail_id_count_pair:
                     (rail_id, raw_count) = jiq.split_and_cast(rail_id_count_pair)
                     try:
@@ -76,7 +77,8 @@ class GeneExpressionQueryManager:
                             normalized_count = raw_count / factor if factor != -1 else -1
                             meta_data[gs.table_geq_col_norm_count] = normalized_count
                             meta_data[gs.table_geq_col_log_2_norm] = (
-                                round(utils.log_2_plus(normalized_count), 4)) if factor != -1 else -1
+                                (round(utils.log_2_plus(normalized_count), 4)) if factor != -1 else -1
+                            )
 
                         gathered_rail_id_meta_data_and_counts.append(meta_data)
                     except (KeyError, IndexError):
