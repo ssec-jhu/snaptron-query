@@ -4,6 +4,14 @@
             General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 web_title = "SnapMine"
+contacts = "Contacts: Irika - isinha1 [@] jhu [.] edu & Dr. Jonathan Ling - jling [@] jhu [.] edu"
+built_using = ["Built using ","Snaptron"," and ","Recount3"]
+url_snaptron = "https://snaptron.cs.jhu.edu/"
+url_recount = "https://rna.recount.bio/"
+url_paper = "https://www.biorxiv.org/content/10.1101/2024.03.27.587011v1.full.pdf"
+cite = "Please cite: "
+paper_text = "[Sinha et al. 2024]"
+
 log_epsilon = 0.01
 tab_jiq = "Junction PSI Query"
 tab_geq = "Gene Expression Query"
