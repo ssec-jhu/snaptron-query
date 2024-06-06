@@ -5,13 +5,13 @@ from snaptron_query.app import components, global_strings as gs
 
 # TODO: remove logos from assets that are not used
 logos = {
-    'neurosci': 'assets/logo_neurosci_reversed.svg',
-    'ssec': 'assets/SSEC-logoHorizontal white_cropped.png',
-    'jmed': 'assets/medicine.logo.horizontal.white.svg',
-    'idies': 'assets/IDIES-JHU-logoHorizontal white_500.svg',
+    'neurosci': 'assets/Neurosci_reversed.svg',
+    'ssec': 'assets/SSEC_horizontal_white_cropped.png',
+    'jmed': 'assets/JHM_horizontal_white.svg',
+    'idies': 'assets/IDIES_JHU_Horizontal_white_500.svg',
     'schmidt': 'assets/schmidt-futures.png',
-    'nih': 'assets/nih-symbol-white.png',
-    'nsf': 'assets/NSF_Official_logo_High_Res_1200ppi.png'
+    'nih': 'assets/NIH_symbol_white.png',
+    'nsf': 'assets/NSF_Official_High_Res_1200ppi.png'
 }
 
 
@@ -50,19 +50,19 @@ def get_navbar_bottom():
                                 children=
                                 [
                                     dbc.Row(dbc.Col([
-                                        components.get_text("Built using "),
-                                        html.A(components.get_text("Snaptron"),
+                                        components.get_text(gs.built_using[0]),
+                                        html.A(components.get_text(gs.built_using[1]),
                                                href=gs.url_snaptron,
                                                className='text-light'),
-                                        components.get_text(" and "),
-                                        html.A(components.get_text("Recount3"),
+                                        components.get_text(gs.built_using[2]),
+                                        html.A(components.get_text(gs.built_using[3]),
                                                href=gs.url_recount,
                                                className='text-light'),
 
                                     ], align='center')),
                                     dbc.Row(dbc.Col([
-                                        components.get_text("Please cite: "),
-                                        html.A(components.get_text("[Sinha et al. 2024]"),
+                                        components.get_text(gs.cite),
+                                        html.A(components.get_text(gs.paper_text),
                                                href=gs.url_paper,
                                                className='text-light')
                                     ], align='center')),
