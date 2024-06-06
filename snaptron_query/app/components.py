@@ -27,7 +27,8 @@ def get_dropdown_compilation(component_id):
     """Wrapper function to retrieve the dropdown component"""
     return html.Div([
         dbc.Label(gs.drop_compilation, className='fw-bold'),
-        dcc.Dropdown(id=component_id, options=gs.compilation_names_dict)
+        dcc.Dropdown(id=component_id, options=gs.compilation_names_dict,
+                     value=gs.compilation_srav3h)
     ], className="dbc",
     )
 
