@@ -7,6 +7,16 @@ import plotly.graph_objects as go
 from snaptron_query.app import global_strings as gs
 
 
+def get_common_colors():
+    # colorblind colors: https://davidmathlogic.com/colorblind/  -> select "tol"
+    return ["#332288",  # blue/purple
+            "#882255",  # red/pink
+            "#117733",  # green
+            "#88CCEE",  # light blue
+            "#DDCC77",  # yellow,
+            ]
+
+
 def get_common_labels_jiq():
     return {gs.snpt_col_rail_id: gs.plot_label_rail_id,
             gs.table_jiq_col_psi: gs.table_jiq_col_psi.upper(),
@@ -24,7 +34,7 @@ def get_common_labels_geq():
 def fig_common_update_box_plot(fig, title, y_axes_title_text):
     fig.update_layout(title=f'<b>{title}</b>',
                       title_x=0.5,
-                      template=gs.dbc_template_name,
+                      # template=gs.dbc_template_name, # TODO: use template or colorblind colors
                       margin=dict(b=0),
                       # points='all'
                       )
@@ -57,12 +67,14 @@ def create_box_plot(violin_overlay, df, y_values, range_y_axis, labels, mode=Non
     if violin_overlay:
         # to draw all points set point to all
         fig = px.violin(df, y=y_values, hover_data=hover_data, labels=labels, box=True, color=color, violinmode=mode,
-                        points='outliers')
+                        points='outliers', color_discrete_map=get_common_colors())
     else:
         fig = px.box(df, y=y_values, hover_data=hover_data, labels=labels, color=color, boxmode=mode, points='outliers',
                      # Request to not snap with table changes for JIQ.
                      # If provided, overrides auto-scaling on the y-axis in cartesian coordinates.
-                     range_y=range_y_axis)
+                     range_y=range_y_axis,
+                     color_discrete_sequence=get_common_colors())
+
         fig.update_traces(boxmean=True)
 
     return fig
@@ -111,11 +123,13 @@ def create_box_plot_gene_expression_normalized(df, log_values, violin_overlay, y
     raw_plot_params_dict = {'y': y_raw,
                             'name': gs.geq_plot_label_raw_count,
                             'hovertemplate': hover_template,
-                            'customdata': custom_data}
+                            'customdata': custom_data,
+                            'marker': {'color':get_common_colors()[0]}}
     norm_plot_params_dict = {'y': y_normalized,
                              'name': gs.geq_plot_label_norm_count,
                              'hovertemplate': hover_template,
-                             'customdata': custom_data}
+                             'customdata': custom_data,
+                             'marker': {'color':get_common_colors()[1]}}
     if violin_overlay:
         trace_raw_count = go.Violin(raw_plot_params_dict, box_visible=True)
         trace_normalized_count = go.Violin(norm_plot_params_dict, box_visible=True)
@@ -161,7 +175,7 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
 def fig_common_update_histogram(fig, title, y_title_text):
     fig.update_layout(title=f'<b>{title}</b>',
                       title_x=0.5,
-                      template=gs.dbc_template_name,
+                      # template=gs.dbc_template_name, # TODO: use template or colorblind colors
                       margin=dict(b=0))
 
     fig.update_xaxes(title_text=y_title_text)
@@ -171,7 +185,8 @@ def fig_common_update_histogram(fig, title, y_title_text):
 
 
 def create_histogram(df, x_values, log_y, labels, bins, plot_title, y_title, color=None):
-    fig = px.histogram(df, x=x_values, log_y=log_y, labels=labels, nbins=bins, color=color)
+    fig = px.histogram(df, x=x_values, log_y=log_y, labels=labels, nbins=bins, color=color,
+                       color_discrete_sequence=get_common_colors())
     fig_common_update_histogram(fig, plot_title, y_title)
     return fig
 
