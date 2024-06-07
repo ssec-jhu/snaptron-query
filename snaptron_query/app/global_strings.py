@@ -27,7 +27,7 @@ compilation_names_dict = {
     compilation_tcgav2: f'human ({compilation_tcgav2})',
     compilation_srav1m: f'mouse ({compilation_srav1m})',
 }
-drop_compilation = 'Select the organism of interest'
+drop_compilation = 'Select the dataset of interest'
 drop_compilation_placeholder = 'Select a compilation'
 
 switch_violin = 'Violin Mode'
