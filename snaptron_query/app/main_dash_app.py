@@ -16,6 +16,7 @@ from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryMa
 # Initialize the app
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 app = Dash(__name__,
+           title=gs.web_title,
            external_stylesheets=[dbc.themes.SANDSTONE, dbc_css, dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME])
 
 # VERY important line of code for running with gunicorn
