@@ -148,7 +148,11 @@ def get_card_box_plot_jiq():
             dbc.Row(
                 [
                     dbc.Col(
-                        components.get_box_plot_info_bundle("id-info-box-plot-jiq"),
+                        [
+                            components.get_info_icon_tooltip_bundle("id-info-box-plot-jiq",
+                                                                    gs.help_box_plot_click,
+                                                                    "left")
+                        ],
                         className='d-flex justify-content-start', align='center', style=styles.border_column),
                     dbc.Col(
                         [

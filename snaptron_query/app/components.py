@@ -26,9 +26,14 @@ def get_input(input_placeholder, input_id, disabled=False):
 def get_dropdown_compilation(component_id):
     """Wrapper function to retrieve the dropdown component"""
     return html.Div([
-        dbc.Label(gs.drop_compilation, className='fw-bold'),
-        dcc.Dropdown(id=component_id, options=gs.compilation_names_dict,
-                     value=gs.compilation_srav3h)
+        html.Span(
+            [
+                # create a bundle with the tooltip icon here
+                dbc.Label(gs.drop_compilation, className='fw-bold me-2 mt-1'),
+                get_info_icon_tooltip_bundle(f"{component_id}_info", gs.drop_compilation_help, "top")
+            ],
+            style={'display': 'flex'}),
+        dcc.Dropdown(id=component_id, options=gs.compilation_names_dict, value=gs.compilation_srav3h),
     ], className="dbc",
     )
 
@@ -156,8 +161,8 @@ def get_button_reset(button_id):
     ]
 
 
-def get_box_plot_info_bundle(icon_id):
-    return [
-        dmc.Text(icons.info, id=icon_id, weight=500, size="md"),
-        get_tooltip(icon_id, gs.help_box_plot_click, 'left')
-    ]
+def get_info_icon_tooltip_bundle(info_icon_id, help_string, location):
+    return html.Div([
+        dmc.Text(icons.info, id=info_icon_id, weight=500, size="md"),
+        get_tooltip(info_icon_id, help_string, location)
+    ])
