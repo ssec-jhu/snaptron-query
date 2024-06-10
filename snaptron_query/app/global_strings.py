@@ -5,7 +5,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 web_title = "SnapMine"
 contacts = "Contacts: Irika - isinha1 [@] jhu [.] edu & Dr. Jonathan Ling - jling [@] jhu [.] edu"
-built_using = ["Built using ","Snaptron"," and ","Recount3"]
+built_using = ["Built using ", "Snaptron", " and ", "Recount3"]
 url_snaptron = "https://snaptron.cs.jhu.edu/"
 url_recount = "https://rna.recount.bio/"
 url_paper = "https://www.biorxiv.org/content/10.1101/2024.03.27.587011v1.full.pdf"
@@ -54,7 +54,9 @@ bad_url = 'Sorry, something must have gone wrong...try again in a couple minutes
 empty_response = 'Snaptron Empty response!'
 missing_user_input = ('You are missing one or more required inputs...did you select a compilation? For each junction, '
                       'are both inclusion and exclusion coordinates defined?')
-bad_coordinates = 'Input coordinates are invalid!'
+bad_coordinates = ("One or more of the input coordinates are invalid! Does the dataset organism match the "
+                   "alternative/cryptic exon of interest? Is the junction provided GRCh38/hg38 (human) or "
+                   "GRCm38/mm10 (mouse) coordinates")
 empty_junction = 'Junctions entered have no results!'
 suggestion = ('Try running the query by adding gene coordinates to your query or double check gene coordinates if '
               'provided!')
