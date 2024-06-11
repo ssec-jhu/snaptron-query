@@ -40,8 +40,7 @@ def insert_junction_calculations(list_of_junctions, junction_index, dict_items_t
         list_of_junctions.extend([{'inc': 0, 'exc': 0} for _ in range(junction_index - len(list_of_junctions) + 1)])
 
     # Update the dictionary in the first list at the given index
-    existing_dict = list_of_junctions[junction_index]
-    existing_dict.update(dict_items_to_add)
+    list_of_junctions[junction_index].update(dict_items_to_add)
 
 
 class JunctionInclusionQueryManager:
@@ -80,29 +79,32 @@ class JunctionInclusionQueryManager:
             inclusion_count = (self.rail_id_dictionary[rail_id]['junctions'][junction_index]).get('inc', 0)
             exclusion_count = (self.rail_id_dictionary[rail_id]['junctions'][junction_index]).get('exc', 0)
 
-            # count totals
-            total_count = inclusion_count + exclusion_count
-
-            # TODO: PSI calculation tolerance of 15, PI must verify?
-            psi = 0.0
-            if total_count > 0:
-                # calculate the percent spliced in
-                psi = round(((100 * inclusion_count) / float(total_count)), 2)
-
-            log2 = round(utils.log_2_plus(psi), 4)
-
-            insert_junction_calculations(list_of_junctions=self.rail_id_dictionary[rail_id]['junctions'],
-                                         junction_index=junction_index,
-                         dict_items_to_add=JiqCalculations(psi, inclusion_count, exclusion_count, total_count,
-                                                                           log2)._asdict())
-
-            self.rail_id_dictionary[rail_id]["psi_sum"] += psi
-
         except IndexError:
-            # the rail id has no sample in the junction so populate with default values
+            # if rail id has no sample in the junction, populate with default values
             insert_junction_calculations(list_of_junctions=self.rail_id_dictionary[rail_id]['junctions'],
                                          junction_index=junction_index,
                                          dict_items_to_add=JiqCalculations(0, 0, 0, 0, 0)._asdict())
+            return
+
+        # count totals
+        total_count = inclusion_count + exclusion_count
+
+        # TODO: PSI calculation tolerance of 15, PI must verify?
+        psi = 0.0
+        if total_count > 0:
+            # calculate the percent spliced in
+            psi = round(((100 * inclusion_count) / float(total_count)), 2)
+
+        log2 = round(utils.log_2_plus(psi), 4)
+
+        # insert the information for this junction
+        insert_junction_calculations(
+            list_of_junctions=self.rail_id_dictionary[rail_id]['junctions'],
+            junction_index=junction_index,
+            dict_items_to_add=JiqCalculations(psi, inclusion_count, exclusion_count, total_count, log2)._asdict())
+
+        # accumulate the psi sum values
+        self.rail_id_dictionary[rail_id]["psi_sum"] += psi
 
     def _gather_rail_id_meta_data(self, rail_id, meta_data_dict, junction_index):
         """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
@@ -132,11 +134,11 @@ class JunctionInclusionQueryManager:
         Use this helper function to convert to extract what we want to show for the SINGLE junction query table.
         """
         single_junction = []
-        for rail_id in self.rail_id_dictionary:
-            if self.rail_id_dictionary[rail_id]['meta'] and len(self.rail_id_dictionary[rail_id]['junctions']) == 1:
+        for rail_id, rail_data in self.rail_id_dictionary.items():
+            if rail_data['meta'] and len(rail_data['junctions']) == 1:
                 data = {'rail_id': rail_id}
-                data.update(self.rail_id_dictionary[rail_id]['meta'])
-                data.update(self.rail_id_dictionary[rail_id]['junctions'][0])
+                data.update(rail_data['meta'])
+                data.update(rail_data['junctions'][0])
                 single_junction.append(data)
 
         return single_junction
@@ -181,11 +183,9 @@ class JunctionInclusionQueryManager:
             splice_junction_pair = junctions_list[junction_index]
             exc_junction_coordinates = splice_junction_pair[0]
             inc_junction_coordinates = splice_junction_pair[1]
-            try:
-                df_snpt_results = df_snpt_results_dict[exc_junction_coordinates]
-            except KeyError:
-                # shouldn't come here ever the map was created based on the coordinates before
-                raise Exception  # TODO: fix this
+
+            # exc_junction_coordinates must be in the map since it was created based on the coordinates before
+            df_snpt_results = df_snpt_results_dict[exc_junction_coordinates]
 
             exc_junctions_df = self._find_junction(df_snpt_results,
                                                    exc_junction_coordinates.start, exc_junction_coordinates.end)
@@ -210,13 +210,16 @@ class JunctionInclusionQueryManager:
             for rail_id in self.rail_id_dictionary:
                 self._gather_rail_id_meta_data(rail_id, meta_data_dict, junction_index)
 
+        query_results = {}
         if return_type == JiqReturnType.RAW:
-            return self.rail_id_dictionary
+            query_results = self.rail_id_dictionary
         elif return_type == JiqReturnType.LIST or return_type == JiqReturnType.INDEXED_PD:
             # returning a list of dictionaries not a dataframe for better coexistence with the front-end UI
             dict_list = self._convert_results_to_dictionary_list_single_jiq() if len(junctions_list) == 1 \
                 else self._convert_results_to_dictionary_list_multi_jiq()
 
             # convert to dataframe if needed
-            return dict_list if return_type == JiqReturnType.LIST \
+            query_results = dict_list if return_type == JiqReturnType.LIST \
                 else pandas.DataFrame(dict_list).set_index(gs.snpt_col_rail_id)
+
+        return query_results
