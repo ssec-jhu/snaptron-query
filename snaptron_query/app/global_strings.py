@@ -142,6 +142,7 @@ table_jiq_col_exc = 'exc'
 table_jiq_col_total = 'total'
 table_jiq_col_psi = 'psi'
 table_jiq_col_log_2 = 'log_2_plus'
+table_jiq_col_avg_psi = 'avg_psi'
 
 # GEQ
 table_geq_col_raw_count = 'raw_count'

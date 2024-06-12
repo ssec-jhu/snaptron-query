@@ -5,17 +5,17 @@ from io import BytesIO
 from snaptron_query.app import exceptions
 import re
 
-COORDINATES = collections.namedtuple('COORDINATES', ['chr', 'start', 'end'])
+JunctionCoordinates = collections.namedtuple('JunctionCoordinates', ['chr', 'start', 'end'])
 
-JIQ_COORDINATES = collections.namedtuple('JIQ_COORDINATES', ['exc_coordinates',  # type COORDINATES
-                                                             'inc_coordinates'])  # type COORDINATES
+SpliceJunctionPair = collections.namedtuple('SpliceJunctionPair', ['exc_coordinates',  # type JunctionCoordinates
+                                                                   'inc_coordinates'])  # type JunctionCoordinates
 
 
-def coordinates_to_formatted_string(coordinates: COORDINATES):
+def coordinates_to_formatted_string(coordinates: JunctionCoordinates):
     return f"{coordinates.chr}:{coordinates.start}-{coordinates.end}"
 
 
-def verify_coordinates(coordinates):
+def verify_coordinates(coordinates) -> JunctionCoordinates:
     # Another format used is: Chromosome 19: 4,472,297-4,502,208
     # We want to handle this case as well and remove all commas and spaces
     translation_table = str.maketrans("", "", ", ")
@@ -30,12 +30,12 @@ def verify_coordinates(coordinates):
         # group(1) will be the chromosome
         # group(2) will be the start of the interval
         # group(3) will be the end of the interval
-        return COORDINATES(m.group(1), int(m.group(2)), int(m.group(3)))
+        return JunctionCoordinates(m.group(1), int(m.group(2)), int(m.group(3)))
     else:  # if not re.match(pattern, (str(coordinates))):
         raise exceptions.BadCoordinates
 
 
-def jiq_verify_coordinate_pairs(exclusion_coordinates, inclusion_coordinates):
+def jiq_verify_coordinate_pairs(exclusion_coordinates, inclusion_coordinates) -> SpliceJunctionPair:
     exc_coordinates = verify_coordinates(exclusion_coordinates)
     inc_coordinates = verify_coordinates(inclusion_coordinates)
 
@@ -45,10 +45,11 @@ def jiq_verify_coordinate_pairs(exclusion_coordinates, inclusion_coordinates):
             exc_coordinates.start > exc_coordinates.end):
         raise exceptions.BadCoordinates
 
-    return JIQ_COORDINATES(exc_coordinates, inc_coordinates)
+    return SpliceJunctionPair(exc_coordinates=exc_coordinates,
+                              inc_coordinates=inc_coordinates)
 
 
-def geq_verify_coordinate(gene_coordinate):
+def geq_verify_coordinate(gene_coordinate) -> JunctionCoordinates:
     coordinates = verify_coordinates(gene_coordinate)
 
     # add sanity checks here for the pairs
@@ -81,3 +82,26 @@ def get_snpt_query_results_df(compilation, region, query_mode):
         return df
     else:
         raise exceptions.EmptyResponse
+
+
+def gather_snpt_query_results_into_dict(compilation, junction_lists: [SpliceJunctionPair]):
+    df_snpt_results_dict = {}
+    for j in range(len(junction_lists)):
+        # gather the exclusion junctions snaptron results
+        # only run if it wasn't calculated previously
+        junction_exc_coordinates = junction_lists[j].exc_coordinates
+        if junction_exc_coordinates not in df_snpt_results_dict:
+            # RUN the URL and get results back from SNAPTRON
+            # make sure you get results back
+            df_snpt_results = get_snpt_query_results_df(
+                compilation=compilation,
+                region=coordinates_to_formatted_string(junction_exc_coordinates),
+                query_mode='snaptron')
+
+            # TODO: do we want to pass and move on to the next junction? or halt?
+            if df_snpt_results.empty:
+                raise exceptions.EmptyResponse
+
+            df_snpt_results_dict[junction_exc_coordinates] = df_snpt_results
+
+    return df_snpt_results_dict

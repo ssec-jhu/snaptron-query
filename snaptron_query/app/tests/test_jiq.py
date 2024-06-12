@@ -11,22 +11,22 @@ def test_jiq_rail_id_size(junction_srav3h):
     assert len(rail_dict) == 160578
 
 
-@pytest.mark.parametrize('rail_id, count', [(992538, 100), (996729, 96)])
+@pytest.mark.parametrize('rail_id, count', [(992538, 100), (996729, 96),
+                                            (2000946, 35), (2000118, 64), (988765, 42),
+                                            (991272, 29), (2000946, 35), (1977105, 23)])
 def test_jiq_lookup_rail_id_inclusion(junction_srav3h, rail_id, count):
     rail_dict = junction_srav3h.get_rail_id_dict()
-    v_list = rail_dict.get(rail_id)
+    v_list = rail_dict.get(rail_id)['junctions']
     assert len(v_list) == 1
-    # assert (v_list[0])['count'] == count
-    # assert (v_list[0])['type'] == JunctionType.EXCLUSION
+    assert v_list[0][JunctionType.EXCLUSION] == count
 
 
 @pytest.mark.parametrize('rail_id,count', [(10044963, 39), (1198331, 86), (301619, 9), (1239258, 13), (1124564, 49)])
 def test_jiq_lookup_rail_id_inclusion_gtexv2(junction_gtexv2, rail_id, count):
     rail_dict = junction_gtexv2.get_rail_id_dict()
-    v_list = rail_dict.get(rail_id)
+    v_list = rail_dict.get(rail_id)['junctions']
     assert len(v_list) == 1
-    assert (v_list[0])['count'] == count
-    assert (v_list[0])['type'] == JunctionType.EXCLUSION
+    assert v_list[0][JunctionType.EXCLUSION] == count
 
 
 @pytest.mark.parametrize('rail_id,exc_count,inc_count', [(1001806, 34, 4), (100107, 15, 1), (100073, 7, 2),
@@ -34,11 +34,10 @@ def test_jiq_lookup_rail_id_inclusion_gtexv2(junction_gtexv2, rail_id, count):
                                                          (1975952, 86, 1)])
 def test_jiq_rail_id_in_both_junctions(junction_srav3h, rail_id, exc_count, inc_count):
     rail_dict = junction_srav3h.get_rail_id_dict()
-    v_list = rail_dict.get(rail_id)
-    assert (v_list[0])['count'] == exc_count
-    assert (v_list[0])['type'] == JunctionType.EXCLUSION
-    assert (v_list[1])['count'] == inc_count
-    assert (v_list[1])['type'] == JunctionType.INCLUSION
+    v_list = rail_dict.get(rail_id)['junctions']
+    assert len(v_list) == 1
+    assert v_list[0][JunctionType.EXCLUSION] == exc_count
+    assert v_list[0][JunctionType.INCLUSION] == inc_count
 
 
 @pytest.mark.parametrize('rail_id,exc_count,inc_count', [(10044980, 67, 1), (10045247, 43, 1), (1165564, 48, 1),
@@ -46,11 +45,10 @@ def test_jiq_rail_id_in_both_junctions(junction_srav3h, rail_id, exc_count, inc_
                                                          (4301568, 95, 2)])
 def test_jiq_rail_id_in_both_junctions_gtexv2(junction_gtexv2, rail_id, exc_count, inc_count):
     rail_dict = junction_gtexv2.get_rail_id_dict()
-    v_list = rail_dict.get(rail_id)
-    assert (v_list[0])['count'] == exc_count
-    assert (v_list[0])['type'] == JunctionType.EXCLUSION
-    assert (v_list[1])['count'] == inc_count
-    assert (v_list[1])['type'] == JunctionType.INCLUSION
+    v_list = rail_dict.get(rail_id)['junctions']
+    assert len(v_list) == 1
+    assert v_list[0][JunctionType.EXCLUSION] == exc_count
+    assert v_list[0][JunctionType.INCLUSION] == inc_count
 
 
 def test_jiq_results_size_cols(junction_srav3h):
@@ -169,4 +167,8 @@ def test_jiq_psi_results_vs_shinyapp_website(junction_srav3h, ground_truth_df, r
 def test_jiq_empty_junctions():
     with pytest.raises(exceptions.EmptyJunction):
         df_sample_junctions_from_snaptron = pd.read_csv(path_sample_junction_data, sep='\t')
-        JunctionQuery(4491836, 4493702, 0, 0, {}, df_sample_junctions_from_snaptron)
+        splice_pair = sc.SpliceJunctionPair(exc_coordinates=sc.JunctionCoordinates(19, 4491836, 4493702),
+                                            inc_coordinates=sc.JunctionCoordinates(19, 0, 0))
+        JunctionQuery(junction_list=[splice_pair],
+                      meta_data_dict={},
+                      df_from_snaptron_map={splice_pair.exc_coordinates: df_sample_junctions_from_snaptron})

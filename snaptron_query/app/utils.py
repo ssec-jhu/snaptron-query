@@ -23,8 +23,8 @@ def read_gtexv2(file_path):
     col_types = {item: 'string' for item in gs.gtexv2_meta_data_required_list[1:len(gs.gtexv2_meta_data_required_list)]}
 
     return pd.read_csv(file_path, sep='\t',
-                     usecols=gs.gtexv2_meta_data_required_list,
-                     dtype=col_types).set_index(gs.snpt_col_rail_id).to_dict(orient='index')
+                       usecols=gs.gtexv2_meta_data_required_list,
+                       dtype=col_types).set_index(gs.snpt_col_rail_id).to_dict(orient='index')
 
 
 def read_tcgav2(file_path):
