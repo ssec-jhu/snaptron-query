@@ -148,17 +148,17 @@ class JunctionInclusionQueryManager:
         Use this helper function to convert to extract what we want to show for the MULTI junction query table.
         """
         multi_junction = []
-        for rail_id in self.rail_id_dictionary:
-            if self.rail_id_dictionary[rail_id]['meta']:
+        for rail_id, rail_data in self.rail_id_dictionary.items():
+            if rail_data['meta']:
                 data = {gs.snpt_col_rail_id: rail_id}
-                data.update(self.rail_id_dictionary[rail_id]['meta'])
+                data.update(rail_data['meta'])
 
                 # add the average psi
-                num_junctions = len(self.rail_id_dictionary[rail_id]['junctions'])
-                data[gs.table_jiq_col_avg_psi] = self.rail_id_dictionary[rail_id]['psi_sum'] / num_junctions
+                num_junctions = len(rail_data['junctions'])
+                data[gs.table_jiq_col_avg_psi] = rail_data['psi_sum'] / num_junctions
 
                 for junction_index in range(0, num_junctions):
-                    info = self.rail_id_dictionary[rail_id]['junctions'][junction_index]
+                    info = rail_data['junctions'][junction_index]
                     # NOTE: the output junction indices starts with 1 not 0
                     modified_dict = {f"{key}_{junction_index + 1}": value for key, value in info.items()}
                     data.update(modified_dict)

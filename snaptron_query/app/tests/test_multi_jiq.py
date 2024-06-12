@@ -3,6 +3,23 @@ import pytest
 from snaptron_query.app import global_strings as gs
 
 
+def run_multijq_asserts(our_results, external_id, inc_1, exc_1, psi_1, inc_2, exc_2, psi_2):
+    assert our_results[gs.snpt_col_external_id] == external_id
+    assert our_results[f"{gs.table_jiq_col_inc}_1"] == inc_1
+    assert our_results[f"{gs.table_jiq_col_exc}_1"] == exc_1
+    assert our_results[f"{gs.table_jiq_col_psi}_1"] == psi_1
+
+    assert our_results[f"{gs.table_jiq_col_inc}_2"] == inc_2
+    assert our_results[f"{gs.table_jiq_col_exc}_2"] == exc_2
+    assert our_results[f"{gs.table_jiq_col_psi}_2"] == psi_2
+
+
+def run_multijq_psi_asserts(our_results, external_id, psi_1, psi_2):
+    assert our_results[gs.snpt_col_external_id] == external_id
+    assert our_results[f"{gs.table_jiq_col_psi}_1"] == psi_1
+    assert our_results[f"{gs.table_jiq_col_psi}_2"] == psi_2
+
+
 @pytest.mark.parametrize('rail_id,external_id,inc_1,exc_1,psi_1,inc_2,exc_2,psi_2',
                          [(1000010, 'SRR3743424', 0, 11, 0, 0, 11, 0),
                           (2171668, 'SRR5714918', 35, 0, 100.0, 0, 0, 0),  # TODO: this has inc_0=-1?
@@ -14,16 +31,9 @@ from snaptron_query.app import global_strings as gs
                           (1641757, 'SRR8083868', 12, 45, 21.05, 10, 45, 18.18),
                           (2109561, 'SRR6873183', 12, 34, 26.09, 0, 34, 0,),
                           ])
-def test_mjq(multi_junction_srav3h, rail_id, external_id, inc_1, exc_1, psi_1,inc_2, exc_2, psi_2):
+def test_mjq(multi_junction_srav3h, rail_id, external_id, inc_1, exc_1, psi_1, inc_2, exc_2, psi_2):
     our_results = multi_junction_srav3h.get_results().loc[rail_id]
-    assert our_results[gs.snpt_col_external_id] == external_id
-    assert our_results[f"{gs.table_jiq_col_inc}_1"] == inc_1
-    assert our_results[f"{gs.table_jiq_col_exc}_1"] == exc_1
-    assert our_results[f"{gs.table_jiq_col_psi}_1"] == psi_1
-
-    assert our_results[f"{gs.table_jiq_col_inc}_2"] == inc_2
-    assert our_results[f"{gs.table_jiq_col_exc}_2"] == exc_2
-    assert our_results[f"{gs.table_jiq_col_psi}_2"] == psi_2
+    run_multijq_asserts(our_results, external_id, inc_1, exc_1, psi_1, inc_2, exc_2, psi_2)
 
 
 @pytest.mark.parametrize('rail_id,external_id,inc_1,exc_1,psi_1,inc_2,exc_2,psi_2',
@@ -39,14 +49,7 @@ def test_mjq(multi_junction_srav3h, rail_id, external_id, inc_1, exc_1, psi_1,in
                           ])
 def test_mjq_2(multi_junction_srav3h_2, rail_id, external_id, inc_1, exc_1, psi_1, inc_2, exc_2, psi_2):
     our_results = multi_junction_srav3h_2.get_results().loc[rail_id]
-    assert our_results[gs.snpt_col_external_id] == external_id
-    assert our_results[f"{gs.table_jiq_col_inc}_1"] == inc_1
-    assert our_results[f"{gs.table_jiq_col_exc}_1"] == exc_1
-    assert our_results[f"{gs.table_jiq_col_psi}_1"] == psi_1
-
-    assert our_results[f"{gs.table_jiq_col_inc}_2"] == inc_2
-    assert our_results[f"{gs.table_jiq_col_exc}_2"] == exc_2
-    assert our_results[f"{gs.table_jiq_col_psi}_2"] == psi_2
+    run_multijq_asserts(our_results, external_id, inc_1, exc_1, psi_1, inc_2, exc_2, psi_2)
 
 
 @pytest.mark.parametrize('rail_id,external_id,psi_1,psi_2',
@@ -69,9 +72,7 @@ def test_mjq_2(multi_junction_srav3h_2, rail_id, external_id, inc_1, exc_1, psi_
                           ])
 def test_mjq_3(multi_junction_srav3h_3, rail_id, external_id, psi_1, psi_2):
     our_results = multi_junction_srav3h_3.get_results().loc[rail_id]
-    assert our_results[gs.snpt_col_external_id] == external_id
-    assert our_results[f"{gs.table_jiq_col_psi}_1"] == psi_1
-    assert our_results[f"{gs.table_jiq_col_psi}_2"] == psi_2
+    run_multijq_psi_asserts(our_results, external_id, psi_1, psi_2)
 
 
 @pytest.mark.parametrize('rail_id,external_id,psi_1,psi_2',
@@ -88,6 +89,4 @@ def test_mjq_3(multi_junction_srav3h_3, rail_id, external_id, psi_1, psi_2):
                          ])
 def test_mjq_4(multi_junction_srav1m_1, rail_id, external_id, psi_1, psi_2):
     our_results = multi_junction_srav1m_1.get_results().loc[rail_id]
-    assert our_results[gs.snpt_col_external_id] == external_id
-    assert our_results[f"{gs.table_jiq_col_psi}_1"] == psi_1
-    assert our_results[f"{gs.table_jiq_col_psi}_2"] == psi_2
+    run_multijq_psi_asserts(our_results, external_id, psi_1, psi_2)
