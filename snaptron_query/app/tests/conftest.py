@@ -157,6 +157,9 @@ def multi_junction_srav3h():
 
 @pytest.fixture(scope='session')
 def multi_junction_srav3h_2():
+    # this test fixture is similar to multi_junction_srav3h fixture but the fixture
+    # reverses the junction pairs orders to ensure results are the same regardless of the ordering of the pairs.
+    # this will also test junction indexing in the rail id dictionary
     meta_data_dict = utils.read_srav3h(path_srav3h_meta)
     df_sample_junctions_from_snaptron = pd.read_csv(path_sample_junction_data, sep='\t')
 
