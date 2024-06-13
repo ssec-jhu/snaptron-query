@@ -53,10 +53,8 @@ def convert_data_to_long_format(df, log_psi_values, list_of_calculated_junctions
 
     # this easy mapping fixes hover data and trace names all-in-one instead of fixing
     # each one manually after the figure is created because the traces follow the df variables
-    replacement_mapping = {'psi_1': 'PSI_1', 'psi_2': 'PSI_2', 'psi_3': 'PSI_3', 'psi_4': 'PSI_4', 'psi_5': 'PSI_5',
-                           'log_2_plus_1': 'Log_1', 'log_2_plus_2': 'Log_2', 'log_2_plus_3': 'Log_3',
-                           'log_2_plus_4': 'Log_4', 'log_2_plus_5': 'Log_5',
-                           }
+    replacement_mapping = {f'psi_{i}': f'PSI_{i}' for i in range(1, 6)}
+    replacement_mapping.update({f'log2_{i}': f'Log_{i}' for i in range(1, 6)})
     df_melt['variable'] = df_melt['variable'].map(replacement_mapping)
 
     return df_melt
@@ -87,10 +85,9 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay, list_of_calculated_junc
     https://plotly.com/python-api-reference/generated/plotly.express.box
     https://plotly.com/python/reference/box/
     """
-    junction_count = len(list_of_calculated_junctions)
     range_y_axis = None if log_psi_values else [0, 110]
     y_axes_title_text = gs.jiq_log_psi if log_psi_values else gs.jiq_psi_plot_axes
-    if junction_count == 1:
+    if len(list_of_calculated_junctions) == 1:
         # set up the titles and the values for the box plot
         y_values = gs.table_jiq_col_log_2 if log_psi_values else gs.table_jiq_col_psi
 
@@ -200,7 +197,7 @@ def get_histogram_jiq(df, log_psi_values, log_y, list_of_calculated_junctions):
     """
     junction_count = len(list_of_calculated_junctions)
     y_title_text = gs.jiq_log_psi if log_psi_values else gs.jiq_psi_plot_axes
-    if junction_count == 1:
+    if len(list_of_calculated_junctions) == 1:
         x_values = gs.table_jiq_col_log_2 if log_psi_values else gs.table_jiq_col_psi
 
         return create_histogram(df, x_values, log_y, get_common_labels_jiq(), 25, gs.jiq_plot_title_hist, y_title_text)
@@ -209,21 +206,21 @@ def get_histogram_jiq(df, log_psi_values, log_y, list_of_calculated_junctions):
         df_melt = convert_data_to_long_format(df, log_psi_values, list_of_calculated_junctions)
 
         return create_histogram(df_melt, "value", log_y, get_common_labels_jiq(), 25, gs.jiq_plot_title_hist,
-                                y_title_text,
-                                color="variable")
+                               y_title_text,
+                               color="variable")
 
-        # TODO:change "variable" to something else? var_name='Junction Index', color would also have to be the same name
-        # # this will put them side to side
-        # fig1 = px.histogram(df_melt, x="value", color="variable", log_y=log_y, nbins=25, title=gs.jiq_plot_title_hist,
-        #                     facet_col='variable', )
-        # # this will show overlay on top of each other
-        # fig3 = px.histogram(df_melt, x="value", color="variable", log_y=log_y, nbins=25, title="overlay",
-        #                     barmode='overlay',opacity=0.75)
-        # fig3.data = fig3.data[::-1]
-        # # Set the opacity of the bars to ensure distinct colors
-        # for trace in fig3.data:
-        #     trace.opacity = 0.5
-        # fig_common_update_histogram(fig3, gs.jiq_plot_title_hist, y_title_text)
+    # TODO:change "variable" to something else? var_name='Junction Index', color would also have to be the same name
+    # # this will put them side to side
+    # fig1 = px.histogram(df_melt, x="value", color="variable", log_y=log_y, nbins=25, title=gs.jiq_plot_title_hist,
+    #                     facet_col='variable', )
+    # # this will show overlay on top of each other
+    # fig3 = px.histogram(df_melt, x="value", color="variable", log_y=log_y, nbins=25, title="overlay",
+    #                     barmode='overlay',opacity=0.75)
+    # fig3.data = fig3.data[::-1]
+    # # Set the opacity of the bars to ensure distinct colors
+    # for trace in fig3.data:
+    #     trace.opacity = 0.5
+    # fig_common_update_histogram(fig3, gs.jiq_plot_title_hist, y_title_text)
 
 
 def get_histogram_geq(df, log_count_values, log_y):
