@@ -195,7 +195,6 @@ def get_histogram_jiq(df, log_psi_values, log_y, list_of_calculated_junctions):
     https://plotly.com/python/reference/histogram/
     https://plotly.com/python/histograms/
     """
-    junction_count = len(list_of_calculated_junctions)
     y_title_text = gs.jiq_log_psi if log_psi_values else gs.jiq_psi_plot_axes
     if len(list_of_calculated_junctions) == 1:
         x_values = gs.table_jiq_col_log_2 if log_psi_values else gs.table_jiq_col_psi
