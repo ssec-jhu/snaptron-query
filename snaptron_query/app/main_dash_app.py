@@ -6,12 +6,11 @@ from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 import os
 
-
 from snaptron_query.app import column_defs as cd, callback_common as callback, inline_styles as styles, navbars, paths
 from snaptron_query.app import (graphs, layout, components, utils, exceptions,
                                 global_strings as gs, snaptron_client as sc)
 from snaptron_query.app.query_gene_expression import GeneExpressionQueryManager
-from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager
+from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager, JiqReturnType
 
 # Initialize the app
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
@@ -107,43 +106,32 @@ def on_button_click_jiq(n_clicks, compilation, children, junction_count):
             if len(inc_junctions) == 0 or len(exc_junctions) == 0:
                 raise exceptions.MissingUserInputs
 
-            # TODO: MultiJunction: fix this for more than one junction, assume 1 for now
-            inclusion_interval = inc_junctions[0]
-            exclusion_interval = exc_junctions[0]
-            # make sure chromosome numbers match
-            # if there is any error in the intervals, an exception will be thrown
-            junction_coordinates = (sc.jiq_verify_coordinate_pairs(exclusion_interval, inclusion_interval))
+            # verify all the coordinates, if there is any error in the intervals, an exception will be thrown
+            junction_lists = []
+            for j in range(len(exc_junctions)):
+                junction_coordinates = (sc.jiq_verify_coordinate_pairs(exc_junctions[j], inc_junctions[j]))
+                junction_lists.append(junction_coordinates)
 
-            # RUN the URL and get results back from SNAPTRON
-            # make sure you get results back
-            df_snpt_results = sc.get_snpt_query_results_df(
-                compilation=compilation,
-                region=sc.coordinates_to_formatted_string(junction_coordinates.exc_coordinates),
-                query_mode='snaptron')
-
-            if df_snpt_results.empty:
-                raise exceptions.EmptyResponse
-
+            # gather the snaptron results form the exclusion junctions
+            df_snpt_results_dict = sc.gather_snpt_query_results_into_dict(compilation=compilation,
+                                                                          junction_lists=junction_lists)
             # Select the metadata that must be used
             meta_data_dict = get_meta_data(compilation)
 
-            # # Set upt the JIQ manager then run the Junction Inclusion Query
-            jqm = JunctionInclusionQueryManager(junction_coordinates.exc_coordinates.start,
-                                                junction_coordinates.exc_coordinates.end,
-                                                junction_coordinates.inc_coordinates.start,
-                                                junction_coordinates.inc_coordinates.end)
             # results returned are list of dictionaries which makes ag-grid load much faster,
-            # Once can convert a dataframe to dict with orient set to records for the ag-grid as well.
-            row_data = jqm.run_junction_inclusion_query(df_snpt_results, meta_data_dict)
+            # One can convert a dataframe to dict with orient set to records for the ag-grid as well.
+            row_data = (JunctionInclusionQueryManager().
+                        run_junction_inclusion_query(meta_data_dict=meta_data_dict,
+                                                     df_snpt_results_dict=df_snpt_results_dict,
+                                                     junctions_list=junction_lists,
+                                                     return_type=JiqReturnType.LIST))
 
             # Set the columnDefs for the ag-grid
-            column_defs = cd.get_junction_query_column_def(compilation)
+            column_defs = cd.get_junction_query_column_def(compilation, len(junction_lists))
 
             # set the preset column filters requested
-            filter_model = {gs.table_jiq_col_total: {'filterType': 'number',
-                                                     'type': 'greaterThanOrEqual', 'filter': 15},
-                            gs.table_jiq_col_psi: {'filterType': 'number',
-                                                   'type': 'greaterThanOrEqual', 'filter': 5}}
+            filter_model = cd.get_jiq_table_filter_model(len(junction_lists))
+
         except Exception as e:
             alert_message = exceptions.alert_message_from_exception(e)
 
@@ -188,8 +176,10 @@ def update_charts_jiq(row_data_from_table, filtered_row_data_from_table, lock_gr
     else:
         df = pd.DataFrame(row_data_from_table)
 
-    histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y)
-    box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay)
+    # count how many psi columns we have
+    list_of_calculated_junctions = [col for col in df.columns if col.startswith(gs.table_jiq_col_psi)]
+    histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y, list_of_calculated_junctions)
+    box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay,list_of_calculated_junctions)
 
     col_width = {'size': 6}
     # when the component is hidden, then becomes visible, the original style is lost,
