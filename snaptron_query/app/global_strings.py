@@ -29,7 +29,8 @@ compilation_names_dict = {
 }
 drop_compilation = 'Select the dataset of interest'
 drop_compilation_placeholder = 'Select a compilation'
-
+drop_compilation_help = ("Please check that the dataset organism matches the alternative/cryptic exon of interest. "
+                         "Ensure that the junction is given as GRCh38/hg38 (human) or GRCm38/mm10 (mouse) coordinates.")
 switch_violin = 'Violin Mode'
 # switch_lock = 'Lock Graphs and Table'
 switch_lock_help = "If locked, filters applied in the table below will be reflected in the graphs."
