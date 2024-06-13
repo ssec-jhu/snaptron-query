@@ -64,14 +64,17 @@ def create_box_plot(violin_overlay, df, y_values, range_y_axis, labels, mode=Non
     hover_data = [gs.snpt_col_rail_id]
     if violin_overlay:
         # to draw all points set point to all
-        fig = px.violin(df, y=y_values, hover_data=hover_data, labels=labels, box=True, color=color, violinmode=mode,
-                        points='outliers', color_discrete_map=get_common_colors())
+        fig = px.violin(df, y=y_values, hover_data=hover_data, labels=labels, color=color, violinmode=mode,
+                        points="all",
+                        color_discrete_sequence=get_common_colors(),
+                        box=True)
     else:
-        fig = px.box(df, y=y_values, hover_data=hover_data, labels=labels, color=color, boxmode=mode, points='outliers',
+        fig = px.box(df, y=y_values, hover_data=hover_data, labels=labels, color=color, boxmode=mode,
+                     points="all",
+                     color_discrete_sequence=get_common_colors(),
                      # Request to not snap with table changes for JIQ.
                      # If provided, overrides auto-scaling on the y-axis in cartesian coordinates.
-                     range_y=range_y_axis,
-                     color_discrete_sequence=get_common_colors())
+                     range_y=range_y_axis)
 
         fig.update_traces(boxmean=True)
 
@@ -128,11 +131,11 @@ def create_box_plot_gene_expression_normalized(df, log_values, violin_overlay, y
                              'customdata': custom_data,
                              'marker': {'color':get_common_colors()[1]}}
     if violin_overlay:
-        trace_raw_count = go.Violin(raw_plot_params_dict, box_visible=True)
-        trace_normalized_count = go.Violin(norm_plot_params_dict, box_visible=True)
+        trace_raw_count = go.Violin(raw_plot_params_dict, box={'visible': True}, points='all')
+        trace_normalized_count = go.Violin(norm_plot_params_dict, box={'visible': True}, points='all')
     else:
-        trace_raw_count = go.Box(raw_plot_params_dict)
-        trace_normalized_count = go.Box(norm_plot_params_dict)
+        trace_raw_count = go.Box(raw_plot_params_dict,boxpoints='all')
+        trace_normalized_count = go.Box(norm_plot_params_dict,boxpoints='all')
 
     fig = go.Figure(data=[trace_raw_count, trace_normalized_count])
 
