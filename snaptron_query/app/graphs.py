@@ -11,6 +11,7 @@ from snaptron_query.app import global_strings as gs, graphs_utils
 #       BOX PLOT
 # ----------------------------------
 
+
 def fig_common_update_box_plot(fig, plot_title, y_axes_title):
     fig.update_layout(
         title=f"<b>{plot_title}</b>",
