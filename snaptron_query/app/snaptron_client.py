@@ -5,10 +5,15 @@ from io import BytesIO
 from snaptron_query.app import exceptions
 import re
 
-JunctionCoordinates = collections.namedtuple('JunctionCoordinates', ['chr', 'start', 'end'])
+JunctionCoordinates = collections.namedtuple("JunctionCoordinates", ["chr", "start", "end"])
 
-SpliceJunctionPair = collections.namedtuple('SpliceJunctionPair', ['exc_coordinates',  # type JunctionCoordinates
-                                                                   'inc_coordinates'])  # type JunctionCoordinates
+SpliceJunctionPair = collections.namedtuple(
+    "SpliceJunctionPair",
+    [
+        "exc_coordinates",  # type JunctionCoordinates
+        "inc_coordinates",
+    ],
+)  # type JunctionCoordinates
 
 
 def coordinates_to_formatted_string(coordinates: JunctionCoordinates):
@@ -24,7 +29,7 @@ def verify_coordinates(coordinates) -> JunctionCoordinates:
     # pattern used from snaptron code:
     # https://github.com/ChristopherWilks/snaptron/blob/75903c30d54708b19d91772142013687c74d88d8/snapconfshared.py#L196C31
     # https://docs.python.org/3/library/re.html#re.Match
-    pattern = r'^(chr[12]?[0-9XYM]):(\d+)-(\d+)$'
+    pattern = r"^(chr[12]?[0-9XYM]):(\d+)-(\d+)$"
     m = re.match(pattern, coordinates)
     if m:  # group(0) is the entire match, will be None if there is no match
         # group(1) will be the chromosome
@@ -40,13 +45,14 @@ def jiq_verify_coordinate_pairs(exclusion_coordinates, inclusion_coordinates) ->
     inc_coordinates = verify_coordinates(inclusion_coordinates)
 
     # add sanity checks here for the pairs
-    if (inc_coordinates.chr != exc_coordinates.chr or
-            inc_coordinates.start > inc_coordinates.end or
-            exc_coordinates.start > exc_coordinates.end):
+    if (
+        inc_coordinates.chr != exc_coordinates.chr
+        or inc_coordinates.start > inc_coordinates.end
+        or exc_coordinates.start > exc_coordinates.end
+    ):
         raise exceptions.BadCoordinates
 
-    return SpliceJunctionPair(exc_coordinates=exc_coordinates,
-                              inc_coordinates=inc_coordinates)
+    return SpliceJunctionPair(exc_coordinates=exc_coordinates, inc_coordinates=inc_coordinates)
 
 
 def geq_verify_coordinate(gene_coordinate) -> JunctionCoordinates:
@@ -67,8 +73,8 @@ def get_snpt_query_results_df(compilation, region, query_mode):
     :return: the result of the snaptron web interface converted into a dataframe
     """
     # TODO: move this to a config file when it's made
-    host = 'https://snaptron.cs.jhu.edu'
-    url = f'{host}/{str(compilation).lower()}/{query_mode}?regions={str(region)}'
+    host = "https://snaptron.cs.jhu.edu"
+    url = f"{host}/{str(compilation).lower()}/{query_mode}?regions={str(region)}"
     # url = 'https://snaptro.cs.jhu.edu/srav3h/snaptron?regions=chr19:4491836-4493702'
     # temp_url = 'https://snaptron.cs.jhu.edu/srav3h/genes?regions=chr1:11013716-11024183'
 
@@ -78,7 +84,7 @@ def get_snpt_query_results_df(compilation, region, query_mode):
     resp.raise_for_status()
     data_bytes = resp.read()
     if data_bytes:
-        df = pd.read_csv(BytesIO(data_bytes), sep='\t')
+        df = pd.read_csv(BytesIO(data_bytes), sep="\t")
         return df
     else:
         raise exceptions.EmptyResponse
@@ -96,7 +102,8 @@ def gather_snpt_query_results_into_dict(compilation, junction_lists: [SpliceJunc
             df_snpt_results = get_snpt_query_results_df(
                 compilation=compilation,
                 region=coordinates_to_formatted_string(junction_exc_coordinates),
-                query_mode='snaptron')
+                query_mode="snaptron",
+            )
 
             # TODO: do we want to pass and move on to the next junction? or halt?
             if df_snpt_results.empty:

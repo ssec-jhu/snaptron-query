@@ -86,9 +86,9 @@ def get_form_geq():
                     dbc.Col([components.get_text(gs.geq_gene_coord)], width=3, align="center"),
                     dbc.Col(
                         [
-                            components.get_input(gs.geq_gene_coord_norm_placeholder,
-                                                 "id-input-geq-gene-coord-norm",
-                                                 disabled="True")
+                            components.get_input(
+                                gs.geq_gene_coord_norm_placeholder, "id-input-geq-gene-coord-norm", disabled="True"
+                            )
                         ],
                         width=4,
                         align="center",
@@ -148,9 +148,7 @@ def get_card_box_plot_geq():
                             dbc.Col(
                                 [
                                     components.get_info_icon_tooltip_bundle(
-                                        "id-info-box-plot-geq",
-                                        gs.help_box_plot_click,
-                                        "left"
+                                        "id-info-box-plot-geq", gs.help_box_plot_click, "left"
                                     )
                                 ],
                                 className="d-flex justify-content-start",
@@ -166,8 +164,7 @@ def get_card_box_plot_geq():
                                     ),
                                     dmc.Space(w=10),
                                     components.get_switch(
-                                        switch_id="id-switch-geq-violin-raw-box-plot",
-                                        switch_label=gs.switch_violin
+                                        switch_id="id-switch-geq-violin-raw-box-plot", switch_label=gs.switch_violin
                                     ),
                                 ],
                                 className="d-flex justify-content-end",
@@ -178,9 +175,7 @@ def get_card_box_plot_geq():
                         className="g-0 form-control-sm",
                         style=styles.border_column,
                     ),
-                    dbc.Row([dcc.Graph(id="id-box-plot-geq")],
-                            class_name="g-0",
-                            tyle=styles.border_column),
+                    dbc.Row([dcc.Graph(id="id-box-plot-geq")], class_name="g-0", tyle=styles.border_column),
                 ]
             )
         ],
@@ -322,9 +317,7 @@ def get_layout_gene_expression_query():
             ),
             # TABLE
             dmc.Space(h=20),
-            dbc.Row([get_card_table_geq()],
-                    id="id-ag-grid-display-geq",
-                    style={"display": "None"}),
+            dbc.Row([get_card_table_geq()], id="id-ag-grid-display-geq", style={"display": "None"}),
         ],
     )
     return layout

@@ -3,9 +3,7 @@ from snaptron_query.app import global_strings as gs, components
 
 
 def get_switch_normalize():
-    return dbc.Switch(id="id-switch-geq-normalize",
-                      label=gs.geq_normalized,
-                      className="text-primary")
+    return dbc.Switch(id="id-switch-geq-normalize", label=gs.geq_normalized, className="text-primary")
 
 
 def get_checkbox_geq_optional_coordinates():
