@@ -14,7 +14,6 @@ def get_tabs():
                 label=gs.tab_jiq,
                 tab_id="id-tab-horizontal-bootstrap-jiq",
             ),
-
             # Gene Expression Query Tab
             dbc.Tab(
                 layout_geq.get_layout_gene_expression_query(),
