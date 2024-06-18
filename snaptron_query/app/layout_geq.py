@@ -175,7 +175,7 @@ def get_card_box_plot_geq():
                         className="g-0 form-control-sm",
                         style=styles.border_column,
                     ),
-                    dbc.Row([dcc.Graph(id="id-box-plot-geq")], class_name="g-0", tyle=styles.border_column),
+                    dbc.Row([dcc.Graph(id="id-box-plot-geq")], class_name="g-0", style=styles.border_column),
                 ]
             )
         ],
