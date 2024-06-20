@@ -276,7 +276,7 @@ def get_card_box_plot_jiq():
                         style=styles.border_column,
                     ),
                     dbc.Row([dcc.Graph(id="id-box-plot-jiq")], className="g-0", style=styles.border_column),
-                ]
+                    ]
             )
         ],
         style=styles.boundary_style,
@@ -398,9 +398,9 @@ def get_layout_junction_inclusion():
             html.Div(id="id-alert-jiq"),
             # spinners in the background until the graphs load
             dmc.Space(h=50),
-            dls.Propagate(
-                show_initially=False, color="var(--bs-secondary)", children=[html.Div(id="id-loading-graph-jiq")]
-            ),
+            # dls.Propagate(
+            #     show_initially=False, color="var(--bs-secondary)", children=[html.Div(id="id-loading-graph-jiq")]
+            # ),
             dls.Fade(show_initially=False, color="var(--bs-secondary)", children=[html.Div(id="id-loading-table-jiq")]),
             # ROW: the plots and graphs
             dbc.Row(

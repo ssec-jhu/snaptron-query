@@ -85,14 +85,34 @@ app.layout = dbc.Container(
     Output("id-ag-grid-jiq", "filterModel"),
     Output("id-loading-table-jiq", "children"),
     Output("id-alert-jiq", "children"),
+    # figure related outputs start here
+    Output("id-histogram-jiq", "figure"),
+    Output("id-box-plot-jiq", "figure"),
+    Output("id-jiq-box-plot-col", "width"),
+    Output("id-jiq-histogram-col", "width"),
+    Output("id-display-graphs-jiq", "style"),
+
     Input("id-button-jiq-generate-results", "n_clicks"),
     State("id-input-compilation-jiq", "value"),
     State("id-jiq-input-container", "children"),
     State("id-store-jiq-junctions", "data"),
+    State("id-switch-jiq-log-psi-box-plot", "value"),
+    State("id-switch-jiq-violin-box-plot", "value"),
+    State("id-switch-jiq-log-psi-histogram", "value"),
+    State("id-switch-jiq-log-y-histogram", "value"),
     prevent_initial_call=True,
     running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)],  # requires the latest Dash 2.16
 )
-def on_button_click_jiq(n_clicks, compilation, children, junction_count):
+def on_button_click_jiq(
+        n_clicks,
+        compilation,
+        children,
+        junction_count,
+        box_log_psi,
+        violin_overlay,
+        histogram_log_psi,
+        histogram_log_y
+):
     #  this function gets called with every input change
     if callback_context.triggered_id != "id-button-jiq-generate-results":
         raise PreventUpdate
@@ -140,25 +160,46 @@ def on_button_click_jiq(n_clicks, compilation, children, junction_count):
             # set the preset column filters requested
             filter_model = cd.get_jiq_table_filter_model(len(junction_lists))
 
+            # Gather figure related items
+            # TODO: these numbers must be combined with the filter model function
+            df = pd.DataFrame(row_data)
+            if len(junction_lists) == 1:
+                df = df[(df[gs.table_jiq_col_psi] >= 5) &
+                        (df[gs.table_jiq_col_total] >= 15)]
+            else:
+                df = df[df[gs.table_jiq_col_avg_psi] >= 5]
+
+            # count how many psi columns we have
+            list_of_calculated_junctions = [col for col in df.columns if col.startswith(gs.table_jiq_col_psi)]
+            histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y, list_of_calculated_junctions)
+            box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay, list_of_calculated_junctions)
+
+            col_width = {"size": 6}
+            # when the component is hidden, then becomes visible, the original style is lost,
+            # so I am putting it back again.
+            display_style = {
+                "box-shadow": "1px 2px 7px 0px grey",
+                "border-radius": "10px",
+            }
+
+
         except Exception as e:
             alert_message = exceptions.alert_message_from_exception(e)
 
     if alert_message:
         alert = components.get_alert(alert_message)
-        # return no_update, no_update, no_update, no_update, no_update, alert
-        return no_update, no_update, no_update, no_update, no_update, alert
+        return (no_update, no_update, no_update, no_update, no_update, alert,
+                no_update, no_update, no_update, no_update, no_update)
 
-    # return {'display': 'block'}, row_data, column_defs, filter_model, True, no_update
-    return {"display": "block"}, row_data, column_defs, filter_model, {}, no_update
+    return ({"display": "block"}, row_data, column_defs, filter_model, {}, no_update,
+            histogram, box_plot, col_width, col_width, display_style)
 
 
 @app.callback(
-    Output("id-histogram-jiq", "figure"),
-    Output("id-box-plot-jiq", "figure"),
-    Output("id-jiq-box-plot-col", "width"),
-    Output("id-jiq-histogram-col", "width"),
-    Output("id-display-graphs-jiq", "style"),
-    Output("id-loading-graph-jiq", "children"),
+    Output("id-histogram-jiq", "figure", allow_duplicate=True),
+    Output("id-box-plot-jiq", "figure", allow_duplicate=True),
+    # Output("id-loading-graph-jiq", "children"),
+
     Input("id-ag-grid-jiq", "rowData"),
     Input("id-ag-grid-jiq", "virtualRowData"),
     Input("id-switch-jiq-lock-with-table", "value"),
@@ -170,14 +211,14 @@ def on_button_click_jiq(n_clicks, compilation, children, junction_count):
     prevent_initial_call=True,
 )
 def update_charts_jiq(
-    row_data_from_table,
-    filtered_row_data_from_table,
-    lock_graph_data_with_table,
-    box_log_psi,
-    violin_overlay,
-    histogram_log_psi,
-    histogram_log_y,
-    junction_count,
+        row_data_from_table,
+        filtered_row_data_from_table,
+        lock_graph_data_with_table,
+        box_log_psi,
+        violin_overlay,
+        histogram_log_psi,
+        histogram_log_y,
+        junction_count,
 ):
     """
     Given the table data as input, it will update the relative graphs
@@ -195,14 +236,7 @@ def update_charts_jiq(
     histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y, list_of_calculated_junctions)
     box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay, list_of_calculated_junctions)
 
-    col_width = {"size": 6}
-    # when the component is hidden, then becomes visible, the original style is lost,
-    # so I am putting it back again.
-    display_style = {
-        "box-shadow": "1px 2px 7px 0px grey",
-        "border-radius": "10px",
-    }
-    return histogram, box_plot, col_width, col_width, display_style, {}
+    return histogram, box_plot  # , {}
 
 
 @app.callback(
@@ -297,14 +331,14 @@ def enable_normalization(normalize_value):
     running=[(Output("id-button-geq-run-query", "disabled"), True, False)],  # requires latest Dash 2.16
 )
 def on_button_click_geq(
-    n_clicks,
-    compilation,
-    use_coordinates,
-    query_gene_id,
-    query_gene_coordinates,
-    normalize_data,
-    norm_gene_id,
-    norm_gene_coordinates,
+        n_clicks,
+        compilation,
+        use_coordinates,
+        query_gene_id,
+        query_gene_coordinates,
+        normalize_data,
+        norm_gene_id,
+        norm_gene_coordinates,
 ):
     #  this function gets called with every input change
     if callback_context.triggered_id != "id-button-geq-run-query":
@@ -390,14 +424,14 @@ def on_button_click_geq(
     prevent_initial_call=True,
 )
 def update_charts_geq(
-    row_data_from_table,
-    filtered_row_data_from_table,
-    lock_graph_data_with_table,
-    log_values,
-    violin_overlay,
-    normalized_data,
-    histogram_log_x,
-    histogram_log_y,
+        row_data_from_table,
+        filtered_row_data_from_table,
+        lock_graph_data_with_table,
+        log_values,
+        violin_overlay,
+        normalized_data,
+        histogram_log_x,
+        histogram_log_y,
 ):
     """
     Given the table data as input, it will update the relative graphs
@@ -526,4 +560,4 @@ def on_lock_switch_geq(lock):
 
 # Run the app
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
