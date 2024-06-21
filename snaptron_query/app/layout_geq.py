@@ -175,7 +175,7 @@ def get_card_box_plot_geq():
                         className="g-0 form-control-sm",
                         style=styles.border_column,
                     ),
-                    dbc.Row([dcc.Graph(id="id-box-plot-geq")], class_name="g-0", style=styles.border_column),
+                    dbc.Row([dcc.Graph(id="id-geq-box-plot")], class_name="g-0", style=styles.border_column),
                 ]
             )
         ],
@@ -211,7 +211,7 @@ def get_card_histogram_geq():
                             ],
                             className="g-0 form-control-sm",
                         ),
-                        dbc.Row([html.Div(dcc.Graph(id="id-row-graph-geq-hist"))], class_name="g-0"),
+                        dbc.Row([html.Div(dcc.Graph(id="id-geq-histogram"))], class_name="g-0"),
                     ]
                 )
             ],
@@ -304,9 +304,9 @@ def get_layout_gene_expression_query():
             # ALERT
             html.Div(id="id-alert-geq"),
             dmc.Space(h=50),
-            dls.Propagate(
-                show_initially=False, color="var(--bs-secondary)", children=[html.Div(id="id-loading-graph-geq")]
-            ),
+            # dls.Propagate(
+            #     show_initially=False, color="var(--bs-secondary)", children=[html.Div(id="id-loading-graph-geq")]
+            # ),
             dls.Fade(show_initially=False, color="var(--bs-secondary)", children=[html.Div(id="id-loading-table-geq")]),
             # GRAPHS
             dbc.Row(

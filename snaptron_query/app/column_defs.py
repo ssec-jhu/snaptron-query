@@ -123,7 +123,7 @@ def get_col_meta_tcgav2_b():
                 "closeOnApply": True,
             },
         }
-        for item in gs.tcgav2_meta_data_required_list[1 : len(gs.tcgav2_meta_data_required_list)]
+        for item in gs.tcgav2_meta_data_required_list[1: len(gs.tcgav2_meta_data_required_list)]
     ]
     return meta_data
 
@@ -139,7 +139,7 @@ def get_col_meta_gtexv2_b():
                 "closeOnApply": True,
             },
         }
-        for item in gs.gtexv2_meta_data_required_list[1 : len(gs.gtexv2_meta_data_required_list)]
+        for item in gs.gtexv2_meta_data_required_list[1: len(gs.gtexv2_meta_data_required_list)]
     ]
     return meta_data
 
@@ -366,5 +366,16 @@ def get_jiq_table_filter_model(junction_count):
     else:
         # filter average psi
         filter_model = {gs.table_jiq_col_avg_psi: {"filterType": "number", "type": "greaterThanOrEqual", "filter": 5}}
+
+    return filter_model
+
+
+def get_geq_table_filter_model(normalized_data):
+    if normalized_data:
+        filter_model = {
+            gs.table_geq_col_factor: {"filterType": "number", "type": "greaterThanOrEqual", "filter": 0},
+        }
+    else:
+        filter_model={}
 
     return filter_model

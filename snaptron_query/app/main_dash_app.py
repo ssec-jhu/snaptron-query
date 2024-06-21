@@ -1,7 +1,8 @@
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 import pandas as pd
-from dash import Dash, Input, Output, callback_context, no_update, State, dcc
+from dash import Dash, Input, Output, ctx, no_update, State, dcc
+
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 import os
@@ -85,17 +86,18 @@ app.layout = dbc.Container(
     Output("id-ag-grid-jiq", "filterModel"),
     Output("id-loading-table-jiq", "children"),
     Output("id-alert-jiq", "children"),
-    # figure related outputs start here
+    # figure related outputs
     Output("id-histogram-jiq", "figure"),
     Output("id-box-plot-jiq", "figure"),
     Output("id-jiq-box-plot-col", "width"),
     Output("id-jiq-histogram-col", "width"),
     Output("id-display-graphs-jiq", "style"),
-
+    # ------- INPUTS ------
     Input("id-button-jiq-generate-results", "n_clicks"),
     State("id-input-compilation-jiq", "value"),
     State("id-jiq-input-container", "children"),
     State("id-store-jiq-junctions", "data"),
+    # figure related states
     State("id-switch-jiq-log-psi-box-plot", "value"),
     State("id-switch-jiq-violin-box-plot", "value"),
     State("id-switch-jiq-log-psi-histogram", "value"),
@@ -114,7 +116,7 @@ def on_button_click_jiq(
         histogram_log_y
 ):
     #  this function gets called with every input change
-    if callback_context.triggered_id != "id-button-jiq-generate-results":
+    if ctx.triggered_id != "id-button-jiq-generate-results":
         raise PreventUpdate
     else:
         try:
@@ -199,15 +201,13 @@ def on_button_click_jiq(
     Output("id-histogram-jiq", "figure", allow_duplicate=True),
     Output("id-box-plot-jiq", "figure", allow_duplicate=True),
     # Output("id-loading-graph-jiq", "children"),
-
-    Input("id-ag-grid-jiq", "rowData"),
+    State("id-ag-grid-jiq", "rowData"),
     Input("id-ag-grid-jiq", "virtualRowData"),
     Input("id-switch-jiq-lock-with-table", "value"),
     Input("id-switch-jiq-log-psi-box-plot", "value"),
     Input("id-switch-jiq-violin-box-plot", "value"),
     Input("id-switch-jiq-log-psi-histogram", "value"),
     Input("id-switch-jiq-log-y-histogram", "value"),
-    State("id-store-jiq-junctions", "data"),
     prevent_initial_call=True,
 )
 def update_charts_jiq(
@@ -218,7 +218,6 @@ def update_charts_jiq(
         violin_overlay,
         histogram_log_psi,
         histogram_log_y,
-        junction_count,
 ):
     """
     Given the table data as input, it will update the relative graphs
@@ -317,8 +316,18 @@ def enable_normalization(normalize_value):
     Output("id-ag-grid-display-geq", "style"),
     Output("id-ag-grid-geq", "rowData"),
     Output("id-ag-grid-geq", "columnDefs"),
+    Output("id-ag-grid-geq", "filterModel"),
     Output("id-loading-table-geq", "children"),
     Output("id-alert-geq", "children"),
+    # figure related outputs
+    Output("id-geq-box-plot", "figure"),
+    Output("id-geq-histogram", "figure"),
+    Output("id-geq-box-plot-col", "width"),
+    Output("id-geq-histogram-col", "width"),
+    Output("id-geq-histogram-col", "style"),
+    Output("id-display-graphs-geq", "style"),
+
+    # ----- Inputs -----
     Input("id-button-geq-run-query", "n_clicks"),
     State("id-input-compilation-geq", "value"),
     State("id-checkbox-use-coordinates", "value"),
@@ -327,6 +336,13 @@ def enable_normalization(normalize_value):
     State("id-switch-geq-normalize", "value"),  # Norm Gene Info
     State("id-input-geq-gene-id-norm", "value"),
     State("id-input-geq-gene-coord-norm", "value"),
+    # figure related states
+    State("id-switch-geq-log-raw-box-plot", "value"),
+    State("id-switch-geq-violin-raw-box-plot", "value"),
+    State("id-switch-geq-normalize", "value"),
+    State("id-switch-geq-log-count-histogram", "value"),
+    State("id-switch-geq-log-y-histogram", "value"),
+
     prevent_initial_call=True,
     running=[(Output("id-button-geq-run-query", "disabled"), True, False)],  # requires latest Dash 2.16
 )
@@ -339,9 +355,14 @@ def on_button_click_geq(
         normalize_data,
         norm_gene_id,
         norm_gene_coordinates,
+        log_values,
+        violin_overlay,
+        normalized_data,
+        histogram_log_x,
+        histogram_log_y,
 ):
     #  this function gets called with every input change
-    if callback_context.triggered_id != "id-button-geq-run-query":
+    if ctx.triggered_id != "id-button-geq-run-query":
         raise PreventUpdate
     else:
         try:
@@ -393,6 +414,28 @@ def on_button_click_geq(
                 # ag-grid accepts list of dicts so passing in the data from storage that is saved as list of dict
                 # saves times here. store_data = row_data.df.to_dict("records") Set the columnDefs for the ag-grid
                 column_defs = cd.get_gene_expression_query_column_def(compilation, normalize_data)
+
+                filter_model = cd.get_geq_table_filter_model(normalized_data)
+                if normalized_data:
+                    # Filter out the -1 factors directly
+                    # data = [row for row in data if row[gs.table_geq_col_factor] != -1]
+                    df = pd.DataFrame(row_data)
+                    df = df[df[gs.table_geq_col_factor] >= 0]
+
+                    # Make histogram
+                    histogram = graphs.get_histogram_geq(df, histogram_log_x, histogram_log_y)
+                    box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
+
+                    width = {"size": 6}
+                    hist_display = {"display": "Block"}
+                    # return box_plot, histogram, width, width, hist_display, styles.section, {}
+                else:
+                    df = pd.DataFrame(row_data)
+                    box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
+                    width = {"size": 8, "offset": 2}
+                    hist_display = {"display": "None"}
+                    # return box_plot, None, width, no_update, hist_display, styles.section, {}
+
             else:
                 raise exceptions.MissingUserInputs
         except Exception as e:
@@ -400,25 +443,28 @@ def on_button_click_geq(
 
     if alert_message:
         alert = components.get_alert(alert_message)
-        return no_update, no_update, no_update, no_update, alert
+        return (no_update, no_update, no_update, no_update, no_update, alert,
+                no_update, no_update, no_update, no_update, no_update, no_update)
     else:
-        return {"display": "block"}, row_data, column_defs, {}, no_update
+        if normalize_data:
+            return ({"display": "block"}, row_data, column_defs, filter_model, {}, no_update,
+                    box_plot, histogram, width, width, hist_display, styles.section)
+        else:
+            return ({"display": "block"}, row_data, column_defs, filter_model, {}, no_update,
+                    box_plot, None, width, no_update, hist_display, styles.section)
 
 
 @app.callback(
-    Output("id-box-plot-geq", "figure"),
-    Output("id-row-graph-geq-hist", "figure"),
-    Output("id-geq-box-plot-col", "width"),
-    Output("id-geq-histogram-col", "width"),
-    Output("id-geq-histogram-col", "style"),
-    Output("id-display-graphs-geq", "style"),
-    Output("id-loading-graph-geq", "children"),
-    Input("id-ag-grid-geq", "rowData"),
+    Output("id-geq-box-plot", "figure", allow_duplicate=True),
+    Output("id-geq-histogram", "figure", allow_duplicate=True),
+    # Output("id-loading-graph-geq", "children"),
+
+    State("id-ag-grid-geq", "rowData"),
     Input("id-ag-grid-geq", "virtualRowData"),
     Input("id-switch-geq-lock-with-table", "value"),
     Input("id-switch-geq-log-raw-box-plot", "value"),
     Input("id-switch-geq-violin-raw-box-plot", "value"),
-    Input("id-switch-geq-normalize", "value"),
+    State("id-switch-geq-normalize", "value"),
     Input("id-switch-geq-log-count-histogram", "value"),
     Input("id-switch-geq-log-y-histogram", "value"),
     prevent_initial_call=True,
@@ -440,7 +486,7 @@ def update_charts_geq(
         raise PreventUpdate
 
     # don't update on these switches, their value is only important, not their trigger
-    if callback_context.triggered_id == "id-switch-geq-normalize":
+    if ctx.triggered_id == "id-switch-geq-normalize":
         raise PreventUpdate
 
     if lock_graph_data_with_table:
@@ -452,28 +498,15 @@ def update_charts_geq(
         # Filter out the -1 factors directly
         data = [row for row in data if row[gs.table_geq_col_factor] != -1]
         df = pd.DataFrame(data)
-        # Make histogram
+        # Make graphs
         histogram = graphs.get_histogram_geq(df, histogram_log_x, histogram_log_y)
         box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
 
-        # norm_count_values = [item[gs.table_geq_col_norm_count] for item in data]
-        # raw_count_values = [item[gs.table_geq_col_raw_count] for item in data]
-        # rail_id_list = [item[gs.snpt_col_rail_id] for item in data]
-        # factor_list = [item[gs.table_geq_col_factor] for item in data]
-        # histogram = graphs.get_histogram_geq_lists(norm_count_values, histogram_log_x, histogram_log_y)
-        # box_plot = graphs.get_box_plot_gene_expression_lists(raw_count_values,norm_count_values,
-        #                                                      rail_id_list,factor_list,
-        #                                                      log_values, violin_overlay, normalized_data)
-
-        width = {"size": 6}
-        hist_display = {"display": "Block"}
-        return box_plot, histogram, width, width, hist_display, styles.section, {}
+        return box_plot, histogram  # , {}
     else:
         df = pd.DataFrame(data)
         box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
-        width = {"size": 8, "offset": 2}
-        hist_display = {"display": "None"}
-        return box_plot, None, width, no_update, hist_display, styles.section, {}
+        return box_plot, None  # , {}
 
 
 @app.callback(
@@ -512,7 +545,7 @@ def on_box_plot_click_jiq(click_data, filter_model):
 
 @app.callback(
     Output("id-ag-grid-geq", "filterModel", allow_duplicate=True),
-    Input("id-box-plot-geq", "clickData"),
+    Input("id-geq-box-plot", "clickData"),
     State("id-ag-grid-geq", "filterModel"),
     prevent_initial_call=True,
 )
@@ -560,4 +593,4 @@ def on_lock_switch_geq(lock):
 
 # Run the app
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
