@@ -183,7 +183,7 @@ def get_box_plot_gene_expression(df, log_values, violin_overlay, normalized=Fals
 # ----------------------------------
 
 
-def fig_common_update_histogram(fig, title, y_title):
+def fig_common_update_histogram(fig, title, x_axes_title):
     fig.update_layout(
         title=f"<b>{title}</b>",
         title_x=0.5,
@@ -191,13 +191,13 @@ def fig_common_update_histogram(fig, title, y_title):
         margin=dict(b=0),
     )
 
-    fig.update_xaxes(title_text=y_title)
+    fig.update_xaxes(title_text=x_axes_title)
     # fig.update_traces(marker_color='darkblue')
 
     return fig
 
 
-def create_histogram(df, x_values, log_y, labels, bins, plot_title, y_title, color=None):
+def create_histogram(df, x_values, log_y, labels, bins, plot_title, x_axes_title, color=None):
     fig = px.histogram(
         df,
         x=x_values,
@@ -208,7 +208,7 @@ def create_histogram(df, x_values, log_y, labels, bins, plot_title, y_title, col
         color_discrete_sequence=graphs_utils.get_common_colors(),
     )
 
-    fig_common_update_histogram(fig, plot_title, y_title)
+    fig_common_update_histogram(fig, plot_title, x_axes_title)
     return fig
 
 
@@ -235,7 +235,7 @@ def get_histogram_jiq(df, log_psi_values, log_y, list_of_calculated_junctions):
         labels=graphs_utils.get_common_labels_jiq(),
         bins=25,
         plot_title=gs.jiq_plot_title_hist,
-        y_title=gs.jiq_log_psi if log_psi_values else gs.jiq_psi_plot_axes,
+        x_axes_title=gs.jiq_log_psi if log_psi_values else gs.jiq_psi_plot_axes,
         color=color,
     )
 
@@ -269,5 +269,5 @@ def get_histogram_geq(df, log_count_values, log_y):
         labels=graphs_utils.get_common_labels_geq(),
         bins=50,
         plot_title=gs.geq_plot_title_hist,
-        y_title=gs.geq_log_count if log_count_values else gs.geq_plot_label_norm_count,
+        x_axes_title=gs.geq_log_count if log_count_values else gs.geq_plot_label_norm_count,
     )
