@@ -3,7 +3,7 @@ import os
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 import pandas as pd
-from dash import Dash, Input, Output, ctx, no_update, State, dcc, ClientsideFunction
+from dash import Dash, Input, Output, ctx, no_update, State, dcc, ClientsideFunction, Patch
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 
@@ -210,13 +210,13 @@ def on_button_click_jiq(
     prevent_initial_call=True,
 )
 def update_charts_jiq(
-    row_data_from_table,
-    filtered_row_data_from_table,
-    lock_graph_data_with_table,
-    box_log_psi,
-    violin_overlay,
-    histogram_log_psi,
-    histogram_log_y,
+        row_data_from_table,
+        filtered_row_data_from_table,
+        lock_graph_data_with_table,
+        box_log_psi,
+        violin_overlay,
+        histogram_log_psi,
+        histogram_log_y,
 ):
     """
     Given the table data as input, it will update the relative graphs
@@ -346,19 +346,19 @@ def enable_normalization(normalize_value):
     running=[(Output("id-button-geq-run-query", "disabled"), True, False)],  # requires latest Dash 2.16
 )
 def on_button_click_geq(
-    n_clicks,
-    compilation,
-    use_coordinates,
-    query_gene_id,
-    query_gene_coordinates,
-    normalize_data,
-    norm_gene_id,
-    norm_gene_coordinates,
-    log_values,
-    violin_overlay,
-    normalized_data,
-    histogram_log_x,
-    histogram_log_y,
+        n_clicks,
+        compilation,
+        use_coordinates,
+        query_gene_id,
+        query_gene_coordinates,
+        normalize_data,
+        norm_gene_id,
+        norm_gene_coordinates,
+        log_values,
+        violin_overlay,
+        normalized_data,
+        histogram_log_x,
+        histogram_log_y,
 ):
     #  this function gets called with every input change
     if ctx.triggered_id != "id-button-geq-run-query":
@@ -453,50 +453,138 @@ def on_button_click_geq(
                     box_plot, None, width, no_update, hist_display, styles.section)
 
 
-@app.callback(
-    Output("id-geq-box-plot", "figure", allow_duplicate=True),
-    # Output("id-geq-histogram", "figure", allow_duplicate=True),
-    # Output("id-loading-graph-geq", "children"),
+# this was slower than the client side callback
+# @app.callback(
+#     Output("id-geq-histogram", "figure", allow_duplicate=True),
+#     Input("id-switch-geq-log-y-histogram", "value"),
+#     prevent_initial_call=True,
+# )
+# def update_geq_histogram_log_y(log_y):
+#     patched_fig = Patch()
+#     if log_y:
+#         patched_fig.layout.yaxis['type'] = 'log'
+#
+#     return patched_fig
 
-    State("id-ag-grid-geq", "rowData"),
-    Input("id-ag-grid-geq", "virtualRowData"),
-    Input("id-switch-geq-lock-with-table", "value"),
-    Input("id-switch-geq-log-raw-box-plot", "value"),  # TODO: need to put this in client side callback as well
-    State("id-switch-geq-violin-raw-box-plot", "value"),
-    State("id-switch-geq-normalize", "value"),
+
+app.clientside_callback(
+    ClientsideFunction(namespace="geq_clientside", function_name="update_histogram_log_y"),
+    Output("id-geq-histogram", "figure", allow_duplicate=True),
+    Input("id-switch-geq-log-y-histogram", "value"),
+    State("id-geq-histogram", "figure"),
     prevent_initial_call=True,
 )
-def update_charts_geq(
-        row_data_from_table,
-        filtered_row_data_from_table,
-        lock_graph_data_with_table,
-        log_values,
-        violin_overlay,
-        normalized_data,
-):
-    """
-    Given the table data as input, it will update the relative graphs
-    """
-    if not row_data_from_table or not filtered_row_data_from_table:
+
+app.clientside_callback(
+    ClientsideFunction(namespace="geq_clientside", function_name="update_histogram_data"),
+    Output("id-geq-histogram", "figure", allow_duplicate=True),
+    Input("id-switch-geq-log-count-histogram", "value"),
+    Input("id-switch-geq-lock-with-table", "value"),
+    Input("id-ag-grid-geq", "virtualRowData"),
+    State("id-ag-grid-geq", "rowData"),
+    State("id-geq-histogram", "figure"),
+    prevent_initial_call=True,
+)
+
+app.clientside_callback(
+    ClientsideFunction(namespace="geq_clientside", function_name="update_box_plot_violin"),
+    Output("id-geq-box-plot", "figure", allow_duplicate=True),
+    Input("id-switch-geq-violin-raw-box-plot", "value"),
+    State("id-geq-box-plot", "figure"),
+    prevent_initial_call=True,
+)
+
+
+# app.clientside_callback(
+#     ClientsideFunction(namespace='geq_clientside',
+#                        function_name='update_box_plot_data'),
+#     Output("id-geq-box-plot", "figure", allow_duplicate=True),
+#     Input("id-switch-geq-log-raw-box-plot", 'value'),
+#     Input('id-switch-geq-lock-with-table', 'value'),
+#     Input('id-ag-grid-geq', 'virtualRowData'),
+#     State('id-ag-grid-geq', 'rowData'),
+#     State("id-geq-box-plot", "figure"),
+#     prevent_initial_call=True
+# )
+
+@app.callback(
+    Output("id-geq-box-plot", "figure", allow_duplicate=True),
+    Input("id-switch-geq-log-raw-box-plot", 'value'),
+    Input('id-switch-geq-lock-with-table', 'value'),
+    State("id-switch-geq-normalize", "value"),
+    Input('id-ag-grid-geq', 'virtualRowData'),
+    # State('id-ag-grid-geq', 'rowData'),
+    prevent_initial_call=True,
+)
+def update_box_plot_data(log_x, lock_with_table, normalized_count, virtual_row_data):
+    if virtual_row_data and lock_with_table:
+        patched_fig = Patch()
+
+        # TODO: does this need to apply if normalized, or is this taken care of in the filter model?
+        # data = [row for row in data if row[gs.table_geq_col_factor] != -1]
+        df = pd.DataFrame(virtual_row_data)
+
+        # handle general items
+        rail_id_list_of_lists = df[gs.snpt_col_rail_id].apply(lambda x: [x]).tolist()
+        patched_fig.data[0]['customdata'] = rail_id_list_of_lists
+        patched_fig.data[0].y = df[gs.table_geq_col_log_2_raw] if log_x else df[gs.table_geq_col_raw_count]
+        patched_fig.layout.yaxis.title = gs.geq_box_plot_y_axes_log if log_x else gs.geq_box_plot_y_axes,
+
+        if normalized_count:
+            patched_fig.data[1]['customdata'] = rail_id_list_of_lists
+            patched_fig.data[1].y = df[gs.table_geq_col_log_2_norm] if log_x else df[gs.table_geq_col_norm_count]
+
+        return patched_fig
+    else:
         raise PreventUpdate
 
-    if lock_graph_data_with_table:
-        data = filtered_row_data_from_table
-    else:
-        data = row_data_from_table
 
-    if normalized_data:
-        # Filter out the -1 factors directly
-        data = [row for row in data if row[gs.table_geq_col_factor] != -1]
-        df = pd.DataFrame(data)
-        # Make graphs
-        box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
-
-    else:
-        df = pd.DataFrame(data)
-        box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
-
-    return box_plot
+# @app.callback(
+#     Output("id-geq-box-plot", "figure", allow_duplicate=True),
+#     # Output("id-geq-histogram", "figure", allow_duplicate=True),
+#     # Output("id-loading-graph-geq", "children"),
+#
+#     State("id-ag-grid-geq", "rowData"),
+#     Input("id-ag-grid-geq", "virtualRowData"),
+#     Input("id-switch-geq-lock-with-table", "value"),
+#     Input("id-switch-geq-log-raw-box-plot", "value"),  # TODO: need to put this in client side callback as well
+#     State("id-switch-geq-violin-raw-box-plot", "value"),
+#     State("id-switch-geq-normalize", "value"),
+#     prevent_initial_call=True,
+# )
+# def update_charts_geq(
+#         row_data_from_table,
+#         filtered_row_data_from_table,
+#         lock_graph_data_with_table,
+#         log_values,
+#         violin_overlay,
+#         normalized_data,
+# ):
+#     """
+#     Given the table data as input, it will update the relative graphs
+#     """
+#     raise PreventUpdate
+#
+#     if not row_data_from_table or not filtered_row_data_from_table:
+#         raise PreventUpdate
+#
+#     if lock_graph_data_with_table:
+#         data = filtered_row_data_from_table
+#     else:
+#         data = row_data_from_table
+#
+#     if normalized_data:
+#         # Filter out the -1 factors directly
+#         data = [row for row in data if row[gs.table_geq_col_factor] != -1]
+#         df = pd.DataFrame(data)
+#         # Make graphs
+#         box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
+#
+#     else:
+#         df = pd.DataFrame(data)
+#         box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
+#
+#     return box_plot
 
 
 @app.callback(
