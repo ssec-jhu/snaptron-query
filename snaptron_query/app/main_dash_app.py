@@ -1,11 +1,11 @@
+import os
+
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 import pandas as pd
-from dash import Dash, Input, Output, ctx, no_update, State, dcc
-
+from dash import Dash, Input, Output, ctx, no_update, State, dcc, ClientsideFunction
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
-import os
 
 from snaptron_query.app import column_defs as cd, callback_common as callback, inline_styles as styles, navbars, paths
 from snaptron_query.app import (
@@ -184,7 +184,6 @@ def on_button_click_jiq(
                 "border-radius": "10px",
             }
 
-
         except Exception as e:
             alert_message = exceptions.alert_message_from_exception(e)
 
@@ -211,13 +210,13 @@ def on_button_click_jiq(
     prevent_initial_call=True,
 )
 def update_charts_jiq(
-        row_data_from_table,
-        filtered_row_data_from_table,
-        lock_graph_data_with_table,
-        box_log_psi,
-        violin_overlay,
-        histogram_log_psi,
-        histogram_log_y,
+    row_data_from_table,
+    filtered_row_data_from_table,
+    lock_graph_data_with_table,
+    box_log_psi,
+    violin_overlay,
+    histogram_log_psi,
+    histogram_log_y,
 ):
     """
     Given the table data as input, it will update the relative graphs
@@ -322,11 +321,12 @@ def enable_normalization(normalize_value):
     # figure related outputs
     Output("id-geq-box-plot", "figure"),
     Output("id-geq-histogram", "figure"),
+    # Output("id-store-geq-box", "data"),
+    # Output("id-store-geq-hist", "data"),
     Output("id-geq-box-plot-col", "width"),
     Output("id-geq-histogram-col", "width"),
     Output("id-geq-histogram-col", "style"),
     Output("id-display-graphs-geq", "style"),
-
     # ----- Inputs -----
     Input("id-button-geq-run-query", "n_clicks"),
     State("id-input-compilation-geq", "value"),
@@ -342,24 +342,23 @@ def enable_normalization(normalize_value):
     State("id-switch-geq-normalize", "value"),
     State("id-switch-geq-log-count-histogram", "value"),
     State("id-switch-geq-log-y-histogram", "value"),
-
     prevent_initial_call=True,
     running=[(Output("id-button-geq-run-query", "disabled"), True, False)],  # requires latest Dash 2.16
 )
 def on_button_click_geq(
-        n_clicks,
-        compilation,
-        use_coordinates,
-        query_gene_id,
-        query_gene_coordinates,
-        normalize_data,
-        norm_gene_id,
-        norm_gene_coordinates,
-        log_values,
-        violin_overlay,
-        normalized_data,
-        histogram_log_x,
-        histogram_log_y,
+    n_clicks,
+    compilation,
+    use_coordinates,
+    query_gene_id,
+    query_gene_coordinates,
+    normalize_data,
+    norm_gene_id,
+    norm_gene_coordinates,
+    log_values,
+    violin_overlay,
+    normalized_data,
+    histogram_log_x,
+    histogram_log_y,
 ):
     #  this function gets called with every input change
     if ctx.triggered_id != "id-button-geq-run-query":
@@ -418,9 +417,9 @@ def on_button_click_geq(
                 filter_model = cd.get_geq_table_filter_model(normalized_data)
                 if normalized_data:
                     # Filter out the -1 factors directly
-                    # data = [row for row in data if row[gs.table_geq_col_factor] != -1]
+                    data = [row for row in row_data if row[gs.table_geq_col_factor] != -1]
                     df = pd.DataFrame(row_data)
-                    df = df[df[gs.table_geq_col_factor] >= 0]
+                    # df = df[df[gs.table_geq_col_factor] >= 0]
 
                     # Make histogram
                     histogram = graphs.get_histogram_geq(df, histogram_log_x, histogram_log_y)
@@ -456,17 +455,15 @@ def on_button_click_geq(
 
 @app.callback(
     Output("id-geq-box-plot", "figure", allow_duplicate=True),
-    Output("id-geq-histogram", "figure", allow_duplicate=True),
+    # Output("id-geq-histogram", "figure", allow_duplicate=True),
     # Output("id-loading-graph-geq", "children"),
 
     State("id-ag-grid-geq", "rowData"),
     Input("id-ag-grid-geq", "virtualRowData"),
     Input("id-switch-geq-lock-with-table", "value"),
-    Input("id-switch-geq-log-raw-box-plot", "value"),
-    Input("id-switch-geq-violin-raw-box-plot", "value"),
+    Input("id-switch-geq-log-raw-box-plot", "value"),  # TODO: need to put this in client side callback as well
+    State("id-switch-geq-violin-raw-box-plot", "value"),
     State("id-switch-geq-normalize", "value"),
-    Input("id-switch-geq-log-count-histogram", "value"),
-    Input("id-switch-geq-log-y-histogram", "value"),
     prevent_initial_call=True,
 )
 def update_charts_geq(
@@ -476,17 +473,11 @@ def update_charts_geq(
         log_values,
         violin_overlay,
         normalized_data,
-        histogram_log_x,
-        histogram_log_y,
 ):
     """
     Given the table data as input, it will update the relative graphs
     """
     if not row_data_from_table or not filtered_row_data_from_table:
-        raise PreventUpdate
-
-    # don't update on these switches, their value is only important, not their trigger
-    if ctx.triggered_id == "id-switch-geq-normalize":
         raise PreventUpdate
 
     if lock_graph_data_with_table:
@@ -499,14 +490,13 @@ def update_charts_geq(
         data = [row for row in data if row[gs.table_geq_col_factor] != -1]
         df = pd.DataFrame(data)
         # Make graphs
-        histogram = graphs.get_histogram_geq(df, histogram_log_x, histogram_log_y)
         box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
 
-        return box_plot, histogram  # , {}
     else:
         df = pd.DataFrame(data)
         box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
-        return box_plot, None  # , {}
+
+    return box_plot
 
 
 @app.callback(
