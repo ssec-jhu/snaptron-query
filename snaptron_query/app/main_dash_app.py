@@ -432,7 +432,7 @@ def on_button_click_geq(
                 if normalized_data:
                     # Filter out the -1 factors directly
                     data = [row for row in row_data if row[gs.table_geq_col_factor] != -1]
-                    df = pd.DataFrame(row_data)
+                    df = pd.DataFrame(data)
                     # df = df[df[gs.table_geq_col_factor] >= 0]
 
                     # Make histogram
