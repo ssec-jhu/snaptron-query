@@ -18,7 +18,7 @@ from snaptron_query.app import (
     snaptron_client as sc,
     runner_geq,
 )
-from snaptron_query.app.query_gene_expression import GeneExpressionQueryManager
+
 from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager, JiqReturnType
 
 # Initialize the app
