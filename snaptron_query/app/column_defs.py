@@ -368,3 +368,14 @@ def get_jiq_table_filter_model(junction_count):
         filter_model = {gs.table_jiq_col_avg_psi: {"filterType": "number", "type": "greaterThanOrEqual", "filter": 5}}
 
     return filter_model
+
+
+def get_geq_table_filter_model(normalized_data):
+    if normalized_data:
+        filter_model = {
+            gs.table_geq_col_factor: {"filterType": "number", "type": "greaterThanOrEqual", "filter": 0},
+        }
+    else:
+        filter_model = {}
+
+    return filter_model
