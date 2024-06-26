@@ -50,7 +50,6 @@ def run_query(
     if df_snpt_results_query.empty:
         raise exceptions.EmptyResponse
 
-
     # Set upt the GEX manager then run the Query
     # Create normalization table if needed
     geq = GeneExpressionQueryManager()
@@ -100,8 +99,8 @@ def run_query(
 
 
 if __name__ == "__main__":
-
     from snaptron_query.app import utils
+
     dict_srav3h = utils.read_srav3h("/Users/Fatemeh/Desktop/meta_data_2/srav3h_samples.tsv")
 
     run_query(

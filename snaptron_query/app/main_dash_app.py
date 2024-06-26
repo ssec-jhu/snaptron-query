@@ -437,7 +437,7 @@ def on_button_click_geq(
             column_defs,
             filter_model,
             {},
-            no_update, #alert
+            no_update,  # alert
             box_plot,
             histogram,
             width_box,
