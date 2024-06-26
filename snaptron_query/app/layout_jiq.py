@@ -276,7 +276,7 @@ def get_card_box_plot_jiq():
                         style=styles.border_column,
                     ),
                     dbc.Row([dcc.Graph(id="id-box-plot-jiq")], className="g-0", style=styles.border_column),
-                    ]
+                ]
             )
         ],
         style=styles.boundary_style,

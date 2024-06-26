@@ -123,7 +123,7 @@ def get_col_meta_tcgav2_b():
                 "closeOnApply": True,
             },
         }
-        for item in gs.tcgav2_meta_data_required_list[1: len(gs.tcgav2_meta_data_required_list)]
+        for item in gs.tcgav2_meta_data_required_list[1 : len(gs.tcgav2_meta_data_required_list)]
     ]
     return meta_data
 
@@ -139,7 +139,7 @@ def get_col_meta_gtexv2_b():
                 "closeOnApply": True,
             },
         }
-        for item in gs.gtexv2_meta_data_required_list[1: len(gs.gtexv2_meta_data_required_list)]
+        for item in gs.gtexv2_meta_data_required_list[1 : len(gs.gtexv2_meta_data_required_list)]
     ]
     return meta_data
 
@@ -376,6 +376,6 @@ def get_geq_table_filter_model(normalized_data):
             gs.table_geq_col_factor: {"filterType": "number", "type": "greaterThanOrEqual", "filter": 0},
         }
     else:
-        filter_model={}
+        filter_model = {}
 
     return filter_model

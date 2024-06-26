@@ -106,14 +106,7 @@ app.layout = dbc.Container(
     running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)],  # requires the latest Dash 2.16
 )
 def on_button_click_jiq(
-        n_clicks,
-        compilation,
-        children,
-        junction_count,
-        box_log_psi,
-        violin_overlay,
-        histogram_log_psi,
-        histogram_log_y
+    n_clicks, compilation, children, junction_count, box_log_psi, violin_overlay, histogram_log_psi, histogram_log_y
 ):
     #  this function gets called with every input change
     if ctx.triggered_id != "id-button-jiq-generate-results":
@@ -166,8 +159,7 @@ def on_button_click_jiq(
             # TODO: these numbers must be combined with the filter model function
             df = pd.DataFrame(row_data)
             if len(junction_lists) == 1:
-                df = df[(df[gs.table_jiq_col_psi] >= 5) &
-                        (df[gs.table_jiq_col_total] >= 15)]
+                df = df[(df[gs.table_jiq_col_psi] >= 5) & (df[gs.table_jiq_col_total] >= 15)]
             else:
                 df = df[df[gs.table_jiq_col_avg_psi] >= 5]
 
@@ -189,11 +181,33 @@ def on_button_click_jiq(
 
     if alert_message:
         alert = components.get_alert(alert_message)
-        return (no_update, no_update, no_update, no_update, no_update, alert,
-                no_update, no_update, no_update, no_update, no_update)
+        return (
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            alert,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+        )
 
-    return ({"display": "block"}, row_data, column_defs, filter_model, {}, no_update,
-            histogram, box_plot, col_width, col_width, display_style)
+    return (
+        {"display": "block"},
+        row_data,
+        column_defs,
+        filter_model,
+        {},
+        no_update,
+        histogram,
+        box_plot,
+        col_width,
+        col_width,
+        display_style,
+    )
 
 
 @app.callback(
@@ -210,13 +224,13 @@ def on_button_click_jiq(
     prevent_initial_call=True,
 )
 def update_charts_jiq(
-        row_data_from_table,
-        filtered_row_data_from_table,
-        lock_graph_data_with_table,
-        box_log_psi,
-        violin_overlay,
-        histogram_log_psi,
-        histogram_log_y,
+    row_data_from_table,
+    filtered_row_data_from_table,
+    lock_graph_data_with_table,
+    box_log_psi,
+    violin_overlay,
+    histogram_log_psi,
+    histogram_log_y,
 ):
     """
     Given the table data as input, it will update the relative graphs
@@ -346,19 +360,19 @@ def enable_normalization(normalize_value):
     running=[(Output("id-button-geq-run-query", "disabled"), True, False)],  # requires latest Dash 2.16
 )
 def on_button_click_geq(
-        n_clicks,
-        compilation,
-        use_coordinates,
-        query_gene_id,
-        query_gene_coordinates,
-        normalize_data,
-        norm_gene_id,
-        norm_gene_coordinates,
-        log_values,
-        violin_overlay,
-        normalized_data,
-        histogram_log_x,
-        histogram_log_y,
+    n_clicks,
+    compilation,
+    use_coordinates,
+    query_gene_id,
+    query_gene_coordinates,
+    normalize_data,
+    norm_gene_id,
+    norm_gene_coordinates,
+    log_values,
+    violin_overlay,
+    normalized_data,
+    histogram_log_x,
+    histogram_log_y,
 ):
     #  this function gets called with every input change
     if ctx.triggered_id != "id-button-geq-run-query":
@@ -442,15 +456,51 @@ def on_button_click_geq(
 
     if alert_message:
         alert = components.get_alert(alert_message)
-        return (no_update, no_update, no_update, no_update, no_update, alert,
-                no_update, no_update, no_update, no_update, no_update, no_update)
+        return (
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            alert,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+        )
     else:
         if normalize_data:
-            return ({"display": "block"}, row_data, column_defs, filter_model, {}, no_update,
-                    box_plot, histogram, width, width, hist_display, styles.section)
+            return (
+                {"display": "block"},
+                row_data,
+                column_defs,
+                filter_model,
+                {},
+                no_update,
+                box_plot,
+                histogram,
+                width,
+                width,
+                hist_display,
+                styles.section,
+            )
         else:
-            return ({"display": "block"}, row_data, column_defs, filter_model, {}, no_update,
-                    box_plot, None, width, no_update, hist_display, styles.section)
+            return (
+                {"display": "block"},
+                row_data,
+                column_defs,
+                filter_model,
+                {},
+                no_update,
+                box_plot,
+                None,
+                width,
+                no_update,
+                hist_display,
+                styles.section,
+            )
 
 
 # this was slower than the client side callback
@@ -507,12 +557,13 @@ app.clientside_callback(
 #     prevent_initial_call=True
 # )
 
+
 @app.callback(
     Output("id-geq-box-plot", "figure", allow_duplicate=True),
-    Input("id-switch-geq-log-raw-box-plot", 'value'),
-    Input('id-switch-geq-lock-with-table', 'value'),
+    Input("id-switch-geq-log-raw-box-plot", "value"),
+    Input("id-switch-geq-lock-with-table", "value"),
     State("id-switch-geq-normalize", "value"),
-    Input('id-ag-grid-geq', 'virtualRowData'),
+    Input("id-ag-grid-geq", "virtualRowData"),
     # State('id-ag-grid-geq', 'rowData'),
     prevent_initial_call=True,
 )
@@ -526,12 +577,12 @@ def update_box_plot_data(log_x, lock_with_table, normalized_count, virtual_row_d
 
         # handle general items
         rail_id_list_of_lists = df[gs.snpt_col_rail_id].apply(lambda x: [x]).tolist()
-        patched_fig.data[0]['customdata'] = rail_id_list_of_lists
+        patched_fig.data[0]["customdata"] = rail_id_list_of_lists
         patched_fig.data[0].y = df[gs.table_geq_col_log_2_raw] if log_x else df[gs.table_geq_col_raw_count]
-        patched_fig.layout.yaxis.title = gs.geq_box_plot_y_axes_log if log_x else gs.geq_box_plot_y_axes,
+        patched_fig.layout.yaxis.title = (gs.geq_box_plot_y_axes_log if log_x else gs.geq_box_plot_y_axes,)
 
         if normalized_count:
-            patched_fig.data[1]['customdata'] = rail_id_list_of_lists
+            patched_fig.data[1]["customdata"] = rail_id_list_of_lists
             patched_fig.data[1].y = df[gs.table_geq_col_log_2_norm] if log_x else df[gs.table_geq_col_norm_count]
 
         return patched_fig
