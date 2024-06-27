@@ -16,8 +16,9 @@ from snaptron_query.app import (
     exceptions,
     global_strings as gs,
     snaptron_client as sc,
+    runner_geq,
 )
-from snaptron_query.app.query_gene_expression import GeneExpressionQueryManager
+
 from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager, JiqReturnType
 
 # Initialize the app
@@ -353,7 +354,7 @@ def enable_normalization(normalize_value):
     # figure related states
     State("id-switch-geq-log-raw-box-plot", "value"),
     State("id-switch-geq-violin-raw-box-plot", "value"),
-    State("id-switch-geq-normalize", "value"),
+    # State("id-switch-geq-normalize", "value"),
     State("id-switch-geq-log-count-histogram", "value"),
     State("id-switch-geq-log-y-histogram", "value"),
     prevent_initial_call=True,
@@ -368,9 +369,8 @@ def on_button_click_geq(
     normalize_data,
     norm_gene_id,
     norm_gene_coordinates,
-    log_values,
+    box_plot_log_x,
     violin_overlay,
-    normalized_data,
     histogram_log_x,
     histogram_log_y,
 ):
@@ -390,64 +390,24 @@ def on_button_click_geq(
                     if not query_gene_coordinates or (normalize_data and (not norm_gene_coordinates)):
                         raise exceptions.MissingUserInputs
 
-                # Verify the gene coordinates string, we don't need the return values for this query
-                df_snpt_results_query = sc.get_snpt_query_results_df(
-                    compilation=compilation,
-                    region=sc.coordinates_to_formatted_string(sc.geq_verify_coordinate(query_gene_coordinates))
-                    if use_coordinates
-                    else query_gene_id,
-                    query_mode="genes",
+                # RUN THE GEX QUERY with the UI inputs
+                (row_data, column_defs, filter_model, box_plot, histogram, width_box, width_hist, hist_display) = (
+                    runner_geq.run_query(
+                        # Select the metadata that must be used
+                        meta_data_dict=get_meta_data(compilation),
+                        normalize_data=normalize_data,
+                        use_coordinates=use_coordinates,
+                        norm_gene_coordinates=norm_gene_coordinates,
+                        query_gene_coordinates=query_gene_coordinates,
+                        compilation=compilation,
+                        norm_gene_id=norm_gene_id,
+                        query_gene_id=query_gene_id,
+                        histogram_log_x=histogram_log_x,
+                        histogram_log_y=histogram_log_y,
+                        box_plot_log_x=box_plot_log_x,
+                        violin_overlay=violin_overlay,
+                    )
                 )
-                if df_snpt_results_query.empty:
-                    raise exceptions.EmptyResponse
-
-                # Select the metadata that must be used
-                meta_data_dict = get_meta_data(compilation)
-
-                # Set upt the GEX manager then run the Query
-                # Create normalization table if needed
-                geq = GeneExpressionQueryManager()
-                if normalize_data:
-                    if use_coordinates:
-                        sc.geq_verify_coordinate(norm_gene_coordinates)
-                        df_snpt_results_norm = sc.get_snpt_query_results_df(
-                            compilation=compilation, region=norm_gene_coordinates, query_mode="genes"
-                        )
-                    else:
-                        df_snpt_results_norm = sc.get_snpt_query_results_df(
-                            compilation=compilation, region=norm_gene_id, query_mode="genes"
-                        )
-                    if df_snpt_results_norm.empty:
-                        raise exceptions.EmptyResponse
-
-                    geq.setup_normalization_data_method(norm_gene_id, df_snpt_results_norm, meta_data_dict)
-
-                row_data = geq.run_gene_expression_query(query_gene_id, df_snpt_results_query, meta_data_dict)
-
-                # ag-grid accepts list of dicts so passing in the data from storage that is saved as list of dict
-                # saves times here. store_data = row_data.df.to_dict("records") Set the columnDefs for the ag-grid
-                column_defs = cd.get_gene_expression_query_column_def(compilation, normalize_data)
-
-                filter_model = cd.get_geq_table_filter_model(normalized_data)
-                if normalized_data:
-                    # Filter out the -1 factors directly
-                    data = [row for row in row_data if row[gs.table_geq_col_factor] != -1]
-                    df = pd.DataFrame(data)
-                    # df = df[df[gs.table_geq_col_factor] >= 0]
-
-                    # Make histogram
-                    histogram = graphs.get_histogram_geq(df, histogram_log_x, histogram_log_y)
-                    box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
-
-                    width = {"size": 6}
-                    hist_display = {"display": "Block"}
-                    # return box_plot, histogram, width, width, hist_display, styles.section, {}
-                else:
-                    df = pd.DataFrame(row_data)
-                    box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
-                    width = {"size": 8, "offset": 2}
-                    hist_display = {"display": "None"}
-                    # return box_plot, None, width, no_update, hist_display, styles.section, {}
 
             else:
                 raise exceptions.MissingUserInputs
@@ -471,36 +431,20 @@ def on_button_click_geq(
             no_update,
         )
     else:
-        if normalize_data:
-            return (
-                {"display": "block"},
-                row_data,
-                column_defs,
-                filter_model,
-                {},
-                no_update,
-                box_plot,
-                histogram,
-                width,
-                width,
-                hist_display,
-                styles.section,
-            )
-        else:
-            return (
-                {"display": "block"},
-                row_data,
-                column_defs,
-                filter_model,
-                {},
-                no_update,
-                box_plot,
-                None,
-                width,
-                no_update,
-                hist_display,
-                styles.section,
-            )
+        return (
+            {"display": "block"},
+            row_data,
+            column_defs,
+            filter_model,
+            {},
+            no_update,  # alert
+            box_plot,
+            histogram,
+            width_box,
+            width_hist,
+            hist_display,
+            styles.section,
+        )
 
 
 # this was slower than the client side callback
@@ -607,7 +551,7 @@ def update_box_plot_data(log_x, lock_with_table, normalized_count, virtual_row_d
 #         row_data_from_table,
 #         filtered_row_data_from_table,
 #         lock_graph_data_with_table,
-#         log_values,
+#         box_plot_log_x,
 #         violin_overlay,
 #         normalized_data,
 # ):
@@ -629,11 +573,11 @@ def update_box_plot_data(log_x, lock_with_table, normalized_count, virtual_row_d
 #         data = [row for row in data if row[gs.table_geq_col_factor] != -1]
 #         df = pd.DataFrame(data)
 #         # Make graphs
-#         box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
+#         box_plot = graphs.get_box_plot_gene_expression(df, box_plot_log_x, violin_overlay, normalized_data)
 #
 #     else:
 #         df = pd.DataFrame(data)
-#         box_plot = graphs.get_box_plot_gene_expression(df, log_values, violin_overlay, normalized_data)
+#         box_plot = graphs.get_box_plot_gene_expression(df, box_plot_log_x, violin_overlay, normalized_data)
 #
 #     return box_plot
 
