@@ -7,7 +7,7 @@ from dash import Dash, Input, Output, ctx, no_update, State, dcc, ClientsideFunc
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 
-from snaptron_query.app import column_defs as cd, callback_common as callback, inline_styles as styles, navbars, paths
+from snaptron_query.app import callback_common as callback, inline_styles as styles, navbars, paths
 from snaptron_query.app import (
     graphs,
     layout,
