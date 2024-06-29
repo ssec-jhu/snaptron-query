@@ -239,18 +239,9 @@ def get_histogram_jiq(df, log_psi_values, log_y, list_of_calculated_junctions):
         color=color,
     )
 
-    # TODO:change "variable" to something else? var_name='Junction Index', color would also have to be the same name
-    # # this will put them side to side
-    # fig1 = px.histogram(df_melt, x="value", color="variable", log_y=log_y, nbins=25, title=gs.jiq_plot_title_hist,
-    #                     facet_col='variable', )
-    # # this will show overlay on top of each other
-    # fig3 = px.histogram(df_melt, x="value", color="variable", log_y=log_y, nbins=25, title="overlay",
-    #                     barmode='overlay',opacity=0.75)
-    # fig3.data = fig3.data[::-1]
-    # # Set the opacity of the bars to ensure distinct colors
-    # for trace in fig3.data:
-    #     trace.opacity = 0.5
-    # fig_common_update_histogram(fig3, gs.jiq_plot_title_hist, y_title_text)
+    if len(list_of_calculated_junctions) != 1:
+        fig.update_layout(barmode='overlay')
+        fig.update_traces(opacity=0.85)
 
     return fig
 
