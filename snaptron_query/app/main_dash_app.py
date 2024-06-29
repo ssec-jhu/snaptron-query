@@ -7,7 +7,7 @@ from dash import Dash, Input, Output, ctx, no_update, State, dcc, ClientsideFunc
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 
-from snaptron_query.app import column_defs as cd, callback_common as callback, inline_styles as styles, navbars, paths
+from snaptron_query.app import callback_common as callback, inline_styles as styles, navbars, paths
 from snaptron_query.app import (
     graphs,
     layout,
@@ -15,11 +15,9 @@ from snaptron_query.app import (
     utils,
     exceptions,
     global_strings as gs,
-    snaptron_client as sc,
     runner_geq,
+    runner_jiq,
 )
-
-from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager, JiqReturnType
 
 # Initialize the app
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
@@ -123,59 +121,18 @@ def on_button_click_jiq(
             if junction_count is None:  # first call
                 junction_count = 0
 
-            # count is indexed at 0
-            inc_junctions, exc_junctions = utils.get_element_id_and_value(children, junction_count)
-            if len(inc_junctions) == 0 or len(exc_junctions) == 0:
-                raise exceptions.MissingUserInputs
-
-            # verify all the coordinates, if there is any error in the intervals, an exception will be thrown
-            junction_lists = []
-            for j in range(len(exc_junctions)):
-                junction_coordinates = sc.jiq_verify_coordinate_pairs(exc_junctions[j], inc_junctions[j])
-                junction_lists.append(junction_coordinates)
-
-            # gather the snaptron results form the exclusion junctions
-            df_snpt_results_dict = sc.gather_snpt_query_results_into_dict(
-                compilation=compilation, junction_lists=junction_lists
+            row_data, column_defs, filter_model, histogram, box_plot, col_width, col_width, display_style = (
+                runner_jiq.run_query(
+                    meta_data_dict=get_meta_data(compilation),
+                    compilation=compilation,
+                    children=children,
+                    junction_count=junction_count,
+                    box_log_psi=box_log_psi,
+                    violin_overlay=violin_overlay,
+                    histogram_log_psi=histogram_log_psi,
+                    histogram_log_y=histogram_log_y,
+                )
             )
-            # Select the metadata that must be used
-            meta_data_dict = get_meta_data(compilation)
-
-            # results returned are list of dictionaries which makes ag-grid load much faster,
-            # One can convert a dataframe to dict with orient set to records for the ag-grid as well.
-            row_data = JunctionInclusionQueryManager().run_junction_inclusion_query(
-                meta_data_dict=meta_data_dict,
-                df_snpt_results_dict=df_snpt_results_dict,
-                junctions_list=junction_lists,
-                return_type=JiqReturnType.LIST,
-            )
-
-            # Set the columnDefs for the ag-grid
-            column_defs = cd.get_junction_query_column_def(compilation, len(junction_lists))
-
-            # set the preset column filters requested
-            filter_model = cd.get_jiq_table_filter_model(len(junction_lists))
-
-            # Gather figure related items
-            # TODO: these numbers must be combined with the filter model function
-            df = pd.DataFrame(row_data)
-            if len(junction_lists) == 1:
-                df = df[(df[gs.table_jiq_col_psi] >= 5) & (df[gs.table_jiq_col_total] >= 15)]
-            else:
-                df = df[df[gs.table_jiq_col_avg_psi] >= 5]
-
-            # count how many psi columns we have
-            list_of_calculated_junctions = [col for col in df.columns if col.startswith(gs.table_jiq_col_psi)]
-            histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y, list_of_calculated_junctions)
-            box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay, list_of_calculated_junctions)
-
-            col_width = {"size": 6}
-            # when the component is hidden, then becomes visible, the original style is lost,
-            # so I am putting it back again.
-            display_style = {
-                "box-shadow": "1px 2px 7px 0px grey",
-                "border-radius": "10px",
-            }
 
         except Exception as e:
             alert_message = exceptions.alert_message_from_exception(e)

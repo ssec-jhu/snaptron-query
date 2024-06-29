@@ -96,24 +96,3 @@ def run_query(
         hist_display = {"display": "None"}
 
     return row_data, column_defs, filter_model, box_plot, histogram, width_box, width_hist, hist_display
-
-
-if __name__ == "__main__":
-    from snaptron_query.app import utils
-
-    dict_srav3h = utils.read_srav3h("/Users/Fatemeh/Desktop/meta_data_2/srav3h_samples.tsv")
-
-    run_query(
-        meta_data_dict=dict_srav3h,
-        normalize_data=True,
-        use_coordinates=None,
-        norm_gene_coordinates=None,
-        query_gene_coordinates=None,
-        compilation="SRAv3h",
-        norm_gene_id="EDF1",
-        query_gene_id="TARDBP",
-        histogram_log_x=True,
-        histogram_log_y=False,
-        box_plot_log_x=True,
-        violin_overlay=False,
-    )
