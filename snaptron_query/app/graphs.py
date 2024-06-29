@@ -240,7 +240,7 @@ def get_histogram_jiq(df, log_psi_values, log_y, list_of_calculated_junctions):
     )
 
     if len(list_of_calculated_junctions) != 1:
-        fig.update_layout(barmode='overlay')
+        fig.update_layout(barmode="overlay")
         fig.update_traces(opacity=0.85)
 
     return fig
