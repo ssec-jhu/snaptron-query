@@ -11,6 +11,6 @@ httpx==0.27.0
 matplotlib==3.8.4
 plotly==5.22.0
 plotly-express==0.4.1
-numpy==1.26.4
+numpy==2.0.0
 dash-loading-spinners==1.0.3
 gunicorn==22.0.0
