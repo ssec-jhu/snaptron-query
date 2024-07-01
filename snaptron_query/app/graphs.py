@@ -241,8 +241,7 @@ def get_histogram_jiq(df, log_psi_values, log_y, list_of_calculated_junctions):
 
     if len(list_of_calculated_junctions) != 1:
         fig.update_layout(barmode="overlay")
-        fig.update_traces(opacity=0.85)
-
+        fig.update_traces(opacity=0.5)  # can't see the blending of some colors with higher opacity
     return fig
 
 
