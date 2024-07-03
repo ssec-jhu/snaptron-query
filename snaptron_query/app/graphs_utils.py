@@ -7,10 +7,10 @@ def get_common_colors():
     # colorblind colors: https://davidmathlogic.com/colorblind/  -> select "tol"
     return [
         "#332288",  # blue/purple
-        "#882255",  # red/pink
-        "#117733",  # green
+        "#44AA99",  # teal
         "#88CCEE",  # light blue
         "#DDCC77",  # yellow,
+        "#882255",  # red/pink
     ]
 
 
