@@ -31,11 +31,11 @@ class Timer:
             # if there was a split before it calculate the splits
             if self.split_start_time:
                 elapsed = end_time - self.split_start_time
-                print(f"\t{msg}: {elapsed:.4f} seconds")
+                print(f"\t{msg}: {elapsed:.6f} seconds")
                 ctx.record_timing(msg, elapsed)
 
             total = end_time - self.start_time
-            print(f"End: {self.function_name}\tTotal time: {total:.4f} seconds")
+            print(f"End: {self.function_name}\tTotal time: {total:.6f} seconds")
             ctx.record_timing(self.function_name, total)
 
     def split(self, msg=None):
@@ -53,7 +53,7 @@ class Timer:
                 else:
                     split_time = current_time - self.split_start_time
 
-                print(f"\t{msg}: {split_time:.4f} seconds")
+                print(f"\t{msg}: {split_time:.6f} seconds")
                 ctx.record_timing(msg, split_time)
                 # start the timer for the next split
                 self.split_start_time = current_time
