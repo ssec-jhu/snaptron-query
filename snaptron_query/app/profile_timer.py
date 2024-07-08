@@ -5,7 +5,7 @@ from dash import callback_context as ctx
 
 class Timer:
     def __init__(self, function_name=None):
-        self.enabled = True  # Set to True to turn on the timers
+        self.enabled = False  # Set to True to turn on the timers
         self.start_time = None
         self.split_start_time = None
         self.function_name = function_name
