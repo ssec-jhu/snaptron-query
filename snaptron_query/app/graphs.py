@@ -36,7 +36,7 @@ def create_box_plot(violin_overlay, df, y_values, range_y_axis, labels, mode=Non
             labels=labels,
             color=color,
             violinmode=mode,
-            #points="all",
+            # points="all",
             color_discrete_sequence=graphs_utils.get_common_colors(),
             box=True,
         )
@@ -48,7 +48,7 @@ def create_box_plot(violin_overlay, df, y_values, range_y_axis, labels, mode=Non
             labels=labels,
             color=color,
             boxmode=mode,
-            #points="all",
+            # points="all",
             color_discrete_sequence=graphs_utils.get_common_colors(),
             # Request to not snap with table changes for JIQ.
             # If provided, overrides auto-scaling on the y-axis in cartesian coordinates.
