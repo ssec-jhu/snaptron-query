@@ -1,4 +1,6 @@
-import time
+from timeit import default_timer as timer
+
+from dash import callback_context as ctx
 
 
 class Timer:
@@ -14,7 +16,7 @@ class Timer:
         starts the timer
         """
         if self.enabled:
-            self.start_time = time.time()
+            self.start_time = timer()
             print(f"Start: {self.function_name}")
 
     def stop(self, msg=None):
@@ -24,14 +26,17 @@ class Timer:
         """
         if self.enabled and self.start_time is not None:
             # stop the time
-            end_time = time.time()
+            end_time = timer()
 
             # if there was a split before it calculate the splits
             if self.split_start_time:
                 elapsed = end_time - self.split_start_time
                 print(f"\t{msg}: {elapsed:.4f} seconds")
+                ctx.record_timing(msg, elapsed)
 
-            print(f"End: {self.function_name}\tTotal time: {end_time - self.start_time:.4f} seconds")
+            total = end_time - self.start_time
+            print(f"End: {self.function_name}\tTotal time: {total:.4f} seconds")
+            ctx.record_timing(self.function_name, total)
 
     def split(self, msg=None):
         """
@@ -41,10 +46,14 @@ class Timer:
         """
         if self.enabled:
             if self.start_time is not None:
+                current_time = timer()
                 if self.split_start_time is None:
-                    self.split_start_time = time.time()
+                    # first split
+                    split_time = current_time - self.start_time
                 else:
-                    # print the elapsed time
-                    print(f"\t{msg}: {time.time() - self.split_start_time:.4f} seconds")
-                    # start the timer for the next split
-                    self.split_start_time = time.time()
+                    split_time = current_time - self.split_start_time
+
+                print(f"\t{msg}: {split_time:.4f} seconds")
+                ctx.record_timing(msg, split_time)
+                # start the timer for the next split
+                self.split_start_time = current_time
