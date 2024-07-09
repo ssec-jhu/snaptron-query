@@ -1,12 +1,13 @@
 import pandas as pd
 from dash import no_update
 
-from snaptron_query.app import column_defs as cd
 from snaptron_query.app import (
     graphs,
     exceptions,
     global_strings as gs,
     snaptron_client as sc,
+    column_defs as cd,
+    profile_timer as timer,
 )
 from snaptron_query.app.query_gene_expression import GeneExpressionQueryManager
 
@@ -26,6 +27,7 @@ def run_query(
     violin_overlay,
 ):
     """
+    :param meta_data_dict: provide the snaptron metadata for this compilation as a dictionary
     :param normalize_data: whether the gene data should be normalized or not
     :param use_coordinates: if coordinates are to be provided
     :param norm_gene_coordinates:  the normalization gene coordinates
@@ -39,6 +41,9 @@ def run_query(
     :param violin_overlay: show plot in violin mode
     :return:
     """
+
+    code_timer = timer.Timer("GEQ:run_query")
+
     # Verify the gene coordinates string, we don't need the return values for this query
     df_snpt_results_query = sc.get_snpt_query_results_df(
         compilation=compilation,
@@ -49,6 +54,8 @@ def run_query(
     )
     if df_snpt_results_query.empty:
         raise exceptions.EmptyResponse
+
+    code_timer.split("Snaptron: Query Gene")
 
     # Set upt the GEX manager then run the Query
     # Create normalization table if needed
@@ -66,9 +73,15 @@ def run_query(
         if df_snpt_results_norm.empty:
             raise exceptions.EmptyResponse
 
+        code_timer.split("Snaptron: Norm Gene")
+
         geq.setup_normalization_data_method(norm_gene_id, df_snpt_results_norm, meta_data_dict)
 
+        code_timer.split("Setup Normalization")
+
     row_data = geq.run_gene_expression_query(query_gene_id, df_snpt_results_query, meta_data_dict)
+
+    code_timer.split("GEQ Main Calculation")
 
     # ag-grid accepts list of dicts so passing in the data from storage that is saved as list of dict
     # saves times here. store_data = row_data.df.to_dict("records") Set the columnDefs for the ag-grid
@@ -94,5 +107,7 @@ def run_query(
         width_box = {"size": 8, "offset": 2}
         width_hist = no_update
         hist_display = {"display": "None"}
+
+    code_timer.stop("Creating Plots")
 
     return row_data, column_defs, filter_model, box_plot, histogram, width_box, width_hist, hist_display
