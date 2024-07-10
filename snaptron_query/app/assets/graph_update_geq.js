@@ -1,16 +1,15 @@
 window.dash_clientside = Object.assign({}, window.dash_clientside, {
     geq_clientside: {
-        update_histogram_log_y: function(log_y,histogram_figure_data){
+        update_histogram_log_y: function (log_y, histogram_figure_data) {
             let newFigure = JSON.parse(JSON.stringify(histogram_figure_data)); // Deep copy of the figure
             if (log_y) {
                 newFigure.layout.yaxis['type'] = 'log'
+            } else {
+                newFigure.layout.yaxis['type'] = 'linear'
             }
-            else{
-               newFigure.layout.yaxis['type'] = 'linear'
-            }
-                return newFigure;
+            return newFigure;
         },
-        update_histogram_data: function(log_x,lock_graphs,virtual_data, rowData, histogram_figure_data){
+        update_histogram_data: function (log_x, lock_graphs, virtual_data, rowData, histogram_figure_data) {
             if (histogram_figure_data && virtual_data) {
                 let newFigure = JSON.parse(JSON.stringify(histogram_figure_data)); // Deep copy of the figure
                 let data;
@@ -33,19 +32,18 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             }
         },
 
-        update_box_plot_violin: function(violin_mode, point_mode, boxplot_figure_data){
+        update_box_plot_violin: function (violin_mode, point_mode, boxplot_figure_data) {
             if (boxplot_figure_data) {
                 let newFigure = JSON.parse(JSON.stringify(boxplot_figure_data)); // Deep copy of the figure
                 const boxpointsValue = point_mode ? 'all' : 'outliers';
                 if (violin_mode) {
                     newFigure.data.forEach(trace => {
                         trace.type = 'violin';
-                        trace.box = { visible: true }; // Show box within violin plot
+                        trace.box = {visible: true}; // Show box within violin plot
                         trace.points = boxpointsValue;
                     });
                     newFigure.layout.violinmode = 'group'
-                }
-                else{
+                } else {
                     newFigure.data.forEach(trace => {
                         trace.type = 'box';
                         trace.boxpoints = boxpointsValue;
@@ -55,7 +53,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 return newFigure;
             }
         },
-        update_box_plot_data: function(log_x,lock_graphs,virtual_data, rowData, boxplot_figure_data){
+        update_box_plot_data: function (log_x, lock_graphs, virtual_data, rowData, boxplot_figure_data) {
             if (boxplot_figure_data && virtual_data) {
                 let newFigure = JSON.parse(JSON.stringify(boxplot_figure_data)); // Deep copy of the figure
                 let data;
@@ -71,13 +69,12 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                         trace.customdata = data.map(item => [item['rail_id']])
                         if (trace.name === "Raw Count") {
                             trace.y = data.map(item => item['log2_raw'])
-                        }
-                        else{
+                        } else {
                             trace.y = data.map(item => item['log2_norm_count'])
                         }
                     });
                     newFigure.layout.yaxis.title = "Log\u2082(Gene Expression Count+0.01)"
-                }else{
+                } else {
                     newFigure.data.forEach(trace => {
                         trace.customdata = data.map(item => [item['rail_id']])
                         if (trace.name === "Raw Count") {
