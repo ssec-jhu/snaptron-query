@@ -36,7 +36,6 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         update_box_plot_violin: function(violin_mode, point_mode, boxplot_figure_data){
             if (boxplot_figure_data) {
                 let newFigure = JSON.parse(JSON.stringify(boxplot_figure_data)); // Deep copy of the figure
-                //let newFigure = boxplot_figure_data // TODO: why doesn't this work?
                 const boxpointsValue = point_mode ? 'all' : 'outliers';
                 if (violin_mode) {
                     newFigure.data.forEach(trace => {
