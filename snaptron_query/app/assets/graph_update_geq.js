@@ -8,7 +8,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             else{
                newFigure.layout.yaxis['type'] = 'linear'
             }
-            return newFigure;
+                return newFigure;
         },
         update_histogram_data: function(log_x,lock_graphs,virtual_data, rowData, histogram_figure_data){
             if (histogram_figure_data && virtual_data) {
@@ -33,20 +33,23 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             }
         },
 
-        update_box_plot_violin: function(violin_mode, boxplot_figure_data){
+        update_box_plot_violin: function(violin_mode, point_mode, boxplot_figure_data){
             if (boxplot_figure_data) {
                 let newFigure = JSON.parse(JSON.stringify(boxplot_figure_data)); // Deep copy of the figure
                 //let newFigure = boxplot_figure_data // TODO: why doesn't this work?
+                const boxpointsValue = point_mode ? 'all' : 'outliers';
                 if (violin_mode) {
                     newFigure.data.forEach(trace => {
                         trace.type = 'violin';
                         trace.box = { visible: true }; // Show box within violin plot
+                        trace.points = boxpointsValue;
                     });
                     newFigure.layout.violinmode = 'group'
                 }
                 else{
                     newFigure.data.forEach(trace => {
                         trace.type = 'box';
+                        trace.boxpoints = boxpointsValue;
                     });
                     newFigure.layout.boxmode = 'group'
                 }
