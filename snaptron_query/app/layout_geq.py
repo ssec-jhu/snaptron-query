@@ -159,7 +159,7 @@ def get_card_box_plot_geq():
                             dbc.Col(
                                 [
                                     components.get_switch_box_plot_points("id-switch-geq-show-points"),
-                                    dmc.Space(w=10),
+                                    dmc.Space(w=20),
                                     components.get_switch(
                                         switch_id="id-switch-geq-log-raw-box-plot",
                                         switch_label=gs.geq_log_count,
