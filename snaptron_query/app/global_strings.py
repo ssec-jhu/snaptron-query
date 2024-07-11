@@ -76,6 +76,15 @@ query_gene_not_found = "Query gene returned empty results." + suggestion
 normalization_gene_not_found = "Normalization gene was not found." + suggestion
 httpx_remote_protocol_error = "Snaptron could not identify the Gene." + suggestion
 httpx_connect_error = "Failed to establish a connection with Snaptron Web API!"
+
+box_plot_points_all = "All Points"
+box_plot_points_outlier = "Outliers"
+box_plot_points_tip = (
+    "Show ALL box plot points or OUTLIERS. "
+    "Enabling this feature may reduce the performance and interactivity of the box plot. "
+    "Keep disabled if you don't need to view the individual points inside the box."
+)
+
 """""" """""" """""" """""" """""" """""" """""" """""" """""" """""" """
             Junction Inclusion Query 
 """ """""" """""" """""" """""" """""" """""" """""" """""" """""" """"""

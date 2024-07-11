@@ -68,6 +68,24 @@ def get_switch_lock_data_with_table(switch_id, lock_id, unlock_id):
     ]
 
 
+def get_switch_box_plot_points(switch_id):
+    return html.Span(
+        [
+            dbc.Label(gs.box_plot_points_outlier),
+            dmc.Space(w=4),
+            dbc.Switch(
+                id=switch_id,
+                # dbc switch follows the text size of its label, so you can use something like class_name="fs-6"
+                # https://community.plotly.com/t/dbc-switch-make-larger/80146
+                value=False,
+            ),
+            dbc.Label(gs.box_plot_points_all),
+            get_tooltip(switch_id, gs.box_plot_points_tip, "top"),
+        ],
+        style={"display": "flex"},
+    )
+
+
 def get_alert(alert_message):
     return [
         dmc.Space(h=20),

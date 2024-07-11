@@ -441,6 +441,7 @@ app.clientside_callback(
     ClientsideFunction(namespace="geq_clientside", function_name="update_box_plot_violin"),
     Output("id-geq-box-plot", "figure", allow_duplicate=True),
     Input("id-switch-geq-violin-raw-box-plot", "value"),
+    Input("id-switch-geq-show-points", "value"),
     State("id-geq-box-plot", "figure"),
     prevent_initial_call=True,
 )
