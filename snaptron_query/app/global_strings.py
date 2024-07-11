@@ -176,17 +176,17 @@ tcgav2_meta_data_required_list = [
 gtexv2_meta_data_required_list = [snpt_col_rail_id, "run_acc", snpt_col_study, "SEX", "AGE", "SAMPID", "SMTS", "SMTSD"]
 
 # JIQ
-table_jiq_col_inc = "inc"
-table_jiq_col_exc = "exc"
-table_jiq_col_total = "total"
+table_jiq_col_inc = "inc_count"
+table_jiq_col_exc = "exc_count"
+table_jiq_col_total = "total_count"
 table_jiq_col_psi = "psi"
-table_jiq_col_log_2 = "log2"
+table_jiq_col_log_2 = "log2_psi"
 table_jiq_col_avg_psi = "avg_psi"
 
 # GEQ
 table_geq_col_raw_count = "raw_count"
 table_geq_col_norm_count = "normalized_count"
 table_geq_col_factor = "factor"
-table_geq_col_log_2_norm = "log2_norm_count"
-table_geq_col_log_2_raw = "log2_raw"
+table_geq_col_log_2_norm = "log2_normalized_count"
+table_geq_col_log_2_raw = "log2_raw_count"
 dbc_template_name = "sandstone"

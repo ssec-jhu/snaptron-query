@@ -148,7 +148,7 @@ def get_col_jiq():
     return [
         {
             "field": gs.table_jiq_col_inc,
-            "headerName": "Inc_Count",
+            "headerName": "Inc Count",
             "filter": "agNumberColumnFilter",
             "width": 130,
             "filterParams": {
@@ -158,7 +158,7 @@ def get_col_jiq():
         },
         {
             "field": gs.table_jiq_col_exc,
-            "headerName": "Exc_Count",
+            "headerName": "Exc Count",
             "filter": "agNumberColumnFilter",
             "width": 130,
             "filterParams": {
@@ -168,7 +168,7 @@ def get_col_jiq():
         },
         {
             "field": gs.table_jiq_col_total,
-            "headerName": "Total_Count",
+            "headerName": "Total Count",
             "filter": "agNumberColumnFilter",
             "width": 160,
             "filterParams": {

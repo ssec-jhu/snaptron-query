@@ -20,7 +20,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 }
 
                 if (log_x) {
-                    newFigure.data[0].x = data.map(item => item['log2_norm_count']); //gs.table_geq_col_log_2_norm
+                    newFigure.data[0].x = data.map(item => item['log2_normalized_count']); //gs.table_geq_col_log_2_norm
                     newFigure.layout.xaxis.title = "Log\u2082(count+0.01)"; //gs.geq_log_count
                     newFigure.data[0].hovertemplate = "Log(count)=%{x}<br>count=%{y}<extra></extra>"
                 } else {
@@ -68,9 +68,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     newFigure.data.forEach(trace => {
                         trace.customdata = data.map(item => [item['rail_id']])
                         if (trace.name === "Raw Count") {
-                            trace.y = data.map(item => item['log2_raw'])
-                        } else {
-                            trace.y = data.map(item => item['log2_norm_count'])
+                            trace.y = data.map(item => item['log2_raw_count'])
+                        }
+                        else{
+                            trace.y = data.map(item => item['log2_normalized_count'])
                         }
                     });
                     newFigure.layout.yaxis.title = "Log\u2082(Gene Expression Count+0.01)"

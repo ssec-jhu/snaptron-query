@@ -1,5 +1,7 @@
 from datetime import datetime
-from dash import no_update
+
+import pandas as pd
+from dash import no_update, dcc
 
 from snaptron_query.app import global_strings as gs, inline_styles as st, components
 
@@ -30,14 +32,14 @@ def on_lock_switch(lock):
         return st.active_lock, st.inactive_lock
 
 
-def export_data_as_csv(option, file_name):
-    if option == components.DownloadType.FILTERED.value:
-        exported_rows = "filteredAndSorted"
-    else:
-        exported_rows = "all"
+def export_data_as_csv(option, data, file_name):
+    df = pd.DataFrame(data)
 
+    exported_rows = "filteredAndSorted" if option == components.DownloadType.FILTERED.value else "all"
     # timestamp the file
     timestamp = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+    # post process the columns to have an underscore in lieu of the spaces
+    file = f"{file_name}_{exported_rows}_{timestamp}.csv"
 
-    # https://ag-grid.com/javascript-data-grid/csv-export/#reference-CsvExportParams-exportedRows
-    return True, {"fileName": f"{file_name}_{exported_rows}_{timestamp}.csv", "exportedRows": exported_rows}
+    # send the download to dash
+    return dcc.send_data_frame(df.to_csv, file)

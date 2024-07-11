@@ -84,7 +84,7 @@ def test_jiq_results_size_cols(junction_srav3h):
 
 
 @pytest.mark.parametrize(
-    "rail_id,external_id,inc,exc,psi",
+    "rail_id,external_id,inc_count,exc_count,psi",
     [
         (1000010, "SRR3743424", 0, 11, 0.0),
         (2171668, "SRR5714918", 35, 0, 100.0),
@@ -97,16 +97,16 @@ def test_jiq_results_size_cols(junction_srav3h):
         (2109561, "SRR6873183", 12, 34, 26.09),
     ],
 )
-def test_jiq_results_srav3h(junction_srav3h, rail_id, external_id, inc, exc, psi):
+def test_jiq_results_srav3h(junction_srav3h, rail_id, external_id, inc_count, exc_count, psi):
     s = junction_srav3h.get_results().loc[rail_id]
     assert s[gs.snpt_col_external_id] == external_id
-    assert s[gs.table_jiq_col_inc] == inc
-    assert s[gs.table_jiq_col_exc] == exc
+    assert s[gs.table_jiq_col_inc] == inc_count
+    assert s[gs.table_jiq_col_exc] == exc_count
     assert s[gs.table_jiq_col_psi] == psi
 
 
 @pytest.mark.parametrize(
-    "rail_id,study,inc,exc,psi",
+    "rail_id,study,inc_count,exc_count,psi",
     [
         (2216416, "BLOOD", 2, 27, 6.9),
         (4399966, "LUNG", 2, 31, 6.06),
@@ -120,16 +120,16 @@ def test_jiq_results_srav3h(junction_srav3h, rail_id, external_id, inc, exc, psi
         (9783109, "MUSCLE", 2, 17, 10.53),
     ],
 )
-def test_jiq_results_gtexv2(junction_gtexv2, rail_id, study, inc, exc, psi):
+def test_jiq_results_gtexv2(junction_gtexv2, rail_id, study, inc_count, exc_count, psi):
     s = junction_gtexv2.get_results().loc[rail_id]
     assert s[gs.snpt_col_study] == study
-    assert s[gs.table_jiq_col_inc] == inc
-    assert s[gs.table_jiq_col_exc] == exc
+    assert s[gs.table_jiq_col_inc] == inc_count
+    assert s[gs.table_jiq_col_exc] == exc_count
     assert s[gs.table_jiq_col_psi] == psi
 
 
 @pytest.mark.parametrize(
-    "rail_id,study,inc,exc,psi",
+    "rail_id,study,inc_count,exc_count,psi",
     [
         (858212, "UCEC", 2, 18, 10.0),
         (220457, "CESC", 2, 21, 8.7),
@@ -142,16 +142,16 @@ def test_jiq_results_gtexv2(junction_gtexv2, rail_id, study, inc, exc, psi):
         (472121, "PRAD", 1, 19, 5.0),
     ],
 )
-def test_jiq_results_tcgav2(junction_tcgav2, rail_id, study, inc, exc, psi):
+def test_jiq_results_tcgav2(junction_tcgav2, rail_id, study, inc_count, exc_count, psi):
     s = junction_tcgav2.get_results().loc[rail_id]
     assert s[gs.snpt_col_study] == study
-    assert s[gs.table_jiq_col_inc] == inc
-    assert s[gs.table_jiq_col_exc] == exc
+    assert s[gs.table_jiq_col_inc] == inc_count
+    assert s[gs.table_jiq_col_exc] == exc_count
     assert s[gs.table_jiq_col_psi] == psi
 
 
 @pytest.mark.parametrize(
-    "rail_id,study,inc,exc,psi",
+    "rail_id,study,inc_count,exc_count,psi",
     [
         (3072016, "SRP057123", 21, 0, 100.0),
         (669879, "SRP061340", 40, 67, 37.38),
@@ -164,11 +164,11 @@ def test_jiq_results_tcgav2(junction_tcgav2, rail_id, study, inc, exc, psi):
         (2885781, "SRP124512", 6, 21, 22.22),
     ],
 )
-def test_jiq_results_srav1m(junction_srav1m, rail_id, study, inc, exc, psi):
+def test_jiq_results_srav1m(junction_srav1m, rail_id, study, inc_count, exc_count, psi):
     s = junction_srav1m.get_results().loc[rail_id]
     assert s[gs.snpt_col_study] == study
-    assert s[gs.table_jiq_col_inc] == inc
-    assert s[gs.table_jiq_col_exc] == exc
+    assert s[gs.table_jiq_col_inc] == inc_count
+    assert s[gs.table_jiq_col_exc] == exc_count
     assert s[gs.table_jiq_col_psi] == psi
 
 

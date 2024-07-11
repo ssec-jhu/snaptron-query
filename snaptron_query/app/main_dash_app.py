@@ -72,6 +72,7 @@ app.layout = dbc.Container(
         # a space for log content if any
         dmc.Space(h=30),
         dcc.Store(id="id-store-jiq-junctions"),
+        dcc.Download(id="download-data-csv"),
     ],
     # TODO: Keep this commented here, need to verify with PI rep to switch to full width or not
     # fluid=True,  # this will make the page use full screen width
@@ -541,27 +542,43 @@ def update_box_plot_data(log_x, lock_with_table, normalized_count, virtual_row_d
 
 
 @app.callback(
-    Output("id-ag-grid-jiq", "exportDataAsCsv"),
-    Output("id-ag-grid-jiq", "csvExportParams"),
+    Output("download-data-csv", "data"),
     Input("id-button-jiq-download", "n_clicks"),
+    State("id-ag-grid-jiq", "virtualRowData"),
+    State("id-ag-grid-jiq", "rowData"),
     State("id-jiq-download-options", "value"),
     prevent_initial_call=True,
     running=[(Output("id-button-jiq-download", "disabled"), True, False)],  # requires the latest Dash 2.16
 )
-def export_data_as_csv_jiq(n_clicks, option):
-    return callback.export_data_as_csv(option, "psi_query_data")
+def export_data_as_csv_jiq(n_clicks, filtered_data, row_data, option):
+    if ctx.triggered_id == "id-button-jiq-download":
+        return callback.export_data_as_csv(
+            option=option,
+            data=filtered_data if option == components.DownloadType.FILTERED.value else row_data,
+            file_name="psi_query_data",
+        )
+    else:
+        raise PreventUpdate
 
 
 @app.callback(
-    Output("id-ag-grid-geq", "exportDataAsCsv"),
-    Output("id-ag-grid-geq", "csvExportParams"),
+    Output("download-data-csv", "data", allow_duplicate=True),
     Input("id-button-geq-download", "n_clicks"),
+    State("id-ag-grid-geq", "virtualRowData"),
+    State("id-ag-grid-geq", "rowData"),
     State("id-geq-download-options", "value"),
     prevent_initial_call=True,
     running=[(Output("id-button-geq-download", "disabled"), True, False)],  # requires the latest Dash 2.16
 )
-def export_data_as_csv_geq(n_clicks, option):
-    return callback.export_data_as_csv(option, "gene_expression_query_data")
+def export_data_as_csv_geq(n_clicks, filtered_data, row_data, option):
+    if ctx.triggered_id == "id-button-geq-download":
+        return callback.export_data_as_csv(
+            option=option,
+            data=filtered_data if option == components.DownloadType.FILTERED.value else row_data,
+            file_name="gene_expression_query_data",
+        )
+    else:
+        raise PreventUpdate
 
 
 @app.callback(

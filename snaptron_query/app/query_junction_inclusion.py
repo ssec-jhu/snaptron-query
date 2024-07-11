@@ -6,8 +6,8 @@ from snaptron_query.app import exceptions, global_strings as gs, utils
 
 
 class JunctionType(StrEnum):
-    EXCLUSION = "exc"
-    INCLUSION = "inc"
+    EXCLUSION = gs.table_jiq_col_exc
+    INCLUSION = gs.table_jiq_col_inc
 
 
 class JiqReturnType(StrEnum):
@@ -38,7 +38,12 @@ def insert_junction_calculations(list_of_junctions, junction_index, dict_items_t
     if junction_index >= len(list_of_junctions):
         # Note: I purposefully did not fill the junction with JiqCalculations default.
         # All the other calculations are based upon these two values and are derived IF they exist for a junction
-        list_of_junctions.extend([{"inc": 0, "exc": 0} for _ in range(junction_index - len(list_of_junctions) + 1)])
+        list_of_junctions.extend(
+            [
+                {gs.table_jiq_col_inc: 0, gs.table_jiq_col_exc: 0}
+                for _ in range(junction_index - len(list_of_junctions) + 1)
+            ]
+        )
 
     # Update the dictionary in the first list at the given index
     list_of_junctions[junction_index].update(dict_items_to_add)
@@ -79,8 +84,12 @@ class JunctionInclusionQueryManager:
             # get the inclusion and exclusion counts for this junction index
             # if this sample does not show up at this junction index, it will be populated with default
             # values in the IndexError exception below
-            inclusion_count = (self.rail_id_dictionary[rail_id]["junctions"][junction_index]).get("inc", 0)
-            exclusion_count = (self.rail_id_dictionary[rail_id]["junctions"][junction_index]).get("exc", 0)
+            inclusion_count = (self.rail_id_dictionary[rail_id]["junctions"][junction_index]).get(
+                gs.table_jiq_col_inc, 0
+            )
+            exclusion_count = (self.rail_id_dictionary[rail_id]["junctions"][junction_index]).get(
+                gs.table_jiq_col_exc, 0
+            )
 
         except IndexError:
             # if rail id has no sample in the junction, populate with default values
@@ -142,7 +151,7 @@ class JunctionInclusionQueryManager:
         single_junction = []
         for rail_id, rail_data in self.rail_id_dictionary.items():
             if rail_data["meta"] and len(rail_data["junctions"]) == 1:
-                data = {"rail_id": rail_id}
+                data = {gs.snpt_col_rail_id: rail_id}
                 data.update(rail_data["meta"])
                 data.update(rail_data["junctions"][0])
                 single_junction.append(data)
@@ -209,8 +218,8 @@ class JunctionInclusionQueryManager:
             inclusion_junction_samples = (inc_junctions_df[gs.snpt_col_samples]).tolist()
 
             # Gather results in a dictionary
-            self._gather_samples_rail_id_and_counts(exclusion_junction_samples, "exc", junction_index)
-            self._gather_samples_rail_id_and_counts(inclusion_junction_samples, "inc", junction_index)
+            self._gather_samples_rail_id_and_counts(exclusion_junction_samples, gs.table_jiq_col_exc, junction_index)
+            self._gather_samples_rail_id_and_counts(inclusion_junction_samples, gs.table_jiq_col_inc, junction_index)
 
         # For each rail id found, gather its metadata and calculate PSI values
         # this will populate self.gathered_rail_id_meta_data_and_psi
