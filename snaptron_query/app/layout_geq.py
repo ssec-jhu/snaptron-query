@@ -310,7 +310,9 @@ def get_layout_gene_expression_query():
             # dls.Propagate(
             #     show_initially=False, color="var(--bs-secondary)", children=[html.Div(id="id-loading-graph-geq")]
             # ),
-            dls.Propagate(show_initially=False, color="var(--bs-secondary)", children=[html.Div(id="id-loading-table-geq")]),
+            dls.Propagate(
+                show_initially=False, color="var(--bs-secondary)", children=[html.Div(id="id-loading-table-geq")]
+            ),
             # GRAPHS
             dbc.Row(
                 [get_accordian_graphs_geq()],
