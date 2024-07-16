@@ -401,7 +401,9 @@ def get_layout_junction_inclusion():
             # dls.Propagate(
             #     show_initially=False, color="var(--bs-secondary)", children=[html.Div(id="id-loading-graph-jiq")]
             # ),
-            dls.Fade(show_initially=False, color="var(--bs-secondary)", children=[html.Div(id="id-loading-table-jiq")]),
+            dls.Propagate(
+                show_initially=False, color="var(--bs-secondary)", children=[html.Div(id="id-loading-table-jiq")]
+            ),
             # ROW: the plots and graphs
             dbc.Row(
                 [get_accordian_graphs_jiq()],
