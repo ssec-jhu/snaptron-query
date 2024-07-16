@@ -20,7 +20,17 @@ def get_text(string, component_style="dmc"):
 
 def get_input(input_placeholder, input_id, disabled=False):
     """Wrapper function to retrieve the texted boxes used in the queries"""
-    return dbc.Input(id=input_id, placeholder=input_placeholder, size="sm", debounce=True, disabled=disabled)
+    if not disabled and input_id in [
+        "id-input-jiq-inc-junc-0",
+        "id-input-jiq-exc-junc-0",
+        "id-input-geq-gene-id",
+        "id-input-geq-gene-id-norm",
+    ]:
+        # per request, these components will have the value set instead of as a placeholder
+        text_box = dbc.Input(id=input_id, value=input_placeholder, size="sm", debounce=True, disabled=disabled)
+    else:
+        text_box = dbc.Input(id=input_id, placeholder=input_placeholder, size="sm", debounce=True, disabled=disabled)
+    return text_box
 
 
 def get_dropdown_compilation(component_id):
