@@ -1,11 +1,15 @@
 from snaptron_query.app import global_strings as gs
 
 
+def capitalize_underscored_string(s):
+    return "_".join([word.capitalize() for word in s.split("_")])
+
+
 def get_rail_id():
     return [
         {
             "field": gs.snpt_col_rail_id,
-            "headerName": gs.plot_label_rail_id,
+            "headerName": capitalize_underscored_string(gs.snpt_col_rail_id),
             "width": 125,
             "pinned": "left",
             "filterParams": {
@@ -36,7 +40,7 @@ def get_col_meta_srav3h_a():
     column_def += [
         {
             "field": gs.snpt_col_external_id,
-            "headerName": "External ID",
+            "headerName": capitalize_underscored_string(gs.snpt_col_external_id),
             "width": 130,
             "filterParams": {
                 "buttons": ["reset", "apply"],
@@ -61,7 +65,7 @@ def get_col_meta_srav3h_b():
     return [
         {
             "field": "study_title",
-            "headerName": "Study Title",
+            "headerName": "Study_Title",
             "width": 350,
             "filterParams": {
                 "buttons": ["reset", "apply"],
@@ -72,7 +76,7 @@ def get_col_meta_srav3h_b():
         },  # must have this here, it is not a style option
         {
             "field": "sample_name",
-            "headerName": "Sample Name",
+            "headerName": "Sample_Name",
             "width": 150 + 20,
             "filterParams": {
                 "buttons": ["reset", "apply"],
@@ -82,7 +86,7 @@ def get_col_meta_srav3h_b():
         },
         {
             "field": "sample_title",
-            "headerName": "Sample Title",
+            "headerName": "Sample_Title",
             "width": 150,
             "filterParams": {
                 "buttons": ["reset", "apply"],
@@ -101,7 +105,7 @@ def get_col_meta_srav3h_b():
         },
         {
             "field": "sample_description",
-            "headerName": "Sample Description",
+            "headerName": "Sample_Description",
             "width": 200,
             "filterParams": {
                 "buttons": ["reset", "apply"],
@@ -207,7 +211,7 @@ def get_col_multi_jiq(junctions_count):
     multi_jiq_fields_indexed = [
         {
             "field": gs.table_jiq_col_avg_psi,
-            "headerName": "avg PSI",
+            "headerName": "avg_PSI",
             "filter": "agNumberColumnFilter",
             "initialSort": "desc",
             "width": 120,
@@ -279,7 +283,7 @@ def get_gene_expression_query_column_def(compilation, normalized=False):
         gex_col = [
             {
                 "field": gs.table_geq_col_raw_count,
-                "headerName": gs.geq_plot_label_raw_count,
+                "headerName": capitalize_underscored_string(gs.table_geq_col_raw_count),
                 "filter": "agNumberColumnFilter",
                 "width": 130,
                 "filterParams": {
@@ -299,7 +303,7 @@ def get_gene_expression_query_column_def(compilation, normalized=False):
             },
             {
                 "field": gs.table_geq_col_norm_count,
-                "headerName": gs.geq_plot_label_norm_count,
+                "headerName": capitalize_underscored_string(gs.table_geq_col_norm_count),
                 "initialSort": "desc",
                 "filter": "agNumberColumnFilter",
                 "width": 170,
@@ -323,7 +327,7 @@ def get_gene_expression_query_column_def(compilation, normalized=False):
         gex_col = [
             {
                 "field": gs.table_geq_col_raw_count,
-                "headerName": gs.geq_plot_label_raw_count,
+                "headerName": capitalize_underscored_string(gs.geq_plot_label_raw_count),
                 "initialSort": "desc",
                 "filter": "agNumberColumnFilter",
                 "width": 130,
