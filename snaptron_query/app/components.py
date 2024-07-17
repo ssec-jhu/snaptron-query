@@ -99,7 +99,7 @@ def get_switch_box_plot_points(switch_id):
 def get_alert(alert_message):
     return [
         dmc.Space(h=20),
-        dbc.Alert(children=f"{alert_message}", duration=4000, dismissable=True, is_open=True, class_name="user-alert"),
+        dbc.Alert(children=f"{alert_message}", dismissable=True, is_open=True, class_name="user-alert"),
     ]
 
 
