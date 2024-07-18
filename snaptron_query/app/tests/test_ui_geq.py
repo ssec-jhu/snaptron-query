@@ -63,6 +63,7 @@ def test_callback_geq():
     assert width_hist == {"size": 6}
 
 
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Skipping test on Github")
 def test_run_query():
     (row_data, column_defs, filter_model, box_plot, histogram, width_box, width_hist, hist_display) = run_query(
         meta_data_dict=mapp.get_meta_data("SRAv3h"),
