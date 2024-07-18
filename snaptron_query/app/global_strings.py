@@ -54,6 +54,14 @@ help_reset = (
     "This will remove all filters applied to the table below. For individual columns, "
     'click on the "Reset" button on the desired column'
 )
+
+help_normalization = (
+    "Note: The normalization gene should be a gene that has relatively constant expression in cells. Normalization in "
+    "this case is by the \"study\" group for each dataset. For SRA, the expression for your gene of "
+    "interest is normalized by the expression of the normalization gene within the study group. For GTeX samples, "
+    'the \"study\" is each tissue. For TCGA the \"study\" is each cancer type.'
+)
+
 """""" """""" """""" """""" """""" """""" """""" """""" """""" """""" """
             ERROR MESSAGES
 """ """""" """""" """""" """""" """""" """""" """""" """""" """""" """"""
