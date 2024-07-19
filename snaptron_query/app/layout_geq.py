@@ -61,7 +61,25 @@ def get_form_geq():
         ),
         # ROW: Normalization Information - gene id
         dmc.Space(h=10),
-        dbc.Row([dbc.Col([components.get_text(gs.geq_normalized_info, "dbc")])]),
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        html.Span(
+                            [
+                                components.get_text(gs.geq_normalized_info, "dbc"),
+                                dmc.Space(w=10),
+                                components.get_info_icon_tooltip_bundle(
+                                    "id-info-geq-normalization", gs.help_normalization, "top"
+                                ),
+                            ],
+                            style={"display": "flex"},
+                        )
+                    ],
+                    align="center",
+                )
+            ]
+        ),
         dbc.Row(
             [
                 dbc.Col([components.get_text(gs.geq_gene_id)], width=3, align="center", style=styles.border_column),
