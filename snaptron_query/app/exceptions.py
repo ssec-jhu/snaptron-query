@@ -26,10 +26,24 @@ class MissingUserInputs(Exception):
     pass
 
 
-class EmptyJunction(Exception):
+class EmptyIncJunction(Exception):
+    """Raised when one of the inclusion junctions is empty"""
+
+    def __init__(self, index):
+        self.index = index
+
+    def get_message(self):
+        return f"Inclusion Junction {self.index} returned no results!"
+
+
+class EmptyExcJunction(Exception):
     """Raised when one of the junctions is empty"""
 
-    pass
+    def __init__(self, index):
+        self.index = index
+
+    def get_message(self):
+        return f"Exclusion Junction {self.index} returned no results!"
 
 
 class QueryGeneNotFound(Exception):
@@ -54,8 +68,10 @@ def alert_message_from_exception(exception):
         alert_message = gs.missing_user_input
     elif e == BadCoordinates:
         alert_message = gs.bad_coordinates
-    elif e == EmptyJunction:
-        alert_message = gs.empty_junction
+    elif e == EmptyIncJunction:
+        alert_message = exception.get_message()
+    elif e == EmptyExcJunction:
+        alert_message = exception.get_message()
     elif e == QueryGeneNotFound:
         alert_message = gs.query_gene_not_found
     elif e == NormalizationGeneNotFound:

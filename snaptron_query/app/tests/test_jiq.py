@@ -3,7 +3,7 @@ import pytest
 
 from snaptron_query.app import global_strings as gs, snaptron_client as sc, exceptions
 from snaptron_query.app.query_junction_inclusion import JunctionType
-from snaptron_query.app.tests.conftest import JunctionQuery, path_sample_junction_data
+from snaptron_query.app.tests.conftest import JunctionQuery
 
 
 def test_jiq_rail_id_size(junction_srav3h):
@@ -214,15 +214,43 @@ def test_jiq_psi_results_vs_shinyapp_website(junction_srav3h, ground_truth_df, r
     assert our_results[gs.table_jiq_col_psi] == ground_truth[gs.table_jiq_col_psi]
 
 
-def test_jiq_empty_junctions():
-    with pytest.raises(exceptions.EmptyJunction):
-        df_sample_junctions_from_snaptron = pd.read_csv(path_sample_junction_data, sep="\t")
+@pytest.mark.parametrize(
+    "exc_chr,exc_start,exc_end,inc_chr,inc_start,inc_end",
+    [(19, 17641557, 17642844, 19, 4491836, 4492014), ((19, 17641557, 1765000, 0, 0, 0))],
+)
+def test_jiq_empty_exc_junctions(
+    df_sample_junctions_from_srav3h, exc_chr, exc_start, exc_end, inc_chr, inc_start, inc_end
+):
+    with pytest.raises(exceptions.EmptyExcJunction) as exc_info:
         splice_pair = sc.SpliceJunctionPair(
-            exc_coordinates=sc.JunctionCoordinates(19, 4491836, 4493702),
-            inc_coordinates=sc.JunctionCoordinates(19, 0, 0),
+            exc_coordinates=sc.JunctionCoordinates(exc_chr, exc_start, exc_end),
+            inc_coordinates=sc.JunctionCoordinates(inc_chr, inc_start, inc_end),
         )
         JunctionQuery(
             junction_list=[splice_pair],
             meta_data_dict={},
-            df_from_snaptron_map={splice_pair.exc_coordinates: df_sample_junctions_from_snaptron},
+            df_from_snaptron_map={splice_pair.exc_coordinates: df_sample_junctions_from_srav3h},
         )
+
+        assert exc_info.value.index == 1
+
+
+@pytest.mark.parametrize(
+    "exc_chr,exc_start,exc_end,inc_chr,inc_start,inc_end",
+    [(19, 4491836, 4493702, 0, 0, 0), (19, 4491834, 4493702, 0, 0, 0)],
+)
+def test_jiq_empty_inc_junctions(
+    df_sample_junctions_from_srav3h, exc_chr, exc_start, exc_end, inc_chr, inc_start, inc_end
+):
+    with pytest.raises(exceptions.EmptyIncJunction) as exc_info:
+        splice_pair = sc.SpliceJunctionPair(
+            exc_coordinates=sc.JunctionCoordinates(exc_chr, exc_start, exc_end),
+            inc_coordinates=sc.JunctionCoordinates(inc_chr, inc_start, inc_end),
+        )
+        JunctionQuery(
+            junction_list=[splice_pair],
+            meta_data_dict={},
+            df_from_snaptron_map={splice_pair.exc_coordinates: df_sample_junctions_from_srav3h},
+        )
+
+    assert exc_info.value.index == 1
