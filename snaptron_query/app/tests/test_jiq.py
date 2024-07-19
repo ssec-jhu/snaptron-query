@@ -1,4 +1,3 @@
-import pandas as pd
 import pytest
 
 from snaptron_query.app import global_strings as gs, snaptron_client as sc, exceptions
