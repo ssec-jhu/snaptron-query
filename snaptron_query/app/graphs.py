@@ -26,7 +26,12 @@ def fig_common_update_box_plot(fig, plot_title, y_axes_title):
 
 
 def create_box_plot(violin_overlay, df, y_values, range_y_axis, labels, mode=None, color=None):
-    hover_data = [gs.snpt_col_rail_id]
+    if df.empty:
+        hover_data = None
+        y_values = None
+    else:
+        hover_data = [gs.snpt_col_rail_id]
+
     if violin_overlay:
         # to draw all points set point to all
         fig = px.violin(
@@ -69,12 +74,11 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay, list_of_calculated_junc
     https://plotly.com/python-api-reference/generated/plotly.express.box
     https://plotly.com/python/reference/box/
     """
-    if len(list_of_calculated_junctions) == 1:
-        # set up the titles and the values for the box plot
-        y_values = gs.table_jiq_col_log_2 if log_psi_values else gs.table_jiq_col_psi
-        color = None
-        mode = None
-    else:
+    # set up the titles and the values for the box plot
+    y_values = gs.table_jiq_col_log_2 if log_psi_values else gs.table_jiq_col_psi
+    color = None
+    mode = None
+    if len(list_of_calculated_junctions) > 1:
         df = graphs_utils.convert_data_to_long_format_jiq(df, log_psi_values, list_of_calculated_junctions)
         y_values = "value"
         color = "variable"
@@ -198,6 +202,9 @@ def fig_common_update_histogram(fig, title, x_axes_title):
 
 
 def create_histogram(df, x_values, log_y, labels, bins, plot_title, x_axes_title, color=None):
+    if df.empty:
+        x_values = None
+
     fig = px.histogram(
         df,
         x=x_values,
@@ -219,10 +226,9 @@ def get_histogram_jiq(df, log_psi_values, log_y, list_of_calculated_junctions):
     https://plotly.com/python/reference/histogram/
     https://plotly.com/python/histograms/
     """
-    if len(list_of_calculated_junctions) == 1:
-        x = gs.table_jiq_col_log_2 if log_psi_values else gs.table_jiq_col_psi
-        color = None
-    else:
+    x = gs.table_jiq_col_log_2 if log_psi_values else gs.table_jiq_col_psi
+    color = None
+    if len(list_of_calculated_junctions) > 1:
         # melt the data frame
         df = graphs_utils.convert_data_to_long_format_jiq(df, log_psi_values, list_of_calculated_junctions)
         x = "value"

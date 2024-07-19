@@ -1,13 +1,11 @@
 window.dash_clientside = Object.assign({}, window.dash_clientside, {
     geq_clientside: {
         update_histogram_log_y: function (log_y, histogram_figure_data) {
-            let newFigure = JSON.parse(JSON.stringify(histogram_figure_data)); // Deep copy of the figure
-            if (log_y) {
-                newFigure.layout.yaxis['type'] = 'log'
-            } else {
-                newFigure.layout.yaxis['type'] = 'linear'
+            if (histogram_figure_data) {
+                let newFigure = JSON.parse(JSON.stringify(histogram_figure_data)); // Deep copy of the figure
+                newFigure.layout.yaxis['type'] = log_y ? 'log' : 'linear'
+                return newFigure;
             }
-            return newFigure;
         },
         update_histogram_data: function (log_x, lock_graphs, virtual_data, rowData, histogram_figure_data) {
             if (histogram_figure_data && virtual_data) {
@@ -32,7 +30,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             }
         },
 
-        update_box_plot_violin: function (violin_mode, point_mode, boxplot_figure_data) {
+        update_box_plot_violin_and_points_display: function (violin_mode, point_mode, boxplot_figure_data) {
             if (boxplot_figure_data) {
                 let newFigure = JSON.parse(JSON.stringify(boxplot_figure_data)); // Deep copy of the figure
                 const boxpointsValue = point_mode ? 'all' : 'outliers';
@@ -64,27 +62,21 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 }
                 //there is only max two traces in the GEX box plot
                 //so precomputing the map outside makes it slower
-                if (log_x) {
-                    newFigure.data.forEach(trace => {
+                newFigure.data.forEach(trace => {
                         trace.customdata = data.map(item => [item['rail_id']])
-                        if (trace.name === "Raw Count") {
-                            trace.y = data.map(item => item['log2_raw'])
-                        } else {
-                            trace.y = data.map(item => item['log2_norm_count'])
-                        }
-                    });
-                    newFigure.layout.yaxis.title = "Log\u2082(Gene Expression Count+0.01)"
-                } else {
-                    newFigure.data.forEach(trace => {
-                        trace.customdata = data.map(item => [item['rail_id']])
-                        if (trace.name === "Raw Count") {
-                            trace.y = data.map(item => item['raw_count'])
-                        } else {
-                            trace.y = data.map(item => item['normalized_count'])
-                        }
-                    });
-                    newFigure.layout.yaxis.title = "Gene Expression Count"
-                }
+                });
+                let raw_string = log_x ? 'log2_raw' : 'raw_count'
+                let norm_string = log_x ? 'log2_norm_count' : 'normalized_count'
+                let yaxis_title = log_x ? "Log\u2082(Gene Expression Count+0.01)" : "Gene Expression Count"
+
+                newFigure.data.forEach(trace => {
+                    if (trace.name === "Normalized Count") {
+                        trace.y = data.map(item => item[norm_string])
+                    } else {
+                        trace.y = data.map(item => item[raw_string])
+                    }
+                });
+                newFigure.layout.yaxis.title = yaxis_title
                 return newFigure;
             }
         },
