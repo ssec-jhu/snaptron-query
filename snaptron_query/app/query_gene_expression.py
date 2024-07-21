@@ -11,7 +11,9 @@ class GeneExpressionQueryManager:
 
     def setup_normalization_data_method(self, gene_id_norm, df_snaptron_results_norm, meta_data_dict):
         # extract the row with the normalization gene ID
-        row_df = df_snaptron_results_norm.loc[df_snaptron_results_norm[gs.snpt_col_gene_id].str.contains(gene_id_norm)]
+        row_df = df_snaptron_results_norm.loc[
+            df_snaptron_results_norm[gs.snpt_col_gene_id].str.contains(gene_id_norm.upper())
+        ]
 
         if row_df.empty:
             raise exceptions.NormalizationGeneNotFound
@@ -48,7 +50,7 @@ class GeneExpressionQueryManager:
 
         # extract the row in the results that matches the query gene ID
         row_df = df_snaptron_results_query.loc[
-            df_snaptron_results_query[gs.snpt_col_gene_id].str.contains(gene_id_query)
+            df_snaptron_results_query[gs.snpt_col_gene_id].str.contains(gene_id_query.upper())
         ]
 
         if row_df.empty:

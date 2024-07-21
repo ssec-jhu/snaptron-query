@@ -4,6 +4,14 @@ from snaptron_query.app import global_strings as gs, snaptron_client as sc, exce
 from snaptron_query.app.tests.conftest import GEXQuery
 
 
+def assert_test_gex(q, rail_id, factor, normalized_count):
+    factors_df = q.get_factor_table()
+    assert round(factors_df[rail_id], 2) == factor
+
+    s = q.get_results().loc[rail_id]
+    assert round(s[gs.table_geq_col_norm_count], 2) == normalized_count
+
+
 @pytest.mark.parametrize(
     "rail_id, factor, normalized_count",
     [
@@ -19,12 +27,28 @@ from snaptron_query.app.tests.conftest import GEXQuery
         (1000283, 0.51, 2606573.21),  # 'SRR4450435'
     ],
 )
-def test_gex(gene_query, rail_id, factor, normalized_count):
-    factors_df = gene_query.get_factor_table()
-    assert round(factors_df[rail_id], 2) == factor
+def test_gex(gene_query, gene_query_case_sensitive, rail_id, factor, normalized_count):
+    assert_test_gex(gene_query, rail_id, factor, normalized_count)
 
-    s = gene_query.get_results().loc[rail_id]
-    assert round(s[gs.table_geq_col_norm_count], 2) == normalized_count
+
+@pytest.mark.parametrize(
+    "rail_id, factor, normalized_count",
+    [
+        (135471, 1.0, 83064.0),  # DRP000366
+        (123622, 1.0, 97738.0),  # DRP000425
+        (158830, 1.0, 406092.0),  # DRP000499
+        (158850, 0.33, 562352.66),  # DRP000499
+        (1000217, 1.0, 57605.0),  # SRP072835
+        (1000316, 1.0, 2025923),  # SRP092075
+        (1282825, 1.0, 634146),  # SRP072829
+        (475278, 1.0, 746481.0),  # SRP072864
+        (1282825, 1.0, 634146.0),  # ''SRR3330930''
+        (1000283, 0.51, 2606573.21),  # 'SRR4450435'
+    ],
+)
+def test_gex_lowercase(gene_query_case_sensitive, rail_id, factor, normalized_count):
+    # same set of test but different query genes - testing case sensitivity
+    assert_test_gex(gene_query_case_sensitive, rail_id, factor, normalized_count)
 
 
 @pytest.mark.parametrize(
@@ -62,8 +86,3 @@ def test_gex_errors_2():
     with pytest.raises(exceptions.NormalizationGeneNotFound):
         # EDF2 is a made up gene
         GEXQuery("TARDBP", "EDF2")
-
-
-# def test_gex_errors_1():
-#     with pytest.raises(exceptions.QueryGeneNotFound):
-#         GEXQuery('MT1XP1')

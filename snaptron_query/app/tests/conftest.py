@@ -266,6 +266,11 @@ def gene_query():
 
 
 @pytest.fixture(scope="session")
+def gene_query_case_sensitive():
+    return GEXQuery("taRdBp", "eDf1")
+
+
+@pytest.fixture(scope="session")
 def compilations():
     return [gs.compilation_srav3h, gs.compilation_gtexv2, gs.compilation_tcgav2]
 
