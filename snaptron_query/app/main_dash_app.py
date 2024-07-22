@@ -103,7 +103,7 @@ app.layout = dbc.Container(
     running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)],  # requires the latest Dash 2.16
 )
 def on_button_click_jiq(
-        n_clicks, compilation, children, junction_count, box_log_psi, violin_overlay, histogram_log_psi, histogram_log_y
+    n_clicks, compilation, children, junction_count, box_log_psi, violin_overlay, histogram_log_psi, histogram_log_y
 ):
     #  this function gets called with every input change
     if ctx.triggered_id != "id-button-jiq-generate-results":
@@ -186,8 +186,7 @@ app.clientside_callback(
 )
 
 app.clientside_callback(
-    ClientsideFunction(namespace="snapmine_clientside",
-                       function_name="update_box_plot_violin_and_points_display"),
+    ClientsideFunction(namespace="snapmine_clientside", function_name="update_box_plot_violin_and_points_display"),
     Output("id-box-plot-jiq", "figure", allow_duplicate=True),
     Input("id-switch-box-plot-violin-jiq", "value"),
     Input("id-switch-box-plot-points-jiq", "value"),
@@ -367,18 +366,18 @@ def enable_normalization(normalize_value):
     running=[(Output("id-button-geq-run-query", "disabled"), True, False)],  # requires latest Dash 2.16
 )
 def on_button_click_geq(
-        n_clicks,
-        compilation,
-        use_coordinates,
-        query_gene_id,
-        query_gene_coordinates,
-        normalize_data,
-        norm_gene_id,
-        norm_gene_coordinates,
-        box_plot_log_x,
-        violin_overlay,
-        histogram_log_x,
-        histogram_log_y,
+    n_clicks,
+    compilation,
+    use_coordinates,
+    query_gene_id,
+    query_gene_coordinates,
+    normalize_data,
+    norm_gene_id,
+    norm_gene_coordinates,
+    box_plot_log_x,
+    violin_overlay,
+    histogram_log_x,
+    histogram_log_y,
 ):
     #  this function gets called with every input change
     if ctx.triggered_id != "id-button-geq-run-query":
