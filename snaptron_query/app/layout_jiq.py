@@ -213,13 +213,13 @@ def get_card_histogram_jiq():
                             dbc.Col(
                                 [
                                     components.get_switch(
-                                        switch_id="id-switch-jiq-log-psi-histogram",
+                                        switch_id="id-switch-histogram-log-jiq",
                                         switch_label=gs.jiq_log_psi,
                                         switch_on=True,
                                     ),
                                     dmc.Space(w=10),
                                     components.get_switch(
-                                        switch_id="id-switch-jiq-log-y-histogram", switch_label=gs.switch_log_geq_hist_y
+                                        switch_id="id-switch-histogram-log-y-jiq", switch_label=gs.switch_log_geq_hist_y
                                     ),
                                 ],
                                 className="d-flex justify-content-end",
@@ -257,6 +257,8 @@ def get_card_box_plot_jiq():
                             ),
                             dbc.Col(
                                 [
+                                    components.get_switch_box_plot_points("id-switch-box-plot-points-jiq"),
+                                    dmc.Space(w=20),
                                     components.get_switch(
                                         switch_id="id-switch-jiq-log-psi-box-plot",
                                         switch_label=gs.jiq_log_psi,
@@ -264,7 +266,7 @@ def get_card_box_plot_jiq():
                                     ),
                                     dmc.Space(w=10),
                                     components.get_switch(
-                                        switch_id="id-switch-jiq-violin-box-plot", switch_label=gs.switch_violin
+                                        switch_id="id-switch-box-plot-violin-jiq", switch_label=gs.switch_violin
                                     ),
                                 ],
                                 className="d-flex justify-content-end",
@@ -319,7 +321,7 @@ def get_card_table_jiq():
                     ),
                     dbc.Col(  # LOCKS
                         components.get_switch_lock_data_with_table(
-                            "id-switch-jiq-lock-with-table", "id-jiq-lock", "id-jiq-unlock"
+                            "id-switch-lock-with-table-jiq", "id-jiq-lock", "id-jiq-unlock"
                         ),
                         width=1,
                         align="center",
