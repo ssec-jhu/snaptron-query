@@ -2,14 +2,12 @@ import os
 
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
-import pandas as pd
 from dash import Dash, Input, Output, ctx, no_update, State, dcc, ClientsideFunction
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 
 from snaptron_query.app import callback_common as callback, inline_styles as styles, navbars, paths
 from snaptron_query.app import (
-    graphs,
     layout,
     components,
     utils,
