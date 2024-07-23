@@ -76,7 +76,6 @@ bad_coordinates = (
     "alternative/cryptic exon of interest? Is the junction provided GRCh38/hg38 (human) or "
     "GRCm38/mm10 (mouse) coordinates"
 )
-empty_junction = "Junctions entered have no results!"
 suggestion = (
     "Try running the query by adding gene coordinates to your query or double check gene coordinates if " "provided!"
 )

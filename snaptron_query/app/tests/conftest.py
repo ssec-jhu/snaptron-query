@@ -13,7 +13,7 @@ path_gtexv2_meta = Path(__file__).parent / "data/test_gtexv2_samples.tsv"
 path_tcgav2_meta = Path(__file__).parent / "data/test_tcgav2_samples.tsv"
 path_srav1m_meta = Path(__file__).parent / "data/test_srav1m_samples.tsv"
 
-path_sample_junction_data = Path(__file__).parent / "data/test_chr19_4491836_4493702_srav3h.tsv"
+path_sample_junction_data_srav3h = Path(__file__).parent / "data/test_chr19_4491836_4493702_srav3h.tsv"
 
 path_ground_truth_data = Path(__file__).parent / "data/test_shinyapp_chr19_4491836_4492014_chr19_4491836_4493702.csv"
 
@@ -84,18 +84,30 @@ class GEXQuery:
 
 
 @pytest.fixture(scope="session")
-def junction_srav3h():
-    meta_data_dict = utils.read_srav3h(path_srav3h_meta)
-    df_sample_junctions_from_snaptron = pd.read_csv(path_sample_junction_data, sep="\t")
+def df_sample_junctions_from_srav3h():
+    return pd.read_csv(path_sample_junction_data_srav3h, sep="\t")
 
+
+@pytest.fixture(scope="session")
+def meta_data_dict_srav3h():
+    return utils.read_srav3h(path_srav3h_meta)
+
+
+@pytest.fixture(scope="session")
+def meta_data_dict_srav1m():
+    return utils.read_srav1m(path_srav1m_meta)
+
+
+@pytest.fixture(scope="session")
+def junction_srav3h(df_sample_junctions_from_srav3h, meta_data_dict_srav3h):
     splice_pair = sc.SpliceJunctionPair(
         exc_coordinates=sc.JunctionCoordinates(19, 4491836, 4493702),
         inc_coordinates=sc.JunctionCoordinates(19, 4491836, 4492014),
     )
-    df_sample_junctions_from_snaptron_map = {splice_pair.exc_coordinates: df_sample_junctions_from_snaptron}
+    df_sample_junctions_from_snaptron_map = {splice_pair.exc_coordinates: df_sample_junctions_from_srav3h}
     jq = JunctionQuery(
         junction_list=[splice_pair],
-        meta_data_dict=meta_data_dict,
+        meta_data_dict=meta_data_dict_srav3h,
         df_from_snaptron_map=df_sample_junctions_from_snaptron_map,
     )
     return jq
@@ -141,9 +153,8 @@ def junction_tcgav2():
 
 
 @pytest.fixture(scope="session")
-def junction_srav1m():
+def junction_srav1m(meta_data_dict_srav1m):
     # this is extracted from the SRAv1m compilation
-    meta_data_dict = utils.read_srav1m(path_srav1m_meta)
     path = Path(__file__).parent / "data/test_chr8_71666671_71671625_srav1m.tsv"
     df_sample_junctions_from_snaptron = pd.read_csv(path, sep="\t")
 
@@ -155,16 +166,13 @@ def junction_srav1m():
 
     return JunctionQuery(
         junction_list=[splice_pair],
-        meta_data_dict=meta_data_dict,
+        meta_data_dict=meta_data_dict_srav1m,
         df_from_snaptron_map=df_sample_junctions_from_snaptron_map,
     )
 
 
 @pytest.fixture(scope="session")
-def multi_junction_srav3h():
-    meta_data_dict = utils.read_srav3h(path_srav3h_meta)
-    df_sample_junctions_from_snaptron = pd.read_csv(path_sample_junction_data, sep="\t")
-
+def multi_junction_srav3h(df_sample_junctions_from_srav3h, meta_data_dict_srav3h):
     # same exclusion junction in this example
     exc_junction = sc.JunctionCoordinates(19, 4491836, 4493702)
     junction_0 = sc.SpliceJunctionPair(
@@ -176,18 +184,16 @@ def multi_junction_srav3h():
 
     return MultiJunctionQuery(
         junction_list=[junction_0, junction_1],
-        meta_data_dict=meta_data_dict,
-        df_from_snaptron_map={junction_0.exc_coordinates: df_sample_junctions_from_snaptron},
+        meta_data_dict=meta_data_dict_srav3h,
+        df_from_snaptron_map={junction_0.exc_coordinates: df_sample_junctions_from_srav3h},
     )
 
 
 @pytest.fixture(scope="session")
-def multi_junction_srav3h_2():
+def multi_junction_srav3h_2(df_sample_junctions_from_srav3h, meta_data_dict_srav3h):
     # this test fixture is similar to multi_junction_srav3h fixture but the fixture
     # reverses the junction pairs orders to ensure results are the same regardless of the ordering of the pairs.
     # this will also test junction indexing in the rail id dictionary
-    meta_data_dict = utils.read_srav3h(path_srav3h_meta)
-    df_sample_junctions_from_snaptron = pd.read_csv(path_sample_junction_data, sep="\t")
 
     exc_junction = sc.JunctionCoordinates(19, 4491836, 4493702)
     junction_0 = sc.SpliceJunctionPair(
@@ -199,15 +205,14 @@ def multi_junction_srav3h_2():
     # reverse the junctions
     return MultiJunctionQuery(
         junction_list=[junction_1, junction_0],
-        meta_data_dict=meta_data_dict,
-        df_from_snaptron_map={junction_0.exc_coordinates: df_sample_junctions_from_snaptron},
+        meta_data_dict=meta_data_dict_srav3h,
+        df_from_snaptron_map={junction_0.exc_coordinates: df_sample_junctions_from_srav3h},
     )
 
 
 @pytest.fixture(scope="session")
-def multi_junction_srav3h_3():
+def multi_junction_srav3h_3(meta_data_dict_srav3h):
     # this specific pair of junctions should have the psi_2 all 0
-    meta_data_dict = utils.read_srav3h(path_srav3h_meta)
     df_sample_junctions_from_snaptron = pd.read_csv(
         Path(__file__).parent / "data/test_chr7_98881251_98881974_srav3h.tsv", sep="\t"
     )
@@ -222,16 +227,33 @@ def multi_junction_srav3h_3():
 
     mjq = MultiJunctionQuery(
         junction_list=[junction_0, junction_1],
-        meta_data_dict=meta_data_dict,
+        meta_data_dict=meta_data_dict_srav3h,
         df_from_snaptron_map={junction_0.exc_coordinates: df_sample_junctions_from_snaptron},
     )
     return mjq
 
 
 @pytest.fixture(scope="session")
-def multi_junction_srav1m_1():
+def multi_junction_srav3h_one_empty_inclusion(df_sample_junctions_from_srav3h, meta_data_dict_srav3h):
+    # the third inclusion junction does not exist and should throw an error with the index specified
+    exc_junction = sc.JunctionCoordinates(19, 4491836, 4493702)
+    junction_0 = sc.SpliceJunctionPair(
+        exc_coordinates=exc_junction, inc_coordinates=sc.JunctionCoordinates(19, 4491836, 4492014)
+    )
+    junction_1 = sc.SpliceJunctionPair(
+        exc_coordinates=exc_junction, inc_coordinates=sc.JunctionCoordinates(19, 4492153, 4493702)
+    )
+    junction_3 = sc.SpliceJunctionPair(
+        exc_coordinates=exc_junction, inc_coordinates=sc.JunctionCoordinates(19, 4056797, 4643209)
+    )
+    j_list = [junction_0, junction_1, junction_3]
+    df_from_snaptron_map = {junction_0.exc_coordinates: df_sample_junctions_from_srav3h}
+    return j_list, df_from_snaptron_map
+
+
+@pytest.fixture(scope="session")
+def multi_junction_srav1m_1(meta_data_dict_srav1m):
     # this specific pair of junctions should have the psi_2 all 0
-    meta_data_dict = utils.read_srav1m(path_srav1m_meta)
     df_sample_junctions_from_snaptron = pd.read_csv(
         Path(__file__).parent / "data/test_chr8_71666671_71671625_srav1m.tsv", sep="\t"
     )
@@ -246,7 +268,7 @@ def multi_junction_srav1m_1():
 
     return MultiJunctionQuery(
         junction_list=[junction_0, junction_1],
-        meta_data_dict=meta_data_dict,
+        meta_data_dict=meta_data_dict_srav1m,
         df_from_snaptron_map={exc_junction: df_sample_junctions_from_snaptron},
     )
 

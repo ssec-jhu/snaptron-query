@@ -94,7 +94,6 @@ class JunctionInclusionQueryManager:
         # count totals
         total_count = inclusion_count + exclusion_count
 
-        # TODO: PSI calculation tolerance of 15, PI must verify?
         psi = 0.0
         if total_count > 0:
             # calculate the percent spliced in
@@ -196,13 +195,15 @@ class JunctionInclusionQueryManager:
             exc_junctions_df = self._find_junction(
                 df_snpt_results, exc_junction_coordinates.start, exc_junction_coordinates.end
             )
+            if exc_junctions_df.empty:
+                raise exceptions.EmptyExcJunction(junction_index + 1)
+
             inc_junctions_df = self._find_junction(
                 df_snpt_results, inc_junction_coordinates.start, inc_junction_coordinates.end
             )
 
-            # if either one is empty the user has inputted wrong coordinates
-            if exc_junctions_df.empty or inc_junctions_df.empty:
-                raise exceptions.EmptyJunction
+            if inc_junctions_df.empty:
+                raise exceptions.EmptyIncJunction(junction_index + 1)
 
             # extract the 'sample' column form the row this is where all the samples and their count is
             exclusion_junction_samples = (exc_junctions_df[gs.snpt_col_samples]).tolist()

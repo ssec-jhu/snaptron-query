@@ -1,6 +1,7 @@
 import pytest
 
-from snaptron_query.app import global_strings as gs
+from snaptron_query.app import global_strings as gs, exceptions
+from snaptron_query.app.tests.conftest import MultiJunctionQuery
 
 
 def run_multijq_asserts(our_results, external_id, inc_1, exc_1, psi_1, inc_2, exc_2, psi_2):
@@ -128,3 +129,14 @@ def test_mjq_3(multi_junction_srav3h_3, rail_id, external_id, psi_1, psi_2):
 def test_mjq_4(multi_junction_srav1m_1, rail_id, external_id, psi_1, psi_2):
     our_results = multi_junction_srav1m_1.get_results().loc[rail_id]
     run_multijq_psi_asserts(our_results, external_id, psi_1, psi_2)
+
+
+def test_multijq_empty_inclusion_error(multi_junction_srav3h_one_empty_inclusion, meta_data_dict_srav3h):
+    with pytest.raises(Exception) as exc_info:
+        MultiJunctionQuery(
+            junction_list=multi_junction_srav3h_one_empty_inclusion[0],
+            meta_data_dict=meta_data_dict_srav3h,
+            df_from_snaptron_map=multi_junction_srav3h_one_empty_inclusion[1],
+        )
+    assert exc_info.value.index == 3
+    assert exc_info.type == exceptions.EmptyIncJunction
