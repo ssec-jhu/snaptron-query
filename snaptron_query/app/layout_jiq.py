@@ -254,6 +254,7 @@ def get_card_box_plot_jiq():
                                 className="d-flex justify-content-start",
                                 align="center",
                                 style=styles.border_column,
+                                width=1,
                             ),
                             dbc.Col(
                                 [
