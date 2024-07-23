@@ -1,7 +1,7 @@
 image:
   repository: containers.repo.sciserver.org/ssec-snaptron/snapmine
   pullPolicy: Always
-  tag: beta9-0e8f773
+  tag: beta10-9c8d2c3
   args:
     - 'snaptron_query.app.main_dash_app:server'
     - '--workers=3' # suggested workers is 2*Core+1 https://docs.gunicorn.org/en/latest/design.html#how-many-workers
