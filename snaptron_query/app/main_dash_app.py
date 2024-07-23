@@ -2,14 +2,12 @@ import os
 
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
-import pandas as pd
 from dash import Dash, Input, Output, ctx, no_update, State, dcc, ClientsideFunction
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import load_figure_template
 
 from snaptron_query.app import callback_common as callback, inline_styles as styles, navbars, paths
 from snaptron_query.app import (
-    graphs,
     layout,
     components,
     utils,
@@ -98,9 +96,9 @@ app.layout = dbc.Container(
     State("id-store-jiq-junctions", "data"),
     # figure related states
     State("id-switch-jiq-log-psi-box-plot", "value"),
-    State("id-switch-jiq-violin-box-plot", "value"),
-    State("id-switch-jiq-log-psi-histogram", "value"),
-    State("id-switch-jiq-log-y-histogram", "value"),
+    State("id-switch-box-plot-violin-jiq", "value"),
+    State("id-switch-histogram-log-jiq", "value"),
+    State("id-switch-histogram-log-y-jiq", "value"),
     prevent_initial_call=True,
     running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)],  # requires the latest Dash 2.16
 )
@@ -168,54 +166,95 @@ def on_button_click_jiq(
     )
 
 
-@app.callback(
+app.clientside_callback(
+    ClientsideFunction(namespace="snapmine_clientside", function_name="update_histogram_log_y"),
     Output("id-histogram-jiq", "figure", allow_duplicate=True),
-    Output("id-box-plot-jiq", "figure", allow_duplicate=True),
-    # Output("id-loading-graph-jiq", "children"),
-    State("id-ag-grid-jiq", "rowData"),
-    Input("id-ag-grid-jiq", "virtualRowData"),
-    Input("id-switch-jiq-lock-with-table", "value"),
-    Input("id-switch-jiq-log-psi-box-plot", "value"),
-    Input("id-switch-jiq-violin-box-plot", "value"),
-    Input("id-switch-jiq-log-psi-histogram", "value"),
-    Input("id-switch-jiq-log-y-histogram", "value"),
+    Input("id-switch-histogram-log-y-jiq", "value"),
+    State("id-histogram-jiq", "figure"),
     prevent_initial_call=True,
 )
-def update_charts_jiq(
-    row_data,
-    virtual_row_data,
-    lock_graph_data_with_table,
-    box_log_psi,
-    violin_overlay,
-    histogram_log_psi,
-    histogram_log_y,
-):
-    """
-    Given the table data as input, it will update the relative graphs
-    """
-    if not row_data:
-        raise PreventUpdate
 
-    if lock_graph_data_with_table:
-        df = pd.DataFrame(virtual_row_data)
-    else:
-        df = pd.DataFrame(row_data)
+app.clientside_callback(
+    ClientsideFunction(namespace="snapmine_clientside", function_name="update_histogram_data_jiq"),
+    Output("id-histogram-jiq", "figure", allow_duplicate=True),
+    Input("id-switch-histogram-log-jiq", "value"),
+    Input("id-switch-lock-with-table-jiq", "value"),
+    Input("id-ag-grid-jiq", "virtualRowData"),
+    State("id-ag-grid-jiq", "rowData"),
+    State("id-histogram-jiq", "figure"),
+    prevent_initial_call=True,
+)
 
-    # count how many psi columns we have
-    list_of_calculated_junctions = [col for col in df.columns if col.startswith(gs.table_jiq_col_psi)]
+app.clientside_callback(
+    ClientsideFunction(namespace="snapmine_clientside", function_name="update_box_plot_violin_and_points_display"),
+    Output("id-box-plot-jiq", "figure", allow_duplicate=True),
+    Input("id-switch-box-plot-violin-jiq", "value"),
+    Input("id-switch-box-plot-points-jiq", "value"),
+    State("id-box-plot-jiq", "figure"),
+    prevent_initial_call=True,
+)
 
-    # if it's just the switches, update the relative plot only
-    if ctx.triggered_id == "id-switch-jiq-log-psi-box-plot" or ctx.triggered_id == "id-switch-jiq-violin-box-plot":
-        histogram = no_update
-        box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay, list_of_calculated_junctions)
-    elif ctx.triggered_id == "id-switch-jiq-log-psi-histogram" or ctx.triggered_id == "id-switch-jiq-log-y-histogram":
-        histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y, list_of_calculated_junctions)
-        box_plot = no_update
-    else:
-        histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y, list_of_calculated_junctions)
-        box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay, list_of_calculated_junctions)
 
-    return histogram, box_plot
+app.clientside_callback(
+    ClientsideFunction(namespace="snapmine_clientside", function_name="update_box_plot_data_jiq"),
+    Output("id-box-plot-jiq", "figure", allow_duplicate=True),
+    Input("id-switch-jiq-log-psi-box-plot", "value"),
+    Input("id-switch-lock-with-table-jiq", "value"),
+    Input("id-ag-grid-jiq", "virtualRowData"),
+    State("id-ag-grid-jiq", "rowData"),
+    State("id-box-plot-jiq", "figure"),
+    prevent_initial_call=True,
+)
+
+
+# @app.callback(
+#     Output("id-histogram-jiq", "figure", allow_duplicate=True),
+#     Output("id-box-plot-jiq", "figure", allow_duplicate=True),
+#     # Output("id-loading-graph-jiq", "children"),
+#     State("id-ag-grid-jiq", "rowData"),
+#     Input("id-ag-grid-jiq", "virtualRowData"),
+#     State("id-switch-lock-with-table-jiq", "value"),
+#     Input("id-switch-jiq-log-psi-box-plot", "value"),
+#     State("id-switch-box-plot-violin-jiq", "value"),
+#     State("id-switch-histogram-log-jiq", "value"),
+#     State("id-switch-histogram-log-y-jiq", "value"),
+#     prevent_initial_call=True,
+# )
+# def update_charts_jiq(
+#         row_data,
+#         virtual_row_data,
+#         lock_graph_data_with_table,
+#         box_log_psi,
+#         violin_overlay,
+#         histogram_log_psi,
+#         histogram_log_y,
+# ):
+#     """
+#     Given the table data as input, it will update the relative graphs
+#     """
+#     if not row_data:
+#         raise PreventUpdate
+#
+#     if lock_graph_data_with_table:
+#         df = pd.DataFrame(virtual_row_data)
+#     else:
+#         df = pd.DataFrame(row_data)
+#
+#     # count how many psi columns we have
+#     list_of_calculated_junctions = [col for col in df.columns if col.startswith(gs.table_jiq_col_psi)]
+#
+#     # if it's just the switches, update the relative plot only
+#     if ctx.triggered_id == "id-switch-jiq-log-psi-box-plot":# or ctx.triggered_id == "id-switch-box-plot-violin-jiq":
+#         histogram = no_update
+#         box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay, list_of_calculated_junctions)
+#     elif ctx.triggered_id == "id-switch-histogram-log-jiq" or ctx.triggered_id == "id-switch-histogram-log-y-jiq":
+#         histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y, list_of_calculated_junctions)
+#         box_plot = no_update
+#     else:
+#         histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y, list_of_calculated_junctions)
+#         box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay, list_of_calculated_junctions)
+#
+#     return histogram, box_plot
 
 
 @app.callback(
@@ -428,7 +467,7 @@ def on_button_click_geq(
 
 
 app.clientside_callback(
-    ClientsideFunction(namespace="geq_clientside", function_name="update_histogram_log_y"),
+    ClientsideFunction(namespace="snapmine_clientside", function_name="update_histogram_log_y"),
     Output("id-geq-histogram", "figure", allow_duplicate=True),
     Input("id-switch-geq-log-y-histogram", "value"),
     State("id-geq-histogram", "figure"),
@@ -436,7 +475,7 @@ app.clientside_callback(
 )
 
 app.clientside_callback(
-    ClientsideFunction(namespace="geq_clientside", function_name="update_histogram_data"),
+    ClientsideFunction(namespace="snapmine_clientside", function_name="update_histogram_data_geq"),
     Output("id-geq-histogram", "figure", allow_duplicate=True),
     Input("id-switch-geq-log-count-histogram", "value"),
     Input("id-switch-geq-lock-with-table", "value"),
@@ -447,7 +486,7 @@ app.clientside_callback(
 )
 
 app.clientside_callback(
-    ClientsideFunction(namespace="geq_clientside", function_name="update_box_plot_violin_and_points_display"),
+    ClientsideFunction(namespace="snapmine_clientside", function_name="update_box_plot_violin_and_points_display"),
     Output("id-geq-box-plot", "figure", allow_duplicate=True),
     Input("id-switch-geq-violin-raw-box-plot", "value"),
     Input("id-switch-geq-show-points", "value"),
@@ -457,7 +496,7 @@ app.clientside_callback(
 
 
 app.clientside_callback(
-    ClientsideFunction(namespace="geq_clientside", function_name="update_box_plot_data"),
+    ClientsideFunction(namespace="snapmine_clientside", function_name="update_box_plot_data_geq"),
     Output("id-geq-box-plot", "figure", allow_duplicate=True),
     Input("id-switch-geq-log-raw-box-plot", "value"),
     Input("id-switch-geq-lock-with-table", "value"),
@@ -533,7 +572,7 @@ def on_reset_table_geq(click_data):
 @app.callback(
     Output("id-jiq-unlock", "style"),
     Output("id-jiq-lock", "style"),
-    Input("id-switch-jiq-lock-with-table", "value"),
+    Input("id-switch-lock-with-table-jiq", "value"),
     prevent_initial_call=True,
 )
 def on_lock_switch_jiq(lock):
