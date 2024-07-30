@@ -70,6 +70,8 @@ app.layout = dbc.Container(
         # a space for log content if any
         dmc.Space(h=30),
         dcc.Store(id="id-store-jiq-junctions"),
+        dcc.Store(id="id-results-cleared-jiq", data=False),
+        dcc.Store(id="id-results-cleared-geq", data=False),
     ],
     # TODO: Keep this commented here, need to verify with PI rep to switch to full width or not
     # fluid=True,  # this will make the page use full screen width
@@ -77,7 +79,7 @@ app.layout = dbc.Container(
 
 
 @app.callback(
-    Output("id-ag-grid-display-jiq", "style"),
+    Output("id-display-ag-grid-jiq", "style"),
     Output("id-ag-grid-jiq", "rowData"),
     Output("id-ag-grid-jiq", "columnDefs"),
     Output("id-ag-grid-jiq", "filterModel"),
@@ -89,8 +91,10 @@ app.layout = dbc.Container(
     Output("id-jiq-box-plot-col", "width"),
     Output("id-jiq-histogram-col", "width"),
     Output("id-display-graphs-jiq", "style"),
+    Output("id-results-cleared-jiq", "data"),
     # ------- INPUTS ------
-    Input("id-button-jiq-generate-results", "n_clicks"),
+    State("id-button-jiq-generate-results", "n_clicks"),  # keep the button so "running" works
+    Input("id-results-cleared-jiq", "data"),  # this MUST be an Input not a state
     State("id-input-compilation-jiq", "value"),
     State("id-jiq-input-container", "children"),
     State("id-store-jiq-junctions", "data"),
@@ -102,11 +106,19 @@ app.layout = dbc.Container(
     prevent_initial_call=True,
     running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)],  # requires the latest Dash 2.16
 )
-def on_button_click_jiq(
-    n_clicks, compilation, children, junction_count, box_log_psi, violin_overlay, histogram_log_psi, histogram_log_y
+def on_button_click_jiq_run(
+        n_clicks,
+        results_are_cleared,
+        compilation,
+        children,
+        junction_count,
+        box_log_psi,
+        violin_overlay,
+        histogram_log_psi,
+        histogram_log_y,
 ):
-    #  this function gets called with every input change
-    if ctx.triggered_id != "id-button-jiq-generate-results":
+    #  this function gets called only when the results are cleared
+    if ctx.triggered_id != "id-results-cleared-jiq" or not results_are_cleared:
         raise PreventUpdate
     else:
         try:
@@ -149,6 +161,7 @@ def on_button_click_jiq(
             no_update,
             no_update,
             no_update,
+            False,  # make sure id-results-cleared-jiq is set back to false if any failure happens
         )
 
     return (
@@ -163,7 +176,28 @@ def on_button_click_jiq(
         col_width,
         col_width,
         display_style,
+        False,  # id-results-cleared-jiq
     )
+
+
+@app.callback(
+    Output("id-display-ag-grid-jiq", "style", allow_duplicate=True),
+    Output("id-display-graphs-jiq", "style", allow_duplicate=True),
+    Output("id-results-cleared-jiq", "data", allow_duplicate=True),
+    Input("id-button-jiq-generate-results", "n_clicks"),
+    State("id-results-cleared-jiq", "data"),
+    prevent_initial_call=True,
+    # running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)],  # requires the latest Dash 2.16
+)
+def on_button_click_jiq_clear(n_clicks, results_are_cleared):
+    if ctx.triggered_id == "id-button-jiq-generate-results" and not results_are_cleared:
+        return (  # clear everything
+            {"display": "None"},  # grid display
+            {"display": "None"},  # graph display
+            True,
+        )
+    else:
+        raise PreventUpdate
 
 
 app.clientside_callback(
@@ -193,7 +227,6 @@ app.clientside_callback(
     State("id-box-plot-jiq", "figure"),
     prevent_initial_call=True,
 )
-
 
 app.clientside_callback(
     ClientsideFunction(namespace="snapmine_clientside", function_name="update_box_plot_data_jiq"),
@@ -332,7 +365,7 @@ def enable_normalization(normalize_value):
 
 
 @app.callback(
-    Output("id-ag-grid-display-geq", "style"),
+    Output("id-display-ag-grid-geq", "style"),
     Output("id-ag-grid-geq", "rowData"),
     Output("id-ag-grid-geq", "columnDefs"),
     Output("id-ag-grid-geq", "filterModel"),
@@ -347,8 +380,10 @@ def enable_normalization(normalize_value):
     Output("id-geq-histogram-col", "width"),
     Output("id-geq-histogram-col", "style"),
     Output("id-display-graphs-geq", "style"),
+    Output("id-results-cleared-geq", "data"),
     # ----- Inputs -----
-    Input("id-button-geq-run-query", "n_clicks"),
+    State("id-button-geq-run-query", "n_clicks"),
+    Input("id-results-cleared-geq", "data"),  # this MUST be an Input not a state
     State("id-input-compilation-geq", "value"),
     State("id-checkbox-use-coordinates", "value"),
     State("id-input-geq-gene-id", "value"),  # Query Gene Info
@@ -365,22 +400,23 @@ def enable_normalization(normalize_value):
     prevent_initial_call=True,
     running=[(Output("id-button-geq-run-query", "disabled"), True, False)],  # requires latest Dash 2.16
 )
-def on_button_click_geq(
-    n_clicks,
-    compilation,
-    use_coordinates,
-    query_gene_id,
-    query_gene_coordinates,
-    normalize_data,
-    norm_gene_id,
-    norm_gene_coordinates,
-    box_plot_log_x,
-    violin_overlay,
-    histogram_log_x,
-    histogram_log_y,
+def on_button_click_geq_run(
+        n_clicks,
+        results_are_cleared,
+        compilation,
+        use_coordinates,
+        query_gene_id,
+        query_gene_coordinates,
+        normalize_data,
+        norm_gene_id,
+        norm_gene_coordinates,
+        box_plot_log_x,
+        violin_overlay,
+        histogram_log_x,
+        histogram_log_y,
 ):
     #  this function gets called with every input change
-    if ctx.triggered_id != "id-button-geq-run-query":
+    if ctx.triggered_id != "id-results-cleared-geq" or not results_are_cleared:
         raise PreventUpdate
     else:
         try:
@@ -434,6 +470,7 @@ def on_button_click_geq(
             no_update,
             no_update,
             no_update,
+            False,  # make sure id-results-cleared-geq is set back to false if any failure happens
         )
     else:
         return (
@@ -449,7 +486,28 @@ def on_button_click_geq(
             width_hist,
             hist_display,
             styles.section,
+            False,  # id-results-cleared-geq
         )
+
+
+@app.callback(
+    Output("id-display-ag-grid-geq", "style", allow_duplicate=True),
+    Output("id-display-graphs-geq", "style", allow_duplicate=True),
+    Output("id-results-cleared-geq", "data", allow_duplicate=True),
+    Input("id-button-geq-run-query", "n_clicks"),
+    State("id-results-cleared-geq", "data"),
+    prevent_initial_call=True,
+    running=[(Output("id-button-geq-run-query", "disabled"), True, False)],  # requires latest Dash 2.16
+)
+def on_button_click_geq_clear(n_clicks, results_are_cleared):
+    if ctx.triggered_id == "id-button-geq-run-query" and not results_are_cleared:
+        return ( # clear everything
+            {"display": "None"},  # grid display
+            {"display": "None"},  # graph display
+            True,
+        )
+    else:
+        raise PreventUpdate
 
 
 # this was slower than the client side callback
@@ -493,7 +551,6 @@ app.clientside_callback(
     State("id-geq-box-plot", "figure"),
     prevent_initial_call=True,
 )
-
 
 app.clientside_callback(
     ClientsideFunction(namespace="snapmine_clientside", function_name="update_box_plot_data_geq"),

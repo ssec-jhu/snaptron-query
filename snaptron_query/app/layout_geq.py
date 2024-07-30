@@ -248,11 +248,15 @@ def get_accordian_graphs_geq():
             dbc.AccordionItem(
                 [
                     dbc.Row(
-                        [
-                            dbc.Col(id="id-geq-box-plot-col", children=[html.Div(get_card_box_plot_geq())]),
-                            dbc.Col(id="id-geq-histogram-col", children=[html.Div(get_card_histogram_geq())]),
-                        ]
-                    )
+                            [
+                                dbc.Col(id="id-geq-box-plot-col",
+                                        width=6,
+                                        children=[html.Div(get_card_box_plot_geq())]),
+                                dbc.Col(id="id-geq-histogram-col",
+                                        width=6,
+                                        children=[html.Div(get_card_histogram_geq())]),
+                            ]
+                            )
                 ],
                 title=gs.graphs_group_title,
             )
@@ -340,7 +344,7 @@ def get_layout_gene_expression_query():
             ),
             # TABLE
             dmc.Space(h=20),
-            dbc.Row([get_card_table_geq()], id="id-ag-grid-display-geq", style={"display": "None"}),
+            dbc.Row([get_card_table_geq()], id="id-display-ag-grid-geq", style={"display": "None"}),
         ],
     )
     return layout

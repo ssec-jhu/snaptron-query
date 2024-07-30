@@ -416,7 +416,7 @@ def get_layout_junction_inclusion():
             ),
             # Row: Table
             dmc.Space(h=20),
-            dbc.Row([get_card_table_jiq()], id="id-ag-grid-display-jiq", style={"display": "None"}),
+            dbc.Row([get_card_table_jiq()], id="id-display-ag-grid-jiq", style={"display": "None"}),
         ],
     )
     return layout
