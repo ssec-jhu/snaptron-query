@@ -1,5 +1,4 @@
 import pandas as pd
-from dash import no_update
 
 from snaptron_query.app import (
     graphs,
@@ -113,4 +112,4 @@ def run_query(
 
     code_timer.stop("Creating Plots")
 
-    return (row_data, column_defs, filter_model, box_plot, histogram, width_box, width_hist, histogram_card_display)
+    return row_data, column_defs, filter_model, box_plot, histogram, width_box, width_hist, histogram_card_display
