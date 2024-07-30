@@ -107,15 +107,15 @@ app.layout = dbc.Container(
     running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)],  # requires the latest Dash 2.16
 )
 def on_button_click_jiq_run(
-        n_clicks,
-        results_are_cleared,
-        compilation,
-        children,
-        junction_count,
-        box_log_psi,
-        violin_overlay,
-        histogram_log_psi,
-        histogram_log_y,
+    n_clicks,
+    results_are_cleared,
+    compilation,
+    children,
+    junction_count,
+    box_log_psi,
+    violin_overlay,
+    histogram_log_psi,
+    histogram_log_y,
 ):
     #  this function gets called only when the results are cleared
     if ctx.triggered_id != "id-results-cleared-jiq" or not results_are_cleared:
@@ -192,8 +192,8 @@ def on_button_click_jiq_run(
 def on_button_click_jiq_clear(n_clicks, results_are_cleared):
     if ctx.triggered_id == "id-button-jiq-generate-results" and not results_are_cleared:
         return (  # clear everything
-            {"display": "None"},  # grid display
-            {"display": "None"},  # graph display
+            styles.display_none,  # grid display
+            styles.display_none,  # graph display
             True,
         )
     else:
@@ -378,7 +378,7 @@ def enable_normalization(normalize_value):
     # Output("id-store-geq-hist", "data"),
     Output("id-geq-box-plot-col", "width"),
     Output("id-geq-histogram-col", "width"),
-    Output("id-geq-histogram-col", "style"),
+    Output("id-card-histogram-geq", "style"),
     Output("id-display-graphs-geq", "style"),
     Output("id-results-cleared-geq", "data"),
     # ----- Inputs -----
@@ -401,19 +401,19 @@ def enable_normalization(normalize_value):
     running=[(Output("id-button-geq-run-query", "disabled"), True, False)],  # requires latest Dash 2.16
 )
 def on_button_click_geq_run(
-        n_clicks,
-        results_are_cleared,
-        compilation,
-        use_coordinates,
-        query_gene_id,
-        query_gene_coordinates,
-        normalize_data,
-        norm_gene_id,
-        norm_gene_coordinates,
-        box_plot_log_x,
-        violin_overlay,
-        histogram_log_x,
-        histogram_log_y,
+    n_clicks,
+    results_are_cleared,
+    compilation,
+    use_coordinates,
+    query_gene_id,
+    query_gene_coordinates,
+    normalize_data,
+    norm_gene_id,
+    norm_gene_coordinates,
+    box_plot_log_x,
+    violin_overlay,
+    histogram_log_x,
+    histogram_log_y,
 ):
     #  this function gets called with every input change
     if ctx.triggered_id != "id-results-cleared-geq" or not results_are_cleared:
@@ -432,24 +432,30 @@ def on_button_click_geq_run(
                         raise exceptions.MissingUserInputs
 
                 # RUN THE GEX QUERY with the UI inputs
-                (row_data, column_defs, filter_model, box_plot, histogram, width_box, width_hist, hist_display) = (
-                    runner_geq.run_query(
-                        # Select the metadata that must be used
-                        meta_data_dict=get_meta_data(compilation),
-                        normalize_data=normalize_data,
-                        use_coordinates=use_coordinates,
-                        norm_gene_coordinates=norm_gene_coordinates,
-                        query_gene_coordinates=query_gene_coordinates,
-                        compilation=compilation,
-                        norm_gene_id=norm_gene_id,
-                        query_gene_id=query_gene_id,
-                        histogram_log_x=histogram_log_x,
-                        histogram_log_y=histogram_log_y,
-                        box_plot_log_x=box_plot_log_x,
-                        violin_overlay=violin_overlay,
-                    )
+                (
+                    row_data,
+                    column_defs,
+                    filter_model,
+                    box_plot,
+                    histogram,
+                    width_box,
+                    width_hist,
+                    histogram_card_display,
+                ) = runner_geq.run_query(
+                    # Select the metadata that must be used
+                    meta_data_dict=get_meta_data(compilation),
+                    normalize_data=normalize_data,
+                    use_coordinates=use_coordinates,
+                    norm_gene_coordinates=norm_gene_coordinates,
+                    query_gene_coordinates=query_gene_coordinates,
+                    compilation=compilation,
+                    norm_gene_id=norm_gene_id,
+                    query_gene_id=query_gene_id,
+                    histogram_log_x=histogram_log_x,
+                    histogram_log_y=histogram_log_y,
+                    box_plot_log_x=box_plot_log_x,
+                    violin_overlay=violin_overlay,
                 )
-
             else:
                 raise exceptions.MissingUserInputs
         except Exception as e:
@@ -484,7 +490,7 @@ def on_button_click_geq_run(
             histogram,
             width_box,
             width_hist,
-            hist_display,
+            histogram_card_display,
             styles.section,
             False,  # id-results-cleared-geq
         )
@@ -501,9 +507,9 @@ def on_button_click_geq_run(
 )
 def on_button_click_geq_clear(n_clicks, results_are_cleared):
     if ctx.triggered_id == "id-button-geq-run-query" and not results_are_cleared:
-        return ( # clear everything
-            {"display": "None"},  # grid display
-            {"display": "None"},  # graph display
+        return (  # clear everything
+            styles.display_none,  # grid display
+            styles.display_none,  # graph display
             True,
         )
     else:

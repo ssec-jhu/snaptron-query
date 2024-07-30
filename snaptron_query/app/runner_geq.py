@@ -8,6 +8,7 @@ from snaptron_query.app import (
     snaptron_client as sc,
     column_defs as cd,
     profile_timer as timer,
+    inline_styles as styles,
 )
 from snaptron_query.app.query_gene_expression import GeneExpressionQueryManager
 
@@ -99,15 +100,17 @@ def run_query(
         box_plot = graphs.get_box_plot_gene_expression(df, box_plot_log_x, violin_overlay, normalize_data)
 
         width_box = width_hist = {"size": 6}
-        hist_display = {"display": "Block"}
+        # merge the styles together.
+        histogram_card_display = {**styles.boundary_style, **styles.display_block}
     else:
         df = pd.DataFrame(row_data)
-        histogram = None
         box_plot = graphs.get_box_plot_gene_expression(df, box_plot_log_x, violin_overlay, normalize_data)
-        width_box = {"size": 8, "offset": 2}
-        width_hist = no_update
-        hist_display = {"display": "None"}
+        width_box = {"size": 6, "offset": 3}
+        # This hack must exist even though nothing is displayed! None throws the UI off
+        width_hist = {"size": 6}
+        histogram = box_plot
+        histogram_card_display = styles.display_none
 
     code_timer.stop("Creating Plots")
 
-    return row_data, column_defs, filter_model, box_plot, histogram, width_box, width_hist, hist_display
+    return (row_data, column_defs, filter_model, box_plot, histogram, width_box, width_hist, histogram_card_display)

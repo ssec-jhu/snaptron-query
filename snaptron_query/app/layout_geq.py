@@ -57,7 +57,7 @@ def get_form_geq():
                 align="start",
             ),
             id="id-row-query-gene-coordinates",
-            style={"display": "none"},
+            style=styles.display_none,
         ),
         # ROW: Normalization Information - gene id
         dmc.Space(h=10),
@@ -115,7 +115,7 @@ def get_form_geq():
                 class_name="g-0 form-control-sm",
             ),
             id="id-row-norm-gene-coordinates",
-            style={"display": "none"},
+            style=styles.display_none,
         ),
         # ROW: Main Calculate Button
         dbc.Row(
@@ -208,6 +208,7 @@ def get_card_box_plot_geq():
 def get_card_histogram_geq():
     card = (
         dbc.Card(
+            id="id-card-histogram-geq",
             children=[
                 dbc.CardBody(
                     [
@@ -248,15 +249,11 @@ def get_accordian_graphs_geq():
             dbc.AccordionItem(
                 [
                     dbc.Row(
-                            [
-                                dbc.Col(id="id-geq-box-plot-col",
-                                        width=6,
-                                        children=[html.Div(get_card_box_plot_geq())]),
-                                dbc.Col(id="id-geq-histogram-col",
-                                        width=6,
-                                        children=[html.Div(get_card_histogram_geq())]),
-                            ]
-                            )
+                        [
+                            dbc.Col(id="id-geq-box-plot-col", width=6, children=[html.Div(get_card_box_plot_geq())]),
+                            dbc.Col(id="id-geq-histogram-col", width=6, children=[html.Div(get_card_histogram_geq())]),
+                        ]
+                    )
                 ],
                 title=gs.graphs_group_title,
             )
@@ -344,7 +341,7 @@ def get_layout_gene_expression_query():
             ),
             # TABLE
             dmc.Space(h=20),
-            dbc.Row([get_card_table_geq()], id="id-display-ag-grid-geq", style={"display": "None"}),
+            dbc.Row([get_card_table_geq()], id="id-display-ag-grid-geq", style=styles.display_none),
         ],
     )
     return layout
