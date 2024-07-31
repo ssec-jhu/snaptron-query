@@ -36,3 +36,14 @@ def test_log_2_plus(psi, value):
     # add this test in case epsilon value changes
     log2 = round(utils.log_2_plus(psi), 2)
     assert log2 == value
+
+
+@pytest.mark.parametrize(
+    "coordinates,result",
+    [
+        ("Chromosome 19: 4,472,297-4,502,208", "chr19:4472297-4502208"),
+        ("Chromosome 10: 3,099,353- 3,101,364", "chr10:3099353-3101364"),
+    ],
+)
+def test_coordinates_to_formatted_string(coordinates, result):
+    assert sc.coordinates_to_formatted_string(sc.geq_verify_coordinate(coordinates)) == result

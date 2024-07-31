@@ -220,7 +220,7 @@ def test_jiq_psi_results_vs_shinyapp_website(junction_srav3h, ground_truth_df, r
 def test_jiq_empty_exc_junctions(
     df_sample_junctions_from_srav3h, exc_chr, exc_start, exc_end, inc_chr, inc_start, inc_end
 ):
-    with pytest.raises(exceptions.EmptyExcJunction) as exc_info:
+    with pytest.raises(exceptions.EmptyExcJunction):
         splice_pair = sc.SpliceJunctionPair(
             exc_coordinates=sc.JunctionCoordinates(exc_chr, exc_start, exc_end),
             inc_coordinates=sc.JunctionCoordinates(inc_chr, inc_start, inc_end),
@@ -230,8 +230,6 @@ def test_jiq_empty_exc_junctions(
             meta_data_dict={},
             df_from_snaptron_map={splice_pair.exc_coordinates: df_sample_junctions_from_srav3h},
         )
-
-        assert exc_info.value.index == 1
 
 
 @pytest.mark.parametrize(

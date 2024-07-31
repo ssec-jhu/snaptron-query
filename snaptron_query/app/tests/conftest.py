@@ -293,11 +293,6 @@ def gene_query_case_sensitive():
 
 
 @pytest.fixture(scope="session")
-def compilations():
-    return [gs.compilation_srav3h, gs.compilation_gtexv2, gs.compilation_tcgav2]
-
-
-@pytest.fixture(scope="session")
 def sample_ui_children():
     return [
         {
