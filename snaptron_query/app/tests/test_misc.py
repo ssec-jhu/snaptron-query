@@ -5,7 +5,7 @@ import pytest
 from dash import html
 from dash import no_update
 
-from snaptron_query.app import column_defs, callback_common, global_strings as gs, inline_styles, components
+from snaptron_query.app import column_defs, callback_common, global_strings as gs, inline_styles, components, exceptions
 
 
 @pytest.mark.parametrize(
@@ -102,6 +102,10 @@ def test_get_geq_table_filter_model(norm, column, r):
     assert column_defs.get_geq_table_filter_model(norm)[column]["filter"] == r
 
 
+def test_get_geq_table_filter_model_2():
+    assert column_defs.get_geq_table_filter_model(False) == {}
+
+
 @pytest.mark.parametrize(
     "index, name",
     [
@@ -117,6 +121,8 @@ def test_get_col_jiq(index, name):
 def test_on_box_plot_click():
     # TODO: get a click data instance and add to test
     assert callback_common.on_box_plot_click(None, None) == no_update
+    click = {"points": [{"customdata": [2171668]}]}
+    assert callback_common.on_box_plot_click(click, {})[gs.snpt_col_rail_id]["filterType"] == "number"
 
 
 @pytest.mark.parametrize(
@@ -177,12 +183,24 @@ def test_get_button_reset():
     assert len(components.get_button_reset("id")) > 0
 
 
-def test_get_text():
+def test_get_text_dmc():
     assert isinstance(components.get_text("string"), dmc.Text)
+
+
+def test_get_text_dbc():
+    assert isinstance(components.get_text("string", "dbc"), dbc.Label)
+
+
+def test_get_text():
+    assert isinstance(components.get_text("string", "anything_else"), html.Label)
 
 
 def test_get_input():
     assert isinstance(components.get_input("placeholder", "id"), dbc.Input)
+
+
+def test_get_input_disabled():
+    assert isinstance(components.get_input("placeholder", "id", True), dbc.Input)
 
 
 def test_get_dropdown_compilation():
@@ -207,3 +225,11 @@ def test_get_tooltip():
 
 def test_get_info_icon_tooltip_bundle():
     assert isinstance(components.get_info_icon_tooltip_bundle("id", "string", "location"), html.Div)
+
+
+def test_empty_inc_junction():
+    assert exceptions.EmptyIncJunction(2).get_message().find("Inclusion Junction 2") != -1
+
+
+def test_empty_exc_junction():
+    assert exceptions.EmptyExcJunction(2).get_message().find("Exclusion Junction 2") != -1

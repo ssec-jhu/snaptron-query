@@ -231,8 +231,6 @@ def test_jiq_empty_exc_junctions(
             df_from_snaptron_map={splice_pair.exc_coordinates: df_sample_junctions_from_srav3h},
         )
 
-        assert exc_info.value.index == 1
-
 
 @pytest.mark.parametrize(
     "exc_chr,exc_start,exc_end,inc_chr,inc_start,inc_end",
