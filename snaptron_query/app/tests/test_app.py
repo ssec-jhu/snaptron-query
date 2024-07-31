@@ -46,5 +46,4 @@ def test_log_2_plus(psi, value):
     ],
 )
 def test_coordinates_to_formatted_string(coordinates, result):
-    c = sc.coordinates_to_formatted_string(sc.geq_verify_coordinate(coordinates))
-    assert c == result
+    assert sc.coordinates_to_formatted_string(sc.geq_verify_coordinate(coordinates)) == result
