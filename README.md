@@ -8,10 +8,10 @@
 # About 
 Web application for junction or gene expression count extraction and analysis:
 * Preprint at: [Large-scale RNA-seq mining reveals ciclopirox triggers TDP-43 cryptic exons](https://www.biorxiv.org/content/10.1101/2024.03.27.587011v1)
-* Deployed at: https://snapmine.idies.jhu.edu/
+* **SnapMine** is deployed at: https://snapmine.idies.jhu.edu/
 
 
-<img src="snaptron_query/app/assets/junction_query.png" alt="junction_query" height="300" />
+<img src="snaptron_query/app/assets/junction_query.png" alt="junction_query" height="250" style="display: block; margin: auto;"/>
 
 ## Build:
 #### Initial Setup:
