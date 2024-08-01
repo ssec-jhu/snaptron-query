@@ -78,7 +78,7 @@ def alert_message_from_exception(exception):
         alert_message = gs.normalization_gene_not_found
     elif e == httpx.RemoteProtocolError:
         alert_message = gs.httpx_remote_protocol_error
-    elif e == httpx.ConnectError or httpx.ConnectTimeout:
+    elif e == httpx.ConnectError or e == httpx.ConnectTimeout:
         alert_message = gs.httpx_connect_error
     else:
         alert_message = f"Exception Occurred: {exception}"
