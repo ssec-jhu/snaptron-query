@@ -14,3 +14,5 @@ section = {"box-shadow": "1px 2px 7px 0px grey", "border-radius": "10px"}
 # render to the screen then shift to their position.
 # visibility will keep the space, so when the plots come in, they render fast
 section_vis = {"visibility": "hidden", "height": "70px"}
+display_block = {"display": "block"}
+display_none = {"display": "none"}
