@@ -185,7 +185,7 @@ def on_button_click_jiq_run(
     Output("id-display-graphs-jiq", "style", allow_duplicate=True),
     Output("id-results-cleared-jiq", "data", allow_duplicate=True),
     Input("id-button-jiq-generate-results", "n_clicks"),
-    State("id-results-cleared-jiq", "data"),
+    State("id-results-cleared-jiq", "data"),  # This MUST be a STATE here as the trigger is the button
     prevent_initial_call=True,
     # running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)],  # requires the latest Dash 2.16
 )
@@ -383,7 +383,7 @@ def enable_normalization(normalize_value):
     Output("id-results-cleared-geq", "data"),
     # ----- Inputs -----
     State("id-button-geq-run-query", "n_clicks"),
-    Input("id-results-cleared-geq", "data"),  # this MUST be an Input not a state
+    Input("id-results-cleared-geq", "data"),  # this MUST be an Input not a state as this is the trigger
     State("id-input-compilation-geq", "value"),
     State("id-checkbox-use-coordinates", "value"),
     State("id-input-geq-gene-id", "value"),  # Query Gene Info
@@ -501,7 +501,7 @@ def on_button_click_geq_run(
     Output("id-display-graphs-geq", "style", allow_duplicate=True),
     Output("id-results-cleared-geq", "data", allow_duplicate=True),
     Input("id-button-geq-run-query", "n_clicks"),
-    State("id-results-cleared-geq", "data"),
+    State("id-results-cleared-geq", "data"),  # This MUST be a STATE here as the trigger is the button
     prevent_initial_call=True,
     running=[(Output("id-button-geq-run-query", "disabled"), True, False)],  # requires latest Dash 2.16
 )
