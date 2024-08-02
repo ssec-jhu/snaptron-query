@@ -27,8 +27,8 @@ def assert_test_gex(q, rail_id, factor, normalized_count):
         (1000283, 0.51, 2606573.21),  # 'SRR4450435'
     ],
 )
-def test_gex(gene_query, gene_query_case_sensitive, rail_id, factor, normalized_count):
-    assert_test_gex(gene_query, rail_id, factor, normalized_count)
+def test_gex(gene_query_srav3h, rail_id, factor, normalized_count):
+    assert_test_gex(gene_query_srav3h, rail_id, factor, normalized_count)
 
 
 @pytest.mark.parametrize(
@@ -46,9 +46,31 @@ def test_gex(gene_query, gene_query_case_sensitive, rail_id, factor, normalized_
         (1000283, 0.51, 2606573.21),  # 'SRR4450435'
     ],
 )
-def test_gex_lowercase(gene_query_case_sensitive, rail_id, factor, normalized_count):
+def test_gex_lowercase_srav3h(gene_query_case_sensitive_srav3h, rail_id, factor, normalized_count):
     # same set of test but different query genes - testing case sensitivity
-    assert_test_gex(gene_query_case_sensitive, rail_id, factor, normalized_count)
+    # human dataset has uppercase gene names
+    assert_test_gex(gene_query_case_sensitive_srav3h, rail_id, factor, normalized_count)
+
+
+@pytest.mark.parametrize(
+    "rail_id, raw_count",
+    [
+        (475207, 5408),
+        (475142, 54236),
+        (475159, 2352),
+        (475278, 55020),
+    ],
+)
+def test_gex_lowercase_srav1m(
+    gene_query_case_sensitive_srav1m, gene_query_case_sensitive_srav1m_not_normalized, rail_id, raw_count
+):
+    # mouse data set has lowercase gene names
+    # normalized and non-normalized should give the same raw counts
+    s = gene_query_case_sensitive_srav1m.get_results().loc[rail_id]
+    assert s[gs.table_geq_col_raw_count] == raw_count
+
+    s_nn = gene_query_case_sensitive_srav1m_not_normalized.get_results().loc[rail_id]
+    assert s_nn[gs.table_geq_col_raw_count] == raw_count
 
 
 @pytest.mark.parametrize(
@@ -82,7 +104,7 @@ def test_geq_verify_coordinates_with_errors(pair):
         sc.geq_verify_coordinate(pair)
 
 
-def test_gex_errors_2():
+def test_gex_errors_2(geq_path_bundle_srav3h):
     with pytest.raises(exceptions.NormalizationGeneNotFound):
         # EDF2 is a made up gene
-        GEXQuery("TARDBP", "EDF2")
+        GEXQuery("TARDBP", geq_path_bundle_srav3h[0], "EDF2", geq_path_bundle_srav3h[1])

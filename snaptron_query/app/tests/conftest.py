@@ -18,8 +18,9 @@ path_sample_junction_data_srav3h = Path(__file__).parent / "data/test_chr19_4491
 path_ground_truth_data = Path(__file__).parent / "data/test_shinyapp_chr19_4491836_4492014_chr19_4491836_4493702.csv"
 
 path_gex_srav3h_meta = Path(__file__).parent / "data/test_samples_SRAv3h_GEX.csv"
-path_sample_gex_norm_data = Path(__file__).parent / "data/test_srav3h_gene_norm_EDF1.csv"
-path_sample_gex_query_data = Path(__file__).parent / "data/test_srav3h_gene_query_TARDBP.csv"
+path_sample_gex_norm_data_srav3h = Path(__file__).parent / "data/test_srav3h_gene_norm_EDF1.csv"
+path_sample_gex_query_data_srav3h = Path(__file__).parent / "data/test_srav3h_gene_query_TARDBP.csv"
+path_sample_gex_query_data_srav1m = Path(__file__).parent / "data/test_srav1m_gene_query_ADNP2.csv"
 
 
 class JunctionQuery:
@@ -59,9 +60,8 @@ class MultiJunctionQuery:
 
 
 class GEXQuery:
-    def __init__(self, query_gene_id, norm_gene_id):
-        df_snaptron_norm = pd.read_csv(path_sample_gex_norm_data)  # Note: query_gene_coord = 'chr1:11012654-11025492'
-        df_snaptron_query = pd.read_csv(path_sample_gex_query_data)  # Note: query_gene_coord = 'chr1:11012654-11025492'
+    def __init__(self, query_gene_id, path_gex_query_data, norm_gene_id=None, path_gex_norm_data=None):
+        df_snaptron_query = pd.read_csv(path_gex_query_data)
         df_srav3h_meta_data = pd.read_csv(path_gex_srav3h_meta, usecols=gs.srav3h_meta_data_required_list).set_index(
             gs.snpt_col_rail_id
         )
@@ -70,7 +70,9 @@ class GEXQuery:
         self.gex_mgr = gex.GeneExpressionQueryManager()
 
         # calculate factors
-        self.gex_mgr.setup_normalization_data_method(norm_gene_id, df_snaptron_norm, meta_data_dict)
+        if norm_gene_id:
+            df_snaptron_norm = pd.read_csv(path_gex_norm_data)
+            self.gex_mgr.setup_normalization_data_method(norm_gene_id, df_snaptron_norm, meta_data_dict)
 
         self.results_list_of_dict = self.gex_mgr.run_gene_expression_query(
             query_gene_id, df_snaptron_query, meta_data_dict
@@ -282,14 +284,35 @@ def ground_truth_df():
 
 
 @pytest.fixture(scope="session")
-def gene_query():
-    # return GEXQuery('ENSG00000120948', 'ENSG00000107223')
-    return GEXQuery("TARDBP", "EDF1")
+def geq_path_bundle_srav3h():
+    return path_sample_gex_query_data_srav3h, path_sample_gex_norm_data_srav3h
 
 
 @pytest.fixture(scope="session")
-def gene_query_case_sensitive():
-    return GEXQuery("taRdBp", "eDf1")
+def gene_query_srav3h(geq_path_bundle_srav3h):
+    return GEXQuery("TARDBP", geq_path_bundle_srav3h[0], "EDF1", geq_path_bundle_srav3h[1])
+
+
+@pytest.fixture(scope="session")
+def gene_query_error_srav3h(geq_path_bundle_srav3h):
+    return GEXQuery("TARDBP", geq_path_bundle_srav3h[0], "EDF2", geq_path_bundle_srav3h[1])
+
+
+@pytest.fixture(scope="session")
+def gene_query_case_sensitive_srav3h(geq_path_bundle_srav3h):
+    return GEXQuery("taRdBp", geq_path_bundle_srav3h[0], "eDf1", geq_path_bundle_srav3h[1])
+
+
+@pytest.fixture(scope="session")
+def gene_query_case_sensitive_srav1m():
+    # mouse datasets have the ensembles in lowercase
+    return GEXQuery("ADNP2", path_sample_gex_query_data_srav1m, "eDf1", path_sample_gex_norm_data_srav3h)
+
+
+@pytest.fixture(scope="session")
+def gene_query_case_sensitive_srav1m_not_normalized():
+    # mouse datasets have the ensembles in lowercase
+    return GEXQuery("aDnp2", path_sample_gex_query_data_srav1m)
 
 
 @pytest.fixture(scope="session")
