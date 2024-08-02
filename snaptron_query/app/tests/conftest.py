@@ -294,11 +294,6 @@ def gene_query_srav3h(geq_path_bundle_srav3h):
 
 
 @pytest.fixture(scope="session")
-def gene_query_error_srav3h(geq_path_bundle_srav3h):
-    return GEXQuery("TARDBP", geq_path_bundle_srav3h[0], "EDF2", geq_path_bundle_srav3h[1])
-
-
-@pytest.fixture(scope="session")
 def gene_query_case_sensitive_srav3h(geq_path_bundle_srav3h):
     return GEXQuery("taRdBp", geq_path_bundle_srav3h[0], "eDf1", geq_path_bundle_srav3h[1])
 
