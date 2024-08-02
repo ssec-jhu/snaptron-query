@@ -364,7 +364,7 @@ def sample_ui_children():
                                 {
                                     "props": {
                                         "children": "Add more inclusion or exclusion junctions (up to 5) to the PSI "
-                                                    "query",
+                                        "query",
                                         "target": "id-button-jiq-add-more-junctions",
                                     },
                                     "type": "Tooltip",
@@ -435,7 +435,7 @@ def sample_ui_children_with_error():
                                 {
                                     "props": {
                                         "children": "Add more inclusion or exclusion junctions (up to 5) to the PSI "
-                                                    "query",
+                                        "query",
                                         "target": "id-button-jiq-add-more-junctions",
                                     },
                                     "type": "Tooltip",
