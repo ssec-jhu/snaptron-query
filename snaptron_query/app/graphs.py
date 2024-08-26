@@ -1,8 +1,6 @@
 """This file includes the graph components used in the queries."""
 
-import numpy as np
 import plotly.express as px
-import plotly.graph_objects as go
 
 from snaptron_query.app import global_strings as gs, graphs_utils
 
@@ -100,47 +98,6 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay, list_of_calculated_junc
         plot_title=gs.jiq_plot_title_box,
         y_axes_title=gs.jiq_log_psi if log_psi_values else gs.jiq_psi_plot_axes,
     )
-
-    return fig
-
-
-# TODO: if performance is better, then delete this
-def create_box_plot_gene_expression_normalized(df, log_values, violin_overlay, y_raw, y_normalized):
-    # to get the hover templates in graphics pobject working use customdata
-    # combination of hoverinfo='text', text=df['rail_id'], hovertemplate="Rail ID:%{text}<br>Raw Count: %{y}"
-    # creates an extra box next to the original hover box with the trace title.
-    # https://stackoverflow.com/questions/69278251/plotly-including-additional-data-in-hovertemplate
-    custom_data = np.stack((df[gs.snpt_col_rail_id], df[gs.table_geq_col_factor]), axis=-1)
-    hover_template_pre = f"{gs.plot_label_rail_id}:" + " %{customdata[0]}<br>"
-    if log_values:
-        hover_template = hover_template_pre + gs.geq_log_count + ": %{y} <br><extra></extra>"
-    else:
-        hover_template = hover_template_pre + "Count: %{y} <br><extra></extra>"
-
-    raw_plot_params_dict = {
-        "y": y_raw,
-        "name": gs.geq_plot_label_raw_count,
-        "hovertemplate": hover_template,
-        "customdata": custom_data,
-        "marker": {"color": graphs_utils.get_common_colors()[0]},
-    }
-    norm_plot_params_dict = {
-        "y": y_normalized,
-        "name": gs.geq_plot_label_norm_count,
-        "hovertemplate": hover_template,
-        "customdata": custom_data,
-        "marker": {"color": graphs_utils.get_common_colors()[1]},
-    }
-    if violin_overlay:
-        trace_raw_count = go.Violin(raw_plot_params_dict, box={"visible": True}, points="all")
-        trace_normalized_count = go.Violin(norm_plot_params_dict, box={"visible": True}, points="all")
-    else:
-        trace_raw_count = go.Box(raw_plot_params_dict, boxpoints="all")
-        trace_normalized_count = go.Box(norm_plot_params_dict, boxpoints="all")
-
-    fig = go.Figure(data=[trace_raw_count, trace_normalized_count])
-
-    fig.update_layout(legend=dict(orientation="h", yanchor="bottom", xanchor="center", x=0.5, y=0.98))
 
     return fig
 
