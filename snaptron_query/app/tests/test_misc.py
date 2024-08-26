@@ -5,7 +5,20 @@ import pytest
 from dash import html
 from dash import no_update
 
-from snaptron_query.app import column_defs, callback_common, global_strings as gs, inline_styles, components, exceptions
+from snaptron_query.app import (
+    column_defs,
+    callback_common,
+    global_strings as gs,
+    inline_styles,
+    components,
+    exceptions,
+    components_jiq,
+    components_geq,
+    navbars,
+    layout_jiq,
+    layout_geq,
+    layout,
+)
 
 
 @pytest.mark.parametrize(
@@ -233,3 +246,90 @@ def test_empty_inc_junction():
 
 def test_empty_exc_junction():
     assert exceptions.EmptyExcJunction(2).get_message().find("Exclusion Junction 2") != -1
+
+
+def test_get_button_add_junction():
+    assert len(components_jiq.get_button_add_junction()) == 2
+    assert isinstance(components_jiq.get_button_add_junction()[0], dbc.Button)
+    assert isinstance(components_jiq.get_button_add_junction()[1], dbc.Tooltip)
+
+
+def test_get_text_junction():
+    assert isinstance(components_jiq.get_text_junction(1), dmc.Text)
+
+
+def test_get_switch_normalize():
+    assert isinstance(components_geq.get_switch_normalize(), dbc.Switch)
+
+
+def test_get_checkbox_geq_optional_coordinates():
+    assert len(components_geq.get_checkbox_geq_optional_coordinates()) == 2
+    assert isinstance(components_geq.get_checkbox_geq_optional_coordinates()[0], dbc.Checklist)
+
+
+def test_get_navbar_top():
+    assert isinstance(navbars.get_navbar_top(), html.Div)
+
+
+def test_get_navbar_bottom():
+    assert isinstance(navbars.get_navbar_bottom(), html.Div)
+
+
+def test_create_junction_row():
+    assert len(layout_jiq.create_junction_row(1)) == 3
+
+
+def test_get_form_jiq():
+    assert len(layout_jiq.get_form_jiq()) == 4
+
+
+def test_get_card_histogram_jiq():
+    assert isinstance(layout_jiq.get_card_histogram_jiq(), dbc.Card)
+
+
+def test_get_card_box_plot_jiq():
+    assert isinstance(layout_jiq.get_card_box_plot_jiq(), dbc.Card)
+
+
+def test_get_card_table_jiq():
+    assert isinstance(layout_jiq.get_card_table_jiq(), dmc.Card)
+
+
+def test_get_accordian_form_jiq():
+    assert isinstance(layout_jiq.get_accordian_form_jiq(), dbc.Accordion)
+
+
+def test_get_accordian_graphs_jiq():
+    assert isinstance(layout_jiq.get_accordian_graphs_jiq(), dbc.Accordion)
+
+
+def test_get_layout_junction_inclusion():
+    assert isinstance(layout_jiq.get_layout_junction_inclusion(), dbc.Container)
+
+
+def test_get_form_geq():
+    assert len(layout_geq.get_form_geq()) > 0
+
+
+def test_get_card_histogram_geq():
+    assert isinstance(layout_geq.get_card_histogram_geq(), dbc.Card)
+
+
+def test_get_accordian_form_geq():
+    assert isinstance(layout_geq.get_accordian_form_geq(), dbc.Accordion)
+
+
+def test_get_card_table_geq():
+    assert isinstance(layout_geq.get_card_table_geq(), dmc.Card)
+
+
+def test_get_accordian_graphs_geq():
+    assert isinstance(layout_geq.get_accordian_graphs_geq(), dbc.Accordion)
+
+
+def test_get_layout_gene_expression_query():
+    assert isinstance(layout_geq.get_layout_gene_expression_query(), dbc.Container)
+
+
+def test_get_tabs():
+    assert isinstance(layout.get_tabs(), dbc.Tabs)

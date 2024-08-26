@@ -206,41 +206,38 @@ def get_card_box_plot_geq():
 
 
 def get_card_histogram_geq():
-    card = (
-        dbc.Card(
-            id="id-card-histogram-geq",
-            children=[
-                dbc.CardBody(
-                    [
-                        dbc.Row(
-                            [
-                                dbc.Col(
-                                    [
-                                        components.get_switch(
-                                            switch_id="id-switch-geq-log-count-histogram",
-                                            switch_label=gs.geq_log_count,
-                                            switch_on=True,
-                                        ),
-                                        dmc.Space(w=10),
-                                        components.get_switch(
-                                            switch_id="id-switch-geq-log-y-histogram",
-                                            switch_label=gs.switch_log_geq_hist_y,
-                                        ),
-                                    ],
-                                    className="d-flex justify-content-end",
-                                    align="center",
-                                )
-                            ],
-                            className="g-0 form-control-sm",
-                        ),
-                        dbc.Row([html.Div(dcc.Graph(id="id-geq-histogram"))], class_name="g-0"),
-                    ]
-                )
-            ],
-            style=styles.boundary_style,
-        ),
+    return dbc.Card(
+        id="id-card-histogram-geq",
+        children=[
+            dbc.CardBody(
+                [
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                [
+                                    components.get_switch(
+                                        switch_id="id-switch-geq-log-count-histogram",
+                                        switch_label=gs.geq_log_count,
+                                        switch_on=True,
+                                    ),
+                                    dmc.Space(w=10),
+                                    components.get_switch(
+                                        switch_id="id-switch-geq-log-y-histogram",
+                                        switch_label=gs.switch_log_geq_hist_y,
+                                    ),
+                                ],
+                                className="d-flex justify-content-end",
+                                align="center",
+                            )
+                        ],
+                        className="g-0 form-control-sm",
+                    ),
+                    dbc.Row([html.Div(dcc.Graph(id="id-geq-histogram"))], class_name="g-0"),
+                ]
+            )
+        ],
+        style=styles.boundary_style,
     )
-    return card
 
 
 def get_accordian_graphs_geq():
