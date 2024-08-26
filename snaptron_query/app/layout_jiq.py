@@ -379,7 +379,7 @@ def get_accordian_form_jiq():
                             ),
                         ],
                         justify="start",
-                    )
+                    ),
                 ],
                 title=gs.jiq_form_title,
             )

@@ -163,7 +163,7 @@ def get_accordian_form_geq():
                             ),
                         ],
                         justify="start",
-                    )
+                    ),
                 ],
                 title=gs.geq_form_title,
             )
