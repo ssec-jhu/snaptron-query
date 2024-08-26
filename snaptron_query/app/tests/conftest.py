@@ -284,6 +284,11 @@ def ground_truth_df():
 
 
 @pytest.fixture(scope="session")
+def compilations():
+    return [gs.compilation_srav3h, gs.compilation_gtexv2, gs.compilation_tcgav2]
+
+
+@pytest.fixture(scope="session")
 def geq_path_bundle_srav3h():
     return path_sample_gex_query_data_srav3h, path_sample_gex_norm_data_srav3h
 
