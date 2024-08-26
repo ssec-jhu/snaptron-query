@@ -139,7 +139,7 @@ def get_accordian_form_geq():
                 [
                     dbc.Modal(
                         [
-                            dbc.ModalHeader(dbc.ModalTitle("Put text here or keep empty???")),
+                            dbc.ModalHeader(dbc.ModalTitle("Genes with Low mRNA Expression Variation")),
                             dbc.ModalBody(html.Img(src="assets/240318_gex.png", style={"width": "100%"})),
                         ],
                         id="id-geq-image-modal",
