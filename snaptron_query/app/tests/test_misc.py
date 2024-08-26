@@ -1,3 +1,5 @@
+import os
+
 import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
@@ -18,6 +20,7 @@ from snaptron_query.app import (
     layout_jiq,
     layout_geq,
     layout,
+    paths,
 )
 
 
@@ -333,3 +336,16 @@ def test_get_layout_gene_expression_query():
 
 def test_get_tabs():
     assert isinstance(layout.get_tabs(), dbc.Tabs)
+
+
+@pytest.mark.parametrize(
+    "file_path, name",
+    [
+        (paths.srav3h_meta, paths.filename_srav3h),
+        (paths.gtexv2_meta, paths.filename_gtexv2),
+        (paths.tcgav2_meta, paths.filename_tcgav2),
+        (paths.srav1m_meta, paths.filename_srav1m),
+    ],
+)
+def test_paths(file_path, name):
+    assert os.path.basename(file_path) == name
