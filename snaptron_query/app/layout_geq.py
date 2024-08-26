@@ -137,12 +137,27 @@ def get_accordian_form_geq():
         [
             dbc.AccordionItem(
                 [
+                    dbc.Modal(
+                        [
+                            dbc.ModalHeader(dbc.ModalTitle("Put text here or keep empty???")),
+                            dbc.ModalBody(html.Img(src="assets/240318_gex.png", style={"width": "100%"})),
+                        ],
+                        id="id-geq-image-modal",
+                        centered=True,
+                        size="xl",  # size= false is default
+                        is_open=False,
+                    ),
                     dbc.Row(
                         [
                             dbc.Col([html.Div(get_form_geq())], width=7),
                             dbc.Col(
                                 [
-                                    html.Img(src="assets/240318_gex.png", width="100%")
+                                    html.Img(
+                                        id="id-geq-image",
+                                        src="assets/240318_gex.png",
+                                        width="100%",
+                                        style={"cursor": "pointer"},
+                                    )
                                 ],  # this will force align the height to the column next to it
                                 style=styles.border_column,
                             ),
