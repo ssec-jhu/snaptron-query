@@ -2,6 +2,10 @@ import pandas as pd
 from snaptron_query.app import utils, paths, global_strings as gs
 
 
+def extract_meta_data_by_study(df, study_list):
+    return df[df[gs.snpt_col_study].isin(study_list)]
+
+
 def extract_meta_data_from_these_ids_only(meta_dict, rail_list):
     meta_list = []
     # extract the metadata for the rail_id provided in the list.
@@ -42,8 +46,25 @@ def generate_samples_srav3h(output_filename):
         245855,
         2033434,
     ]
-    pruned_file = extract_meta_data_from_these_ids_only(utils.read_srav3h(paths.srav3h_meta), rail_list)
-    pd.DataFrame.to_csv(pruned_file, output_filename, sep="\t")
+
+    rail_id_df = extract_meta_data_from_these_ids_only(utils.read_srav3h(paths.srav3h_meta), rail_list)
+
+    # also prune out some samples based on study for the gene expression query tests.
+    study_list = [
+        "DRP000366",
+        "DRP000425",
+        "DRP000499",
+        "SRP072835",
+        "SRP092075",
+        "SRP072829",
+        "SRP072864",
+        "SRP013565",
+    ]
+
+    study_df = extract_meta_data_by_study(df=utils.read_srav3h_into_df(paths.srav3h_meta), study_list=study_list)
+    result_df = pd.concat([rail_id_df, study_df]).drop_duplicates(subset=gs.snpt_col_rail_id, keep="first")
+
+    pd.DataFrame.to_csv(result_df, output_filename, sep="\t")
 
 
 def generate_samples_gtexv2(output_filename):

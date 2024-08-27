@@ -131,8 +131,8 @@ def test_histogram_empty(junction_srav3h, log_psi_values, violin_overlay, list_o
         (False, False),
     ],
 )
-def test_get_box_plot_gene_expression_normalized(gene_query_srav3h, log_values, violin_overlay):
-    df = gene_query_srav3h.get_results()
+def test_get_box_plot_gene_expression_normalized(gene_query_srav3h_tardbp_with_edf1, log_values, violin_overlay):
+    df = gene_query_srav3h_tardbp_with_edf1.get_results()
     df_with_index = df.reset_index()
     fig = graphs.get_box_plot_gene_expression(df_with_index, log_values, violin_overlay, True)
     assert len(fig["data"]) == 2
@@ -151,8 +151,8 @@ def test_get_box_plot_gene_expression_normalized(gene_query_srav3h, log_values, 
         (False, False),
     ],
 )
-def test_get_box_plot_gene_expression_not_normalized(gene_query_srav3h, log_values, violin_overlay):
-    df = gene_query_srav3h.get_results()
+def test_get_box_plot_gene_expression_not_normalized(gene_query_srav3h_tardbp_with_edf1, log_values, violin_overlay):
+    df = gene_query_srav3h_tardbp_with_edf1.get_results()
     df_with_index = df.reset_index()
     fig = graphs.get_box_plot_gene_expression(df_with_index, log_values, violin_overlay, False)
     assert len(fig["data"]) == 1
@@ -169,8 +169,8 @@ def test_get_box_plot_gene_expression_not_normalized(gene_query_srav3h, log_valu
         (False, False),
     ],
 )
-def test_get_histogram_geq(gene_query_srav3h, log_count_values, log_y):
-    df = gene_query_srav3h.get_results()
+def test_get_histogram_geq(gene_query_srav3h_tardbp_with_edf1, log_count_values, log_y):
+    df = gene_query_srav3h_tardbp_with_edf1.get_results()
     df_with_index = df.reset_index()
     fig = graphs.get_histogram_geq(df_with_index, log_count_values, log_y)
     assert len(fig["data"]) == 1
