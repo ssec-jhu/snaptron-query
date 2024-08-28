@@ -85,6 +85,21 @@ class GEXQuery:
         return pd.DataFrame(self.results_list_of_dict).set_index("rail_id")
 
 
+@pytest.fixture
+def monkeypatch_meta_data(monkeypatch):
+    """ "
+    path to the metadata files has been mocked here to read the sample metadata file
+    """
+    meta_dir = Path(__file__).parent / "data/"
+    from snaptron_query.app import paths
+
+    monkeypatch.setattr(paths, "meta_data_directory", meta_dir)
+    monkeypatch.setattr(paths, "srav3h_meta", path_srav3h_meta)
+    monkeypatch.setattr(paths, "gtexv2_meta", path_gtexv2_meta)
+    monkeypatch.setattr(paths, "tcgav2_meta", path_tcgav2_meta)
+    monkeypatch.setattr(paths, "srav1m_meta", path_srav1m_meta)
+
+
 @pytest.fixture(scope="session")
 def df_sample_junctions_from_srav3h():
     return pd.read_csv(path_sample_junction_data_srav3h, sep="\t")
