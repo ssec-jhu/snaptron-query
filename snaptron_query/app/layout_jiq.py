@@ -355,7 +355,7 @@ def get_accordian_form_jiq():
                 [
                     dbc.Modal(
                         [
-                            dbc.ModalHeader(dbc.ModalTitle("Put text here or keep empty???")),
+                            dbc.ModalHeader(dbc.ModalTitle("")),
                             dbc.ModalBody(html.Img(src="assets/junction_query.png", style={"width": "100%"})),
                         ],
                         id="id-jiq-image-modal",
