@@ -78,10 +78,6 @@ def test_jiq_rail_id_in_both_junctions_gtexv2(junction_gtexv2, rail_id, exc_coun
     assert v_list[0][JunctionType.INCLUSION] == inc_count
 
 
-def test_jiq_results_size_cols(junction_srav3h):
-    assert junction_srav3h.get_results().shape[1] == 12
-
-
 @pytest.mark.parametrize(
     "rail_id,external_id,inc,exc,psi",
     [

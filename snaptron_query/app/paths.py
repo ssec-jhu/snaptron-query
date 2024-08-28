@@ -18,4 +18,4 @@ filename_srav1m = "srav1m_samples.tsv"
 srav3h_meta = meta_data_directory / filename_srav3h
 gtexv2_meta = meta_data_directory / filename_gtexv2
 tcgav2_meta = meta_data_directory / filename_tcgav2
-srav1m_meta = meta_data_directory / filename_srav3h
+srav1m_meta = meta_data_directory / filename_srav1m
