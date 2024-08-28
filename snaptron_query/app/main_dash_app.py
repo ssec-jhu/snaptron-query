@@ -652,6 +652,28 @@ def on_lock_switch_geq(lock):
     return callback.on_lock_switch(lock)
 
 
+@app.callback(
+    Output("id-jiq-image-modal", "is_open"),
+    Input("id-jiq-image", "n_clicks"),  # call-back trigger is the image click
+    State("id-jiq-image-modal", "is_open"),
+)
+def on_image_click_jiq(n_clicks, is_open):
+    if n_clicks:  # If there is a click
+        return not is_open  # Toggle the open state
+    return is_open  # If no click, return current state
+
+
+@app.callback(
+    Output("id-geq-image-modal", "is_open"),
+    Input("id-geq-image", "n_clicks"),  # call-back trigger is the image click
+    State("id-geq-image-modal", "is_open"),
+)
+def on_image_click_geq(n_clicks, is_open):
+    if n_clicks:  # If there is a click
+        return not is_open  # Toggle the open state
+    return is_open  # If no click, return current state
+
+
 # Run the app
 if __name__ == "__main__":
     app.run()

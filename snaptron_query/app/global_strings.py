@@ -63,6 +63,8 @@ help_normalization = (
     'the "study" is each tissue. For TCGA the "study" is each cancer type.'
 )
 
+image_title_gex = "Genes with Low mRNA Expression Variation"
+
 """""" """""" """""" """""" """""" """""" """""" """""" """""" """""" """
             ERROR MESSAGES
 """ """""" """""" """""" """""" """""" """""" """""" """""" """""" """"""

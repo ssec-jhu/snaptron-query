@@ -353,18 +353,33 @@ def get_accordian_form_jiq():
         [
             dbc.AccordionItem(
                 [
+                    dbc.Modal(
+                        [
+                            dbc.ModalHeader(dbc.ModalTitle("")),
+                            dbc.ModalBody(html.Img(src="assets/junction_query.png", style={"width": "100%"})),
+                        ],
+                        id="id-jiq-image-modal",
+                        centered=True,
+                        size="xl",  # size= false is default
+                        is_open=False,
+                    ),
                     dbc.Row(
                         [
                             dbc.Col([html.Div(get_form_jiq())], width=8),
                             dbc.Col(
                                 [
-                                    html.Img(src="assets/junction_query.png", width="100%")
+                                    html.Img(
+                                        id="id-jiq-image",
+                                        src="assets/junction_query.png",
+                                        width="100%",
+                                        style={"cursor": "pointer"},
+                                    ),
                                 ],  # this will force align the height to the column next to it
                                 style=styles.border_column,
                             ),
                         ],
                         justify="start",
-                    )
+                    ),
                 ],
                 title=gs.jiq_form_title,
             )
