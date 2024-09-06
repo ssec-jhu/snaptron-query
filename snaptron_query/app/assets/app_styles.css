@@ -59,3 +59,12 @@
     justify-content: center;
     height: 120px !important;
 }
+
+.del-button {
+    color: var(--bs-secondary) !important;
+}
+
+.del-button:hover {
+    color: var(--bs-secondary) !important;
+    background-color: var(--bs-secondary-bg-subtle)
+}

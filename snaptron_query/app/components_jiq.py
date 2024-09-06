@@ -15,7 +15,6 @@ def get_button_add_junction():
             id=button_id,
             n_clicks=0,
             children=[icons.add_box, gs.jiq_button_add_junction],
-            # TODO: confirm with PI of the removal of the green link to make it actually look like a button
             color="link",
             # outline=True,
             style={"color": "var(--bs-primary)"},
@@ -23,6 +22,36 @@ def get_button_add_junction():
             size="sm",
         ),
         components.get_tooltip(button_id, gs.jiq_help_add_junction, "right"),
+    ]
+
+
+def get_button_delete_junction(index):
+    """Wrapper function to retrieve the multi junction component"""
+    # search here for icon: https://icon-sets.iconify.design/
+    button_id = f"id-button-jiq-delete-junctions-{index}"
+    return [
+        dbc.Button(
+            id=button_id,
+            n_clicks=0,
+            children=[icons.del_box, gs.jiq_button_delete_junction],
+            color="link",
+            # since this button is a dynamic component that is added to the layout,
+            # the display changes override the style={"color": "var(--bs-secondary)"} properties,
+            # but defining it as a class in assets seems to do the trick.
+            class_name="del-button",
+            size="sm",
+        ),
+        dbc.Tooltip(
+            id=f"{button_id}-tip",
+            children=gs.jiq_help_delete_junction,
+            is_open=False,
+            target=button_id,
+            placement="right",
+            # some style is overriding the tooltip and making the strings all caps
+            # overriding the text transform here
+            # the tooltips for the delete button also need to be set to a none display
+            style={"text-transform": "none", "display": "none"},
+        ),
     ]
 
 
