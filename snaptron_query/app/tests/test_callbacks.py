@@ -94,20 +94,46 @@ def test_enable_coordinate_inputs(monkeypatch_meta_data, use_coordinates, index,
 
 
 @pytest.mark.parametrize(
-    "junction_counts,",
-    [1, 2, 3, 4],
+    "junction_counts,index,value",
+    [
+        (0, 0, "none"),
+        (0, 1, "none"),
+        (0, 2, "none"),
+        (0, 3, "none"),
+        (0, 4, "none"),
+        (0, 5, "none"),
+        (0, 6, "none"),
+        (0, 7, "none"),
+        (0, 8, "none"),
+        (0, 9, "none"),
+        (0, 10, "none"),
+        (0, 11, "none"),
+        (1, 0, "flex"),
+        (1, 4, "flex"),
+        (1, 8, "block"),
+        (2, 1, "flex"),
+        (2, 5, "flex"),
+        (2, 9, "block"),
+        (3, 2, "flex"),
+        (3, 6, "flex"),
+        (3, 10, "block"),
+        (4, 3, "flex"),
+        (4, 7, "flex"),
+        (4, 11, "block"),
+    ],
 )
-def test_update_junction_inputs(monkeypatch_meta_data, junction_counts):
+def test_update_junction_inputs(monkeypatch_meta_data, junction_counts, index, value):
     from snaptron_query.app.main_dash_app import update_junction_inputs
 
-    assert update_junction_inputs(1, junction_counts)[junction_counts - 1]["display"] == "flex"
+    ret = update_junction_inputs(1, junction_counts, {}, {}, {}, {})
+    assert ret[index]["display"] == value
 
 
 def test_update_junction_inputs_exception(monkeypatch_meta_data):
     from snaptron_query.app.main_dash_app import update_junction_inputs
 
     with pytest.raises(PreventUpdate):
-        update_junction_inputs(1, 5)
+        update_junction_inputs(1, 5, {}, {}, {}, {})
 
 
 @pytest.mark.parametrize(
