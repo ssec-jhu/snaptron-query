@@ -61,6 +61,7 @@ def get_form_jiq():
         html.Div(
             id="id-jiq-input-container",
             children=[
+                # Junction 0 - default junction
                 dbc.Row(
                     [
                         dbc.Col(
@@ -90,6 +91,7 @@ def get_form_jiq():
                     className="g-1 form-control-sm",
                     justify="start",
                 ),
+                # Junction 1
                 dbc.Row(
                     [
                         dbc.Col(
@@ -108,12 +110,19 @@ def get_form_jiq():
                             align="center",
                             style=styles.border_column,
                         ),
+                        dbc.Col(
+                            components_jiq.get_button_delete_junction(1),  # fit column to text
+                            width=2,
+                            className="col-md-auto",
+                            align="center",
+                        ),
                     ],
                     className="g-1 form-control-sm",
                     justify="start",
                     id="id-row-input-jiq-1",
                     style={"display": "none"},
                 ),
+                # Junction 2
                 dbc.Row(
                     [
                         dbc.Col(
@@ -132,12 +141,19 @@ def get_form_jiq():
                             align="center",
                             style=styles.border_column,
                         ),
+                        dbc.Col(
+                            components_jiq.get_button_delete_junction(2),  # fit column to text
+                            width=2,
+                            className="col-md-auto",
+                            align="center",
+                        ),
                     ],
                     className="g-1 form-control-sm",
                     justify="start",
                     id="id-row-input-jiq-2",
                     style={"display": "none"},
                 ),
+                # Junction 3
                 dbc.Row(
                     [
                         dbc.Col(
@@ -156,12 +172,19 @@ def get_form_jiq():
                             align="center",
                             style=styles.border_column,
                         ),
+                        dbc.Col(
+                            components_jiq.get_button_delete_junction(3),  # fit column to text
+                            width=2,
+                            className="col-md-auto",
+                            align="center",
+                        ),
                     ],
                     className="g-1 form-control-sm",
                     justify="start",
                     id="id-row-input-jiq-3",
                     style={"display": "none"},
                 ),
+                # Junciton 4
                 dbc.Row(
                     [
                         dbc.Col(
@@ -179,6 +202,12 @@ def get_form_jiq():
                             width=4,
                             align="center",
                             style=styles.border_column,
+                        ),
+                        dbc.Col(
+                            components_jiq.get_button_delete_junction(4),  # fit column to text
+                            width=2,
+                            className="col-md-auto",
+                            align="center",
                         ),
                     ],
                     className="g-1 form-control-sm",
