@@ -102,6 +102,7 @@ box_plot_points_tip = (
 jiq_form_title = "Junction Information"
 button_download = "Download"
 jiq_button_add_junction = " Add Junction"
+jiq_button_delete_junction = " Del Junction"
 jiq_button_run = "Calculate PSI"
 jiq_input_inc_placeholder = "chr19:4491836-4492014"
 jiq_input_inc_txt = "Inclusion Junction"
@@ -114,6 +115,8 @@ jiq_psi_plot_axes = "PSI"
 jiq_log_psi = f"Log\u2082(psi+{log_epsilon})"
 jiq_help_table = " Table initially loads with PSI\u22655 and Total\u226515."
 jiq_help_add_junction = "Add more inclusion or exclusion junctions (up to 5) to the PSI query"
+jiq_help_delete_junction = "Remove junction from the PSI query"
+
 """""" """""" """""" """""" """""" """""" """""" """""" """""" """""" """
             Gene Expression Query 
 """ """""" """""" """""" """""" """""" """""" """""" """""" """""" """"""
