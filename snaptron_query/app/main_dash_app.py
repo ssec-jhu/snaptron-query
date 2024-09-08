@@ -307,30 +307,122 @@ def on_add_junction_click(n_clicks, junction_counts):
 
 
 @app.callback(
-    Output("id-row-input-jiq-1", "style"),
-    Output("id-row-input-jiq-2", "style"),
-    Output("id-row-input-jiq-3", "style"),
-    Output("id-row-input-jiq-4", "style"),
+    Output("id-store-jiq-junctions", "data", allow_duplicate=True),
+    # one of these buttons will be displayed at any given time
+    [Input(f"id-button-jiq-delete-junctions-{i}", "n_clicks") for i in range(1, 5)],
+    State("id-store-jiq-junctions", "data"),
+    prevent_initial_call=True,
+    # Don't prevent initial call back as this sets the junction count value
+)
+def on_delete_junction_click(n_clicks_1, n_clicks_2, n_clicks_3, n_clicks_4, junction_counts):
+    if junction_counts is None:  # first call
+        return 0
+
+    if junction_counts == 0:
+        return PreventUpdate
+    else:
+        return junction_counts - 1
+
+
+@app.callback(
+    # the rows containing the form items
+    [Output(f"id-row-input-jiq-{i}", "style") for i in range(1, 5)],
+    # the del button and it's tooltips that shows up dynamically in the last row
+    [Output(f"id-button-jiq-delete-junctions-{i}", "style") for i in range(1, 5)],
+    [Output(f"id-button-jiq-delete-junctions-{i}-tip", "style") for i in range(1, 5)],
     Input("id-button-jiq-add-more-junctions", "n_clicks"),
     Input("id-store-jiq-junctions", "data"),
+    [Input(f"id-button-jiq-delete-junctions-{i}-tip", "style") for i in range(1, 5)],
     prevent_initial_call=True,
 )
-def update_junction_inputs(n_clicks, junction_counts):
+def update_junction_inputs(n_clicks, junction_counts, tip_1, tip_2, tip_3, tip_4):
     # changing row style for visibility throws off the whole layout
     # https://community.plotly.com/t/setting-style-causes-layout-issue/60403
     # need to ensure I put back the original 'flex' not just a 'block' display
-    if junction_counts == 1:
-        style_1 = {"display": "flex"}
-        return style_1, no_update, no_update, no_update
+    if junction_counts == 0:
+        tip_1["display"] = tip_2["display"] = tip_3["display"] = tip_4["display"] = "none"
+        return (
+            styles.display_none,
+            styles.display_none,
+            styles.display_none,
+            styles.display_none,
+            styles.display_none,
+            styles.display_none,
+            styles.display_none,
+            styles.display_none,
+            tip_1,
+            tip_2,
+            tip_3,
+            tip_4,
+        )
+    elif junction_counts == 1:
+        tip_1["display"] = "block"
+        tip_2["display"] = tip_3["display"] = tip_4["display"] = "none"
+        return (
+            styles.display_flex,
+            styles.display_none,
+            styles.display_none,
+            styles.display_none,
+            styles.display_flex,
+            styles.display_none,
+            styles.display_none,
+            styles.display_none,
+            tip_1,
+            tip_2,
+            tip_3,
+            tip_4,
+        )
     elif junction_counts == 2:
-        style_2 = {"display": "flex"}
-        return no_update, style_2, no_update, no_update
+        tip_2["display"] = "block"
+        tip_1["display"] = tip_3["display"] = tip_4["display"] = "none"
+        return (
+            styles.display_flex,
+            styles.display_flex,
+            styles.display_none,
+            styles.display_none,
+            styles.display_none,
+            styles.display_flex,
+            styles.display_none,
+            styles.display_none,
+            tip_1,
+            tip_2,
+            tip_3,
+            tip_4,
+        )
     elif junction_counts == 3:
-        style_3 = {"display": "flex"}
-        return no_update, no_update, style_3, no_update
+        tip_3["display"] = "block"
+        tip_1["display"] = tip_2["display"] = tip_4["display"] = "none"
+        return (
+            styles.display_flex,
+            styles.display_flex,
+            styles.display_flex,
+            styles.display_none,
+            styles.display_none,
+            styles.display_none,
+            styles.display_flex,
+            styles.display_none,
+            tip_1,
+            tip_2,
+            tip_3,
+            tip_4,
+        )
     elif junction_counts == 4:
-        style_4 = {"display": "flex"}
-        return no_update, no_update, no_update, style_4
+        tip_4["display"] = "block"
+        tip_1["display"] = tip_2["display"] = tip_3["display"] = "none"
+        return (
+            styles.display_flex,
+            styles.display_flex,
+            styles.display_flex,
+            styles.display_flex,
+            styles.display_none,
+            styles.display_none,
+            styles.display_none,
+            styles.display_flex,
+            tip_1,
+            tip_2,
+            tip_3,
+            tip_4,
+        )
     else:
         raise PreventUpdate
 
