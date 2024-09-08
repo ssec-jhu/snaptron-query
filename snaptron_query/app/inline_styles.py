@@ -16,3 +16,4 @@ section = {"box-shadow": "1px 2px 7px 0px grey", "border-radius": "10px"}
 section_vis = {"visibility": "hidden", "height": "70px"}
 display_block = {"display": "block"}
 display_none = {"display": "none"}
+display_flex = {"display": "flex"}
