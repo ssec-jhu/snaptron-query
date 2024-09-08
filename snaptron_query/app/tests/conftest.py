@@ -39,21 +39,23 @@ class JunctionQuery:
 
 
 class MultiJunctionQuery:
-    def __init__(self, junction_list, meta_data_dict, df_from_snaptron_map):
+    def __init__(
+        self, junction_list, meta_data_dict, df_from_snaptron_map, data_return_type=jiq.JiqReturnType.INDEXED_PD
+    ):
         # find the exclusion and inclusion junction rows
         self.query_mgr = jiq.JunctionInclusionQueryManager()
-        self.df_jiq_results = self.query_mgr.run_junction_inclusion_query(
+        self.jiq_results = self.query_mgr.run_junction_inclusion_query(
             meta_data_dict=meta_data_dict,
             df_snpt_results_dict=df_from_snaptron_map,
             junctions_list=junction_list,
-            return_type=jiq.JiqReturnType.INDEXED_PD,
+            return_type=data_return_type,
         )
 
     def get_rail_id_dict(self):
         return self.query_mgr.get_rail_id_dictionary()
 
     def get_results(self):
-        return self.df_jiq_results
+        return self.jiq_results
 
 
 class GEXQuery:
@@ -223,6 +225,28 @@ def multi_junction_srav3h(df_sample_junctions_from_srav3h, meta_data_dict_srav3h
         junction_list=[junction_0, junction_1],
         meta_data_dict=meta_data_dict_srav3h,
         df_from_snaptron_map={junction_0.exc_coordinates: df_sample_junctions_from_srav3h},
+    )
+
+
+@pytest.fixture(scope="session")
+def multi_junction_srav3h_raw_results(df_sample_junctions_from_srav3h, meta_data_dict_srav3h):
+    # this test fixture is similar to multi_junction_srav3h fixture but the fixture
+    # requests a different return type from the query
+
+    # same exclusion junction in this example
+    exc_junction = sc.JunctionCoordinates(19, 4491836, 4493702)
+    junction_0 = sc.SpliceJunctionPair(
+        exc_coordinates=exc_junction, inc_coordinates=sc.JunctionCoordinates(19, 4491836, 4492014)
+    )
+    junction_1 = sc.SpliceJunctionPair(
+        exc_coordinates=exc_junction, inc_coordinates=sc.JunctionCoordinates(19, 4492153, 4493702)
+    )
+
+    return MultiJunctionQuery(
+        junction_list=[junction_0, junction_1],
+        meta_data_dict=meta_data_dict_srav3h,
+        df_from_snaptron_map={junction_0.exc_coordinates: df_sample_junctions_from_srav3h},
+        data_return_type=jiq.JiqReturnType.RAW,
     )
 
 
