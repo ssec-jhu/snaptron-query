@@ -54,12 +54,17 @@ def run_query(
     filter_model = cd.get_jiq_table_filter_model(len(junction_lists))
 
     # Gather figure related items
-    # TODO: these numbers must be combined with the filter model function
     df = pd.DataFrame(row_data)
     if len(junction_lists) == 1:
-        df = df[(df[gs.table_jiq_col_psi] >= 5) & (df[gs.table_jiq_col_total] >= 15)]
+        df = df[
+            (df[gs.table_jiq_col_psi] >= gs.const_filter_psi) & (df[gs.table_jiq_col_total] >= gs.const_filter_total)
+        ]
     else:
-        df = df[df[gs.table_jiq_col_avg_psi] >= 5]
+        # we need to filter all the psi_i and total_i for all the junctions
+        for i in range(1, len(junction_lists) + 1):
+            psi_col = f"{gs.table_jiq_col_psi}_{i}"
+            total_col = f"{gs.table_jiq_col_total}_{i}"
+            df = df[(df[psi_col] >= gs.const_filter_psi) & (df[total_col] >= gs.const_filter_total)]
 
     # count how many psi columns we have
     list_of_calculated_junctions = [col for col in df.columns if col.startswith(gs.table_jiq_col_psi)]

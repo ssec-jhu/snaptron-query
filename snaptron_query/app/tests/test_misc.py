@@ -99,9 +99,10 @@ def test_get_gene_expression_query_column_def(compilation, normalized, index):
 @pytest.mark.parametrize(
     "junction_count, column, r",
     [
-        (1, gs.table_jiq_col_total, 15),
-        (1, gs.table_jiq_col_psi, 5),
-        (3, gs.table_jiq_col_avg_psi, 5),
+        (1, gs.table_jiq_col_total, gs.const_filter_total),
+        (1, gs.table_jiq_col_psi, gs.const_filter_psi),
+        (2, f"{gs.table_jiq_col_total}_1", gs.const_filter_total),
+        (2, f"{gs.table_jiq_col_psi}_1", gs.const_filter_psi),
     ],
 )
 def test_get_jiq_table_filter_model(junction_count, column, r):

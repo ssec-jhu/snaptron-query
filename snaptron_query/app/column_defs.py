@@ -236,6 +236,16 @@ def get_col_multi_jiq(junctions_count):
             },
         },
         {
+            "field": gs.table_jiq_col_total,
+            "headerName": "Total",
+            "filter": "agNumberColumnFilter",
+            "width": 120,
+            "filterParams": {
+                "buttons": ["reset", "apply"],
+                "closeOnApply": True,
+            },
+        },
+        {
             "field": gs.table_jiq_col_log_2,
             "headerName": gs.jiq_log_psi,
             "filter": "agNumberColumnFilter",
@@ -360,16 +370,20 @@ def get_gene_expression_query_column_def(compilation, normalized=False):
 
 
 def get_jiq_table_filter_model(junction_count):
-    # for single junction queries we also show total count in the tables
-    if junction_count == 1:
-        # filter psi and total_count
-        filter_model = {
-            gs.table_jiq_col_total: {"filterType": "number", "type": "greaterThanOrEqual", "filter": 15},
-            gs.table_jiq_col_psi: {"filterType": "number", "type": "greaterThanOrEqual", "filter": 5},
-        }
-    else:
-        # filter average psi
-        filter_model = {gs.table_jiq_col_avg_psi: {"filterType": "number", "type": "greaterThanOrEqual", "filter": 5}}
+    # filter psi and total_count
+    filter_model = {
+        gs.table_jiq_col_total: {"filterType": "number", "type": "greaterThanOrEqual", "filter": gs.const_filter_total},
+        gs.table_jiq_col_psi: {"filterType": "number", "type": "greaterThanOrEqual", "filter": gs.const_filter_psi},
+    }
+
+    if junction_count > 1:
+        # add junction indices on the filter keys
+        indexed_filter_model = {}
+        for i in range(1, junction_count + 1):
+            for key, value in filter_model.items():
+                new_key = f"{key}_{i}"
+                indexed_filter_model[new_key] = value
+        filter_model = indexed_filter_model
 
     return filter_model
 

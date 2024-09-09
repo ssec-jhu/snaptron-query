@@ -111,7 +111,7 @@ class JunctionInclusionQueryManager:
         # accumulate the psi sum values
         self.rail_id_dictionary[rail_id]["psi_sum"] += psi
 
-    def _gather_rail_id_meta_data(self, rail_id, meta_data_dict, junction_index):
+    def _gather_rail_id_data(self, rail_id, meta_data_dict, junction_index):
         """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
         rail ids
         """
@@ -217,7 +217,7 @@ class JunctionInclusionQueryManager:
         # this will populate self.gathered_rail_id_meta_data_and_psi
         for junction_index in range(0, len(junctions_list)):
             for rail_id in self.rail_id_dictionary:
-                self._gather_rail_id_meta_data(rail_id, meta_data_dict, junction_index)
+                self._gather_rail_id_data(rail_id, meta_data_dict, junction_index)
 
         query_results = {}
         if return_type == JiqReturnType.RAW:

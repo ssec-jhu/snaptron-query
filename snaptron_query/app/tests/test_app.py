@@ -24,7 +24,7 @@ def test_get_element_id_and_value_error(sample_ui_children_with_error):
 
 @pytest.mark.parametrize("junction_count", [1, 2, 3, 4])
 def test_get_col_multi_jiq(junction_count):
-    assert len(column_defs.get_col_multi_jiq(junction_count)) == 2 * junction_count + 1
+    assert len(column_defs.get_col_multi_jiq(junction_count)) == 3 * junction_count + 1
 
 
 def test_get_col_jiq():
