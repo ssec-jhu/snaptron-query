@@ -10,6 +10,9 @@ from dash._utils import AttributeDict
 
 import snaptron_query.app.global_strings as gs
 
+TARDBP_coordinates = "Chromosome 1: 11,012,344-11,030,528"
+EDF_coordinates = "Chromosome 9: 136,862,119-136,866,308"
+
 
 @pytest.fixture()
 def mock_get_snpt_query_results_df_geq(mocker, gex_data_srav3h_TARDBP, gex_data_srav3h_EDF1):
@@ -26,11 +29,7 @@ def mock_get_snpt_query_results_df_geq(mocker, gex_data_srav3h_TARDBP, gex_data_
             return pd.DataFrame()
         elif kwargs == {"compilation": "SRAv3h", "query_mode": "genes", "region": "chr1:11012344-11030528"}:
             return gex_data_srav3h_TARDBP
-        elif kwargs == {
-            "compilation": "SRAv3h",
-            "query_mode": "genes",
-            "region": "Chromosome 9: 136,862,119-136,866,308",
-        }:
+        elif kwargs == {"compilation": "SRAv3h", "query_mode": "genes", "region": EDF_coordinates}:
             return gex_data_srav3h_EDF1
         else:
             return Exception("exception occurred inn args_based_return")
@@ -45,17 +44,12 @@ def mock_get_snpt_query_results_df_geq(mocker, gex_data_srav3h_TARDBP, gex_data_
 @pytest.mark.parametrize(
     "compilation,use_coordinates,query_gene_id,query_gene_coordinates,normalize_data,norm_gene_id,norm_gene_coordinates",
     [
-        (gs.compilation_srav3h, False, "TARDBP", None, True, "EDF1", None),  # classic
-        (gs.compilation_srav3h, False, "TARDBP", None, False, "EDF1", None),  # don't normalize
-        (
-            gs.compilation_srav3h,
-            True,
-            "TARDBP",
-            "Chromosome 1: 11,012,344-11,030,528",
-            True,
-            "EDF1",
-            "Chromosome 9: 136,862,119-136,866,308",
-        ),  # correct
+        # classic
+        (gs.compilation_srav3h, False, "TARDBP", None, True, "EDF1", None),
+        # don't normalize
+        (gs.compilation_srav3h, False, "TARDBP", None, False, "EDF1", None),
+        # use coordinates
+        (gs.compilation_srav3h, True, "TARDBP", TARDBP_coordinates, True, "EDF1", EDF_coordinates),
     ],
 )
 def test_mock_on_button_click_geq_run(
@@ -133,9 +127,9 @@ def test_mock_on_button_click_geq_run_callback_with_incorrect_trigger(
         # normalization gene not found
         (gs.compilation_srav3h, False, "TARDBP", None, True, "EDF1-X", None),
         # use coordinates but missing query coordinates
-        (gs.compilation_srav3h, True, "TARDBP", None, True, "EDF1", "Chromosome 9: 136,862,119-136,866,308"),
+        (gs.compilation_srav3h, True, "TARDBP", None, True, "EDF1", EDF_coordinates),
         # use coordinates but missing norm coordinates
-        (gs.compilation_srav3h, True, "TARDBP", "Chromosome 1: 11,012,344-11,030,528", True, "EDF1", None),
+        (gs.compilation_srav3h, True, "TARDBP", TARDBP_coordinates, True, "EDF1", None),
         # normalize gene but user did not provide norm gene
         (gs.compilation_srav3h, False, "TARDBP-X", None, True, None, None),
     ],
