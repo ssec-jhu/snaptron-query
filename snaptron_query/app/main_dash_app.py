@@ -319,7 +319,7 @@ def on_delete_junction_click(n_clicks_1, n_clicks_2, n_clicks_3, n_clicks_4, jun
         return 0
 
     if junction_counts == 0:
-        return PreventUpdate
+        raise PreventUpdate
     else:
         return junction_counts - 1
 
