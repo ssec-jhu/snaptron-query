@@ -84,6 +84,7 @@ suggestion = (
 )
 query_gene_not_found = "Query gene returned empty results." + suggestion
 normalization_gene_not_found = "Normalization gene was not found." + suggestion
+matching_query_and_norm_gen = "Normalization gene name or coordinates is the same as the query gene. Try changing one."
 httpx_remote_protocol_error = "Snaptron could not identify the Gene." + suggestion
 httpx_connect_error = "Failed to establish a connection with Snaptron Web API!"
 

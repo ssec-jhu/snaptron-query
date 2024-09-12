@@ -44,6 +44,15 @@ def run_query(
 
     code_timer = timer.Timer("GEQ:run_query")
 
+    # test if we are normalizing by the same gene
+    if normalize_data:
+        if (
+            use_coordinates
+            and (sc.geq_verify_coordinate(norm_gene_coordinates) == sc.geq_verify_coordinate(query_gene_coordinates))
+        ) or str(query_gene_id).lower() == str(norm_gene_id).lower():
+            # you can't normalize by the same gene
+            raise exceptions.MatchingQueryAndNormGene
+
     # Verify the gene coordinates string, we don't need the return values for this query
     df_snpt_results_query = sc.get_snpt_query_results_df(
         compilation=compilation,

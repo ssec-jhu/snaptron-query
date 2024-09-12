@@ -58,6 +58,12 @@ class NormalizationGeneNotFound(Exception):
     pass
 
 
+class MatchingQueryAndNormGene(Exception):
+    """Raised when the gene names or coordinates match"""
+
+    pass
+
+
 def alert_message_from_exception(exception):
     e = type(exception)
     if e == BadURL:
@@ -76,6 +82,8 @@ def alert_message_from_exception(exception):
         alert_message = gs.query_gene_not_found
     elif e == NormalizationGeneNotFound:
         alert_message = gs.normalization_gene_not_found
+    elif e == MatchingQueryAndNormGene:
+        alert_message = gs.matching_query_and_norm_gen
     elif e == httpx.RemoteProtocolError:
         alert_message = gs.httpx_remote_protocol_error
     elif e == httpx.ConnectError or e == httpx.ConnectTimeout:

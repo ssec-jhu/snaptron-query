@@ -132,6 +132,12 @@ def test_mock_on_button_click_geq_run_callback_with_incorrect_trigger(
         (gs.compilation_srav3h, True, "TARDBP", TARDBP_coordinates, True, "EDF1", None),
         # normalize gene but user did not provide norm gene
         (gs.compilation_srav3h, False, "TARDBP-X", None, True, None, None),
+        # normalize gene but gene name matches the query's
+        (gs.compilation_srav3h, False, "tarDbp", None, True, "tArdbp", None),
+        # normalize gene using gene coordinates: gene names match
+        (gs.compilation_srav3h, True, "tarDbp", TARDBP_coordinates, True, "tArdbp", EDF_coordinates),
+        # normalize gene using gene coordinates: gene coordinates match
+        (gs.compilation_srav3h, True, "TARDBP", TARDBP_coordinates, True, "EDF1", TARDBP_coordinates),
     ],
 )
 def test_mock_on_button_click_geq_run_raises_alerts(
