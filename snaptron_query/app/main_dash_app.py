@@ -339,90 +339,27 @@ def update_junction_inputs(n_clicks, junction_counts, tip_1, tip_2, tip_3, tip_4
     # changing row style for visibility throws off the whole layout
     # https://community.plotly.com/t/setting-style-causes-layout-issue/60403
     # need to ensure I put back the original 'flex' not just a 'block' display
-    if junction_counts == 0:
-        tip_1["display"] = tip_2["display"] = tip_3["display"] = tip_4["display"] = "none"
-        return (
-            styles.display_none,
-            styles.display_none,
-            styles.display_none,
-            styles.display_none,
-            styles.display_none,
-            styles.display_none,
-            styles.display_none,
-            styles.display_none,
-            tip_1,
-            tip_2,
-            tip_3,
-            tip_4,
-        )
-    elif junction_counts == 1:
-        tip_1["display"] = "block"
-        tip_2["display"] = tip_3["display"] = tip_4["display"] = "none"
-        return (
-            styles.display_flex,
-            styles.display_none,
-            styles.display_none,
-            styles.display_none,
-            styles.display_flex,
-            styles.display_none,
-            styles.display_none,
-            styles.display_none,
-            tip_1,
-            tip_2,
-            tip_3,
-            tip_4,
-        )
-    elif junction_counts == 2:
-        tip_2["display"] = "block"
-        tip_1["display"] = tip_3["display"] = tip_4["display"] = "none"
-        return (
-            styles.display_flex,
-            styles.display_flex,
-            styles.display_none,
-            styles.display_none,
-            styles.display_none,
-            styles.display_flex,
-            styles.display_none,
-            styles.display_none,
-            tip_1,
-            tip_2,
-            tip_3,
-            tip_4,
-        )
-    elif junction_counts == 3:
-        tip_3["display"] = "block"
-        tip_1["display"] = tip_2["display"] = tip_4["display"] = "none"
-        return (
-            styles.display_flex,
-            styles.display_flex,
-            styles.display_flex,
-            styles.display_none,
-            styles.display_none,
-            styles.display_none,
-            styles.display_flex,
-            styles.display_none,
-            tip_1,
-            tip_2,
-            tip_3,
-            tip_4,
-        )
-    elif junction_counts == 4:
-        tip_4["display"] = "block"
-        tip_1["display"] = tip_2["display"] = tip_3["display"] = "none"
-        return (
-            styles.display_flex,
-            styles.display_flex,
-            styles.display_flex,
-            styles.display_flex,
-            styles.display_none,
-            styles.display_none,
-            styles.display_none,
-            styles.display_flex,
-            tip_1,
-            tip_2,
-            tip_3,
-            tip_4,
-        )
+
+    if junction_counts < 5:
+        # display all rows through the number of junctions
+        junction_row = {i: styles.display_none for i in range(1, 5)}
+        for i in range(1, junction_counts + 1):
+            junction_row[i] = styles.display_flex
+
+        # the delete button should only show up on the last row with its tip
+        # tips have text transform info, don't override the whole thing
+        del_buttons = {i: styles.display_none for i in range(1, 5)}
+        tips = {1: tip_1, 2: tip_2, 3: tip_3, 4: tip_4}
+        for tip_ in tips.values():
+            tip_["display"] = "none"
+
+        if junction_counts != 0:
+            del_buttons[junction_counts] = styles.display_flex
+            tips[junction_counts]["display"] = "block"
+
+        result = (tuple(junction_row.values())) + tuple(del_buttons.values()) + tuple(tips.values())
+        return result
+
     else:
         raise PreventUpdate
 
@@ -768,4 +705,4 @@ def on_image_click_geq(n_clicks, is_open):
 
 # Run the app
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
