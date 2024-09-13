@@ -257,6 +257,33 @@ def test_get_button_add_junction():
     assert isinstance(components_jiq.get_button_add_junction()[1], dbc.Tooltip)
 
 
+@pytest.mark.parametrize(
+    "junction",
+    [
+        (1, 2, 3, 4),
+    ],
+)
+def test_get_button_delete_junction(junction):
+    assert len(components_jiq.get_button_delete_junction(junction)) == 2
+
+
+@pytest.mark.parametrize(
+    "junction, index, instance",
+    [
+        (1, 0, dbc.Button),
+        (1, 1, dbc.Tooltip),
+        (2, 0, dbc.Button),
+        (2, 1, dbc.Tooltip),
+        (3, 0, dbc.Button),
+        (3, 1, dbc.Tooltip),
+        (4, 0, dbc.Button),
+        (4, 1, dbc.Tooltip),
+    ],
+)
+def test_get_button_delete_junction_2(junction, index, instance):
+    assert isinstance(components_jiq.get_button_delete_junction(junction)[index], instance)
+
+
 def test_get_text_junction():
     assert isinstance(components_jiq.get_text_junction(1), dmc.Text)
 

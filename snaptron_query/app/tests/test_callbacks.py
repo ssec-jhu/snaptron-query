@@ -94,20 +94,88 @@ def test_enable_coordinate_inputs(monkeypatch_meta_data, use_coordinates, index,
 
 
 @pytest.mark.parametrize(
-    "junction_counts,",
-    [1, 2, 3, 4],
+    "junction_counts,index,value",
+    [
+        # one default junction
+        (0, 0, "none"),
+        (0, 1, "none"),
+        (0, 2, "none"),
+        (0, 3, "none"),
+        (0, 4, "none"),
+        (0, 5, "none"),
+        (0, 6, "none"),
+        (0, 7, "none"),
+        (0, 8, "none"),
+        (0, 9, "none"),
+        (0, 10, "none"),
+        (0, 11, "none"),
+        # one junction added
+        (1, 0, "flex"),  # junction rows
+        (1, 1, "none"),
+        (1, 2, "none"),
+        (1, 3, "none"),
+        (1, 4, "flex"),  # del button
+        (1, 5, "none"),
+        (1, 6, "none"),
+        (1, 7, "none"),
+        (1, 8, "block"),  # tip
+        (1, 9, "none"),
+        (1, 3, "none"),
+        (1, 10, "none"),
+        (1, 11, "none"),
+        # two junctions added
+        (2, 0, "flex"),  # junction rows
+        (2, 1, "flex"),
+        (2, 2, "none"),
+        (2, 3, "none"),
+        (2, 4, "none"),  # del button
+        (2, 5, "flex"),
+        (2, 6, "none"),
+        (2, 7, "none"),
+        (2, 8, "none"),
+        (2, 9, "block"),
+        (2, 10, "none"),
+        (2, 11, "none"),
+        # 3 junctions
+        (3, 0, "flex"),  # junction rows
+        (3, 1, "flex"),
+        (3, 2, "flex"),
+        (3, 3, "none"),
+        (3, 4, "none"),  # del button
+        (3, 5, "none"),
+        (3, 6, "flex"),
+        (3, 7, "none"),
+        (3, 8, "none"),
+        (3, 9, "none"),
+        (3, 10, "block"),
+        (3, 11, "none"),
+        # # 4 junctions
+        (4, 0, "flex"),  # junction rows
+        (4, 1, "flex"),
+        (4, 2, "flex"),
+        (4, 3, "flex"),
+        (4, 4, "none"),
+        (4, 5, "none"),  # del button
+        (4, 6, "none"),
+        (4, 7, "flex"),
+        (4, 8, "none"),
+        (4, 9, "none"),
+        (4, 10, "none"),
+        (4, 11, "block"),
+    ],
 )
-def test_update_junction_inputs(monkeypatch_meta_data, junction_counts):
+def test_update_junction_inputs(monkeypatch_meta_data, junction_counts, index, value):
     from snaptron_query.app.main_dash_app import update_junction_inputs
 
-    assert update_junction_inputs(1, junction_counts)[junction_counts - 1]["display"] == "flex"
+    ret = update_junction_inputs(1, junction_counts, {}, {}, {}, {})
+    assert ret[index]["display"] == value
 
 
 def test_update_junction_inputs_exception(monkeypatch_meta_data):
     from snaptron_query.app.main_dash_app import update_junction_inputs
 
     with pytest.raises(PreventUpdate):
-        update_junction_inputs(1, 5)
+        update_junction_inputs(1, 5, {}, {}, {}, {})
 
 
 @pytest.mark.parametrize(
