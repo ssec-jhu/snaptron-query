@@ -116,7 +116,7 @@ jiq_plot_title_hist = "PSI Histogram"
 jiq_plot_title_box = "PSI Box Plot"
 jiq_psi_plot_axes = "PSI"
 jiq_log_psi = f"Log\u2082(psi+{const_log_epsilon})"
-jiq_help_table = f" Table initially loads with PSI\u2265{const_log_epsilon} and Total\u2265{const_filter_total}."
+jiq_help_table = f" Table initially loads with PSI\u2265{const_filter_psi} and Total\u2265{const_filter_total}."
 jiq_help_add_junction = "Add more inclusion or exclusion junctions (up to 5) to the PSI query"
 jiq_help_delete_junction = "Remove junction from the PSI query"
 
