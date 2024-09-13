@@ -63,6 +63,17 @@ def mock_httpx_response_error(mock_httpx_get):
     return mock_response
 
 
+@pytest.fixture
+def mock_df_snpt_results_dict_empty(mocker):
+    """
+    Fixture to mock a response
+    """
+    # empty response
+    mock = mocker.patch("snaptron_query.app.snaptron_client.get_snpt_query_results_df")
+    mock.return_value = pd.DataFrame()  # empty data frame
+    return mock
+
+
 # need to have pytest-mock installed
 def test_get_snpt_query_results_df(mock_httpx_get, mock_httpx_response_data):
     # Set our mock object as the return value of httpx.get
@@ -124,9 +135,19 @@ def test_gather_snpt_query_results_into_dic_exception(mock_httpx_get, mock_httpx
             exc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
             inc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4492014),
         ),
+    ]
+
+    with pytest.raises(exceptions.EmptyResponse):
+        gather_snpt_query_results_into_dict("compilation", junction_list)
+
+
+def test_gather_snpt_query_results_into_dic_exception_2(mock_httpx_get, mock_df_snpt_results_dict_empty):
+    # this exception is raised in the function itself not in get_snpt_query_results_df
+
+    junction_list = [
         SpliceJunctionPair(
             exc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
-            inc_coordinates=JunctionCoordinates(chr="chr19", start=4492153, end=4493702),
+            inc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4492014),
         ),
     ]
 
