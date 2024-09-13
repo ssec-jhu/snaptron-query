@@ -197,6 +197,24 @@ def test_on_add_junction_click_exception(monkeypatch_meta_data):
 
 
 @pytest.mark.parametrize(
+    "junction_counts,result",
+    [(None, 0), (1, 0), (2, 1), (3, 2), (4, 3), (5, 4)],
+)
+def test_on_delete_junction_click(monkeypatch_meta_data, junction_counts, result):
+    from snaptron_query.app.main_dash_app import on_delete_junction_click
+
+    assert on_delete_junction_click(1, 0, 0, 0, junction_counts) == result
+    assert on_delete_junction_click(0, 0, 0, 0, junction_counts) == result
+
+
+def test_on_delete_junction_click_exception(monkeypatch_meta_data):
+    from snaptron_query.app.main_dash_app import on_delete_junction_click
+
+    with pytest.raises(PreventUpdate):
+        on_delete_junction_click(1, 0, 0, 0, 0)
+
+
+@pytest.mark.parametrize(
     "compilation",
     [
         gs.compilation_srav3h,
@@ -219,3 +237,14 @@ def test_get_meta_data_exception(monkeypatch_meta_data):
         from snaptron_query.app.main_dash_app import get_meta_data
 
         get_meta_data("unimportant-string")
+
+
+def test_time_function():
+    from snaptron_query.app import profile_timer
+
+    test_timer = profile_timer.Timer("starting:test_time_function")
+    test_timer.turn_on()
+    test_timer.start()
+    test_timer.split("split here")
+    test_timer.split("split again")
+    test_timer.stop("stopping:test_time_function")
