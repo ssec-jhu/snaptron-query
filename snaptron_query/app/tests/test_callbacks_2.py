@@ -36,9 +36,10 @@ def test_on_button_click_jiq_clear(monkeypatch_meta_data):
 
     ctx = copy_context()
     output = ctx.run(run_callback)
-    assert output[0] == inline_styles.display_none
+    assert output[0] == []
     assert output[1] == inline_styles.display_none
-    assert output[2]
+    assert output[2] == inline_styles.display_none
+    assert output[3]
 
 
 def test_on_button_click_jiq_clear_error(monkeypatch_meta_data):
@@ -72,9 +73,10 @@ def test_on_button_click_geq_clear(monkeypatch_meta_data):
 
     ctx = copy_context()
     output = ctx.run(run_callback)
-    assert output[0] == inline_styles.display_none
+    assert output[0] == []
     assert output[1] == inline_styles.display_none
-    assert output[2]
+    assert output[2] == inline_styles.display_none
+    assert output[3]
 
 
 def test_on_button_click_geq_clear_error(monkeypatch_meta_data):

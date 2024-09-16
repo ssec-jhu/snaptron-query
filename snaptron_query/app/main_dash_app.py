@@ -181,6 +181,7 @@ def on_button_click_jiq_run(
 
 
 @app.callback(
+    Output("id-alert-jiq", "children", allow_duplicate=True),
     Output("id-display-ag-grid-jiq", "style", allow_duplicate=True),
     Output("id-display-graphs-jiq", "style", allow_duplicate=True),
     Output("id-results-cleared-jiq", "data", allow_duplicate=True),
@@ -192,6 +193,7 @@ def on_button_click_jiq_run(
 def on_button_click_jiq_clear(n_clicks, results_are_cleared):
     if ctx.triggered_id == "id-button-jiq-generate-results" and not results_are_cleared:
         return (  # clear everything
+            [],  # clear alert if any
             styles.display_none,  # grid display
             styles.display_none,  # graph display
             True,
@@ -526,6 +528,7 @@ def on_button_click_geq_run(
 
 
 @app.callback(
+    Output("id-alert-geq", "children", allow_duplicate=True),
     Output("id-display-ag-grid-geq", "style", allow_duplicate=True),
     Output("id-display-graphs-geq", "style", allow_duplicate=True),
     Output("id-results-cleared-geq", "data", allow_duplicate=True),
@@ -537,6 +540,7 @@ def on_button_click_geq_run(
 def on_button_click_geq_clear(n_clicks, results_are_cleared):
     if ctx.triggered_id == "id-button-geq-run-query" and not results_are_cleared:
         return (  # clear everything
+            [],  # clear alert if any
             styles.display_none,  # grid display
             styles.display_none,  # graph display
             True,
