@@ -214,7 +214,7 @@ def get_col_multi_jiq(junctions_count):
             "headerName": "avg_PSI",
             "filter": "agNumberColumnFilter",
             "initialSort": "desc",
-            "width": 120,
+            "width": 155,
             "filterParams": {
                 "buttons": ["reset", "apply"],
                 "closeOnApply": True,
