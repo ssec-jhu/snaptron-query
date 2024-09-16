@@ -179,7 +179,7 @@ class JunctionInclusionQueryManager:
         return df.loc[(df["start"] == start) & (df["end"] == end)]
 
     def run_junction_inclusion_query(
-            self, meta_data_dict, df_snpt_results_dict, junctions_list, return_type: JiqReturnType
+        self, meta_data_dict, df_snpt_results_dict, junctions_list, return_type: JiqReturnType
     ):
         """Given the snaptron interface results in a map, this function calculates the Percent Spliced In (PSI)
         given the inclusion junction and the exclusion junctions. If multiple junctions are provided,
