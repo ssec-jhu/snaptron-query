@@ -369,35 +369,29 @@ def get_gene_expression_query_column_def(compilation, normalized=False):
         return get_col_meta_srav3h_a() + gex_col + get_col_meta_srav3h_b()
 
 
+def make_dash_ag_grid_greater_than_or_equal_filter(filter_value):
+    return {
+        "filterType": "number",
+        "type": "greaterThanOrEqual",
+        "filter": filter_value,
+    }
+
+
 def get_jiq_table_filter_model(junction_count):
     if junction_count == 1:
         # filter psi and total_count
         filter_model = {
-            gs.table_jiq_col_total: {
-                "filterType": "number",
-                "type": "greaterThanOrEqual",
-                "filter": gs.const_filter_total,
-            },
-            gs.table_jiq_col_psi: {"filterType": "number", "type": "greaterThanOrEqual", "filter": gs.const_filter_psi},
+            gs.table_jiq_col_total: make_dash_ag_grid_greater_than_or_equal_filter(gs.const_filter_total),
+            gs.table_jiq_col_psi: make_dash_ag_grid_greater_than_or_equal_filter(gs.const_filter_psi),
         }
     else:
         # filter average psi
-        filter_model = {
-            gs.table_jiq_col_avg_psi: {
-                "filterType": "number",
-                "type": "greaterThanOrEqual",
-                "filter": gs.const_filter_psi,
-            }
-        }
+        filter_model = {gs.table_jiq_col_avg_psi: make_dash_ag_grid_greater_than_or_equal_filter(gs.const_filter_psi)}
         # filter total columns indexed
         indexed_filter_model = {}
         for index in range(1, junction_count + 1):
             new_key = f"{gs.table_jiq_col_total}_{index}"
-            indexed_filter_model[new_key] = {
-                "filterType": "number",
-                "type": "greaterThanOrEqual",
-                "filter": gs.const_filter_total,
-            }
+            indexed_filter_model[new_key] = make_dash_ag_grid_greater_than_or_equal_filter(gs.const_filter_total)
         filter_model.update(indexed_filter_model)
 
     return filter_model
@@ -406,7 +400,7 @@ def get_jiq_table_filter_model(junction_count):
 def get_geq_table_filter_model(normalized_data):
     if normalized_data:
         filter_model = {
-            gs.table_geq_col_factor: {"filterType": "number", "type": "greaterThanOrEqual", "filter": 0},
+            gs.table_geq_col_factor: make_dash_ag_grid_greater_than_or_equal_filter(0),
         }
     else:
         filter_model = {}

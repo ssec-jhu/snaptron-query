@@ -140,14 +140,25 @@ def test_get_jiq_table_filter_model_count_of_items(junction_count, dictionary_co
     assert len(column_defs.get_jiq_table_filter_model(junction_count)) == dictionary_count
 
 
+def test_get_geq_table_filter_model_norm():
+    assert column_defs.get_geq_table_filter_model(True)[gs.table_geq_col_factor]["filter"] == 0
+
+
+def test_get_geq_table_filter_model():
+    assert column_defs.get_geq_table_filter_model(False) == {}
+
+
 @pytest.mark.parametrize(
-    "norm, column, r",
+    "filter_value",
     [
-        (True, gs.table_geq_col_factor, 0),
+        (gs.const_filter_total),
+        (gs.const_filter_psi),
     ],
 )
-def test_get_geq_table_filter_model(norm, column, r):
-    assert column_defs.get_geq_table_filter_model(norm)[column]["filter"] == r
+def test_make_dash_ag_grid_greater_than_or_equal_filter(filter_value):
+    assert column_defs.make_dash_ag_grid_greater_than_or_equal_filter(filter_value)["filter"] == filter_value
+    assert column_defs.make_dash_ag_grid_greater_than_or_equal_filter(filter_value)["type"] == "greaterThanOrEqual"
+    assert column_defs.make_dash_ag_grid_greater_than_or_equal_filter(filter_value)["filterType"] == "number"
 
 
 def test_get_geq_table_filter_model_2():
