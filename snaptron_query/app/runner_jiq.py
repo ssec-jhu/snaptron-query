@@ -54,6 +54,7 @@ def run_query(
     filter_model = cd.get_jiq_table_filter_model(len(junction_lists))
 
     # Gather figure related items
+    # make sure you also update get_jiq_table_filter_model with changes here
     df = pd.DataFrame(row_data)
     if len(junction_lists) == 1:
         df = df[

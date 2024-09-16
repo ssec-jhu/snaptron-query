@@ -101,12 +101,43 @@ def test_get_gene_expression_query_column_def(compilation, normalized, index):
     [
         (1, gs.table_jiq_col_total, gs.const_filter_total),
         (1, gs.table_jiq_col_psi, gs.const_filter_psi),
+        (2, gs.table_jiq_col_avg_psi, gs.const_filter_psi),
         (2, f"{gs.table_jiq_col_total}_1", gs.const_filter_total),
-        (2, f"{gs.table_jiq_col_psi}_1", gs.const_filter_psi),
+        (2, f"{gs.table_jiq_col_total}_2", gs.const_filter_total),
+        (3, gs.table_jiq_col_avg_psi, gs.const_filter_psi),
+        (3, f"{gs.table_jiq_col_total}_1", gs.const_filter_total),
+        (3, f"{gs.table_jiq_col_total}_2", gs.const_filter_total),
+        (3, f"{gs.table_jiq_col_total}_3", gs.const_filter_total),
+        (4, gs.table_jiq_col_avg_psi, gs.const_filter_psi),
+        (4, f"{gs.table_jiq_col_total}_1", gs.const_filter_total),
+        (4, f"{gs.table_jiq_col_total}_2", gs.const_filter_total),
+        (4, f"{gs.table_jiq_col_total}_3", gs.const_filter_total),
+        (4, f"{gs.table_jiq_col_total}_4", gs.const_filter_total),
+        (5, gs.table_jiq_col_avg_psi, gs.const_filter_psi),
+        (5, f"{gs.table_jiq_col_total}_1", gs.const_filter_total),
+        (5, f"{gs.table_jiq_col_total}_2", gs.const_filter_total),
+        (5, f"{gs.table_jiq_col_total}_3", gs.const_filter_total),
+        (5, f"{gs.table_jiq_col_total}_4", gs.const_filter_total),
+        (5, f"{gs.table_jiq_col_total}_5", gs.const_filter_total),
     ],
 )
 def test_get_jiq_table_filter_model(junction_count, column, r):
-    assert column_defs.get_jiq_table_filter_model(junction_count)[column]["filter"] == r
+    column_def = column_defs.get_jiq_table_filter_model(junction_count)[column]["filter"]
+    assert column_def == r
+
+
+@pytest.mark.parametrize(
+    "junction_count, dictionary_count",
+    [
+        (1, 2),
+        (2, 3),
+        (3, 4),
+        (4, 5),
+        (5, 6),
+    ],
+)
+def test_get_jiq_table_filter_model_count_of_items(junction_count, dictionary_count):
+    assert len(column_defs.get_jiq_table_filter_model(junction_count)) == dictionary_count
 
 
 @pytest.mark.parametrize(

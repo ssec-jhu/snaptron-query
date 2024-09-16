@@ -370,20 +370,35 @@ def get_gene_expression_query_column_def(compilation, normalized=False):
 
 
 def get_jiq_table_filter_model(junction_count):
-    # filter psi and total_count
-    filter_model = {
-        gs.table_jiq_col_total: {"filterType": "number", "type": "greaterThanOrEqual", "filter": gs.const_filter_total},
-        gs.table_jiq_col_psi: {"filterType": "number", "type": "greaterThanOrEqual", "filter": gs.const_filter_psi},
-    }
-
-    if junction_count > 1:
-        # add junction indices on the filter keys
+    if junction_count == 1:
+        # filter psi and total_count
+        filter_model = {
+            gs.table_jiq_col_total: {
+                "filterType": "number",
+                "type": "greaterThanOrEqual",
+                "filter": gs.const_filter_total,
+            },
+            gs.table_jiq_col_psi: {"filterType": "number", "type": "greaterThanOrEqual", "filter": gs.const_filter_psi},
+        }
+    else:
+        # filter average psi
+        filter_model = {
+            gs.table_jiq_col_avg_psi: {
+                "filterType": "number",
+                "type": "greaterThanOrEqual",
+                "filter": gs.const_filter_psi,
+            }
+        }
+        # filter total columns indexed
         indexed_filter_model = {}
-        for i in range(1, junction_count + 1):
-            for key, value in filter_model.items():
-                new_key = f"{key}_{i}"
-                indexed_filter_model[new_key] = value
-        filter_model = indexed_filter_model
+        for index in range(1, junction_count + 1):
+            new_key = f"{gs.table_jiq_col_total}_{index}"
+            indexed_filter_model[new_key] = {
+                "filterType": "number",
+                "type": "greaterThanOrEqual",
+                "filter": gs.const_filter_total,
+            }
+        filter_model.update(indexed_filter_model)
 
     return filter_model
 
