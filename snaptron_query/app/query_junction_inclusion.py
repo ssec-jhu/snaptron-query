@@ -141,7 +141,7 @@ class JunctionInclusionQueryManager:
         single_junction = []
         for rail_id, rail_data in self.rail_id_dictionary.items():
             if rail_data["meta"] and len(rail_data["junctions"]) == 1:
-                data = {"rail_id": rail_id}
+                data = {gs.snpt_col_rail_id: rail_id}
                 data.update(rail_data["meta"])
                 data.update(rail_data["junctions"][0])
                 single_junction.append(data)
@@ -161,6 +161,8 @@ class JunctionInclusionQueryManager:
                 # add the average psi
                 num_junctions = len(rail_data["junctions"])
                 data[gs.table_jiq_col_avg_psi] = rail_data["psi_sum"] / num_junctions
+                # average psi needs to be rounded
+                data[gs.table_jiq_col_avg_psi] = round(data[gs.table_jiq_col_avg_psi], 2)
 
                 for junction_index in range(0, num_junctions):
                     info = rail_data["junctions"][junction_index]
@@ -177,7 +179,7 @@ class JunctionInclusionQueryManager:
         return df.loc[(df["start"] == start) & (df["end"] == end)]
 
     def run_junction_inclusion_query(
-        self, meta_data_dict, df_snpt_results_dict, junctions_list, return_type: JiqReturnType
+            self, meta_data_dict, df_snpt_results_dict, junctions_list, return_type: JiqReturnType
     ):
         """Given the snaptron interface results in a map, this function calculates the Percent Spliced In (PSI)
         given the inclusion junction and the exclusion junctions. If multiple junctions are provided,
