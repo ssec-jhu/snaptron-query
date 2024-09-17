@@ -14,15 +14,10 @@ dependencies = [
     "dash-ag-grid",
     "dash-bootstrap-components",
     "dash-bootstrap-templates",
-    "dash-core-components",
-    "dash-html-components",
     "dash-iconify",
     "dash-mantine-components",
     "pandas",
     "httpx",
-    "plotly",
-    "plotly-express",
-    "numpy",
     "dash-loading-spinners",
     "gunicorn"
 ]
