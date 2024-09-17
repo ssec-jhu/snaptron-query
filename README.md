@@ -33,8 +33,8 @@ Follow above setup instructions if you have not done so already.
 
   #### with Docker:
   * Download & install Docker - see [Docker install docs](https://docs.docker.com/get-docker/).
-  * ``cd`` into repo dir.
-  * Build image: ``docker build -t <image_name> .``
+  * ``cd`` into repo dir where the [Dockerfile](https://github.com/ssec-jhu/snaptron-query/blob/d56df6f28592c56ee4622bedb8c68e4c06499363/Dockerfile) is.
+  * Build image: ``docker build -t <image_name> .`` 
   * Run container from image: ``docker run -d -p 8000:8000 <image_name>``. _NOTE: ``-p 8000:8000`` is specific to the example application using port 8000._
   * Alternatively, images can be pulled from ``ghcr.io/ssec-jhu/`` e.g., ``docker pull ghcr.io/ssec-jhu/snaptron-query:pr-1``.
 
