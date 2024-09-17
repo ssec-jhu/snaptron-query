@@ -26,45 +26,47 @@ def run_multijq_psi_asserts(our_results, external_id, psi_1, psi_2):
     [
         (1000010, "SRR3743424", 0, 11, 0, 0, 11, 0),
         (2171668, "SRR5714918", 35, 0, 100.0, 0, 0, 0),  # TODO: this has inc_0=-1?
-        (
-            988956,
-            "SRR5461171",
-            66,
-            102,
-            39.29,
-            81,
-            102,
-            44.26,
-        ),
+        (988956, "SRR5461171", 66, 102, 39.29, 81, 102, 44.26),
         (1127039, "SRR5398327", 4, 12, 25.0, 0, 12, 0),
         (499887, "SRR3469415", 9, 23, 28.12, 1, 23, 4.17),
-        (
-            988942,
-            "SRR5461170",
-            65,
-            101,
-            39.16,
-            77,
-            101,
-            43.26,
-        ),
+        (988942, "SRR5461170", 65, 101, 39.16, 77, 101, 43.26),
         (1641727, "SRR8083867", 17, 55, 23.61, 15, 55, 21.43),
         (1641757, "SRR8083868", 12, 45, 21.05, 10, 45, 18.18),
-        (
-            2109561,
-            "SRR6873183",
-            12,
-            34,
-            26.09,
-            0,
-            34,
-            0,
-        ),
+        (2109561, "SRR6873183", 12, 34, 26.09, 0, 34, 0),
     ],
 )
 def test_mjq(multi_junction_srav3h, rail_id, external_id, inc_1, exc_1, psi_1, inc_2, exc_2, psi_2):
     our_results = multi_junction_srav3h.get_results().loc[rail_id]
     run_multijq_asserts(our_results, external_id, inc_1, exc_1, psi_1, inc_2, exc_2, psi_2)
+
+
+@pytest.mark.parametrize(
+    "rail_id,external_id,inc_1,exc_1,psi_1,inc_2,exc_2,psi_2",
+    [
+        (1000010, "SRR3743424", 0, 11, 0, 0, 11, 0),
+        (2171668, "SRR5714918", 35, 0, 100.0, 0, 0, 0),  # TODO: this has inc_0=-1?
+        (988956, "SRR5461171", 66, 102, 39.29, 81, 102, 44.26),
+        (1127039, "SRR5398327", 4, 12, 25.0, 0, 12, 0),
+        (499887, "SRR3469415", 9, 23, 28.12, 1, 23, 4.17),
+        (988942, "SRR5461170", 65, 101, 39.16, 77, 101, 43.26),
+        (1641727, "SRR8083867", 17, 55, 23.61, 15, 55, 21.43),
+        (1641757, "SRR8083868", 12, 45, 21.05, 10, 45, 18.18),
+        (2109561, "SRR6873183", 12, 34, 26.09, 0, 34, 0),
+    ],
+)
+def test_mjq_raw_results(
+    multi_junction_srav3h_raw_results, rail_id, external_id, inc_1, exc_1, psi_1, inc_2, exc_2, psi_2
+):
+    # this test has a different return type from the other multi junction queries
+    # this tests the default dictionary that is created
+    our_results = multi_junction_srav3h_raw_results.get_results()[rail_id]
+    assert our_results["meta"][gs.snpt_col_external_id] == external_id
+    assert our_results["junctions"][0]["inc"] == inc_1
+    assert our_results["junctions"][0]["exc"] == exc_1
+    assert our_results["junctions"][0]["psi"] == psi_1
+    assert our_results["junctions"][1]["inc"] == inc_2
+    assert our_results["junctions"][1]["exc"] == exc_2
+    assert our_results["junctions"][1]["psi"] == psi_2
 
 
 @pytest.mark.parametrize(

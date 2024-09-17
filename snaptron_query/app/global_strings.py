@@ -13,7 +13,10 @@ url_paper = "https://doi.org/10.1101/2024.03.27.587011"
 cite = "Please cite: "
 paper_text = "[Sinha et al. 2024]"
 
-log_epsilon = 0.01
+const_log_epsilon = 0.01
+const_filter_psi = 5
+const_filter_total = 15
+
 tab_jiq = "Junction PSI Query"
 tab_geq = "Gene Expression Query"
 graphs_group_title = "Graphs"
@@ -112,8 +115,8 @@ jiq_input_junction_txt_list = ["Junction 1", "Junction 2", "Junction 3", "Juncti
 jiq_plot_title_hist = "PSI Histogram"
 jiq_plot_title_box = "PSI Box Plot"
 jiq_psi_plot_axes = "PSI"
-jiq_log_psi = f"Log\u2082(psi+{log_epsilon})"
-jiq_help_table = " Table initially loads with PSI\u22655 and Total\u226515."
+jiq_log_psi = f"Log\u2082(psi+{const_log_epsilon})"
+jiq_help_table = f" Table initially loads with PSI\u2265{const_filter_psi} and Total\u2265{const_filter_total}."
 jiq_help_add_junction = "Add more inclusion or exclusion junctions (up to 5) to the PSI query"
 jiq_help_delete_junction = "Remove junction from the PSI query"
 
@@ -138,8 +141,8 @@ geq_plot_title_hist = "Normalized Count Histogram"
 geq_plot_label_raw_count = "Raw Count"
 geq_plot_label_norm_count = "Normalized Count"
 geq_box_plot_y_axes = "Gene Expression Count"
-geq_box_plot_y_axes_log = f"Log\u2082(Gene Expression Count+{log_epsilon})"
-geq_log_count = f"Log\u2082(count+{log_epsilon})"
+geq_box_plot_y_axes_log = f"Log\u2082(Gene Expression Count+{const_log_epsilon})"
+geq_log_count = f"Log\u2082(count+{const_log_epsilon})"
 geq_help_checkbox = "Check this box if you need to enter gene coordinates in addition to gene name"
 geq_provide_coordinates = "I want to provide gene coordinates in addition to Gene ID (use when Gene ID is not found)."
 """""" """""" """""" """""" """""" """""" """""" """""" """""" """""" """

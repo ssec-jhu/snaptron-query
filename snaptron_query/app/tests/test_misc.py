@@ -99,23 +99,66 @@ def test_get_gene_expression_query_column_def(compilation, normalized, index):
 @pytest.mark.parametrize(
     "junction_count, column, r",
     [
-        (1, gs.table_jiq_col_total, 15),
-        (1, gs.table_jiq_col_psi, 5),
-        (3, gs.table_jiq_col_avg_psi, 5),
+        (1, gs.table_jiq_col_total, gs.const_filter_total),
+        (1, gs.table_jiq_col_psi, gs.const_filter_psi),
+        (2, gs.table_jiq_col_avg_psi, gs.const_filter_psi),
+        (2, f"{gs.table_jiq_col_total}_1", gs.const_filter_total),
+        (2, f"{gs.table_jiq_col_total}_2", gs.const_filter_total),
+        (3, gs.table_jiq_col_avg_psi, gs.const_filter_psi),
+        (3, f"{gs.table_jiq_col_total}_1", gs.const_filter_total),
+        (3, f"{gs.table_jiq_col_total}_2", gs.const_filter_total),
+        (3, f"{gs.table_jiq_col_total}_3", gs.const_filter_total),
+        (4, gs.table_jiq_col_avg_psi, gs.const_filter_psi),
+        (4, f"{gs.table_jiq_col_total}_1", gs.const_filter_total),
+        (4, f"{gs.table_jiq_col_total}_2", gs.const_filter_total),
+        (4, f"{gs.table_jiq_col_total}_3", gs.const_filter_total),
+        (4, f"{gs.table_jiq_col_total}_4", gs.const_filter_total),
+        (5, gs.table_jiq_col_avg_psi, gs.const_filter_psi),
+        (5, f"{gs.table_jiq_col_total}_1", gs.const_filter_total),
+        (5, f"{gs.table_jiq_col_total}_2", gs.const_filter_total),
+        (5, f"{gs.table_jiq_col_total}_3", gs.const_filter_total),
+        (5, f"{gs.table_jiq_col_total}_4", gs.const_filter_total),
+        (5, f"{gs.table_jiq_col_total}_5", gs.const_filter_total),
     ],
 )
 def test_get_jiq_table_filter_model(junction_count, column, r):
-    assert column_defs.get_jiq_table_filter_model(junction_count)[column]["filter"] == r
+    column_def = column_defs.get_jiq_table_filter_model(junction_count)[column]["filter"]
+    assert column_def == r
 
 
 @pytest.mark.parametrize(
-    "norm, column, r",
+    "junction_count, dictionary_count",
     [
-        (True, gs.table_geq_col_factor, 0),
+        (1, 2),
+        (2, 3),
+        (3, 4),
+        (4, 5),
+        (5, 6),
     ],
 )
-def test_get_geq_table_filter_model(norm, column, r):
-    assert column_defs.get_geq_table_filter_model(norm)[column]["filter"] == r
+def test_get_jiq_table_filter_model_count_of_items(junction_count, dictionary_count):
+    assert len(column_defs.get_jiq_table_filter_model(junction_count)) == dictionary_count
+
+
+def test_get_geq_table_filter_model_norm():
+    assert column_defs.get_geq_table_filter_model(True)[gs.table_geq_col_factor]["filter"] == 0
+
+
+def test_get_geq_table_filter_model():
+    assert column_defs.get_geq_table_filter_model(False) == {}
+
+
+@pytest.mark.parametrize(
+    "filter_value",
+    [
+        (gs.const_filter_total),
+        (gs.const_filter_psi),
+    ],
+)
+def test_make_dash_ag_grid_greater_than_or_equal_filter(filter_value):
+    assert column_defs.make_dash_ag_grid_greater_than_or_equal_filter(filter_value)["filter"] == filter_value
+    assert column_defs.make_dash_ag_grid_greater_than_or_equal_filter(filter_value)["type"] == "greaterThanOrEqual"
+    assert column_defs.make_dash_ag_grid_greater_than_or_equal_filter(filter_value)["filterType"] == "number"
 
 
 def test_get_geq_table_filter_model_2():

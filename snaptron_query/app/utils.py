@@ -53,7 +53,7 @@ def read_tcgav2(file_path):
 
 
 def log_2_plus(x):
-    return np.log2(x + gs.log_epsilon)
+    return np.log2(x + gs.const_log_epsilon)
 
 
 def get_component(input_id, list_of_children, component_index, junctions):

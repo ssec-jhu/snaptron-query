@@ -111,7 +111,7 @@ class JunctionInclusionQueryManager:
         # accumulate the psi sum values
         self.rail_id_dictionary[rail_id]["psi_sum"] += psi
 
-    def _gather_rail_id_meta_data(self, rail_id, meta_data_dict, junction_index):
+    def _gather_rail_id_data(self, rail_id, meta_data_dict, junction_index):
         """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
         rail ids
         """
@@ -141,7 +141,7 @@ class JunctionInclusionQueryManager:
         single_junction = []
         for rail_id, rail_data in self.rail_id_dictionary.items():
             if rail_data["meta"] and len(rail_data["junctions"]) == 1:
-                data = {"rail_id": rail_id}
+                data = {gs.snpt_col_rail_id: rail_id}
                 data.update(rail_data["meta"])
                 data.update(rail_data["junctions"][0])
                 single_junction.append(data)
@@ -161,6 +161,8 @@ class JunctionInclusionQueryManager:
                 # add the average psi
                 num_junctions = len(rail_data["junctions"])
                 data[gs.table_jiq_col_avg_psi] = rail_data["psi_sum"] / num_junctions
+                # average psi needs to be rounded
+                data[gs.table_jiq_col_avg_psi] = round(data[gs.table_jiq_col_avg_psi], 2)
 
                 for junction_index in range(0, num_junctions):
                     info = rail_data["junctions"][junction_index]
@@ -217,7 +219,7 @@ class JunctionInclusionQueryManager:
         # this will populate self.gathered_rail_id_meta_data_and_psi
         for junction_index in range(0, len(junctions_list)):
             for rail_id in self.rail_id_dictionary:
-                self._gather_rail_id_meta_data(rail_id, meta_data_dict, junction_index)
+                self._gather_rail_id_data(rail_id, meta_data_dict, junction_index)
 
         query_results = {}
         if return_type == JiqReturnType.RAW:
