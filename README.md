@@ -24,7 +24,7 @@ Web application for junction or gene expression count extraction and analysis:
     * Change the `meta_data_directory` in [paths.py](https://github.com/ssec-jhu/snaptron-query/blob/07103767262f5292ada793c4c1e7a94b32e7fd15/snaptron_query/app/paths.py#L7) to the directory of the metadata files downloaded 
 
 ## Build & Run:
-Follow above [Setup](#Initial Setup) instructions if you have not done so already.
+Follow above setup instructions if you have not done so already.
   #### with Tox:
   * ``pip install tox``
   * Option 1: Run tests then execute: ``tox -e test exec -- python -m snaptron_query.app.main_dash_app``.
