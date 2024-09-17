@@ -24,7 +24,7 @@ Web application for junction or gene expression count extraction and analysis:
     * Change the `meta_data_directory` in [paths.py](https://github.com/ssec-jhu/snaptron-query/blob/07103767262f5292ada793c4c1e7a94b32e7fd15/snaptron_query/app/paths.py#L7) to the directory of the metadata files downloaded 
 
 ## Build & Run:
-Follow above [Setup](#Initial Setup) instructions if you have not done so already.
+Follow above setup instructions if you have not done so already.
   #### with Tox:
   * ``pip install tox``
   * Option 1: Run tests then execute: ``tox -e test exec -- python -m snaptron_query.app.main_dash_app``.
@@ -33,8 +33,8 @@ Follow above [Setup](#Initial Setup) instructions if you have not done so alread
 
   #### with Docker:
   * Download & install Docker - see [Docker install docs](https://docs.docker.com/get-docker/).
-  * ``cd`` into repo dir.
-  * Build image: ``docker build -t <image_name> .``
+  * ``cd`` into repo dir where the [Dockerfile](https://github.com/ssec-jhu/snaptron-query/blob/d56df6f28592c56ee4622bedb8c68e4c06499363/Dockerfile) is.
+  * Build image: ``docker build -t <image_name> .`` 
   * Run container from image: ``docker run -d -p 8000:8000 <image_name>``. _NOTE: ``-p 8000:8000`` is specific to the example application using port 8000._
   * Alternatively, images can be pulled from ``ghcr.io/ssec-jhu/`` e.g., ``docker pull ghcr.io/ssec-jhu/snaptron-query:pr-1``.
 
