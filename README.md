@@ -21,25 +21,33 @@ Web application for junction or gene expression count extraction and analysis:
     * [gtexv2](https://snaptron.cs.jhu.edu/data/gtexv2/samples.tsv) to `gtexv2_samples.tsv`
     * [tcgav2](https://snaptron.cs.jhu.edu/data/tcgav2/samples.tsv) to `tcgav2_samples.tsv`
     * [srav1m](https://snaptron.cs.jhu.edu/data/srav1m/samples.tsv) to `srav1m_samples.tsv`
-    * Change the `meta_data_directory` in [paths.py](https://github.com/ssec-jhu/snaptron-query/blob/07103767262f5292ada793c4c1e7a94b32e7fd15/snaptron_query/app/paths.py#L7) to the directory of the metadata files downloaded 
+    * Change the `meta_data_directory` string in [snaptron-query/snaptron_query/app/paths.py](https://github.com/ssec-jhu/snaptron-query/blob/07103767262f5292ada793c4c1e7a94b32e7fd15/snaptron_query/app/paths.py#L7) to the directory of the metadata files downloaded 
 
 ## Build & Run:
 Follow above setup instructions if you have not done so already.
-  #### with Tox:
-  * ``pip install tox``
-  * Option 1: Run tests then execute: ``tox -e test exec -- python -m snaptron_query.app.main_dash_app``.
-  * Option 2: Run only: ``tox exec -- python -m snaptron_query.app.main_dash_app``
-  * This will have Dash running on http://127.0.0.1:8050/.
+  #### with Tox [running locally]:
+  * ``pip install tox`` if you don't have it already
+  * Make sure you are in the repo directory: ``cd snaptron-query``
+  * You should see the tox file: [``tox.ini``](https://github.com/ssec-jhu/snaptron-query/blob/ca0fbf1f0d95df72147510c6acde79be482e2405/tox.ini) 
+  * Run: ``tox -e test exec -- python -m snaptron_query.app.main_dash_app``
+  * This will have Dash running locally on http://127.0.0.1:8050/
+  * ``Ctrl+c`` to quit
 
-  #### with Docker:
+  #### with Python ecosystem [running locally]:
+  * Make sure you are in the repo directory: ``cd snaptron-query``
+  * Run ``python3 -m  snaptron_query.app.main_dash_app``
+  * This will have Dash running locally on http://127.0.0.1:8050/
+  * Ctrl+c to quit
+
+
+  
+#### with Docker [for deployment only]:
   * Download & install Docker - see [Docker install docs](https://docs.docker.com/get-docker/).
-  * ``cd`` into repo dir where the [Dockerfile](https://github.com/ssec-jhu/snaptron-query/blob/d56df6f28592c56ee4622bedb8c68e4c06499363/Dockerfile) is.
+  * Make sure you are in the repo directory: ``cd snaptron-query``
+  * You should see the [``Dockerfile``](https://github.com/ssec-jhu/snaptron-query/blob/d56df6f28592c56ee4622bedb8c68e4c06499363/Dockerfile).
   * Build image: ``docker build -t <image_name> .`` 
   * Run container from image: ``docker run -d -p 8000:8000 <image_name>``. _NOTE: ``-p 8000:8000`` is specific to the example application using port 8000._
   * Alternatively, images can be pulled from ``ghcr.io/ssec-jhu/`` e.g., ``docker pull ghcr.io/ssec-jhu/snaptron-query:pr-1``.
-
-  #### with Python ecosystem:
-  * Run ``python3 -m  snaptron_query.app.main_dash_app``.This will have Dash running on http://127.0.0.1:8050/.
     
   
 
