@@ -45,7 +45,7 @@ def get_col_meta_srav3h_before():
     """
     column_def = get_rail_id()
     column_def += [
-        {   # external_id
+        {  # external_id
             "field": gs.snpt_col_external_id,
             "headerName": capitalize_underscored_string(gs.snpt_col_external_id),
             "width": 130,
@@ -54,7 +54,7 @@ def get_col_meta_srav3h_before():
                 "closeOnApply": True,
             },
         },
-        {   # study column
+        {  # study column
             "field": gs.snpt_col_study,
             "headerName": "Study",
             "width": 120,
@@ -64,7 +64,7 @@ def get_col_meta_srav3h_before():
                 "closeOnApply": True,
             },
         },
-        {   # study_title column
+        {  # study_title column
             "field": gs.snpt_col_study_title,
             "headerName": capitalize_underscored_string(gs.snpt_col_study_title),
             "width": 350,
@@ -132,7 +132,7 @@ def get_col_meta_tcgav2_before():
     """
     column_def = get_rail_id()
     column_def += [
-        {   # study column
+        {  # study column
             "field": gs.snpt_col_study,
             "headerName": "Study",
             "width": 120,
@@ -165,7 +165,7 @@ def get_col_meta_gtexv2_before():
     """
     column_def = get_rail_id()
     column_def += [
-        {   # run_acc column
+        {  # run_acc column
             "field": gs.snpt_col_run_acc,
             "headerName": capitalize_underscored_string(gs.snpt_col_run_acc),
             "width": 130,
@@ -174,7 +174,7 @@ def get_col_meta_gtexv2_before():
                 "closeOnApply": True,
             },
         },
-        {   # study column
+        {  # study column
             "field": gs.snpt_col_study,
             "headerName": "Study",
             "tooltipField": gs.snpt_col_study,
