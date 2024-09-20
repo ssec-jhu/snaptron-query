@@ -24,11 +24,11 @@ def test_get_element_id_and_value_error(sample_ui_children_with_error):
 
 @pytest.mark.parametrize("junction_count", [1, 2, 3, 4])
 def test_get_col_multi_jiq(junction_count):
-    assert len(column_defs.get_col_multi_jiq(junction_count)) == 3 * junction_count + 1
+    assert len(column_defs.get_col_multi_jiq_calculations(junction_count)) == 3 * junction_count + 1
 
 
 def test_get_col_jiq():
-    assert len(column_defs.get_col_jiq()) == 5
+    assert len(column_defs.get_col_jiq_calculations()) == 5
 
 
 @pytest.mark.parametrize("psi,value", [(100, 6.64), (50, 5.64), (25, 4.64), (0, -6.64)])
