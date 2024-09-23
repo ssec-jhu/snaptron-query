@@ -31,7 +31,6 @@ server = app.server
 
 load_figure_template(gs.dbc_template_name)
 
-# TODO: remove this code for final deployment
 # Sanity check for the metadata directory
 dir_list = os.listdir(paths.meta_data_directory)
 if len(dir_list) == 0:
@@ -73,7 +72,6 @@ app.layout = dbc.Container(
         dcc.Store(id="id-results-cleared-jiq", data=False),
         dcc.Store(id="id-results-cleared-geq", data=False),
     ],
-    # TODO: Keep this commented here, need to verify with PI rep to switch to full width or not
     # fluid=True,  # this will make the page use full screen width
 )
 

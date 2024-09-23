@@ -31,7 +31,7 @@ def get_common_labels_geq():
         gs.snpt_col_rail_id: gs.plot_label_rail_id,
         gs.table_geq_col_raw_count: gs.geq_plot_label_raw_count,
         gs.table_geq_col_norm_count: gs.geq_plot_label_norm_count,
-        gs.table_geq_col_log_2_raw: gs.geq_plot_label_raw_count,  # TODO: use log or not, it will affect hover data
+        gs.table_geq_col_log_2_raw: gs.geq_plot_label_raw_count,
         gs.table_geq_col_log_2_norm: gs.geq_plot_label_norm_count,  # don't put the word "Log"
     }
 

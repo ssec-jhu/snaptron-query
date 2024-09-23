@@ -3,13 +3,11 @@ from dash import html
 
 from snaptron_query.app import components, global_strings as gs
 
-# TODO: remove logos from assets that are not used
 logos = {
     "neurosci": "assets/Neurosci_reversed.svg",
     "ssec": "assets/SSEC_horizontal_white_cropped.png",
     "jmed": "assets/JHM_horizontal_white.svg",
     "idies": "assets/IDIES_JHU_Horizontal_white_500.svg",
-    "schmidt": "assets/schmidt-futures.png",
     "nih": "assets/NIH_symbol_white.png",
     "nsf": "assets/NSF_Official_High_Res_1200ppi.png",
 }

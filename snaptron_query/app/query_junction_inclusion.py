@@ -129,7 +129,6 @@ class JunctionInclusionQueryManager:
             self._calculate_percent_spliced_in(rail_id, junction_index)
 
         except (KeyError, IndexError):
-            # TODO: look into the rail ids that are not found in the meta data file.
             # print(f"{rail_id} not in meta data file.  Moving on to the next iteration.")
             # code must continue and not stop
             pass
