@@ -72,7 +72,6 @@ def get_snpt_query_results_df(compilation, region, query_mode):
     :param query_mode:  'snaptron' or 'genes'
     :return: the result of the snaptron web interface converted into a dataframe
     """
-    # TODO: move this to a config file when it's made
     host = "https://snaptron.cs.jhu.edu"
     url = f"{host}/{str(compilation).lower()}/{query_mode}?regions={str(region)}"
     # url = 'https://snaptro.cs.jhu.edu/srav3h/snaptron?regions=chr19:4491836-4493702'
@@ -105,7 +104,6 @@ def gather_snpt_query_results_into_dict(compilation, junction_lists: [SpliceJunc
                 query_mode="snaptron",
             )
 
-            # TODO: do we want to pass and move on to the next junction? or halt?
             if df_snpt_results.empty:
                 raise exceptions.EmptyResponse
 
