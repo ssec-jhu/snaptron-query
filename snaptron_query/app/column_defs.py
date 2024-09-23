@@ -150,7 +150,7 @@ def get_col_meta_tcgav2_before():
                 "buttons": ["reset", "apply"],
                 "closeOnApply": True,
             },
-        }
+        },
     ]
     return column_def
 
