@@ -145,22 +145,28 @@ geq_box_plot_y_axes_log = f"Log\u2082(Gene Expression Count+{const_log_epsilon})
 geq_log_count = f"Log\u2082(count+{const_log_epsilon})"
 geq_help_checkbox = "Check this box if you need to enter gene coordinates in addition to gene name"
 geq_provide_coordinates = "I want to provide gene coordinates in addition to Gene ID (use when Gene ID is not found)."
+
 """""" """""" """""" """""" """""" """""" """""" """""" """""" """""" """
     Strings beyond this point are related to the snaptron interface
     DO NOT TOUCH if you don't know what you are doing
     Strings here exists solely for the purpose of potential changes in the 
     snaptron client web interface and its internal data
 """ """""" """""" """""" """""" """""" """""" """""" """""" """""" """"""
+
 snpt_col_rail_id = "rail_id"
 snpt_col_samples = "samples"
 snpt_col_external_id = "external_id"
 snpt_col_gene_id = "gene_id:gene_name:gene_type:bp_length"
 snpt_col_study = "study"
+snpt_col_study_title = "study_title"
+snpt_col_run_acc = "run_acc"
+
+# srav3h and srav1m list of columns read from metadata file -> do not change the ordering of this list
 srav3h_meta_data_required_list = [
     snpt_col_rail_id,
     snpt_col_external_id,
     snpt_col_study,
-    "study_title",
+    snpt_col_study_title,
     "library_layout",
     "sample_description",
     "sample_name",
@@ -169,12 +175,13 @@ srav3h_meta_data_required_list = [
 
 srav1m_meta_data_required_list = srav3h_meta_data_required_list  # SRA mouse and SRA human are similar
 
+# tcgav2 list of columns read from metadata file -> do not change the ordering of this list
 tcgav2_meta_data_required_list = [
     snpt_col_rail_id,
-    "tcga_barcode",
-    snpt_col_study,
-    "gdc_cases.project.name",
     "gdc_cases.project.primary_site",
+    snpt_col_study,
+    "tcga_barcode",
+    "gdc_cases.project.name",
     "cgc_sample_sample_type",
     "gdc_state",
     "gdc_cases.demographic.race",
@@ -190,7 +197,17 @@ tcgav2_meta_data_required_list = [
     "cgc_follow_up_tumor_status",
 ]
 
-gtexv2_meta_data_required_list = [snpt_col_rail_id, "run_acc", snpt_col_study, "SEX", "AGE", "SAMPID", "SMTS", "SMTSD"]
+# gtexv2 list of columns read from metadata file -> do not change the ordering of this list
+gtexv2_meta_data_required_list = [
+    snpt_col_rail_id,
+    snpt_col_run_acc,
+    snpt_col_study,
+    "SEX",
+    "AGE",
+    "SAMPID",
+    "SMTS",
+    "SMTSD",
+]
 
 # JIQ
 table_jiq_col_inc = "inc"
