@@ -56,11 +56,12 @@ def test_get_col_meta_srav3h_b(index, value):
     "index, value",
     [
         (0, gs.snpt_col_rail_id),
-        (1, gs.snpt_col_study),
+        (1, "gdc_cases.project.primary_site"),
+        (2, gs.snpt_col_study),
     ],
 )
 def test_get_col_meta_tcgav2_a(index, value):
-    assert len(column_defs.get_col_meta_tcgav2_before()) == 2
+    assert len(column_defs.get_col_meta_tcgav2_before()) == 3
     assert column_defs.get_col_meta_tcgav2_before()[index]["field"] == value
 
 
@@ -72,7 +73,7 @@ def test_get_col_meta_tcgav2_a(index, value):
     ],
 )
 def test_get_col_meta_tcgav2_b(index, value):
-    assert len(column_defs.get_col_meta_tcgav2_after()) == 16
+    assert len(column_defs.get_col_meta_tcgav2_after()) == 15
     assert column_defs.get_col_meta_tcgav2_after()[index]["field"] == value
 
 
@@ -147,19 +148,22 @@ def test_get_col_meta_gtexv2_b(index, value):
         (gs.compilation_gtexv2, 4, 4, "psi_1"),
         # tcga compilation
         (gs.compilation_tcgav2, 2, 0, "rail_id"),
-        (gs.compilation_tcgav2, 2, 1, "study"),
-        (gs.compilation_tcgav2, 2, 2, "avg_psi"),
-        (gs.compilation_tcgav2, 2, 3, "psi_1"),
+        (gs.compilation_tcgav2, 2, 1, "gdc_cases.project.primary_site"),
+        (gs.compilation_tcgav2, 2, 2, "study"),
+        (gs.compilation_tcgav2, 2, 3, "avg_psi"),
+        (gs.compilation_tcgav2, 2, 4, "psi_1"),
         # three junctions
         (gs.compilation_tcgav2, 3, 0, "rail_id"),
-        (gs.compilation_tcgav2, 3, 1, "study"),
-        (gs.compilation_tcgav2, 3, 2, "avg_psi"),
-        (gs.compilation_tcgav2, 3, 3, "psi_1"),
+        (gs.compilation_tcgav2, 3, 1, "gdc_cases.project.primary_site"),
+        (gs.compilation_tcgav2, 3, 2, "study"),
+        (gs.compilation_tcgav2, 3, 3, "avg_psi"),
+        (gs.compilation_tcgav2, 3, 4, "psi_1"),
         # four junctions
         (gs.compilation_tcgav2, 4, 0, "rail_id"),
-        (gs.compilation_tcgav2, 4, 1, "study"),
-        (gs.compilation_tcgav2, 4, 2, "avg_psi"),
-        (gs.compilation_tcgav2, 4, 3, "psi_1"),
+        (gs.compilation_tcgav2, 4, 1, "gdc_cases.project.primary_site"),
+        (gs.compilation_tcgav2, 4, 2, "study"),
+        (gs.compilation_tcgav2, 4, 3, "avg_psi"),
+        (gs.compilation_tcgav2, 4, 4, "psi_1"),
         # mouse compilation
         (gs.compilation_srav1m, 2, 0, "rail_id"),
         (gs.compilation_srav1m, 2, 1, "external_id"),
@@ -220,15 +224,17 @@ def test_get_junction_query_column_def(compilation, junction_count, index, value
         (gs.compilation_gtexv2, False, 4, gs.table_geq_col_log_2_raw),
         # tcgav2 compilation
         (gs.compilation_tcgav2, True, 0, "rail_id"),
-        (gs.compilation_tcgav2, True, 1, "study"),
-        (gs.compilation_tcgav2, True, 2, gs.table_geq_col_raw_count),
-        (gs.compilation_tcgav2, True, 3, "factor"),
-        (gs.compilation_tcgav2, True, 4, "normalized_count"),
+        (gs.compilation_tcgav2, True, 1, "gdc_cases.project.primary_site"),
+        (gs.compilation_tcgav2, True, 2, "study"),
+        (gs.compilation_tcgav2, True, 3, gs.table_geq_col_raw_count),
+        (gs.compilation_tcgav2, True, 4, "factor"),
+        (gs.compilation_tcgav2, True, 5, "normalized_count"),
         # not normalized
         (gs.compilation_tcgav2, False, 0, "rail_id"),
-        (gs.compilation_tcgav2, False, 1, "study"),
-        (gs.compilation_tcgav2, False, 2, gs.table_geq_col_raw_count),
-        (gs.compilation_tcgav2, False, 3, gs.table_geq_col_log_2_raw),
+        (gs.compilation_tcgav2, False, 1, "gdc_cases.project.primary_site"),
+        (gs.compilation_tcgav2, False, 2, "study"),
+        (gs.compilation_tcgav2, False, 3, gs.table_geq_col_raw_count),
+        (gs.compilation_tcgav2, False, 4, gs.table_geq_col_log_2_raw),
         # mouse compilation
         (gs.compilation_srav1m, True, 0, "rail_id"),
         (gs.compilation_srav1m, True, 1, "external_id"),
