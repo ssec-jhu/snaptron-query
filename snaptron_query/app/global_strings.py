@@ -178,10 +178,10 @@ srav1m_meta_data_required_list = srav3h_meta_data_required_list  # SRA mouse and
 # tcgav2 list of columns read from metadata file -> do not change the ordering of this list
 tcgav2_meta_data_required_list = [
     snpt_col_rail_id,
+    "gdc_cases.project.primary_site",
     snpt_col_study,
     "tcga_barcode",
     "gdc_cases.project.name",
-    "gdc_cases.project.primary_site",
     "cgc_sample_sample_type",
     "gdc_state",
     "gdc_cases.demographic.race",

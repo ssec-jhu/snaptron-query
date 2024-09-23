@@ -132,6 +132,16 @@ def get_col_meta_tcgav2_before():
     """
     column_def = get_rail_id()
     column_def += [
+        {  # gdc_cases.project.primary_site
+            "field": "gdc_cases.project.primary_site",
+            "headerName": "gdc_cases.project.primary_site",
+            "tooltipField": "gdc_cases.project.primary_site",
+            "width": 200,
+            "filterParams": {
+                "buttons": ["reset", "apply"],
+                "closeOnApply": True,
+            },
+        },
         {  # study column
             "field": gs.snpt_col_study,
             "headerName": "Study",
@@ -148,11 +158,11 @@ def get_col_meta_tcgav2_before():
 def get_col_meta_tcgav2_after():
     """
     These columns go AFTER the calculations in the order below
-    rail_id and study come before the calculations
+    rail_id,gdc_cases.project.primary_site, study come before the calculations
     rest of the metadata, from the second item on the metadata list onwards, comes after the calculations
     """
     meta_data = []
-    for item in gs.tcgav2_meta_data_required_list[2 : len(gs.tcgav2_meta_data_required_list)]:
+    for item in gs.tcgav2_meta_data_required_list[3 : len(gs.tcgav2_meta_data_required_list)]:
         meta_data += get_generic_col(item)
     return meta_data
 
