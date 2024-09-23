@@ -1,7 +1,6 @@
 from pathlib import Path
 
 # path to the directory where the metadata for the compilations reside
-# TODO: this hardcoded path needs to be in a config file outside the container in the future
 # switch to the first line for deployment and
 # switch to the line below it for running locally
 meta_data_directory = Path("/srv/nvme2/snaptron_data/snapmine_samples")
