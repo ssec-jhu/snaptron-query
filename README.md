@@ -2,7 +2,7 @@
 [![CI](https://github.com/ssec-jhu/snaptron-query/actions/workflows/ci.yml/badge.svg)](https://github.com/ssec-jhu/snaptron-query/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/ssec-jhu/snaptron-query/graph/badge.svg?token=9uy1hl0p9o)](https://codecov.io/gh/ssec-jhu/snaptron-query)
 [![Security](https://github.com/ssec-jhu/snaptron-query/actions/workflows/security.yml/badge.svg)](https://github.com/ssec-jhu/snaptron-query/actions/workflows/security.yml)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13921402.svg)](https://doi.org/10.5281/zenodo.13921402)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13921402.svg)](https://doi.org/10.5281/zenodo.13921401)
 
 
 ![SSEC-JHU Logo](docs/_static/SSEC_logo_horiz_blue_1152x263.png)
