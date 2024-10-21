@@ -45,7 +45,7 @@ authors:
   given-names: "James"
   affiliation: "Johns Hopkins University Scientific Software Engineering Center"
   orcid: "https://orcid.org/0000-0002-0922-5770"
- - family-names: "Sinha"
+- family-names: "Sinha"
   given-names: "Irika R."
   orcid: "https://orcid.org/0000-0001-6440-7019"
   affiliation: "Johns Hopkins School of Medicine"
@@ -56,6 +56,6 @@ authors:
 
 title: "SnapMine"
 version: 1.0.0
-doi: "https://doi.org/10.5281/zenodo.13921401"
+doi: "10.5281/zenodo.13921401"
 date-released: 2024-11-01
 url: "https://github.com/ssec-jhu/snaptron_query"
