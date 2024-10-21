@@ -2,8 +2,23 @@
     "creators": [
         {
             "affiliation": "Scientific Software Engineering Center at JHU",
-            "name": "James Noss",
-            "orcid": "0000-0002-0922-5770"
+            "name": "Fatemeh Abbasinejad",
+            "orcid": "0009-0006-3239-7112"
+        },
+        {
+            "affiliation": "Scientific Software Engineering Center at JHU",
+            "name": "Samuel Carliles",
+            "orcid": "0000-0003-0273-9776"
+        },
+        {
+            "affiliation": "Scientific Software Engineering Center at JHU",
+            "name": "Xiang Chen",
+            "orcid": "0009-0003-6402-9822"
+        },
+        {
+            "affiliation": "Scientific Software Engineering Center at JHU",
+            "name": "Ryan Hausen",
+            "orcid": "0000-0002-8543-761X"
         },
         {
             "affiliation": "Scientific Software Engineering Center at JHU",
@@ -21,19 +36,34 @@
             "orcid": "0000-0001-5041-2458"
         },
         {
+            "affiliation": "Johns Hopkins School of Medicine",
+            "name": "Jonathan P. Ling",
+            "orcid": "0000-0003-1927-9729"
+        },
+        {
+            "affiliation": "Scientific Software Engineering Center at JHU",
+            "name": "Iain Maitland",
+            "orcid": "0009-0008-3831-1927"
+        },
+        {
             "affiliation": "Scientific Software Engineering Center at JHU",
             "name": "Arik Mitschang",
             "orcid": "0000-0001-9239-012X"
         },
         {
             "affiliation": "Scientific Software Engineering Center at JHU",
-            "name": "Xiang Chen",
-            "orcid": "0009-0003-6402-9822"
+            "name": "James Noss",
+            "orcid": "0000-0002-0922-5770"
         },
         {
-            "affiliation": "Scientific Software Engineering Center at JHU",
-            "name": "Fatemeh Abbasinejad",
-            "orcid": "0009-0006-3239-7112"
+            "affiliation": "Johns Hopkins School of Medicine",
+            "name": "Irika R. Sinha",
+            "orcid": "0000-0001-6440-7019"
+        },
+        {
+            "affiliation": "Johns Hopkins School of Medicine",
+            "name": "Philip Wong",
+            "orcid": "0000-0001-8162-3274"
         }
     ],
     "description": "Accelerating Software Development for Science Research",
