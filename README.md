@@ -13,7 +13,7 @@ Web application for junction or gene expression count extraction and analysis:
 * **SnapMine** is deployed at: https://snapmine.idies.jhu.edu/
 
 
-<img src="snaptron_query/app/assets/junction_query.png" alt="junction_query" height="250" style="display: block; margin: auto;"/>
+<img src="snaptron_query/app/assets/junction_query_updated.png" alt="junction_query" height="250" style="display: block; margin: auto;"/>
 
 ## Initial Setup:
   * Get the code: ``git clone https://github.com/ssec-jhu/snaptron-query.git``

@@ -385,7 +385,7 @@ def get_accordian_form_jiq():
                     dbc.Modal(
                         [
                             dbc.ModalHeader(dbc.ModalTitle("")),
-                            dbc.ModalBody(html.Img(src="assets/junction_query.png", style={"width": "100%"})),
+                            dbc.ModalBody(html.Img(src="assets/junction_query_updated.png", style={"width": "100%"})),
                         ],
                         id="id-jiq-image-modal",
                         centered=True,
@@ -399,7 +399,7 @@ def get_accordian_form_jiq():
                                 [
                                     html.Img(
                                         id="id-jiq-image",
-                                        src="assets/junction_query.png",
+                                        src="assets/junction_query_updated.png",
                                         width="100%",
                                         style={"cursor": "pointer"},
                                     ),
