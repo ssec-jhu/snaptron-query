@@ -111,7 +111,7 @@ class JunctionInclusionQueryManager:
         # accumulate the psi sum values
         self.rail_id_dictionary[rail_id]["psi_sum"] += psi
 
-    def _gather_rail_id_data(self, rail_id, meta_data_dict, junction_index):
+    def _gather_rail_id_data(self, rail_id, meta_data_dict, junction_index, compilation):
         """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
         rail ids
         """
@@ -124,6 +124,17 @@ class JunctionInclusionQueryManager:
             # do lookup only if metadata does not exist
             if not self.rail_id_dictionary[rail_id]["meta"]:
                 self.rail_id_dictionary[rail_id]["meta"] = meta_data_dict[rail_id]
+
+            # change the sex variable from 1 or 2 to meaningful values in GTEx queries
+            if compilation == gs.compilation_gtexv2:
+                # set mapping
+                mapping_sex = {1: "male", 2: "female"}
+
+                # change the value of the sex variable
+                status = self.rail_id_dictionary[rail_id]["meta"].get("SEX")
+
+                if status is not None:  # Ensure "status" key exists before modifying
+                    self.rail_id_dictionary[rail_id]["meta"]["SEX"] = mapping_sex.get(status, status)
 
             # append the calculated results such as PSI and other counts
             self._calculate_percent_spliced_in(rail_id, junction_index)
