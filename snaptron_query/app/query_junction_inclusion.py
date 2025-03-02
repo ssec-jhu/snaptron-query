@@ -1,5 +1,7 @@
 import collections
 from enum import StrEnum
+from typing import Dict
+
 import pandas
 
 from snaptron_query.app import exceptions, global_strings as gs, utils
@@ -128,13 +130,13 @@ class JunctionInclusionQueryManager:
             # change the sex variable from 1 or 2 to meaningful values in GTEx queries
             if compilation == gs.compilation_gtexv2:
                 # set mapping
-                mapping_sex = {1: "male", 2: "female"}
+                mapping_sex_jiq = {1: "male", 2: "female"}
 
                 # change the value of the sex variable
-                status = self.rail_id_dictionary[rail_id]["meta"].get("SEX")
+                status = self.rail_id_dictionary[rail_id]["meta"].get(gs.snpt_col_sex)
 
                 if status is not None:  # Ensure "status" key exists before modifying
-                    self.rail_id_dictionary[rail_id]["meta"]["SEX"] = mapping_sex.get(status, status)
+                    self.rail_id_dictionary[rail_id]["meta"]["SEX"] = mapping_sex_jiq.get(status, status)
 
             # append the calculated results such as PSI and other counts
             self._calculate_percent_spliced_in(rail_id, junction_index)

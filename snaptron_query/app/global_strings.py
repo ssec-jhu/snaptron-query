@@ -162,6 +162,7 @@ snpt_col_gene_id = "gene_id:gene_name:gene_type:bp_length"
 snpt_col_study = "study"
 snpt_col_study_title = "study_title"
 snpt_col_run_acc = "run_acc"
+snpt_col_sex = "SEX"
 
 # srav3h and srav1m list of columns read from metadata file -> do not change the ordering of this list
 srav3h_meta_data_required_list = [
@@ -206,6 +207,7 @@ gtexv2_meta_data_required_list = [
     snpt_col_study,
     "SEX",
     "AGE",
+    "SUBJID",
     "SAMPID",
     "SMTS",
     "SMTSD",

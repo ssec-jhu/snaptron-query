@@ -45,7 +45,7 @@ class GeneExpressionQueryManager:
         self.normalize_counts = True
         return
 
-    def run_gene_expression_query(self, gene_id_query, df_snaptron_results_query, meta_data_dict):
+    def run_gene_expression_query(self, gene_id_query, df_snaptron_results_query, meta_data_dict, compilation):
         gathered_rail_id_meta_data_and_counts = []
 
         # extract the row in the results that matches the query gene ID
@@ -79,6 +79,17 @@ class GeneExpressionQueryManager:
                             meta_data[gs.table_geq_col_log_2_norm] = (
                                 (round(utils.log_2_plus(normalized_count), 4)) if factor != -1 else -1
                             )
+
+                        # change the sex variable from 1 or 2 to meaningful values in GTEx queries
+                        if compilation == gs.compilation_gtexv2:
+                            # set mapping
+                            mapping_sex_geq = {1: "male", 2: "female"}
+
+                            # change the value of the sex variable
+                            status = meta_data[gs.snpt_col_sex]
+
+                            if status is not None:  # Ensure "status" key exists before modifying
+                                meta_data[gs.snpt_col_sex] = mapping_sex_geq.get(status, status)
 
                         gathered_rail_id_meta_data_and_counts.append(meta_data)
                     except (KeyError, IndexError):
