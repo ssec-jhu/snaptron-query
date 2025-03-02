@@ -45,13 +45,17 @@ def get_form_jiq():
             [
                 dbc.Col(width=2, style=styles.border_column),
                 dbc.Col(
-                    components.get_text(gs.jiq_input_inc_txt),
+                    [components.get_text(gs.jiq_input_inc_txt),
+                     components.get_info_icon_tooltip_bundle(
+                         "id-info-inc-junc-jiq", gs.jiq_help_incjunc, "top")],
                     width=4,
                     className="mx-0.5",
                     align="center",
                     style=styles.border_column,
                 ),
-                dbc.Col(components.get_text(gs.jiq_input_exc_txt), width=4, align="center", style=styles.border_column),
+                dbc.Col([components.get_text(gs.jiq_input_exc_txt),
+                     components.get_info_icon_tooltip_bundle(
+                         "id-info-exc-junc-jiq", gs.jiq_help_excjunc, "top")], width=4, align="center", style=styles.border_column),
                 dbc.Col(width=2, style=styles.border_column),
             ],
             className="g-0 form-control-sm",
