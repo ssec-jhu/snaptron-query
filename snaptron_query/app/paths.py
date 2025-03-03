@@ -3,7 +3,7 @@ from pathlib import Path
 # path to the directory where the metadata for the compilations reside
 # switch to the first line for deployment and
 # switch to the line below it for running locally
-meta_data_directory = Path("/Users/Fatemeh/Desktop/meta_data_2")
+meta_data_directory = Path("/srv/nvme2/snaptron_data/snapmine_samples")
 # meta_data_directory = Path(__file__).parent / 'data/'
 
 
