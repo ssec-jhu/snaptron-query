@@ -12,3 +12,7 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    ignore:
+    - dependency-name: "dash-mantine-components"
+      # Ignore versions that are greater than below
+      versions: [ ">0.13.0.a3" ]
