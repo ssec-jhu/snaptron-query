@@ -4,7 +4,6 @@ import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 from dash import Dash, Input, Output, ctx, no_update, State, dcc, ClientsideFunction
 from dash.exceptions import PreventUpdate
-from dash_bootstrap_templates import load_figure_template
 
 from snaptron_query.app import callback_common as callback, inline_styles as styles, navbars, paths
 from snaptron_query.app import (
@@ -29,7 +28,7 @@ app = Dash(
 # you run the 'server' not the 'app'. VS. you run the 'app' with uvicorn
 server = app.server
 
-load_figure_template(gs.dbc_template_name)
+# load_figure_template(gs.dbc_template_name)
 
 # Sanity check for the metadata directory
 dir_list = os.listdir(paths.meta_data_directory)
