@@ -88,7 +88,7 @@ def run_query(
 
         code_timer.split("Setup Normalization")
 
-    row_data = geq.run_gene_expression_query(query_gene_id, df_snpt_results_query, meta_data_dict)
+    row_data = geq.run_gene_expression_query(query_gene_id, df_snpt_results_query, meta_data_dict, compilation)
 
     code_timer.split("GEQ Main Calculation")
 

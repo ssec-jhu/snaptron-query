@@ -44,6 +44,7 @@ def run_query(
         meta_data_dict=meta_data_dict,
         df_snpt_results_dict=df_snpt_results_dict,
         junctions_list=junction_lists,
+        compilation=compilation,
         return_type=JiqReturnType.LIST,
     )
 
