@@ -82,12 +82,7 @@ class GeneExpressionQueryManager:
 
                         # change the sex variable from 1 or 2 to meaningful values in GTEx queries
                         if str(compilation) == gs.compilation_gtexv2:
-                            # set mapping
-                            mapping_sex_geq = {"1": "male", "2": "female"}
-
-                            # change the value of the sex variable
-                            status = str(meta_data[gs.snpt_col_sex])
-                            meta_data[gs.snpt_col_sex] = mapping_sex_geq.get(status)
+                            meta_data[gs.snpt_col_sex] = utils.map_sex_value(str(meta_data[gs.snpt_col_sex]))
 
                         gathered_rail_id_meta_data_and_counts.append(meta_data)
                     except (KeyError, IndexError):
