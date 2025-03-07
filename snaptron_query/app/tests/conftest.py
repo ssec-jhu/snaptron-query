@@ -21,10 +21,11 @@ path_gex_srav3h_meta = Path(__file__).parent / "data/test_samples_SRAv3h_GEX.csv
 
 
 class JunctionQuery:
-    def __init__(self, junction_list, meta_data_dict, df_from_snaptron_map):
+    def __init__(self, compilation, junction_list, meta_data_dict, df_from_snaptron_map):
         # find the exclusion and inclusion junction rows
         self.query_mgr = jiq.JunctionInclusionQueryManager()
         self.df_jiq_results = self.query_mgr.run_junction_inclusion_query(
+            compilation=compilation,
             meta_data_dict=meta_data_dict,
             df_snpt_results_dict=df_from_snaptron_map,
             junctions_list=junction_list,
@@ -40,11 +41,17 @@ class JunctionQuery:
 
 class MultiJunctionQuery:
     def __init__(
-        self, junction_list, meta_data_dict, df_from_snaptron_map, data_return_type=jiq.JiqReturnType.INDEXED_PD
+        self,
+        compilation,
+        junction_list,
+        meta_data_dict,
+        df_from_snaptron_map,
+        data_return_type=jiq.JiqReturnType.INDEXED_PD,
     ):
         # find the exclusion and inclusion junction rows
         self.query_mgr = jiq.JunctionInclusionQueryManager()
         self.jiq_results = self.query_mgr.run_junction_inclusion_query(
+            compilation=compilation,
             meta_data_dict=meta_data_dict,
             df_snpt_results_dict=df_from_snaptron_map,
             junctions_list=junction_list,
@@ -61,6 +68,7 @@ class MultiJunctionQuery:
 class GEXQuery:
     def __init__(
         self,
+        compilation,
         query_gene_id,
         query_gene_snaptron_data,
         query_gene_meta_data_dict,
@@ -80,6 +88,7 @@ class GEXQuery:
             gene_id_query=query_gene_id,
             df_snaptron_results_query=query_gene_snaptron_data,
             meta_data_dict=query_gene_meta_data_dict,
+            compilation=compilation,
         )
 
     def get_factor_table(self):
@@ -189,6 +198,7 @@ def gex_data_srav1m_ADNP2():
 def junction_srav3h(df_sample_junctions_from_srav3h, meta_data_dict_srav3h, junction_pair_human_1):
     df_sample_junctions_from_snaptron_map = {junction_pair_human_1.exc_coordinates: df_sample_junctions_from_srav3h}
     jq = JunctionQuery(
+        compilation=gs.compilation_srav3h,
         junction_list=[junction_pair_human_1],
         meta_data_dict=meta_data_dict_srav3h,
         df_from_snaptron_map=df_sample_junctions_from_snaptron_map,
@@ -206,6 +216,7 @@ def junction_gtexv2(junction_pair_human_1):
     df_sample_junctions_from_snaptron_map = {junction_pair_human_1.exc_coordinates: df_sample_junctions_from_snaptron}
 
     return JunctionQuery(
+        compilation=gs.compilation_gtexv2,
         junction_list=[junction_pair_human_1],
         meta_data_dict=meta_data_dict,
         df_from_snaptron_map=df_sample_junctions_from_snaptron_map,
@@ -222,6 +233,7 @@ def junction_tcgav2(junction_pair_human_1):
     df_sample_junctions_from_snaptron_map = {junction_pair_human_1.exc_coordinates: df_sample_junctions_from_snaptron}
 
     return JunctionQuery(
+        compilation=gs.compilation_tcgav2,
         junction_list=[junction_pair_human_1],
         meta_data_dict=meta_data_dict,
         df_from_snaptron_map=df_sample_junctions_from_snaptron_map,
@@ -237,6 +249,7 @@ def junction_srav1m(meta_data_dict_srav1m, junction_pair_mouse_1):
     df_sample_junctions_from_snaptron_map = {junction_pair_mouse_1.exc_coordinates: df_sample_junctions_from_snaptron}
 
     return JunctionQuery(
+        compilation=gs.compilation_srav1m,
         junction_list=[junction_pair_mouse_1],
         meta_data_dict=meta_data_dict_srav1m,
         df_from_snaptron_map=df_sample_junctions_from_snaptron_map,
@@ -249,6 +262,7 @@ def multi_junction_srav3h(
 ):
     # same exclusion junction in this example
     return MultiJunctionQuery(
+        compilation=gs.compilation_srav3h,
         junction_list=[junction_pair_human_1, junction_pair_human_2],
         meta_data_dict=meta_data_dict_srav3h,
         df_from_snaptron_map={junction_pair_human_1.exc_coordinates: df_sample_junctions_from_srav3h},
@@ -262,6 +276,7 @@ def multi_junction_srav3h_raw_results(
     # this test fixture is similar to multi_junction_srav3h fixture but the fixture
     # requests a different return type from the query
     return MultiJunctionQuery(
+        compilation=gs.compilation_srav3h,
         junction_list=[junction_pair_human_1, junction_pair_human_2],
         meta_data_dict=meta_data_dict_srav3h,
         df_from_snaptron_map={junction_pair_human_1.exc_coordinates: df_sample_junctions_from_srav3h},
@@ -279,6 +294,7 @@ def multi_junction_srav3h_2(
 
     # reverse the junctions
     return MultiJunctionQuery(
+        compilation=gs.compilation_srav3h,
         junction_list=[junction_pair_human_2, junction_pair_human_1],
         meta_data_dict=meta_data_dict_srav3h,
         df_from_snaptron_map={junction_pair_human_1.exc_coordinates: df_sample_junctions_from_srav3h},
@@ -293,6 +309,7 @@ def multi_junction_srav3h_3(meta_data_dict_srav3h, junction_pair_human_3, juncti
     )
 
     return MultiJunctionQuery(
+        compilation=gs.compilation_srav3h,
         junction_list=[junction_pair_human_3, junction_pair_human_4],
         meta_data_dict=meta_data_dict_srav3h,
         df_from_snaptron_map={junction_pair_human_3.exc_coordinates: df_sample_junctions_from_snaptron},
@@ -320,6 +337,7 @@ def multi_junction_srav1m_1(meta_data_dict_srav1m, junction_pair_mouse_1, juncti
         Path(__file__).parent / "data/test_chr8_71666671_71671625_srav1m.tsv", sep="\t"
     )
     return MultiJunctionQuery(
+        compilation=gs.compilation_srav1m,
         junction_list=[junction_pair_mouse_1, junction_pair_mouse_2],
         meta_data_dict=meta_data_dict_srav1m,
         df_from_snaptron_map={junction_pair_mouse_1.exc_coordinates: df_sample_junctions_from_snaptron},
@@ -342,6 +360,7 @@ def compilations():
 @pytest.fixture(scope="session")
 def gene_query_srav3h_tardbp_with_edf1(meta_data_dict_srav3h, gex_data_srav3h_TARDBP, gex_data_srav3h_EDF1):
     return GEXQuery(
+        compilation=gs.compilation_srav3h,
         query_gene_id="TARDBP",
         query_gene_snaptron_data=gex_data_srav3h_TARDBP,
         query_gene_meta_data_dict=meta_data_dict_srav3h,
@@ -356,6 +375,7 @@ def gene_query_case_sensitive_srav3h_tardbp_with_edf1(
     meta_data_dict_srav3h, gex_data_srav3h_TARDBP, gex_data_srav3h_EDF1
 ):
     return GEXQuery(
+        compilation=gs.compilation_srav3h,
         query_gene_id="taRdBp",
         query_gene_snaptron_data=gex_data_srav3h_TARDBP,
         query_gene_meta_data_dict=meta_data_dict_srav3h,
@@ -369,6 +389,7 @@ def gene_query_case_sensitive_srav3h_tardbp_with_edf1(
 def gene_query_case_sensitive_srav1m_ADNP2_not_normalized(meta_data_dict_srav1m, gex_data_srav1m_ADNP2):
     # mouse datasets have the ensembles in lowercase
     return GEXQuery(
+        compilation=gs.compilation_srav1m,
         query_gene_id="aDnp2",
         query_gene_snaptron_data=gex_data_srav1m_ADNP2,
         query_gene_meta_data_dict=meta_data_dict_srav1m,
@@ -381,6 +402,7 @@ def gene_query_case_sensitive_srav1m_adnp2_with_edf1(
 ):
     # mouse datasets have the ensembles in lowercase
     return GEXQuery(
+        compilation=gs.compilation_srav1m,
         query_gene_id="aDnp2",
         query_gene_snaptron_data=gex_data_srav1m_ADNP2,
         query_gene_meta_data_dict=meta_data_dict_srav1m,

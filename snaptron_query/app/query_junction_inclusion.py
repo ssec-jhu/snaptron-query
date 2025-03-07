@@ -122,13 +122,14 @@ class JunctionInclusionQueryManager:
             # this was called for all rail_ids. Replaced the code to use dictionaries and made a significant
             # difference.
             # do lookup only if metadata does not exist
+            # DO NOT OVERRIDE meta_data. It is mutable.
             if not self.rail_id_dictionary[rail_id]["meta"]:
                 self.rail_id_dictionary[rail_id]["meta"] = meta_data_dict[rail_id]
 
             # change the sex variable from 1 or 2 to meaningful values in GTEx queries
             if str(compilation) == gs.compilation_gtexv2:
                 self.rail_id_dictionary[rail_id]["meta"][gs.snpt_col_sex] = utils.map_sex_value(
-                    str(self.rail_id_dictionary[rail_id]["meta"][gs.snpt_col_sex])
+                    self.rail_id_dictionary[rail_id]["meta"][gs.snpt_col_sex]
                 )
 
             # append the calculated results such as PSI and other counts

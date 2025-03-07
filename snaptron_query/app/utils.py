@@ -88,6 +88,14 @@ def get_element_id_and_value(children, count):
     return inc_junctions, exc_junctions
 
 
+# Define sex value
+# NOTE: meta_data is mutable so need to put in a catch for changes in sex
 def map_sex_value(status):
-    mapping_sex = {"1": "male", "2": "female"}
-    return mapping_sex.get(status)
+    status = str(status)
+    if status == "1":
+        sex = "male"
+    elif status == "2":
+        sex = "female"
+    else:
+        sex = status
+    return sex

@@ -64,6 +64,7 @@ class GeneExpressionQueryManager:
                     (rail_id, raw_count) = jiq.split_and_cast(rail_id_count_pair)
                     try:
                         # meta_data = collections.defaultdict(list)
+                        # DO NOT OVERRIDE meta_data. It is mutable.
                         meta_data = meta_data_dict[rail_id]
                         meta_data[gs.snpt_col_rail_id] = rail_id
                         meta_data[gs.table_geq_col_raw_count] = raw_count
@@ -82,7 +83,7 @@ class GeneExpressionQueryManager:
 
                         # change the sex variable from 1 or 2 to meaningful values in GTEx queries
                         if str(compilation) == gs.compilation_gtexv2:
-                            meta_data[gs.snpt_col_sex] = utils.map_sex_value(str(meta_data[gs.snpt_col_sex]))
+                            meta_data[gs.snpt_col_sex] = utils.map_sex_value(meta_data[gs.snpt_col_sex])
 
                         gathered_rail_id_meta_data_and_counts.append(meta_data)
                     except (KeyError, IndexError):
