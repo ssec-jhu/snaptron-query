@@ -127,8 +127,9 @@ class JunctionInclusionQueryManager:
 
             # change the sex variable from 1 or 2 to meaningful values in GTEx queries
             if str(compilation) == gs.compilation_gtexv2:
-                self.rail_id_dictionary[rail_id]["meta"][gs.snpt_col_sex] = \
-                    utils.map_sex_value(str(self.rail_id_dictionary[rail_id]["meta"][gs.snpt_col_sex]))
+                self.rail_id_dictionary[rail_id]["meta"][gs.snpt_col_sex] = utils.map_sex_value(
+                    str(self.rail_id_dictionary[rail_id]["meta"][gs.snpt_col_sex])
+                )
 
             # append the calculated results such as PSI and other counts
             self._calculate_percent_spliced_in(rail_id, junction_index)

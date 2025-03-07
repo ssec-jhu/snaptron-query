@@ -87,6 +87,7 @@ def get_element_id_and_value(children, count):
 
     return inc_junctions, exc_junctions
 
+
 def map_sex_value(status):
     mapping_sex = {"1": "male", "2": "female"}
     return mapping_sex.get(status)
