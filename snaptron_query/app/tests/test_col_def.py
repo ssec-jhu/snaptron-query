@@ -102,7 +102,7 @@ def test_get_col_meta_gtexv2_a(index, value):
     ],
 )
 def test_get_col_meta_gtexv2_b(index, value):
-    assert len(column_defs.get_col_meta_gtexv2_after()) == 5
+    assert len(column_defs.get_col_meta_gtexv2_after()) == 6
     assert column_defs.get_col_meta_gtexv2_after()[index]["field"] == value
 
 
