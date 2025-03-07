@@ -25,11 +25,14 @@ compilation_srav3h = "SRAv3h"
 compilation_gtexv2 = "GTEXv2"
 compilation_tcgav2 = "TCGAv2"
 compilation_srav1m = "SRAv1m"
+compilation_encode = "encode1159"
+
 compilation_names_dict = {
     compilation_srav3h: f"human ({compilation_srav3h})",
     compilation_gtexv2: f"human ({compilation_gtexv2})",
     compilation_tcgav2: f"human ({compilation_tcgav2})",
     compilation_srav1m: f"mouse ({compilation_srav1m})",
+    compilation_encode: "human (ENCODE shRNA)",
 }
 drop_compilation = "Select the dataset of interest"
 drop_compilation_placeholder = "Select a compilation"
@@ -207,6 +210,18 @@ gtexv2_meta_data_required_list = [
     "SAMPID",
     "SMTS",
     "SMTSD",
+]
+# encode list of columns read from metadata file -> do not change the ordering of this list
+encode_meta_data_required_list = [
+    snpt_col_rail_id,
+    "Experiment accession",
+    "Biosample term name",
+    "Experiment target",
+    "Biosample life stage",
+    "Biosample sex",
+    "Biosample Age",
+    "Assay",
+    "Experiment date released",
 ]
 
 # JIQ

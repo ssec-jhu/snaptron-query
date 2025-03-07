@@ -41,6 +41,7 @@ dict_srav3h = utils.read_srav3h(paths.srav3h_meta)
 dict_gtexv2 = utils.read_gtexv2(paths.gtexv2_meta)
 dict_tcgav2 = utils.read_tcgav2(paths.tcgav2_meta)
 dict_srav1m = utils.read_srav1m(paths.srav1m_meta)
+dict_encode = utils.read_encode(paths.encode_meta)
 
 
 def get_meta_data(compilation):
@@ -52,6 +53,8 @@ def get_meta_data(compilation):
         return dict_tcgav2
     elif compilation == gs.compilation_srav1m:
         return dict_srav1m
+    elif compilation == gs.compilation_encode:
+        return dict_encode
     else:
         raise PreventUpdate
 
@@ -707,4 +710,4 @@ def on_image_click_geq(n_clicks, is_open):
 
 # Run the app
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
