@@ -265,6 +265,101 @@ def get_col_meta_gtexv2_after():
     ]
 
 
+def get_col_meta_encode_before():
+    """
+    These columns go BEFORE the calculations in the order below
+    """
+    column_def = get_rail_id()
+    column_def += [
+        {  # "Experiment accession"
+            "field": "Experiment accession",
+            "headerName": "Accession",
+            "tooltipField": "Experiment accession",
+            "width": 120,
+            "filterParams": {
+                "buttons": ["reset", "apply"],
+                "closeOnApply": True,
+            },
+        },
+        {  # "Biosample term name"
+            "field": "Biosample term name",
+            "headerName": "Cell Type",
+            "tooltipField": "Biosample term name",
+            "width": 100,
+            "filterParams": {
+                "buttons": ["reset", "apply"],
+                "closeOnApply": True,
+            },
+        },
+        {  # "Experiment target"
+            "field": "Experiment target",
+            "headerName": "shRNA",
+            "tooltipField": "Experiment target",
+            "width": 150,
+            "filterParams": {
+                "buttons": ["reset", "apply"],
+                "closeOnApply": True,
+            },
+        },
+    ]
+    return column_def
+
+
+def get_col_meta_encode_after():
+    """
+    These columns go AFTER the calculations in the order below
+    rest of the metadata, from the second item on the metadata list onwards, comes after the calculations
+    """
+    return [
+        {
+            "field": "Biosample life stage",
+            "headerName": "Life Stage",
+            "width": 100,
+            "filterParams": {
+                "buttons": ["reset", "apply"],
+                "closeOnApply": True,
+            },
+        },
+        {
+            "field": "Biosample sex",
+            "headerName": "Sex",
+            "width": 80,
+            "filterParams": {
+                "buttons": ["reset", "apply"],
+                "closeOnApply": True,
+            },
+        },
+        {
+            "field": "Biosample Age",
+            "headerName": "Age",
+            "width": 100,
+            "filterParams": {
+                "buttons": ["reset", "apply"],
+                "closeOnApply": True,
+            },
+        },
+        {
+            "field": "Assay",
+            "headerName": "Assay",
+            "width": 180,
+            "tooltipField": "Assay",
+            "filterParams": {
+                "buttons": ["reset", "apply"],
+                "closeOnApply": True,
+            },
+        },
+        {
+            "field": "Experiment date released",
+            "headerName": "Release Date",
+            "width": 150,
+            "filterParams": {
+                "buttons": ["reset", "apply"],
+                "closeOnApply": True,
+            },
+        },
+    ]
+
+
 def get_col_jiq_calculations():
     return [
         {
@@ -400,6 +495,8 @@ def get_junction_query_column_def(compilation, junction_count):
     elif compilation == gs.compilation_srav1m:
         # SRAV1m is similar to SRAV3h
         return get_col_meta_srav3h_before() + col_jiq + get_col_meta_srav3h_after()
+    elif compilation == gs.compilation_encode:
+        return get_col_meta_encode_before() + col_jiq + get_col_meta_encode_after()
 
 
 def get_gene_expression_query_column_def(compilation, normalized=False):
@@ -482,6 +579,8 @@ def get_gene_expression_query_column_def(compilation, normalized=False):
     elif compilation == gs.compilation_srav1m:
         # SRAV1m is similar to SRAV3h
         return get_col_meta_srav3h_before() + gex_col + get_col_meta_srav3h_after()
+    elif compilation == gs.compilation_encode:
+        return get_col_meta_encode_before() + gex_col + get_col_meta_encode_after()
 
 
 def make_dash_ag_grid_greater_than_or_equal_filter(filter_value):

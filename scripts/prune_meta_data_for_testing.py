@@ -1,5 +1,5 @@
 import pandas as pd
-from snaptron_query.app import utils, paths, global_strings as gs
+from snaptron_query.app import utils, paths, global_strings as gs, snaptron_client as sc
 
 
 def extract_meta_data_by_study(df, study_list):
@@ -99,12 +99,18 @@ def generate_samples_srav1m(output_filename):
     pruned_file = extract_meta_data_from_these_ids_only(utils.read_srav1m(paths.srav1m_meta), rail_list)
     pd.DataFrame.to_csv(pruned_file, output_filename, sep="\t")
 
+def generate_samples_encode(output_filename):
+    rail_list = [71123, 71141, 71151, 71195, 71200, 71263, 71495]
+    pruned_file = extract_meta_data_from_these_ids_only(utils.read_encode(paths.encode_meta), rail_list)
+    pd.DataFrame.to_csv(pruned_file, output_filename, sep="\t")
+
 
 def generate_samples():
     generate_samples_srav3h(output_filename="test_srav3h_samples.tsv")
     generate_samples_gtexv2(output_filename="test_gtexv2_samples.tsv")
     generate_samples_tcgav2(output_filename="test_tcgav2_samples.tsv")
     generate_samples_srav1m(output_filename="test_srav1m_samples.tsv")
+    generate_samples_encode(output_filename="../snaptron_query/app/tests/data/test_encode_samples.tsv")
 
 
 if __name__ == "__main__":
@@ -112,3 +118,11 @@ if __name__ == "__main__":
     # take the files generated files and put them in snaptron-query/app/tests/data/
     # these files are just a small sample set of the Gigabyte files used for the app itself which includes all samples
     generate_samples()
+
+def generate_test_snaptron_encode(compilation, region, query_mode,output_filename):
+    df = sc.get_snpt_query_results_df(compilation, region, query_mode)
+    pd.DataFrame.to_csv(df, output_filename, sep="\t")
+
+def generate_test_snaptron():
+    generate_test_snaptron_encode(gs.compilation_encode, "chr19:4491836-4493702", "snaptron",
+                                  output_filename="../snaptron_query/app/tests/data/test_chr19_4491836_4493702_encode.tsv")
