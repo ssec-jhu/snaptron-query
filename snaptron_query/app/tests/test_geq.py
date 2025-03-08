@@ -154,6 +154,7 @@ def test_gex_errors_2(meta_data_dict_srav3h, gex_data_srav3h_TARDBP, gex_data_sr
     with pytest.raises(exceptions.NormalizationGeneNotFound):
         # EDF2 is a made up gene
         GEXQuery(
+            compilation=gs.compilation_srav3h,
             query_gene_id="TARDBP",
             query_gene_snaptron_data=gex_data_srav3h_TARDBP,
             query_gene_meta_data_dict=meta_data_dict_srav3h,

@@ -222,6 +222,7 @@ def test_jiq_empty_exc_junctions(
             inc_coordinates=sc.JunctionCoordinates(inc_chr, inc_start, inc_end),
         )
         JunctionQuery(
+            compilation=gs.compilation_srav3h,
             junction_list=[splice_pair],
             meta_data_dict={},
             df_from_snaptron_map={splice_pair.exc_coordinates: df_sample_junctions_from_srav3h},
@@ -241,6 +242,7 @@ def test_jiq_empty_inc_junctions(
             inc_coordinates=sc.JunctionCoordinates(inc_chr, inc_start, inc_end),
         )
         JunctionQuery(
+            compilation=gs.compilation_srav3h,
             junction_list=[splice_pair],
             meta_data_dict={},
             df_from_snaptron_map={splice_pair.exc_coordinates: df_sample_junctions_from_srav3h},

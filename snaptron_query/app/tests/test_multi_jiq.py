@@ -136,6 +136,7 @@ def test_mjq_4(multi_junction_srav1m_1, rail_id, external_id, psi_1, psi_2):
 def test_multijq_empty_inclusion_error(multi_junction_srav3h_one_empty_inclusion, meta_data_dict_srav3h):
     with pytest.raises(Exception) as exc_info:
         MultiJunctionQuery(
+            compilation=gs.compilation_srav3h,
             junction_list=multi_junction_srav3h_one_empty_inclusion[0],
             meta_data_dict=meta_data_dict_srav3h,
             df_from_snaptron_map=multi_junction_srav3h_one_empty_inclusion[1],

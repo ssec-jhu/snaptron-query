@@ -47,3 +47,20 @@ def test_log_2_plus(psi, value):
 )
 def test_coordinates_to_formatted_string(coordinates, result):
     assert sc.coordinates_to_formatted_string(sc.geq_verify_coordinate(coordinates)) == result
+
+
+@pytest.mark.parametrize(
+    "status,value",
+    [
+        (1, "male"),
+        (2, "female"),
+        ("1", "male"),
+        ("2", "female"),
+        ("male", "male"),
+        ("female", "female"),
+        ("", ""),
+        (None, "None"),
+    ],
+)
+def test_map_sex_value(status, value):
+    assert utils.map_sex_value(status) == value

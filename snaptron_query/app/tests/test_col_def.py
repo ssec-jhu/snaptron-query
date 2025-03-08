@@ -95,13 +95,14 @@ def test_get_col_meta_gtexv2_a(index, value):
     [
         (0, "SEX"),
         (1, "AGE"),
-        (2, "SAMPID"),
-        (3, "SMTS"),
-        (4, "SMTSD"),
+        (2, "SUBJID"),
+        (3, "SAMPID"),
+        (4, "SMTS"),
+        (5, "SMTSD"),
     ],
 )
 def test_get_col_meta_gtexv2_b(index, value):
-    assert len(column_defs.get_col_meta_gtexv2_after()) == 5
+    assert len(column_defs.get_col_meta_gtexv2_after()) == 6
     assert column_defs.get_col_meta_gtexv2_after()[index]["field"] == value
 
 

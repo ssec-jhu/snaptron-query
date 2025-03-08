@@ -223,6 +223,16 @@ def get_col_meta_gtexv2_after():
             },
         },
         {
+            "field": "SUBJID",
+            "headerName": "SUBJID",
+            "tooltipField": "SUBJID",
+            "width": 180,
+            "filterParams": {
+                "buttons": ["reset", "apply"],
+                "closeOnApply": True,
+            },
+        },
+        {
             "field": "SAMPID",
             "headerName": "SAMPID",
             "tooltipField": "SAMPID",

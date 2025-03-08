@@ -111,7 +111,7 @@ class JunctionInclusionQueryManager:
         # accumulate the psi sum values
         self.rail_id_dictionary[rail_id]["psi_sum"] += psi
 
-    def _gather_rail_id_data(self, rail_id, meta_data_dict, junction_index):
+    def _gather_rail_id_data(self, rail_id, meta_data_dict, junction_index, compilation):
         """Given the metadata for the compilation and the rail ids,function extracts the related metadata for
         rail ids
         """
@@ -122,8 +122,15 @@ class JunctionInclusionQueryManager:
             # this was called for all rail_ids. Replaced the code to use dictionaries and made a significant
             # difference.
             # do lookup only if metadata does not exist
+            # DO NOT OVERRIDE meta_data. It is mutable.
             if not self.rail_id_dictionary[rail_id]["meta"]:
                 self.rail_id_dictionary[rail_id]["meta"] = meta_data_dict[rail_id]
+
+            # change the sex variable from 1 or 2 to meaningful values in GTEx queries
+            if str(compilation) == gs.compilation_gtexv2:
+                self.rail_id_dictionary[rail_id]["meta"][gs.snpt_col_sex] = utils.map_sex_value(
+                    self.rail_id_dictionary[rail_id]["meta"][gs.snpt_col_sex]
+                )
 
             # append the calculated results such as PSI and other counts
             self._calculate_percent_spliced_in(rail_id, junction_index)
@@ -178,7 +185,7 @@ class JunctionInclusionQueryManager:
         return df.loc[(df["start"] == start) & (df["end"] == end)]
 
     def run_junction_inclusion_query(
-        self, meta_data_dict, df_snpt_results_dict, junctions_list, return_type: JiqReturnType
+        self, meta_data_dict, df_snpt_results_dict, junctions_list, compilation, return_type: JiqReturnType
     ):
         """Given the snaptron interface results in a map, this function calculates the Percent Spliced In (PSI)
         given the inclusion junction and the exclusion junctions. If multiple junctions are provided,
@@ -218,7 +225,7 @@ class JunctionInclusionQueryManager:
         # this will populate self.gathered_rail_id_meta_data_and_psi
         for junction_index in range(0, len(junctions_list)):
             for rail_id in self.rail_id_dictionary:
-                self._gather_rail_id_data(rail_id, meta_data_dict, junction_index)
+                self._gather_rail_id_data(rail_id, meta_data_dict, junction_index, compilation)
 
         query_results = {}
         if return_type == JiqReturnType.RAW:
