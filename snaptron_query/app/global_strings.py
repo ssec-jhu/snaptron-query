@@ -155,6 +155,7 @@ geq_box_plot_y_axes_log = f"Log\u2082(Gene Expression Count+{const_log_epsilon})
 geq_log_count = f"Log\u2082(count+{const_log_epsilon})"
 geq_help_checkbox = "Check this box if you need to enter gene coordinates in addition to gene name"
 geq_provide_coordinates = "I want to provide gene coordinates in addition to Gene ID (use when Gene ID is not found)."
+geq_encode_norm_error = "ENCODE shRNA gene expression data has too few datasets too be normalized"
 
 """""" """""" """""" """""" """""" """""" """""" """""" """""" """""" """
     Strings beyond this point are related to the snaptron interface

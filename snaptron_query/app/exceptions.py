@@ -64,6 +64,12 @@ class MatchingQueryAndNormGene(Exception):
     pass
 
 
+class EncodeNormAttempt(Exception):
+    """Raised when the data compilation is ENCODE for GEQ and trying to normalize"""
+
+    pass
+
+
 def alert_message_from_exception(exception):
     e = type(exception)
     if e == BadURL:
@@ -88,6 +94,8 @@ def alert_message_from_exception(exception):
         alert_message = gs.httpx_remote_protocol_error
     elif e == httpx.ConnectError or e == httpx.ConnectTimeout:
         alert_message = gs.httpx_connect_error
+    elif e == EncodeNormAttempt:
+        alert_message = gs.geq_encode_norm_error
     else:
         alert_message = f"Exception Occurred: {exception}"
 
