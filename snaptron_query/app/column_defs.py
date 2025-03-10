@@ -282,9 +282,9 @@ def get_col_meta_encode_before():
             },
         },
         {  # "Biosample term name"
-            "field": "Biosample term name",
+            "field": gs.snpt_col_cell_line,
             "headerName": "Cell Type",
-            "tooltipField": "Biosample term name",
+            "tooltipField": gs.snpt_col_cell_line,
             "width": 100,
             "filterParams": {
                 "buttons": ["reset", "apply"],

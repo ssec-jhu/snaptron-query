@@ -223,6 +223,7 @@ def test_on_delete_junction_click_exception(monkeypatch_meta_data):
         gs.compilation_gtexv2,
         gs.compilation_tcgav2,
         gs.compilation_srav1m,
+        gs.compilation_encode,
     ],
 )
 def test_get_meta_data(monkeypatch_meta_data, compilation):

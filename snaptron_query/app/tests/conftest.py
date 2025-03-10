@@ -12,6 +12,7 @@ path_srav3h_meta = Path(__file__).parent / "data/test_srav3h_samples.tsv"
 path_gtexv2_meta = Path(__file__).parent / "data/test_gtexv2_samples.tsv"
 path_tcgav2_meta = Path(__file__).parent / "data/test_tcgav2_samples.tsv"
 path_srav1m_meta = Path(__file__).parent / "data/test_srav1m_samples.tsv"
+path_encode_meta = Path(__file__).parent / "data/test_encode_samples.tsv"
 
 path_sample_junction_data_srav3h = Path(__file__).parent / "data/test_chr19_4491836_4493702_srav3h.tsv"
 
@@ -111,6 +112,7 @@ def monkeypatch_meta_data(monkeypatch):
     monkeypatch.setattr(paths, "gtexv2_meta", path_gtexv2_meta)
     monkeypatch.setattr(paths, "tcgav2_meta", path_tcgav2_meta)
     monkeypatch.setattr(paths, "srav1m_meta", path_srav1m_meta)
+    monkeypatch.setattr(paths, "encode_meta", path_encode_meta)
 
 
 @pytest.fixture(scope="session")
@@ -252,6 +254,23 @@ def junction_srav1m(meta_data_dict_srav1m, junction_pair_mouse_1):
         compilation=gs.compilation_srav1m,
         junction_list=[junction_pair_mouse_1],
         meta_data_dict=meta_data_dict_srav1m,
+        df_from_snaptron_map=df_sample_junctions_from_snaptron_map,
+    )
+
+
+@pytest.fixture(scope="session")
+def junction_encode(junction_pair_human_1):
+    # this is extracted from the encode compilation
+    meta_data_dict = utils.read_encode(path_encode_meta)
+    path = Path(__file__).parent / "data/test_chr19_4491836_4493702_encode.tsv"
+    df_sample_junctions_from_snaptron = pd.read_csv(path, sep="\t")
+
+    df_sample_junctions_from_snaptron_map = {junction_pair_human_1.exc_coordinates: df_sample_junctions_from_snaptron}
+
+    return JunctionQuery(
+        compilation=gs.compilation_encode,
+        junction_list=[junction_pair_human_1],
+        meta_data_dict=meta_data_dict,
         df_from_snaptron_map=df_sample_junctions_from_snaptron_map,
     )
 

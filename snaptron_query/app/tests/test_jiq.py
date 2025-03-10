@@ -146,6 +146,27 @@ def test_jiq_results_tcgav2(junction_tcgav2, rail_id, study, inc, exc, psi):
 
 
 @pytest.mark.parametrize(
+    "rail_id,cell, inc,exc,psi",
+    [
+        (71123, "K562", 0, 35, 0),
+        (71141, "K562", 0, 4, 0),
+        (71151, "K562", 0, 16, 0),
+        (71195, "K562", 0, 78, 0),
+        (71200, "HepG2", 0, 22, 0),
+        (71263, "IMR-90", 0, 667, 0),
+        (71495, "HepG2", 0, 31, 0),
+        (71741, "K562", 14, 59, 19.18),
+    ],
+)
+def test_jiq_results_encode(junction_encode, rail_id, cell, inc, exc, psi):
+    s = junction_encode.get_results().loc[rail_id]
+    assert s[gs.snpt_col_cell_line] == cell
+    assert s[gs.table_jiq_col_inc] == inc
+    assert s[gs.table_jiq_col_exc] == exc
+    assert s[gs.table_jiq_col_psi] == psi
+
+
+@pytest.mark.parametrize(
     "rail_id,study,inc,exc,psi",
     [
         (3072016, "SRP057123", 21, 0, 100.0),

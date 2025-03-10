@@ -171,6 +171,7 @@ snpt_col_study = "study"
 snpt_col_study_title = "study_title"
 snpt_col_run_acc = "run_acc"
 snpt_col_sex = "SEX"
+snpt_col_cell_line = "Biosample term name"
 
 # srav3h and srav1m list of columns read from metadata file -> do not change the ordering of this list
 srav3h_meta_data_required_list = [
@@ -225,7 +226,7 @@ gtexv2_meta_data_required_list = [
 encode_meta_data_required_list = [
     snpt_col_rail_id,
     "Experiment accession",
-    "Biosample term name",
+    snpt_col_cell_line,
     "Experiment target",
     "Biosample life stage",
     "Biosample sex",

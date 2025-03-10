@@ -81,7 +81,7 @@ def test_get_col_meta_tcgav2_b(index, value):
     "index, value",
     [
         (0, gs.snpt_col_rail_id),
-        (1, "run_acc"),
+        (1, gs.snpt_col_run_acc),
         (2, gs.snpt_col_study),
     ],
 )
@@ -104,6 +104,35 @@ def test_get_col_meta_gtexv2_a(index, value):
 def test_get_col_meta_gtexv2_b(index, value):
     assert len(column_defs.get_col_meta_gtexv2_after()) == 6
     assert column_defs.get_col_meta_gtexv2_after()[index]["field"] == value
+
+
+@pytest.mark.parametrize(
+    "index, value",
+    [
+        (0, gs.snpt_col_rail_id),
+        (1, "Experiment accession"),
+        (2, gs.snpt_col_cell_line),
+        (3, "Experiment target"),
+    ],
+)
+def test_get_col_meta_encode_a(index, value):
+    assert len(column_defs.get_col_meta_encode_before()) == 4
+    assert column_defs.get_col_meta_encode_before()[index]["field"] == value
+
+
+@pytest.mark.parametrize(
+    "index, value",
+    [
+        (0, "Biosample life stage"),
+        (1, "Biosample sex"),
+        (2, "Biosample Age"),
+        (3, "Assay"),
+        (4, "Experiment date released"),
+    ],
+)
+def test_get_col_meta_encode_b(index, value):
+    assert len(column_defs.get_col_meta_encode_after()) == 5
+    assert column_defs.get_col_meta_encode_after()[index]["field"] == value
 
 
 @pytest.mark.parametrize(
@@ -165,6 +194,24 @@ def test_get_col_meta_gtexv2_b(index, value):
         (gs.compilation_tcgav2, 4, 2, "study"),
         (gs.compilation_tcgav2, 4, 3, "avg_psi"),
         (gs.compilation_tcgav2, 4, 4, "psi_1"),
+        # encode compilation
+        (gs.compilation_encode, 2, 0, "rail_id"),
+        (gs.compilation_encode, 2, 1, "run_acc"),
+        (gs.compilation_encode, 2, 2, "study"),
+        (gs.compilation_encode, 2, 3, "avg_psi"),
+        (gs.compilation_encode, 2, 4, "psi_1"),
+        # three junctions
+        (gs.compilation_encode, 3, 0, "rail_id"),
+        (gs.compilation_encode, 3, 1, "run_acc"),
+        (gs.compilation_encode, 3, 2, "study"),
+        (gs.compilation_encode, 3, 3, "avg_psi"),
+        (gs.compilation_encode, 3, 4, "psi_1"),
+        # four junctions
+        (gs.compilation_encode, 4, 0, "rail_id"),
+        (gs.compilation_encode, 4, 1, "run_acc"),
+        (gs.compilation_encode, 4, 2, "study"),
+        (gs.compilation_encode, 4, 3, "avg_psi"),
+        (gs.compilation_encode, 4, 4, "psi_1"),
         # mouse compilation
         (gs.compilation_srav1m, 2, 0, "rail_id"),
         (gs.compilation_srav1m, 2, 1, "external_id"),
@@ -236,6 +283,21 @@ def test_get_junction_query_column_def(compilation, junction_count, index, value
         (gs.compilation_tcgav2, False, 2, "study"),
         (gs.compilation_tcgav2, False, 3, gs.table_geq_col_raw_count),
         (gs.compilation_tcgav2, False, 4, gs.table_geq_col_log_2_raw),
+        # encode compilation
+        (gs.compilation_encode, True, 0, "rail_id"),
+        (gs.compilation_encode, True, 1, "Experiment accession"),
+        (gs.compilation_encode, True, 2, gs.snpt_col_cell_line),
+        (gs.compilation_encode, True, 3, "Experiment target"),
+        (gs.compilation_encode, True, 4, gs.table_geq_col_raw_count),
+        (gs.compilation_encode, True, 5, "factor"),
+        (gs.compilation_encode, True, 6, "normalized_count"),
+        # not normalized
+        (gs.compilation_encode, False, 0, "rail_id"),
+        (gs.compilation_encode, True, 1, "Experiment accession"),
+        (gs.compilation_encode, True, 2, gs.snpt_col_cell_line),
+        (gs.compilation_encode, True, 3, "Experiment target"),
+        (gs.compilation_encode, False, 4, gs.table_geq_col_raw_count),
+        (gs.compilation_encode, False, 5, gs.table_geq_col_log_2_raw),
         # mouse compilation
         (gs.compilation_srav1m, True, 0, "rail_id"),
         (gs.compilation_srav1m, True, 1, "external_id"),

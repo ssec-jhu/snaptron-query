@@ -259,6 +259,7 @@ def test_get_tabs():
         (paths.srav3h_meta, paths.filename_srav3h),
         (paths.gtexv2_meta, paths.filename_gtexv2),
         (paths.tcgav2_meta, paths.filename_tcgav2),
+        (paths.encode_meta, paths.filename_encode),
         (paths.srav1m_meta, paths.filename_srav1m),
     ],
 )
