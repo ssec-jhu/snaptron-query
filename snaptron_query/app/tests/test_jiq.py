@@ -222,7 +222,7 @@ def test_split_and_verify_mismatch_chromosomes():
         sc.jiq_verify_coordinate_pairs("chr19:5000-6000", "chr29:4000-5000")
 
 
-@pytest.mark.parametrize("rail_id", [2171668, 988956, 1127039, 499887, 988942, 1641727, 1641757, 2109561])
+@pytest.mark.parametrize(gs.snpt_col_rail_id, [2171668, 988956, 1127039, 499887, 988942, 1641727, 1641757, 2109561])
 def test_jiq_psi_results_vs_shinyapp_website(junction_srav3h, ground_truth_df, rail_id):
     our_results = junction_srav3h.get_results().loc[rail_id]
     ground_truth = ground_truth_df.loc[rail_id]

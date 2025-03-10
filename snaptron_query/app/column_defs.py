@@ -205,8 +205,8 @@ def get_col_meta_gtexv2_after():
     """
     return [
         {
-            "field": "SEX",
-            "headerName": "SEX",
+            "field": gs.snpt_col_sex,
+            "headerName": gs.snpt_col_sex,
             "width": 80,
             "filterParams": {
                 "buttons": ["reset", "apply"],

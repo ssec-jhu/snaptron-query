@@ -111,7 +111,7 @@ def generate_samples():
     generate_samples_gtexv2(output_filename="test_gtexv2_samples.tsv")
     generate_samples_tcgav2(output_filename="test_tcgav2_samples.tsv")
     generate_samples_srav1m(output_filename="test_srav1m_samples.tsv")
-    generate_samples_encode(output_filename="../snaptron_query/app/tests/data/test_encode_samples.tsv")
+    generate_samples_encode(output_filename="test_encode_samples.tsv")
 
 
 if __name__ == "__main__":

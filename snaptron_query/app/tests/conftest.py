@@ -96,7 +96,7 @@ class GEXQuery:
         return self.gex_mgr.normalization_factor_table
 
     def get_results(self):
-        return pd.DataFrame(self.results_list_of_dict).set_index("rail_id")
+        return pd.DataFrame(self.results_list_of_dict).set_index(gs.snpt_col_rail_id)
 
 
 @pytest.fixture
