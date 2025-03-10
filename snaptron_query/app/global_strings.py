@@ -66,7 +66,7 @@ help_normalization = (
     'this case is by the "study" group for each dataset. For SRA, the expression for your gene of '
     "interest is normalized by the expression of the normalization gene within the study group. For GTeX samples, "
     'the "study" is each tissue. For TCGA the "study" is each cancer type. The ENCODE shRNA data compilation has too '
-    'few samples for this kind of normalization.'
+    "few samples for this kind of normalization."
 )
 
 image_title_gex = "Genes with Low mRNA Expression Variation"
