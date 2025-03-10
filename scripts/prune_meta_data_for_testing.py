@@ -121,15 +121,53 @@ if __name__ == "__main__":
     generate_samples()
 
 
-def generate_test_snaptron_encode(compilation, region, query_mode, output_filename):
+# This will generate a sample for all compilations given the compilation + chromosomal region
+# these are in ../tests/data
+def generate_test_snaptron(
+    compilation,
+    region,
+    output_filename,
+    query_mode="snaptron",
+):
     df = sc.get_snpt_query_results_df(compilation, region, query_mode)
     pd.DataFrame.to_csv(df, output_filename, sep="\t")
 
 
-def generate_test_snaptron():
-    generate_test_snaptron_encode(
+def generate_test_snaptron_srav3h():
+    generate_test_snaptron(
+        gs.compilation_srav3h,
+        gs.jiq_input_exc_placeholder,
+        output_filename="test_chr19_4491836_4493702_srav3h.tsv",
+    )
+
+
+def generate_test_snaptron_gtexv2():
+    generate_test_snaptron(
+        gs.compilation_gtexv2,
+        gs.jiq_input_exc_placeholder,
+        output_filename="test_chr19_4491836_4493702_gtexv2.tsv",
+    )
+
+
+def generate_test_snaptron_tcgav2():
+    generate_test_snaptron(
+        gs.compilation_tcgav2,
+        gs.jiq_input_exc_placeholder,
+        output_filename="test_chr19_4491836_4493702_tcgav2.tsv",
+    )
+
+
+def generate_test_snaptron_encode():
+    generate_test_snaptron(
         gs.compilation_encode,
-        "chr19:4491836-4493702",
-        "snaptron",
-        output_filename="../snaptron_query/app/tests/data/test_chr19_4491836_4493702_encode.tsv",
+        gs.jiq_input_exc_placeholder,
+        output_filename="data/test_chr19_4491836_4493702_encode.tsv",
+    )
+
+
+def generate_test_snaptron_srav1m():
+    generate_test_snaptron(
+        gs.compilation_srav1m,
+        "chr8:71666671-71671625",
+        output_filename="data/test_chr8_71666671_71671625_srav1m.tsv",
     )
