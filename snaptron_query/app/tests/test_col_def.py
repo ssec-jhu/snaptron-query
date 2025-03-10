@@ -18,6 +18,7 @@ def test_get_rail_id():
     assert column_defs.get_rail_id()[0]["field"] == gs.snpt_col_rail_id
     assert column_defs.get_col_meta_tcgav2_before()[0]["field"] == gs.snpt_col_rail_id
     assert column_defs.get_col_meta_gtexv2_before()[0]["field"] == gs.snpt_col_rail_id
+    assert column_defs.get_col_meta_encode_before()[0]["field"] == gs.snpt_col_rail_id
 
 
 def test_get_generic_col():
