@@ -23,7 +23,9 @@ class GeneExpressionQueryManager:
         # if I convert it to a dictionary, instead of using a dataframe there is a big performance boost
         # meta_data_dict = meta_data_df['study'].to_dict()
         meta_data_dict = {
-            key: inner_dict[gs.snpt_col_study] for key, inner_dict in meta_data_dict.items() if gs.snpt_col_study in inner_dict
+            key: inner_dict[gs.snpt_col_study]
+            for key, inner_dict in meta_data_dict.items()
+            if gs.snpt_col_study in inner_dict
         }
 
         for sample_set in row_df[gs.snpt_col_samples]:  # list_of_sample_count_pairs
