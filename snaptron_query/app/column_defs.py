@@ -85,27 +85,27 @@ def get_col_meta_srav3h_after():
     """
     return [
         {
-            "field": "sample_name",
+            "field": gs.snpt_col_sample_name,
             "headerName": "Sample_Name",
             "width": 150 + 20,
             "filterParams": {
                 "buttons": ["reset", "apply"],
                 "closeOnApply": True,
             },
-            "tooltipField": "sample_name",
+            "tooltipField": gs.snpt_col_sample_name,
         },
         {
-            "field": "sample_title",
+            "field": gs.snpt_col_sample_title,
             "headerName": "Sample_Title",
             "width": 150,
             "filterParams": {
                 "buttons": ["reset", "apply"],
                 "closeOnApply": True,
             },
-            "tooltipField": "sample_title",
+            "tooltipField": gs.snpt_col_sample_title,
         },
         {
-            "field": "library_layout",
+            "field": gs.snpt_col_library_layout,
             "headerName": "Library",
             "width": 100,
             "filterParams": {
@@ -114,14 +114,14 @@ def get_col_meta_srav3h_after():
             },
         },
         {
-            "field": "sample_description",
+            "field": gs.snpt_col_sample_description,
             "headerName": "Sample_Description",
             "width": 200,
             "filterParams": {
                 "buttons": ["reset", "apply"],
                 "closeOnApply": True,
             },
-            "tooltipField": "sample_description",
+            "tooltipField": gs.snpt_col_sample_description,
         },
     ]
 
@@ -133,9 +133,9 @@ def get_col_meta_tcgav2_before():
     column_def = get_rail_id()
     column_def += [
         {  # gdc_cases.project.primary_site
-            "field": "gdc_cases.project.primary_site",
+            "field": gs.snpt_col_gdc_prim_site,
             "headerName": "gdc_cases.project.primary_site",
-            "tooltipField": "gdc_cases.project.primary_site",
+            "tooltipField": gs.snpt_col_gdc_prim_site,
             "width": 200,
             "filterParams": {
                 "buttons": ["reset", "apply"],
@@ -214,7 +214,7 @@ def get_col_meta_gtexv2_after():
             },
         },
         {
-            "field": "AGE",
+            "field": gs.snpt_col_caps_age,
             "headerName": "AGE",
             "width": 90,
             "filterParams": {
@@ -223,9 +223,9 @@ def get_col_meta_gtexv2_after():
             },
         },
         {
-            "field": "SUBJID",
-            "headerName": "SUBJID",
-            "tooltipField": "SUBJID",
+            "field": gs.snpt_col_SUBJID,
+            "headerName": gs.snpt_col_SUBJID,
+            "tooltipField": gs.snpt_col_SUBJID,
             "width": 180,
             "filterParams": {
                 "buttons": ["reset", "apply"],
@@ -233,9 +233,9 @@ def get_col_meta_gtexv2_after():
             },
         },
         {
-            "field": "SAMPID",
-            "headerName": "SAMPID",
-            "tooltipField": "SAMPID",
+            "field": gs.snpt_col_SAMPID,
+            "headerName": gs.snpt_col_SAMPID,
+            "tooltipField": gs.snpt_col_SAMPID,
             "width": 180,
             "filterParams": {
                 "buttons": ["reset", "apply"],
@@ -243,9 +243,9 @@ def get_col_meta_gtexv2_after():
             },
         },
         {
-            "field": "SMTS",
-            "headerName": "SMTS",
-            "tooltipField": "SMTS",
+            "field": gs.snpt_col_smts,
+            "headerName": gs.snpt_col_smts,
+            "tooltipField": gs.snpt_col_smts,
             "width": 150,
             "filterParams": {
                 "buttons": ["reset", "apply"],
@@ -253,9 +253,9 @@ def get_col_meta_gtexv2_after():
             },
         },
         {
-            "field": "SMTSD",
-            "headerName": "SMTSD",
-            "tooltipField": "SMTSD",
+            "field": gs.snpt_col_smtsd,
+            "headerName": gs.snpt_col_smtsd,
+            "tooltipField": gs.snpt_col_smtsd,
             "width": 230,
             "filterParams": {
                 "buttons": ["reset", "apply"],
@@ -272,9 +272,9 @@ def get_col_meta_encode_before():
     column_def = get_rail_id()
     column_def += [
         {  # "Experiment accession"
-            "field": "Experiment accession",
+            "field": gs.snpt_col_exp_acc,
             "headerName": "Accession",
-            "tooltipField": "Experiment accession",
+            "tooltipField": gs.snpt_col_exp_acc,
             "width": 120,
             "filterParams": {
                 "buttons": ["reset", "apply"],
@@ -292,9 +292,9 @@ def get_col_meta_encode_before():
             },
         },
         {  # "Experiment target"
-            "field": "Experiment target",
+            "field": gs.snpt_col_exp_target,
             "headerName": "shRNA",
-            "tooltipField": "Experiment target",
+            "tooltipField": gs.snpt_col_exp_target,
             "width": 150,
             "filterParams": {
                 "buttons": ["reset", "apply"],
@@ -312,7 +312,7 @@ def get_col_meta_encode_after():
     """
     return [
         {
-            "field": "Biosample life stage",
+            "field": gs.snpt_col_biosamp_life_stage,
             "headerName": "Life Stage",
             "width": 100,
             "filterParams": {
@@ -321,7 +321,7 @@ def get_col_meta_encode_after():
             },
         },
         {
-            "field": "Biosample sex",
+            "field": gs.snpt_col_biosamp_life_sex,
             "headerName": "Sex",
             "width": 80,
             "filterParams": {
@@ -330,7 +330,7 @@ def get_col_meta_encode_after():
             },
         },
         {
-            "field": "Biosample Age",
+            "field": gs.snpt_col_biosamp_life_age,
             "headerName": "Age",
             "width": 100,
             "filterParams": {
@@ -339,17 +339,17 @@ def get_col_meta_encode_after():
             },
         },
         {
-            "field": "Assay",
-            "headerName": "Assay",
+            "field": gs.snpt_col_assay,
+            "headerName": gs.snpt_col_assay,
             "width": 180,
-            "tooltipField": "Assay",
+            "tooltipField": gs.snpt_col_assay,
             "filterParams": {
                 "buttons": ["reset", "apply"],
                 "closeOnApply": True,
             },
         },
         {
-            "field": "Experiment date released",
+            "field": gs.snpt_col_exp_date_rel,
             "headerName": "Release Date",
             "width": 150,
             "filterParams": {

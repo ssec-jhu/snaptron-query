@@ -114,13 +114,6 @@ def generate_samples():
     generate_samples_encode(output_filename="test_encode_samples.tsv")
 
 
-if __name__ == "__main__":
-    # this will generate a sample metadata file for all 4 compilations given the rail id in the lists provided
-    # take the files generated files and put them in snaptron-query/app/tests/data/
-    # these files are just a small sample set of the Gigabyte files used for the app itself which includes all samples
-    generate_samples()
-
-
 # This will generate a sample for all compilations given the compilation + chromosomal region
 # these are in ../tests/data
 def generate_test_snaptron(
@@ -171,3 +164,10 @@ def generate_test_snaptron_srav1m():
         "chr8:71666671-71671625",
         output_filename="data/test_chr8_71666671_71671625_srav1m.tsv",
     )
+
+
+if __name__ == "__main__":
+    # this will generate a sample metadata file for all 4 compilations given the rail id in the lists provided
+    # take the files generated files and put them in snaptron-query/app/tests/data/
+    # these files are just a small sample set of the Gigabyte files used for the app itself which includes all samples
+    generate_samples()

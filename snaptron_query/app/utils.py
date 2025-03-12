@@ -7,7 +7,7 @@ from snaptron_query.app import exceptions, global_strings as gs
 def read_srav3h_into_df(file_path):
     # read the file and make sure index is set to the rail id for fast lookup
     return pd.read_csv(
-        file_path, sep="\t", usecols=gs.srav3h_meta_data_required_list, dtype={"sample_description": "string"}
+        file_path, sep="\t", usecols=gs.srav3h_meta_data_required_list, dtype={gs.snpt_col_sample_description: "string"}
     )
 
 
@@ -20,7 +20,10 @@ def read_srav1m(file_path):
     # read the file and make sure index is set to the rail id for fast lookup
     return (
         pd.read_csv(
-            file_path, sep="\t", usecols=gs.srav1m_meta_data_required_list, dtype={"sample_description": "string"}
+            file_path,
+            sep="\t",
+            usecols=gs.srav1m_meta_data_required_list,
+            dtype={gs.snpt_col_sample_description: "string"},
         )
         .set_index(gs.snpt_col_rail_id)
         .to_dict(orient="index")

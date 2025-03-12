@@ -174,6 +174,23 @@ snpt_col_study_title = "study_title"
 snpt_col_run_acc = "run_acc"
 snpt_col_sex = "SEX"
 snpt_col_cell_line = "Biosample term name"
+snpt_col_sample_name = "sample_name"
+snpt_col_sample_title = "sample_title"
+snpt_col_library_layout = "library_layout"
+snpt_col_sample_description = "sample_description"
+snpt_col_gdc_prim_site = "gdc_cases.project.primary_site"
+snpt_col_caps_age = "AGE"
+snpt_col_SUBJID = "SUBJID"
+snpt_col_SAMPID = "SAMPID"
+snpt_col_smts = "SMTS"
+snpt_col_smtsd = "SMTSD"
+snpt_col_exp_acc = "Experiment accession"
+snpt_col_exp_target = "Experiment target"
+snpt_col_biosamp_life_stage = "Biosample life stage"
+snpt_col_biosamp_life_sex = "Biosample sex"
+snpt_col_biosamp_life_age = "Biosample Age"
+snpt_col_assay = "Assay"
+snpt_col_exp_date_rel = "Experiment date released"
 
 # srav3h and srav1m list of columns read from metadata file -> do not change the ordering of this list
 srav3h_meta_data_required_list = [
@@ -181,10 +198,10 @@ srav3h_meta_data_required_list = [
     snpt_col_external_id,
     snpt_col_study,
     snpt_col_study_title,
-    "library_layout",
-    "sample_description",
-    "sample_name",
-    "sample_title",
+    snpt_col_library_layout,
+    snpt_col_sample_description,
+    snpt_col_sample_name,
+    snpt_col_sample_title,
 ]
 
 srav1m_meta_data_required_list = srav3h_meta_data_required_list  # SRA mouse and SRA human are similar
@@ -192,7 +209,7 @@ srav1m_meta_data_required_list = srav3h_meta_data_required_list  # SRA mouse and
 # tcgav2 list of columns read from metadata file -> do not change the ordering of this list
 tcgav2_meta_data_required_list = [
     snpt_col_rail_id,
-    "gdc_cases.project.primary_site",
+    snpt_col_gdc_prim_site,
     snpt_col_study,
     "tcga_barcode",
     "gdc_cases.project.name",
@@ -217,24 +234,24 @@ gtexv2_meta_data_required_list = [
     snpt_col_run_acc,
     snpt_col_study,
     snpt_col_sex,
-    "AGE",
-    "SUBJID",
-    "SAMPID",
-    "SMTS",
-    "SMTSD",
+    snpt_col_caps_age,
+    snpt_col_SUBJID,
+    snpt_col_SAMPID,
+    snpt_col_smts,
+    snpt_col_smtsd,
 ]
 
 # encode list of columns read from metadata file
 encode_meta_data_required_list = [
     snpt_col_rail_id,
-    "Experiment accession",
+    snpt_col_exp_acc,
     snpt_col_cell_line,
-    "Experiment target",
-    "Biosample life stage",
-    "Biosample sex",
-    "Biosample Age",
-    "Assay",
-    "Experiment date released",
+    snpt_col_exp_target,
+    snpt_col_biosamp_life_stage,
+    snpt_col_biosamp_life_sex,
+    snpt_col_biosamp_life_age,
+    snpt_col_assay,
+    snpt_col_exp_date_rel,
 ]
 
 # JIQ

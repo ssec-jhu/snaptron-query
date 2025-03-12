@@ -43,10 +43,10 @@ def test_get_col_meta_srav3h_a(index, value):
 @pytest.mark.parametrize(
     "index, value",
     [
-        (0, "sample_name"),
-        (1, "sample_title"),
-        (2, "library_layout"),
-        (3, "sample_description"),
+        (0, gs.snpt_col_sample_name),
+        (1, gs.snpt_col_sample_title),
+        (2, gs.snpt_col_library_layout),
+        (3, gs.snpt_col_sample_description),
     ],
 )
 def test_get_col_meta_srav3h_b(index, value):
@@ -57,7 +57,7 @@ def test_get_col_meta_srav3h_b(index, value):
     "index, value",
     [
         (0, gs.snpt_col_rail_id),
-        (1, "gdc_cases.project.primary_site"),
+        (1, gs.snpt_col_gdc_prim_site),
         (2, gs.snpt_col_study),
     ],
 )
@@ -95,11 +95,11 @@ def test_get_col_meta_gtexv2_a(index, value):
     "index, value",
     [
         (0, gs.snpt_col_sex),
-        (1, "AGE"),
-        (2, "SUBJID"),
-        (3, "SAMPID"),
-        (4, "SMTS"),
-        (5, "SMTSD"),
+        (1, gs.snpt_col_caps_age),
+        (2, gs.snpt_col_SUBJID),
+        (3, gs.snpt_col_SAMPID),
+        (4, gs.snpt_col_smts),
+        (5, gs.snpt_col_smtsd),
     ],
 )
 def test_get_col_meta_gtexv2_b(index, value):
@@ -111,9 +111,9 @@ def test_get_col_meta_gtexv2_b(index, value):
     "index, value",
     [
         (0, gs.snpt_col_rail_id),
-        (1, "Experiment accession"),
+        (1, gs.snpt_col_exp_acc),
         (2, gs.snpt_col_cell_line),
-        (3, "Experiment target"),
+        (3, gs.snpt_col_exp_target),
     ],
 )
 def test_get_col_meta_encode_a(index, value):
@@ -124,11 +124,11 @@ def test_get_col_meta_encode_a(index, value):
 @pytest.mark.parametrize(
     "index, value",
     [
-        (0, "Biosample life stage"),
-        (1, "Biosample sex"),
-        (2, "Biosample Age"),
-        (3, "Assay"),
-        (4, "Experiment date released"),
+        (0, gs.snpt_col_biosamp_life_stage),
+        (1, gs.snpt_col_biosamp_life_sex),
+        (2, gs.snpt_col_biosamp_life_age),
+        (3, gs.snpt_col_assay),
+        (4, gs.snpt_col_exp_date_rel),
     ],
 )
 def test_get_col_meta_encode_b(index, value):
@@ -179,41 +179,41 @@ def test_get_col_meta_encode_b(index, value):
         (gs.compilation_gtexv2, 4, 4, "psi_1"),
         # tcga compilation
         (gs.compilation_tcgav2, 2, 0, gs.snpt_col_rail_id),
-        (gs.compilation_tcgav2, 2, 1, "gdc_cases.project.primary_site"),
+        (gs.compilation_tcgav2, 2, 1, gs.snpt_col_gdc_prim_site),
         (gs.compilation_tcgav2, 2, 2, gs.snpt_col_study),
         (gs.compilation_tcgav2, 2, 3, "avg_psi"),
         (gs.compilation_tcgav2, 2, 4, "psi_1"),
         # three junctions
         (gs.compilation_tcgav2, 3, 0, gs.snpt_col_rail_id),
-        (gs.compilation_tcgav2, 3, 1, "gdc_cases.project.primary_site"),
+        (gs.compilation_tcgav2, 3, 1, gs.snpt_col_gdc_prim_site),
         (gs.compilation_tcgav2, 3, 2, gs.snpt_col_study),
         (gs.compilation_tcgav2, 3, 3, "avg_psi"),
         (gs.compilation_tcgav2, 3, 4, "psi_1"),
         # four junctions
         (gs.compilation_tcgav2, 4, 0, gs.snpt_col_rail_id),
-        (gs.compilation_tcgav2, 4, 1, "gdc_cases.project.primary_site"),
+        (gs.compilation_tcgav2, 4, 1, gs.snpt_col_gdc_prim_site),
         (gs.compilation_tcgav2, 4, 2, gs.snpt_col_study),
         (gs.compilation_tcgav2, 4, 3, "avg_psi"),
         (gs.compilation_tcgav2, 4, 4, "psi_1"),
         # encode compilation
         (gs.compilation_encode, 2, 0, gs.snpt_col_rail_id),
-        (gs.compilation_encode, 2, 1, "Experiment accession"),
+        (gs.compilation_encode, 2, 1, gs.snpt_col_exp_acc),
         (gs.compilation_encode, 2, 2, gs.snpt_col_cell_line),
-        (gs.compilation_encode, 2, 3, "Experiment target"),
+        (gs.compilation_encode, 2, 3, gs.snpt_col_exp_target),
         (gs.compilation_encode, 2, 4, "avg_psi"),
         (gs.compilation_encode, 2, 5, "psi_1"),
         # three junctions
         (gs.compilation_encode, 3, 0, gs.snpt_col_rail_id),
-        (gs.compilation_encode, 3, 1, "Experiment accession"),
+        (gs.compilation_encode, 3, 1, gs.snpt_col_exp_acc),
         (gs.compilation_encode, 3, 2, gs.snpt_col_cell_line),
-        (gs.compilation_encode, 2, 3, "Experiment target"),
+        (gs.compilation_encode, 2, 3, gs.snpt_col_exp_target),
         (gs.compilation_encode, 2, 4, "avg_psi"),
         (gs.compilation_encode, 2, 5, "psi_1"),
         # four junctions
         (gs.compilation_encode, 4, 0, gs.snpt_col_rail_id),
-        (gs.compilation_encode, 4, 1, "Experiment accession"),
+        (gs.compilation_encode, 4, 1, gs.snpt_col_exp_acc),
         (gs.compilation_encode, 4, 2, gs.snpt_col_cell_line),
-        (gs.compilation_encode, 2, 3, "Experiment target"),
+        (gs.compilation_encode, 2, 3, gs.snpt_col_exp_target),
         (gs.compilation_encode, 2, 4, "avg_psi"),
         (gs.compilation_encode, 2, 5, "psi_1"),
         # mouse compilation
@@ -276,30 +276,30 @@ def test_get_junction_query_column_def(compilation, junction_count, index, value
         (gs.compilation_gtexv2, False, 4, gs.table_geq_col_log_2_raw),
         # tcgav2 compilation
         (gs.compilation_tcgav2, True, 0, gs.snpt_col_rail_id),
-        (gs.compilation_tcgav2, True, 1, "gdc_cases.project.primary_site"),
+        (gs.compilation_tcgav2, True, 1, gs.snpt_col_gdc_prim_site),
         (gs.compilation_tcgav2, True, 2, gs.snpt_col_study),
         (gs.compilation_tcgav2, True, 3, gs.table_geq_col_raw_count),
         (gs.compilation_tcgav2, True, 4, "factor"),
         (gs.compilation_tcgav2, True, 5, "normalized_count"),
         # not normalized
         (gs.compilation_tcgav2, False, 0, gs.snpt_col_rail_id),
-        (gs.compilation_tcgav2, False, 1, "gdc_cases.project.primary_site"),
+        (gs.compilation_tcgav2, False, 1, gs.snpt_col_gdc_prim_site),
         (gs.compilation_tcgav2, False, 2, gs.snpt_col_study),
         (gs.compilation_tcgav2, False, 3, gs.table_geq_col_raw_count),
         (gs.compilation_tcgav2, False, 4, gs.table_geq_col_log_2_raw),
         # encode compilation (should not have normalized values)
         (gs.compilation_encode, True, 0, gs.snpt_col_rail_id),
-        (gs.compilation_encode, True, 1, "Experiment accession"),
+        (gs.compilation_encode, True, 1, gs.snpt_col_exp_acc),
         (gs.compilation_encode, True, 2, gs.snpt_col_cell_line),
-        (gs.compilation_encode, True, 3, "Experiment target"),
+        (gs.compilation_encode, True, 3, gs.snpt_col_exp_target),
         (gs.compilation_encode, True, 4, gs.table_geq_col_raw_count),
         (gs.compilation_encode, True, 5, "factor"),
         (gs.compilation_encode, True, 6, "normalized_count"),
         # not normalized
         (gs.compilation_encode, False, 0, gs.snpt_col_rail_id),
-        (gs.compilation_encode, True, 1, "Experiment accession"),
+        (gs.compilation_encode, True, 1, gs.snpt_col_exp_acc),
         (gs.compilation_encode, True, 2, gs.snpt_col_cell_line),
-        (gs.compilation_encode, True, 3, "Experiment target"),
+        (gs.compilation_encode, True, 3, gs.snpt_col_exp_target),
         (gs.compilation_encode, False, 4, gs.table_geq_col_raw_count),
         (gs.compilation_encode, False, 5, gs.table_geq_col_log_2_raw),
         # mouse compilation
