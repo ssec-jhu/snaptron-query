@@ -16,6 +16,7 @@ IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
         (gs.compilation_gtexv2, "chr19:4491836-4493702", "snaptron"),
         (gs.compilation_tcgav2, "chr19:4491836-4493702", "snaptron"),
         (gs.compilation_srav1m, "chr19:4491836-4493702", "snaptron"),
+        (gs.compilation_encode, "chr19:4491836-4493702", "snaptron"),
     ],
 )
 def test_snaptron(compilation, region, query_mode):

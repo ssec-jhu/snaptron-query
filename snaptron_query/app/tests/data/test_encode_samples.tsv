@@ -1,0 +1,9 @@
+	Experiment accession	Assay	Biosample term name	Biosample life stage	Biosample sex	Biosample Age	Experiment target	Experiment date released	rail_id
+0	ENCSR410ZPU	shRNA knockdown followed by RNA-seq	K562	adult	female	53 year	BCLAF1-human	2014-12-17	71123
+1	ENCSR344XID	shRNA knockdown followed by RNA-seq	K562	adult	female	53 year	Non-specific target control-human	2014-10-16	71141
+2	ENCSR648QFY	shRNA knockdown followed by RNA-seq	K562	adult	female	53 year	PCBP2-human	2014-10-16	71151
+3	ENCSR718EWL	shRNA knockdown followed by RNA-seq	K562	adult	female	53 year	Non-specific target control-human	2017-01-04	71195
+4	ENCSR246RRQ	shRNA knockdown followed by RNA-seq	HepG2	child	male	15 year	Non-specific target control-human	2016-02-11	71200
+5	ENCSR000CTP	RNA-seq	IMR-90	fetal	female	16 week		2012-06-21	71263
+6	ENCSR017PRS	shRNA knockdown followed by RNA-seq	HepG2	child	male	15 year	SRSF7-human	2014-10-16	71495
+7	ENCSR134JRE	shRNA knockdown followed by RNA-seq	K562	adult	female	53 year	TARDBP-human	2014-10-16	71741

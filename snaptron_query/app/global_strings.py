@@ -25,11 +25,13 @@ compilation_srav3h = "SRAv3h"
 compilation_gtexv2 = "GTEXv2"
 compilation_tcgav2 = "TCGAv2"
 compilation_srav1m = "SRAv1m"
+compilation_encode = "encode1159"
 compilation_names_dict = {
     compilation_srav3h: f"human ({compilation_srav3h})",
     compilation_gtexv2: f"human ({compilation_gtexv2})",
     compilation_tcgav2: f"human ({compilation_tcgav2})",
     compilation_srav1m: f"mouse ({compilation_srav1m})",
+    compilation_encode: "human (ENCODE shRNA)",
 }
 drop_compilation = "Select the dataset of interest"
 drop_compilation_placeholder = "Select a compilation"
@@ -63,7 +65,8 @@ help_normalization = (
     "Note: The normalization gene should be a gene that has relatively constant expression in cells. Normalization in "
     'this case is by the "study" group for each dataset. For SRA, the expression for your gene of '
     "interest is normalized by the expression of the normalization gene within the study group. For GTeX samples, "
-    'the "study" is each tissue. For TCGA the "study" is each cancer type.'
+    'the "study" is each tissue. For TCGA the "study" is each cancer type. The ENCODE shRNA data compilation has too '
+    "few samples for this kind of normalization."
 )
 
 image_title_gex = "Genes with Low mRNA Expression Variation"
@@ -153,6 +156,7 @@ geq_box_plot_y_axes_log = f"Log\u2082(Gene Expression Count+{const_log_epsilon})
 geq_log_count = f"Log\u2082(count+{const_log_epsilon})"
 geq_help_checkbox = "Check this box if you need to enter gene coordinates in addition to gene name"
 geq_provide_coordinates = "I want to provide gene coordinates in addition to Gene ID (use when Gene ID is not found)."
+geq_encode_norm_error = "ENCODE shRNA gene expression data has too few datasets too be normalized"
 
 """""" """""" """""" """""" """""" """""" """""" """""" """""" """""" """
     Strings beyond this point are related to the snaptron interface
@@ -169,6 +173,24 @@ snpt_col_study = "study"
 snpt_col_study_title = "study_title"
 snpt_col_run_acc = "run_acc"
 snpt_col_sex = "SEX"
+snpt_col_cell_line = "Biosample term name"
+snpt_col_sample_name = "sample_name"
+snpt_col_sample_title = "sample_title"
+snpt_col_library_layout = "library_layout"
+snpt_col_sample_description = "sample_description"
+snpt_col_gdc_prim_site = "gdc_cases.project.primary_site"
+snpt_col_caps_age = "AGE"
+snpt_col_SUBJID = "SUBJID"
+snpt_col_SAMPID = "SAMPID"
+snpt_col_smts = "SMTS"
+snpt_col_smtsd = "SMTSD"
+snpt_col_exp_acc = "Experiment accession"
+snpt_col_exp_target = "Experiment target"
+snpt_col_biosamp_life_stage = "Biosample life stage"
+snpt_col_biosamp_life_sex = "Biosample sex"
+snpt_col_biosamp_life_age = "Biosample Age"
+snpt_col_assay = "Assay"
+snpt_col_exp_date_rel = "Experiment date released"
 
 # srav3h and srav1m list of columns read from metadata file -> do not change the ordering of this list
 srav3h_meta_data_required_list = [
@@ -176,10 +198,10 @@ srav3h_meta_data_required_list = [
     snpt_col_external_id,
     snpt_col_study,
     snpt_col_study_title,
-    "library_layout",
-    "sample_description",
-    "sample_name",
-    "sample_title",
+    snpt_col_library_layout,
+    snpt_col_sample_description,
+    snpt_col_sample_name,
+    snpt_col_sample_title,
 ]
 
 srav1m_meta_data_required_list = srav3h_meta_data_required_list  # SRA mouse and SRA human are similar
@@ -187,7 +209,7 @@ srav1m_meta_data_required_list = srav3h_meta_data_required_list  # SRA mouse and
 # tcgav2 list of columns read from metadata file -> do not change the ordering of this list
 tcgav2_meta_data_required_list = [
     snpt_col_rail_id,
-    "gdc_cases.project.primary_site",
+    snpt_col_gdc_prim_site,
     snpt_col_study,
     "tcga_barcode",
     "gdc_cases.project.name",
@@ -212,11 +234,24 @@ gtexv2_meta_data_required_list = [
     snpt_col_run_acc,
     snpt_col_study,
     snpt_col_sex,
-    "AGE",
-    "SUBJID",
-    "SAMPID",
-    "SMTS",
-    "SMTSD",
+    snpt_col_caps_age,
+    snpt_col_SUBJID,
+    snpt_col_SAMPID,
+    snpt_col_smts,
+    snpt_col_smtsd,
+]
+
+# encode list of columns read from metadata file
+encode_meta_data_required_list = [
+    snpt_col_rail_id,
+    snpt_col_exp_acc,
+    snpt_col_cell_line,
+    snpt_col_exp_target,
+    snpt_col_biosamp_life_stage,
+    snpt_col_biosamp_life_sex,
+    snpt_col_biosamp_life_age,
+    snpt_col_assay,
+    snpt_col_exp_date_rel,
 ]
 
 # JIQ
