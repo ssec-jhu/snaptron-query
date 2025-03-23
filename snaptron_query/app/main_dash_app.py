@@ -127,6 +127,7 @@ def on_button_click_jiq_run(
             alert_message = None
             row_data = None
             column_defs = None
+            box_plot_split = None
             if not compilation:
                 raise exceptions.MissingUserInputs
 
