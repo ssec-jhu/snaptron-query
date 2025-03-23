@@ -489,7 +489,7 @@ def get_accordian_graphs_jiq():
                             dmc.Space(h=20),
                             dbc.Col(id="id-jiq-box-plot-col-split", children=[html.Div(get_card_box_plot_split_jiq())]),
                         ]
-                    )
+                    ),
                 ],
                 title=gs.graphs_group_title,
             )
