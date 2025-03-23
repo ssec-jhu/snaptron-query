@@ -1,6 +1,7 @@
 """This file includes the graph components used in the queries."""
 
 import plotly.express as px
+import plotly.graph_objects as go
 
 from snaptron_query.app import global_strings as gs, graphs_utils
 
@@ -23,7 +24,7 @@ def fig_common_update_box_plot(fig, plot_title, y_axes_title):
     return fig
 
 
-def create_box_plot(violin_overlay, df, y_values, range_y_axis, labels, mode=None, color=None):
+def create_box_plot(violin_overlay, df, y_values, range_y_axis, labels, mode=None, color=None, facet_col=None,n_col_graph=None ):
     if df.empty:
         hover_data = None
         y_values = None
@@ -51,6 +52,8 @@ def create_box_plot(violin_overlay, df, y_values, range_y_axis, labels, mode=Non
             labels=labels,
             color=color,
             boxmode=mode,
+            facet_col=facet_col,
+            facet_col_wrap=n_col_graph,
             # points="all",
             color_discrete_sequence=graphs_utils.get_common_colors(),
             # Request to not snap with table changes for JIQ.
@@ -65,7 +68,7 @@ def create_box_plot(violin_overlay, df, y_values, range_y_axis, labels, mode=Non
     return fig
 
 
-def get_box_plot_jiq(df, log_psi_values, violin_overlay, list_of_calculated_junctions):
+def get_box_plot_jiq(df, log_psi_values, violin_overlay, list_of_calculated_junctions, split=None, n_col_graph=None):
     """Wrapper for plotly express box plot given a df
 
     https://plotly.com/python/box-plots/
@@ -90,6 +93,8 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay, list_of_calculated_junc
         labels=graphs_utils.get_common_labels_jiq(),
         color=color,
         mode=mode,  # TODO: mode="overlay"?
+        facet_col=split,
+        n_col_graph=n_col_graph,
     )
 
     # apply the common attributes for all box plots
@@ -98,6 +103,16 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay, list_of_calculated_junc
         plot_title=gs.jiq_plot_title_box,
         y_axes_title=gs.jiq_log_psi if log_psi_values else gs.jiq_psi_plot_axes,
     )
+
+    if split is not None:
+        fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+        for annotation in fig.layout.annotations:
+            annotation.update(textangle=-45, y=0.1, yanchor="top", yref="paper", xref="paper")
+        # hide subplot y-axis titles and x-axis titles
+        for axis in fig.layout:
+            if type(fig.layout[axis]) == go.layout.YAxis:
+                fig.layout[axis].title.text = ''
+        fig.update_layout(title=f"<b>PSI Box Plot Split By {split}</b>", title_x=0.5)
 
     return fig
 
