@@ -109,15 +109,15 @@ app.layout = dbc.Container(
     running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)],  # requires the latest Dash 2.16
 )
 def on_button_click_jiq_run(
-        n_clicks,
-        results_are_cleared,
-        compilation,
-        children,
-        junction_count,
-        box_log_psi,
-        violin_overlay,
-        histogram_log_psi,
-        histogram_log_y,
+    n_clicks,
+    results_are_cleared,
+    compilation,
+    children,
+    junction_count,
+    box_log_psi,
+    violin_overlay,
+    histogram_log_psi,
+    histogram_log_y,
 ):
     #  this function gets called only when the results are cleared
     if ctx.triggered_id != "id-results-cleared-jiq" or not results_are_cleared:
@@ -134,17 +134,25 @@ def on_button_click_jiq_run(
             if junction_count is None:  # first call
                 junction_count = 0
 
-            row_data, column_defs, filter_model, histogram, box_plot, box_plot_split, col_width, col_width, display_style = (
-                runner_jiq.run_query(
-                    meta_data_dict=get_meta_data(compilation),
-                    compilation=compilation,
-                    children=children,
-                    junction_count=junction_count,
-                    box_log_psi=box_log_psi,
-                    violin_overlay=violin_overlay,
-                    histogram_log_psi=histogram_log_psi,
-                    histogram_log_y=histogram_log_y,
-                )
+            (
+                row_data,
+                column_defs,
+                filter_model,
+                histogram,
+                box_plot,
+                box_plot_split,
+                col_width,
+                col_width,
+                display_style,
+            ) = runner_jiq.run_query(
+                meta_data_dict=get_meta_data(compilation),
+                compilation=compilation,
+                children=children,
+                junction_count=junction_count,
+                box_log_psi=box_log_psi,
+                violin_overlay=violin_overlay,
+                histogram_log_psi=histogram_log_psi,
+                histogram_log_y=histogram_log_y,
             )
 
         except Exception as e:
@@ -167,7 +175,7 @@ def on_button_click_jiq_run(
             no_update,
             False,  # make sure id-results-cleared-jiq is set back to false if any failure happens
         )
-    if compilation not in {gs.compilation_gtexv2,gs.compilation_tcgav2}:
+    if compilation not in {gs.compilation_gtexv2, gs.compilation_tcgav2}:
         box_plot_split = None
 
     return (

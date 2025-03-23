@@ -74,11 +74,20 @@ def run_query(
     box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay, list_of_calculated_junctions)
 
     # Create split graph
-    if compilation in {gs.compilation_gtexv2, gs.compilation_tcgav2}:
-        split_column = "SMTS" if compilation == gs.compilation_gtexv2 else "gdc_cases.project.primary_site"
-        unique_categories = df[split_column].nunique()
-        box_plot_split = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay, list_of_calculated_junctions,
-                                                 split=split_column, n_col_graph=unique_categories)
+    if len(inc_junctions) == 1:
+        if compilation in {gs.compilation_gtexv2, gs.compilation_tcgav2}:
+            split_column = "SMTS" if compilation == gs.compilation_gtexv2 else "gdc_cases.project.primary_site"
+            unique_categories = df[split_column].nunique()
+            box_plot_split = graphs.get_box_plot_jiq(
+                df,
+                box_log_psi,
+                violin_overlay,
+                list_of_calculated_junctions,
+                split=split_column,
+                n_col_graph=unique_categories,
+            )
+        else:
+            box_plot_split = None
     else:
         box_plot_split = None
 
