@@ -73,6 +73,15 @@ def run_query(
     histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y, list_of_calculated_junctions)
     box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay, list_of_calculated_junctions)
 
+    # Create split graph
+    if compilation in {gs.compilation_gtexv2, gs.compilation_tcgav2}:
+        split_column = "SMTS" if compilation == gs.compilation_gtexv2 else "gdc_cases.project.primary_site"
+        unique_categories = df[split_column].nunique()
+        box_plot_split = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay, list_of_calculated_junctions,
+                                                 split=split_column, n_col_graph=unique_categories)
+    else:
+        box_plot_split = None
+
     col_width = {"size": 6}
     # when the component is hidden, then becomes visible, the original style is lost,
     # so I am putting it back again.
@@ -81,4 +90,4 @@ def run_query(
         "border-radius": "10px",
     }
 
-    return row_data, column_defs, filter_model, histogram, box_plot, col_width, col_width, display_style
+    return row_data, column_defs, filter_model, histogram, box_plot, box_plot_split, col_width, col_width, display_style
