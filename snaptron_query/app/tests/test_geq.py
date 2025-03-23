@@ -90,7 +90,7 @@ def test_srav1m_adnp2_normalized_edf1(
     assert s_nn[gs.snpt_col_study] == study
 
     if sample_name:
-        assert s_nn["sample_name"] == sample_name
+        assert s_nn[gs.snpt_col_sample_name] == sample_name
 
 
 @pytest.mark.parametrize(
@@ -116,7 +116,7 @@ def test_srav1m_adnp2_not_normalized(
     assert s_nn[gs.snpt_col_study] == study
 
     if sample_name:
-        assert s_nn["sample_name"] == sample_name
+        assert s_nn[gs.snpt_col_sample_name] == sample_name
 
 
 @pytest.mark.parametrize(
