@@ -130,6 +130,10 @@ jiq_help_excjunc = (
 jiq_help_table = f" Table initially loads with PSI\u2265{const_filter_psi} and Total\u2265{const_filter_total}."
 jiq_help_add_junction = "Add more inclusion or exclusion junctions (up to 5) to the PSI query"
 jiq_help_delete_junction = "Remove junction from the PSI query"
+jiq_caution = (
+    "We strongly recommend users cross-validate junction coordinates using visualization tools like UCSC "
+    "Genome Browser or IGV. "
+)
 
 """""" """""" """""" """""" """""" """""" """""" """""" """""" """""" """
             Gene Expression Query 

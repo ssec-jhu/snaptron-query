@@ -222,3 +222,12 @@ def get_info_icon_tooltip_bundle(info_icon_id, help_string, location):
     return html.Div(
         [dmc.Text(icons.info, id=info_icon_id, weight=500, size="md"), get_tooltip(info_icon_id, help_string, location)]
     )
+
+
+def get_caution_icon_tooltip_bundle(caution_icon_id, help_string, location):
+    return html.Div(
+        [
+            dmc.Text(icons.caution, id=caution_icon_id, weight=500, size="md"),
+            get_tooltip(caution_icon_id, help_string, location),
+        ]
+    )
