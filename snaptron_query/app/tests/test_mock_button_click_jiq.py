@@ -81,7 +81,7 @@ def test_mock_on_button_click_jiq_run(
 ):
     ctx = copy_context()
     output = ctx.run(run_callback, sample_ui_children)
-    assert len(output) == 13
+    assert len(output) == 14
     assert len(output[1]) == 2000
     assert output[5] == no_update  # no alerts were given
 
@@ -112,7 +112,7 @@ def test_mock_on_button_click_jiq_run_multi_junction(
 ):
     ctx = copy_context()
     output = ctx.run(run_callback, sample_ui_children)
-    assert len(output) == 13
+    assert len(output) == 14
 
 
 def test_mock_on_button_click_jiq_run_callback_with_incorrect_trigger(sample_ui_children, monkeypatch_meta_data):
@@ -180,4 +180,4 @@ def test_mock_on_button_click_jiq_run_callback_junction_zero(sample_ui_children,
 
     ctx = copy_context()
     output = ctx.run(run_callback_with_errors)
-    assert len(output) == 13
+    assert len(output) == 14
