@@ -114,7 +114,7 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay, list_of_calculated_junc
         for axis in fig.layout:
             if type(fig.layout[axis]) is go.layout.YAxis:
                 fig.layout[axis].title.text = ""
-        fig.update_layout(title=f"<b>PSI Box Plot Split By {split}</b>", title_x=0.5)
+        fig.update_layout(title_text=f"<b>PSI Box Plot Split By {split}</b>", title_x=0.5)
 
     return fig
 
