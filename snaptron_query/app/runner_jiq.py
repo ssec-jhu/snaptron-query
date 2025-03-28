@@ -6,6 +6,7 @@ from snaptron_query.app import (
     exceptions,
     global_strings as gs,
     snaptron_client as sc,
+    inline_styles as styles,
 )
 from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager, JiqReturnType
 
@@ -74,6 +75,7 @@ def run_query(
     box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay, list_of_calculated_junctions)
 
     # Create split graph
+    box_plot_split_display = styles.display_none
     if len(inc_junctions) == 1:
         if compilation in {gs.compilation_gtexv2, gs.compilation_tcgav2}:
             split_column = "SMTS" if compilation == gs.compilation_gtexv2 else "gdc_cases.project.primary_site"
@@ -86,6 +88,7 @@ def run_query(
                 split=split_column,
                 n_col_graph=unique_categories,
             )
+            box_plot_split_display = styles.display_block
         else:
             box_plot_split = None
     else:
@@ -99,4 +102,15 @@ def run_query(
         "border-radius": "10px",
     }
 
-    return row_data, column_defs, filter_model, histogram, box_plot, box_plot_split, col_width, col_width, display_style
+    return (
+        row_data,
+        column_defs,
+        filter_model,
+        histogram,
+        box_plot,
+        box_plot_split,
+        box_plot_split_display,
+        col_width,
+        col_width,
+        display_style,
+    )
