@@ -65,7 +65,7 @@ def create_box_plot(
             boxmode=mode,
             facet_col=facet_col,
             facet_col_wrap=n_col_graph,
-            facet_col_spacing=0.0001,
+            facet_col_spacing=0.01,
             category_orders=order_split,
             # points="all",
             color_discrete_sequence=graphs_utils.get_common_colors(),
@@ -129,8 +129,7 @@ def get_box_plot_jiq(
             if type(fig.layout[axis]) is go.layout.YAxis:
                 fig.layout[axis].title.text = ""
         fig.update_layout(title_text=f"<b>PSI Box Plot Split By {split}</b>", title_x=0.5,
-                          margin=dict(b=50,),)
-        fig.update_xaxes(showgrid=True)
+                          margin=dict(b=50,), boxmode="overlay",)
 
     return fig
 
