@@ -93,6 +93,9 @@ def run_query(
         else:
             # placeholder graph needed for appropriate refresh of graph
             box_plot_split = box_plot
+    else:
+        # placeholder graph needed for multi-junction query
+        box_plot_split = box_plot
 
     col_width = {"size": 6}
     # when the component is hidden, then becomes visible, the original style is lost,
