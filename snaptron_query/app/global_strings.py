@@ -147,6 +147,13 @@ jiq_caution_expanded_coordinates = (
     "has not been thoroughly tested."
 >>>>>>> 77138ad (Work on Issue #240)
 )
+jiq_expanded_coordinates = (
+    "One or more inclusion junctions are outside of the associated exclusion junction's coordinates."
+)
+jiq_caution_expanded_coordinates = (
+    "This usage involves a non-cryptic exon junction. Junction PSI(s) will be calculated but this usage of the app "
+    "has not been thoroughly tested."
+)
 
 """""" """""" """""" """""" """""" """""" """""" """""" """""" """""" """
             Gene Expression Query 
