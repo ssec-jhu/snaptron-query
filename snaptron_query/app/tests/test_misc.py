@@ -189,6 +189,11 @@ def test_get_checkbox_geq_optional_coordinates():
     assert isinstance(components_geq.get_checkbox_geq_optional_coordinates()[0], dbc.Checklist)
 
 
+def test_get_checkbox_jiq_expanded_coordinates():
+    assert len(components_jiq.get_checkbox_jiq_expanded_coordinates()) == 2
+    assert isinstance(components_jiq.get_checkbox_jiq_expanded_coordinates()[0], dbc.Checklist)
+
+
 def test_get_navbar_top():
     assert isinstance(navbars.get_navbar_top(), html.Div)
 
