@@ -128,8 +128,14 @@ def get_box_plot_jiq(
         for axis in fig.layout:
             if type(fig.layout[axis]) is go.layout.YAxis:
                 fig.layout[axis].title.text = ""
-        fig.update_layout(title_text=f"<b>PSI Box Plot Split By {split}</b>", title_x=0.5,
-                          margin=dict(b=50,), boxmode="overlay",)
+        fig.update_layout(
+            title_text=f"<b>PSI Box Plot Split By {split}</b>",
+            title_x=0.5,
+            margin=dict(
+                b=50,
+            ),
+            boxmode="overlay",
+        )
 
     return fig
 
