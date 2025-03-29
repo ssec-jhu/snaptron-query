@@ -207,7 +207,7 @@ def test_create_junction_row():
 
 
 def test_get_form_jiq():
-    assert len(layout_jiq.get_form_jiq()) == 4
+    assert len(layout_jiq.get_form_jiq()) == 6
 
 
 def test_get_card_histogram_jiq():
