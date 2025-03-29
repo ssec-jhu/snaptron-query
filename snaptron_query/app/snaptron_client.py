@@ -52,6 +52,10 @@ def jiq_verify_coordinate_pairs(exclusion_coordinates, inclusion_coordinates) ->
     ):
         raise exceptions.BadCoordinates
 
+    # add checks here for if any inclusion junction is outside exclusion junction
+    if inc_coordinates.start > exc_coordinates.end or exc_coordinates.start > inc_coordinates.end:
+        raise exceptions.ExpandedJunctions
+
     return SpliceJunctionPair(exc_coordinates=exc_coordinates, inc_coordinates=inc_coordinates)
 
 
