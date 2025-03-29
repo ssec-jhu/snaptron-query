@@ -57,3 +57,15 @@ def get_button_delete_junction(index):
 
 def get_text_junction(index):
     return dmc.Text(gs.jiq_input_junction_txt_list[index], weight=500, size="sm")
+
+
+def get_checkbox_jiq_expanded_coordinates():
+    return [
+        dbc.Checklist(
+            id="id-checkbox-expanded-coordinates",
+            options=[{"label": gs.jiq_expanded_coordinates, "value": 1}],
+            label_checked_style={"color": "var(--bs-danger)"},
+            input_checked_style={"backgroundColor": "var(--bs-danger)", "borderColor": "#ea6258"},
+        ),
+        components.get_tooltip("id-checkbox-expanded-coordinates", gs.jiq_caution_expanded_coordinates, "left"),
+    ]
