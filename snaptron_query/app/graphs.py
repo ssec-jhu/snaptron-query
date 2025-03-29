@@ -25,7 +25,16 @@ def fig_common_update_box_plot(fig, plot_title, y_axes_title):
 
 
 def create_box_plot(
-    violin_overlay, df, y_values, range_y_axis, labels, mode=None, color=None, facet_col=None, n_col_graph=None
+    violin_overlay,
+    df,
+    y_values,
+    range_y_axis,
+    labels,
+    mode=None,
+    color=None,
+    facet_col=None,
+    n_col_graph=None,
+    order_split=None,
 ):
     if df.empty:
         hover_data = None
@@ -56,6 +65,8 @@ def create_box_plot(
             boxmode=mode,
             facet_col=facet_col,
             facet_col_wrap=n_col_graph,
+            facet_col_spacing=0.0001,
+            category_orders=order_split,
             # points="all",
             color_discrete_sequence=graphs_utils.get_common_colors(),
             # Request to not snap with table changes for JIQ.
@@ -70,7 +81,9 @@ def create_box_plot(
     return fig
 
 
-def get_box_plot_jiq(df, log_psi_values, violin_overlay, list_of_calculated_junctions, split=None, n_col_graph=None):
+def get_box_plot_jiq(
+    df, log_psi_values, violin_overlay, list_of_calculated_junctions, split=None, n_col_graph=None, order_split=None
+):
     """Wrapper for plotly express box plot given a df
 
     https://plotly.com/python/box-plots/
@@ -97,6 +110,7 @@ def get_box_plot_jiq(df, log_psi_values, violin_overlay, list_of_calculated_junc
         mode=mode,  # TODO: mode="overlay"?
         facet_col=split,
         n_col_graph=n_col_graph,
+        order_split=order_split,
     )
 
     # apply the common attributes for all box plots

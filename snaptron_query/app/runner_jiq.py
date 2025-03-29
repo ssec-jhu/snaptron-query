@@ -79,14 +79,15 @@ def run_query(
     if len(inc_junctions) == 1:
         if compilation in {gs.compilation_gtexv2, gs.compilation_tcgav2}:
             split_column = "SMTS" if compilation == gs.compilation_gtexv2 else "gdc_cases.project.primary_site"
-            unique_categories = df[split_column].nunique()
+            unique_categories = df[split_column].unique()
             box_plot_split = graphs.get_box_plot_jiq(
                 df,
                 box_log_psi,
                 violin_overlay,
                 list_of_calculated_junctions,
                 split=split_column,
-                n_col_graph=unique_categories,
+                n_col_graph=len(unique_categories),
+                order_split={split_column: sorted(unique_categories)},
             )
             box_plot_split_display = styles.display_block
         else:
