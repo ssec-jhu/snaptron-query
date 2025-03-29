@@ -217,6 +217,12 @@ def test_jiq_verify_coordinates_with_errors(pair_a, pair_b):
         sc.jiq_verify_coordinate_pairs(pair_a, pair_b)
 
 
+@pytest.mark.parametrize("pair_a,pair_b", [("chr1:11022251-11023192", "chr1:11020600-11022123")])
+def test_jiq_verify_expanded_coordinates_with_errors(pair_a, pair_b):
+    with pytest.raises(exceptions.ExpandedJunctions):
+        sc.jiq_verify_coordinate_pairs(pair_a, pair_b)
+
+
 def test_split_and_verify_mismatch_chromosomes():
     with pytest.raises(exceptions.BadCoordinates):
         sc.jiq_verify_coordinate_pairs("chr19:5000-6000", "chr29:4000-5000")
