@@ -91,9 +91,8 @@ def run_query(
             )
             box_plot_split_display = styles.display_block
         else:
-            box_plot_split = None
-    else:
-        box_plot_split = None
+            # placeholder graph needed for appropriate refresh of graph
+            box_plot_split = box_plot
 
     col_width = {"size": 6}
     # when the component is hidden, then becomes visible, the original style is lost,

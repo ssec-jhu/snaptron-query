@@ -177,8 +177,6 @@ def on_button_click_jiq_run(
             no_update,
             False,  # make sure id-results-cleared-jiq is set back to false if any failure happens
         )
-    if compilation not in {gs.compilation_gtexv2, gs.compilation_tcgav2}:
-        box_plot_split = None
 
     return (
         {"display": "block"},
