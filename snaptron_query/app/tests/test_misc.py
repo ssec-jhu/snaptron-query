@@ -131,6 +131,10 @@ def test_get_info_icon_tooltip_bundle():
     assert isinstance(components.get_info_icon_tooltip_bundle("id", "string", "location"), html.Div)
 
 
+def test_get_caution_icon_tooltip_bundle():
+    assert isinstance(components.get_caution_icon_tooltip_bundle("id", "string", "location"), html.Div)
+
+
 def test_empty_inc_junction():
     assert exceptions.EmptyIncJunction(2).get_message().find("Inclusion Junction 2") != -1
 
