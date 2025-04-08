@@ -119,17 +119,23 @@ def gather_snpt_query_results_into_dict(compilation, junction_lists: [SpliceJunc
         # gather the exclusion junctions snaptron results
         # only run if it wasn't calculated previously
         junction_exc_coordinates = junction_lists[j].exc_coordinates
-        junction_search_coordinates = junction_lists[j].search_coordinates
+        junction_inc_coordinates = junction_lists[j].inc_coordinates
         if junction_exc_coordinates not in df_snpt_results_dict:
             # RUN the URL and get results back from SNAPTRON
             # make sure you get results back
             if junction_lists[j].exc_coordinates != junction_lists[j].search_coordinates:
-                # This occurs when we care about expanded coordinates. This is the same as the exclusion coordinates in
-                # some cases. "exc_coordinates" hard-coded in query_junction_inclusion.py for the results dictionary -
-                # will break if I change to search_coordinates
+                # This occurs when we care about expanded coordinates. This is the same as the exclusion coordinates
+                # in some cases. "exc_coordinates" hard-coded in query_junction_inclusion.py as the key for the
+                # results dictionary - will break if I change to search_coordinates
+                # However it is faster to generate results to concatenate results from searches rather than the whole range
+                search_coordinates = (
+                    coordinates_to_formatted_string(junction_exc_coordinates)
+                    + ","
+                    + coordinates_to_formatted_string(junction_inc_coordinates)
+                )
                 df_snpt_results = get_snpt_query_results_df(
                     compilation=compilation,
-                    region=coordinates_to_formatted_string(junction_search_coordinates),
+                    region=search_coordinates,
                     query_mode="snaptron",
                 )
             else:
