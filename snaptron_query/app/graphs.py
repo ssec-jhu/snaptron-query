@@ -129,7 +129,7 @@ def get_box_plot_jiq(
             if type(fig.layout[axis]) is go.layout.YAxis:
                 fig.layout[axis].title.text = ""
         fig.update_layout(
-            title_text=f"<b>PSI of Junction Split By: {split}</b>",
+            title_text=f"<b>Junction PSI/sample Grouped By: {split}</b>",
             title_x=0.5,
             margin=dict(
                 b=100,
