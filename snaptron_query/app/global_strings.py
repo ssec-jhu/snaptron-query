@@ -85,6 +85,10 @@ bad_coordinates = (
     "alternative/cryptic exon of interest? Is the junction provided GRCh38/hg38 (human) or "
     "GRCm38/mm10 (mouse) coordinates"
 )
+expanded_coordinates = (
+    "One or more inclusion junctions are outside of the associated exclusion junctions coordinates. If this is "
+    "purposeful, enable the checkbox below the junction coordinates entry boxes."
+)
 suggestion = (
     "Try running the query by adding gene coordinates to your query or double check gene coordinates if " "provided!"
 )
@@ -130,6 +134,21 @@ jiq_help_excjunc = (
 jiq_help_table = f" Table initially loads with PSI\u2265{const_filter_psi} and Total\u2265{const_filter_total}."
 jiq_help_add_junction = "Add more inclusion or exclusion junctions (up to 5) to the PSI query"
 jiq_help_delete_junction = "Remove junction from the PSI query"
+jiq_expanded_coordinates = (
+    "One or more inclusion junctions are outside of the associated exclusion junction's coordinates."
+)
+jiq_caution_expanded_coordinates = (
+    "One or more inclusion junction(s) are outside exclusion junction coordinate range(s)."
+)
+jiq_expanded_coordinates = (
+    "One or more inclusion junctions are outside of the associated exclusion junction's coordinates."
+)
+jiq_caution_expanded_coordinates = (
+    "Junction usage ratios will be calculated but this usage of the app has not been thoroughly tested."
+)
+jiq_expanded_coordinates = (
+    "One or more inclusion junction(s) outside of the associated exclusion junction's coordinates."
+)
 
 """""" """""" """""" """""" """""" """""" """""" """""" """""" """""" """
             Gene Expression Query 

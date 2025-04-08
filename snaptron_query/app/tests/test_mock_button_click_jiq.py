@@ -25,6 +25,7 @@ def run_callback(sample_ui_children):
         violin_overlay=False,
         histogram_log_psi=True,
         histogram_log_y=False,
+        expanded_coordinates=False,
     )
 
 
@@ -131,6 +132,7 @@ def test_mock_on_button_click_jiq_run_callback_with_incorrect_trigger(sample_ui_
             violin_overlay=False,
             histogram_log_psi=True,
             histogram_log_y=False,
+            expanded_coordinates=False,
         )
 
     ctx = copy_context()
@@ -153,6 +155,7 @@ def test_mock_on_button_click_jiq_run_callback_missing_compilation(sample_ui_chi
             violin_overlay=False,
             histogram_log_psi=True,
             histogram_log_y=False,
+            expanded_coordinates=False,
         )
 
     ctx = copy_context()
@@ -176,6 +179,7 @@ def test_mock_on_button_click_jiq_run_callback_junction_zero(sample_ui_children,
             violin_overlay=False,
             histogram_log_psi=True,
             histogram_log_y=False,
+            expanded_coordinates=False,
         )
 
     ctx = copy_context()

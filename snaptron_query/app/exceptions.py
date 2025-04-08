@@ -20,6 +20,13 @@ class BadCoordinates(Exception):
     pass
 
 
+class ExpandedJunctions(Exception):
+    """Raised when the user has entered an inclusion junction with coordinates outside the range of the exclusion
+    junction coordinates"""
+
+    pass
+
+
 class MissingUserInputs(Exception):
     """Raised when the user has missing inputs"""
 
@@ -80,6 +87,8 @@ def alert_message_from_exception(exception):
         alert_message = gs.missing_user_input
     elif e == BadCoordinates:
         alert_message = gs.bad_coordinates
+    elif e == ExpandedJunctions:
+        alert_message = gs.expanded_coordinates
     elif e == EmptyIncJunction:
         alert_message = exception.get_message()
     elif e == EmptyExcJunction:

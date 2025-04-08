@@ -12,6 +12,7 @@ SpliceJunctionPair = collections.namedtuple(
     [
         "exc_coordinates",  # type JunctionCoordinates
         "inc_coordinates",
+        "search_coordinates",
     ],
 )  # type JunctionCoordinates
 
@@ -40,7 +41,9 @@ def verify_coordinates(coordinates) -> JunctionCoordinates:
         raise exceptions.BadCoordinates
 
 
-def jiq_verify_coordinate_pairs(exclusion_coordinates, inclusion_coordinates) -> SpliceJunctionPair:
+def jiq_verify_coordinate_pairs(
+    exclusion_coordinates, inclusion_coordinates, expanded_coordinates
+) -> SpliceJunctionPair:
     exc_coordinates = verify_coordinates(exclusion_coordinates)
     inc_coordinates = verify_coordinates(inclusion_coordinates)
 
@@ -52,7 +55,28 @@ def jiq_verify_coordinate_pairs(exclusion_coordinates, inclusion_coordinates) ->
     ):
         raise exceptions.BadCoordinates
 
-    return SpliceJunctionPair(exc_coordinates=exc_coordinates, inc_coordinates=inc_coordinates)
+    # add checks here for if any inclusion junction is outside exclusion junction
+    # this should allow for mutually exclusive exons?
+    if not expanded_coordinates:
+        if (
+            (inc_coordinates.start > exc_coordinates.end and inc_coordinates.end > exc_coordinates.end)
+            or (exc_coordinates.start > inc_coordinates.start and exc_coordinates.start > inc_coordinates.end)
+            or (inc_coordinates.start < exc_coordinates.start < inc_coordinates.end)
+            or (inc_coordinates.start < exc_coordinates.end < inc_coordinates.end)
+        ):
+            raise exceptions.ExpandedJunctions
+        else:
+            search_coordinates = verify_coordinates(exclusion_coordinates)
+    else:
+        search_coordinates = JunctionCoordinates(
+            exc_coordinates.chr,
+            min(exc_coordinates.start, inc_coordinates.start),
+            max(exc_coordinates.end, inc_coordinates.end),
+        )
+
+    return SpliceJunctionPair(
+        exc_coordinates=exc_coordinates, inc_coordinates=inc_coordinates, search_coordinates=search_coordinates
+    )
 
 
 def geq_verify_coordinate(gene_coordinate) -> JunctionCoordinates:
@@ -95,14 +119,31 @@ def gather_snpt_query_results_into_dict(compilation, junction_lists: [SpliceJunc
         # gather the exclusion junctions snaptron results
         # only run if it wasn't calculated previously
         junction_exc_coordinates = junction_lists[j].exc_coordinates
+        junction_inc_coordinates = junction_lists[j].inc_coordinates
         if junction_exc_coordinates not in df_snpt_results_dict:
             # RUN the URL and get results back from SNAPTRON
             # make sure you get results back
-            df_snpt_results = get_snpt_query_results_df(
-                compilation=compilation,
-                region=coordinates_to_formatted_string(junction_exc_coordinates),
-                query_mode="snaptron",
-            )
+            if junction_lists[j].exc_coordinates != junction_lists[j].search_coordinates:
+                # This occurs when we care about expanded coordinates. This is the same as the exclusion coordinates
+                # in some cases. "exc_coordinates" hard-coded in query_junction_inclusion.py as the key for the
+                # results dictionary - will break if I change to search_coordinates
+                # However it is faster to generate results to concatenate results from searches rather than the whole range
+                search_coordinates = (
+                    coordinates_to_formatted_string(junction_exc_coordinates)
+                    + ","
+                    + coordinates_to_formatted_string(junction_inc_coordinates)
+                )
+                df_snpt_results = get_snpt_query_results_df(
+                    compilation=compilation,
+                    region=search_coordinates,
+                    query_mode="snaptron",
+                )
+            else:
+                df_snpt_results = get_snpt_query_results_df(
+                    compilation=compilation,
+                    region=coordinates_to_formatted_string(junction_exc_coordinates),
+                    query_mode="snaptron",
+                )
 
             if df_snpt_results.empty:
                 raise exceptions.EmptyResponse
