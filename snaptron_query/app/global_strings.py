@@ -142,15 +142,10 @@ jiq_expanded_coordinates = (
     "One or more inclusion junctions are outside of the associated exclusion junction's coordinates."
 )
 jiq_caution_expanded_coordinates = (
-    "This usage involves a non-cryptic exon junction. Junction PSI(s) will be calculated but this usage of the app "
-    "has not been thoroughly tested."
+    "Junction usage ratios will be calculated but this usage of the app has not been thoroughly tested."
 )
 jiq_expanded_coordinates = (
-    "One or more inclusion junctions are outside of the associated exclusion junction's coordinates."
-)
-jiq_caution_expanded_coordinates = (
-    "This usage involves a non-cryptic exon junction. Junction PSI(s) will be calculated but this usage of the app "
-    "has not been thoroughly tested."
+    "One or more inclusion junction(s) outside of the associated exclusion junction's coordinates."
 )
 
 """""" """""" """""" """""" """""" """""" """""" """""" """""" """""" """
