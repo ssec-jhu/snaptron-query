@@ -113,14 +113,16 @@ def test_gather_snpt_query_results_into_dict(mock_httpx_get, mock_httpx_response
         SpliceJunctionPair(
             exc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
             inc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4492014),
+            search_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
         ),
         SpliceJunctionPair(
             exc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
             inc_coordinates=JunctionCoordinates(chr="chr19", start=4492153, end=4493702),
+            search_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
         ),
     ]
 
-    snpt_results_dict = gather_snpt_query_results_into_dict("compilation", junction_list)
+    snpt_results_dict = gather_snpt_query_results_into_dict("compilation", junction_list, expanded_coordinates=False)
 
     # exclusion junction is duplicate so it must be 1
     assert len(snpt_results_dict) == 1
@@ -134,11 +136,12 @@ def test_gather_snpt_query_results_into_dic_exception(mock_httpx_get, mock_httpx
         SpliceJunctionPair(
             exc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
             inc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4492014),
+            search_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
         ),
     ]
 
     with pytest.raises(exceptions.EmptyResponse):
-        gather_snpt_query_results_into_dict("compilation", junction_list)
+        gather_snpt_query_results_into_dict("compilation", junction_list, expanded_coordinates=False)
 
 
 def test_gather_snpt_query_results_into_dic_exception_2(mock_httpx_get, mock_df_snpt_results_dict_empty):
@@ -148,8 +151,9 @@ def test_gather_snpt_query_results_into_dic_exception_2(mock_httpx_get, mock_df_
         SpliceJunctionPair(
             exc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
             inc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4492014),
+            search_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
         ),
     ]
 
     with pytest.raises(exceptions.EmptyResponse):
-        gather_snpt_query_results_into_dict("compilation", junction_list)
+        gather_snpt_query_results_into_dict("compilation", junction_list, expanded_coordinates=False)

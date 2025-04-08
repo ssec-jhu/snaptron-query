@@ -104,6 +104,7 @@ app.layout = dbc.Container(
     State("id-switch-box-plot-violin-jiq", "value"),
     State("id-switch-histogram-log-jiq", "value"),
     State("id-switch-histogram-log-y-jiq", "value"),
+    State("id-checkbox-expanded-coordinates", "value"),  # Expanded coordinates checkbox response
     prevent_initial_call=True,
     running=[(Output("id-button-jiq-generate-results", "disabled"), True, False)],  # requires the latest Dash 2.16
 )
@@ -117,6 +118,7 @@ def on_button_click_jiq_run(
     violin_overlay,
     histogram_log_psi,
     histogram_log_y,
+    expanded_coordinates,
 ):
     #  this function gets called only when the results are cleared
     if ctx.triggered_id != "id-results-cleared-jiq" or not results_are_cleared:
@@ -142,6 +144,7 @@ def on_button_click_jiq_run(
                     violin_overlay=violin_overlay,
                     histogram_log_psi=histogram_log_psi,
                     histogram_log_y=histogram_log_y,
+                    expanded_coordinates=expanded_coordinates,
                 )
             )
 

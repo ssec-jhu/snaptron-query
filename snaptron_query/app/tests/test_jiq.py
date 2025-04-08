@@ -248,6 +248,7 @@ def test_jiq_empty_exc_junctions(
         splice_pair = sc.SpliceJunctionPair(
             exc_coordinates=sc.JunctionCoordinates(exc_chr, exc_start, exc_end),
             inc_coordinates=sc.JunctionCoordinates(inc_chr, inc_start, inc_end),
+            search_coordinates=sc.JunctionCoordinates(exc_chr, exc_start, exc_end),
         )
         JunctionQuery(
             compilation=gs.compilation_srav3h,
@@ -268,6 +269,7 @@ def test_jiq_empty_inc_junctions(
         splice_pair = sc.SpliceJunctionPair(
             exc_coordinates=sc.JunctionCoordinates(exc_chr, exc_start, exc_end),
             inc_coordinates=sc.JunctionCoordinates(inc_chr, inc_start, inc_end),
+            search_coordinates=sc.JunctionCoordinates(exc_chr, exc_start, exc_end),
         )
         JunctionQuery(
             compilation=gs.compilation_srav3h,
