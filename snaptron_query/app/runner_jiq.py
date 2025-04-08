@@ -81,10 +81,10 @@ def run_query(
             split_column = "SMTS" if compilation == gs.compilation_gtexv2 else "gdc_cases.project.primary_site"
             unique_categories = df[split_column].unique()
             box_plot_split = graphs.get_box_plot_jiq(
-                df,
-                box_log_psi,
-                violin_overlay,
-                list_of_calculated_junctions,
+                df=df,
+                log_psi_values=False,
+                violin_overlay=False,
+                list_of_calculated_junctions=list_of_calculated_junctions,
                 split=split_column,
                 n_col_graph=len(unique_categories),
                 order_split={split_column: sorted(unique_categories)},

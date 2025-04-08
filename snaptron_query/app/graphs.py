@@ -123,16 +123,16 @@ def get_box_plot_jiq(
     if split is not None:
         fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
         for annotation in fig.layout.annotations:
-            annotation.update(textangle=-45, y=0.1, yanchor="top", yref="paper", xref="paper")
+            annotation.update(textangle=-45, y=-0.1, yanchor="top", yref="paper", xref="paper")
         # hide subplot y-axis titles and x-axis titles
         for axis in fig.layout:
             if type(fig.layout[axis]) is go.layout.YAxis:
                 fig.layout[axis].title.text = ""
         fig.update_layout(
-            title_text=f"<b>PSI Box Plot Split By {split}</b>",
+            title_text=f"<b>PSI of Junction Split By: {split}</b>",
             title_x=0.5,
             margin=dict(
-                b=50,
+                b=100,
             ),
             boxmode="overlay",
         )
