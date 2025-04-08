@@ -41,7 +41,7 @@ def get_dropdown_compilation(component_id):
                 [
                     # create a bundle with the tooltip icon here
                     dbc.Label(gs.drop_compilation, className="fw-bold me-2 mt-1"),
-                    get_info_icon_tooltip_bundle(f"{component_id}_info", gs.drop_compilation_help, "top"),
+                    get_caution_icon_tooltip_bundle(f"{component_id}_info", gs.drop_compilation_help, "top"),
                 ],
                 style={"display": "flex"},
             ),
