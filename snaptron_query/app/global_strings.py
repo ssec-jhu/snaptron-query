@@ -134,18 +134,12 @@ jiq_help_excjunc = (
 jiq_help_table = f" Table initially loads with PSI\u2265{const_filter_psi} and Total\u2265{const_filter_total}."
 jiq_help_add_junction = "Add more inclusion or exclusion junctions (up to 5) to the PSI query"
 jiq_help_delete_junction = "Remove junction from the PSI query"
-jiq_caution = (
-    "We strongly recommend users cross-validate junction coordinates using visualization tools like UCSC "
-    "Genome Browser or IGV. "
-)
 jiq_expanded_coordinates = (
     "One or more inclusion junctions are outside of the associated exclusion junction's coordinates."
 )
 jiq_caution_expanded_coordinates = (
-    "Junction usage ratios will be calculated but this usage of the app has not been thoroughly tested."
-)
-jiq_expanded_coordinates = (
-    "One or more inclusion junction(s) outside of the associated exclusion junction's coordinates."
+    "This usage involves a non-cryptic exon junction. Junction PSI(s) will be calculated but this usage of the app "
+    "has not been thoroughly tested."
 )
 
 """""" """""" """""" """""" """""" """""" """""" """""" """""" """""" """
