@@ -122,7 +122,7 @@ def test_gather_snpt_query_results_into_dict(mock_httpx_get, mock_httpx_response
         ),
     ]
 
-    snpt_results_dict = gather_snpt_query_results_into_dict("compilation", junction_list, expanded_coordinates=False)
+    snpt_results_dict = gather_snpt_query_results_into_dict("compilation", junction_list)
 
     # exclusion junction is duplicate so it must be 1
     assert len(snpt_results_dict) == 1
@@ -141,7 +141,7 @@ def test_gather_snpt_query_results_into_dic_exception(mock_httpx_get, mock_httpx
     ]
 
     with pytest.raises(exceptions.EmptyResponse):
-        gather_snpt_query_results_into_dict("compilation", junction_list, expanded_coordinates=False)
+        gather_snpt_query_results_into_dict("compilation", junction_list)
 
 
 def test_gather_snpt_query_results_into_dic_exception_2(mock_httpx_get, mock_df_snpt_results_dict_empty):
@@ -156,4 +156,4 @@ def test_gather_snpt_query_results_into_dic_exception_2(mock_httpx_get, mock_df_
     ]
 
     with pytest.raises(exceptions.EmptyResponse):
-        gather_snpt_query_results_into_dict("compilation", junction_list, expanded_coordinates=False)
+        gather_snpt_query_results_into_dict("compilation", junction_list)
