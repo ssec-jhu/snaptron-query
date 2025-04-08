@@ -202,7 +202,7 @@ def test_jiq_results_srav1m(junction_srav1m, rail_id, study, inc, exc, psi):
     ],
 )
 def test_jiq_verify_coordinates(pair_a, pair_b, chromosome, start_a, end_a, start_b, end_b):
-    junction_coordinates = sc.jiq_verify_coordinate_pairs(pair_a, pair_b)
+    junction_coordinates = sc.jiq_verify_coordinate_pairs(pair_a, pair_b, expanded_coordinates=False)
     assert junction_coordinates.exc_coordinates.chr == chromosome
     assert junction_coordinates.inc_coordinates.chr == chromosome
     # make sure they are cast correctly
