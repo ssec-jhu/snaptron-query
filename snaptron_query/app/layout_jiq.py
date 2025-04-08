@@ -350,15 +350,10 @@ def get_card_box_plot_split_jiq():
                     dbc.Row(
                         [
                             dbc.Col(
-                                [
-                                    components.get_info_icon_tooltip_bundle(
-                                        "id-info-box-plot-split-jiq", gs.help_box_plot_click, "left"
-                                    )
-                                ],
+                                [components.get_text([icons.caution, gs.caution_box_plot_split])],
                                 className="d-flex justify-content-start",
                                 align="center",
                                 style=styles.border_column,
-                                width=1,
                             ),
                         ],
                         className="g-0 form-control-sm",

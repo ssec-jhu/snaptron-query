@@ -77,8 +77,14 @@ def run_query(
     # Create split graph
     box_plot_split_display = styles.display_none
     if len(inc_junctions) == 1:
-        if compilation in {gs.compilation_gtexv2, gs.compilation_tcgav2}:
-            split_column = "SMTS" if compilation == gs.compilation_gtexv2 else "gdc_cases.project.primary_site"
+        if compilation in {gs.compilation_gtexv2, gs.compilation_tcgav2,  gs.compilation_encode}:
+            if compilation == gs.compilation_gtexv2:
+                split_column = gs.snpt_col_smts
+            elif compilation == gs.compilation_tcgav2:
+                split_column = gs.snpt_col_gdc_prim_site
+            else:
+                split_column = gs.snpt_col_exp_target
+
             unique_categories = df[split_column].unique()
             box_plot_split = graphs.get_box_plot_jiq(
                 df=df,
@@ -90,6 +96,10 @@ def run_query(
                 order_split={split_column: sorted(unique_categories)},
             )
             box_plot_split_display = styles.display_block
+
+            if compilation == gs.compilation_encode:
+                # remove "-human" from shRNA label
+                box_plot_split.for_each_annotation(lambda a: a.update(text=a.text.split("-")[0]))
         else:
             # placeholder graph needed for appropriate refresh of graph
             box_plot_split = box_plot
