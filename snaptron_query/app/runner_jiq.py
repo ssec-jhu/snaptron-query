@@ -77,7 +77,7 @@ def run_query(
     # Create split graph
     box_plot_split_display = styles.display_none
     if len(inc_junctions) == 1:
-        if compilation in {gs.compilation_gtexv2, gs.compilation_tcgav2,  gs.compilation_encode}:
+        if compilation in {gs.compilation_gtexv2, gs.compilation_tcgav2, gs.compilation_encode}:
             if compilation == gs.compilation_gtexv2:
                 split_column = gs.snpt_col_smts
             elif compilation == gs.compilation_tcgav2:
