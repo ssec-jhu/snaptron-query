@@ -27,17 +27,17 @@ compilation_tcgav2 = "TCGAv2"
 compilation_srav1m = "SRAv1m"
 compilation_encode = "encode1159"
 compilation_names_dict = {
-    compilation_srav3h: f"human ({compilation_srav3h})",
-    compilation_gtexv2: f"human ({compilation_gtexv2})",
-    compilation_tcgav2: f"human ({compilation_tcgav2})",
-    compilation_srav1m: f"mouse ({compilation_srav1m})",
-    compilation_encode: "human (ENCODE shRNA)",
+    compilation_srav3h: f"human ({compilation_srav3h}, GRCh38/hg38 coordinates)",
+    compilation_gtexv2: f"human ({compilation_gtexv2}, GRCh38/hg38 coordinates)",
+    compilation_tcgav2: f"human ({compilation_tcgav2}, GRCh38/hg38 coordinates)",
+    compilation_srav1m: f"mouse ({compilation_srav1m}, GRCm38/mm10 coordinates)",
+    compilation_encode: "human (ENCODE shRNA, GRCh38/hg38 coordinates)",
 }
 drop_compilation = "Select the dataset of interest"
 drop_compilation_placeholder = "Select a compilation"
 drop_compilation_help = (
-    "Please check that the dataset organism matches the alternative/cryptic exon of interest. "
-    "Ensure that the junction is given as GRCh38/hg38 (human) or GRCm38/mm10 (mouse) coordinates."
+    "We strongly recommend users cross-validate junction coordinates using visualization tools like UCSC Genome "
+    "Browser or IGV. "
 )
 switch_violin = "Violin Mode"
 # switch_lock = 'Lock Graphs and Table'
@@ -130,10 +130,6 @@ jiq_help_excjunc = (
 jiq_help_table = f" Table initially loads with PSI\u2265{const_filter_psi} and Total\u2265{const_filter_total}."
 jiq_help_add_junction = "Add more inclusion or exclusion junctions (up to 5) to the PSI query"
 jiq_help_delete_junction = "Remove junction from the PSI query"
-jiq_caution = (
-    "We strongly recommend users cross-validate junction coordinates using visualization tools like UCSC "
-    "Genome Browser or IGV. "
-)
 
 """""" """""" """""" """""" """""" """""" """""" """""" """""" """""" """
             Gene Expression Query 

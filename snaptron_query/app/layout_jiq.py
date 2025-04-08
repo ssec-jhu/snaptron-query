@@ -52,9 +52,6 @@ def get_form_jiq():
                                 components.get_info_icon_tooltip_bundle(
                                     "id-info-inc-junc-jiq", gs.jiq_help_incjunc, "top"
                                 ),
-                                components.get_caution_icon_tooltip_bundle(
-                                    "id-caution-inc-junc-jiq", gs.jiq_caution, "top"
-                                ),
                             ],
                             style={"display": "flex", "gap": "5px"},
                         )
@@ -71,9 +68,6 @@ def get_form_jiq():
                                 components.get_text(gs.jiq_input_exc_txt),
                                 components.get_info_icon_tooltip_bundle(
                                     "id-info-exc-junc-jiq", gs.jiq_help_excjunc, "top"
-                                ),
-                                components.get_caution_icon_tooltip_bundle(
-                                    "id-caution-exc-junc-jiq", gs.jiq_caution, "top"
                                 ),
                             ],
                             style={"display": "flex", "gap": "5px"},
