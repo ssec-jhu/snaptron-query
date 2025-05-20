@@ -13,6 +13,7 @@ section = {"box-shadow": "1px 2px 7px 0px grey", "border-radius": "10px"}
 # Note: Setting the 'display': 'None' creates a delay in the rendering of the plots. They
 # render to the screen then shift to their position.
 # visibility will keep the space, so when the plots come in, they render fast
+# the height of 70 is just a placeholder
 section_vis = {"visibility": "hidden", "height": "70px"}
 display_block = {"display": "block"}
 display_none = {"display": "none"}

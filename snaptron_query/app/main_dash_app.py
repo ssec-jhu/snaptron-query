@@ -89,6 +89,8 @@ app.layout = dbc.Container(
     # figure related outputs
     Output("id-histogram-jiq", "figure"),
     Output("id-box-plot-jiq", "figure"),
+    Output("id-box-plot-jiq-split", "figure"),
+    Output("id-display-box-plot-split-row", "style"),
     Output("id-jiq-box-plot-col", "width"),
     Output("id-jiq-histogram-col", "width"),
     Output("id-display-graphs-jiq", "style"),
@@ -126,23 +128,33 @@ def on_button_click_jiq_run(
             alert_message = None
             row_data = None
             column_defs = None
+            box_plot_split = None
             if not compilation:
                 raise exceptions.MissingUserInputs
 
             if junction_count is None:  # first call
                 junction_count = 0
 
-            row_data, column_defs, filter_model, histogram, box_plot, col_width, col_width, display_style = (
-                runner_jiq.run_query(
-                    meta_data_dict=get_meta_data(compilation),
-                    compilation=compilation,
-                    children=children,
-                    junction_count=junction_count,
-                    box_log_psi=box_log_psi,
-                    violin_overlay=violin_overlay,
-                    histogram_log_psi=histogram_log_psi,
-                    histogram_log_y=histogram_log_y,
-                )
+            (
+                row_data,
+                column_defs,
+                filter_model,
+                histogram,
+                box_plot,
+                box_plot_split,
+                box_plot_split_display,
+                col_width,
+                col_width,
+                display_style,
+            ) = runner_jiq.run_query(
+                meta_data_dict=get_meta_data(compilation),
+                compilation=compilation,
+                children=children,
+                junction_count=junction_count,
+                box_log_psi=box_log_psi,
+                violin_overlay=violin_overlay,
+                histogram_log_psi=histogram_log_psi,
+                histogram_log_y=histogram_log_y,
             )
 
         except Exception as e:
@@ -162,6 +174,7 @@ def on_button_click_jiq_run(
             no_update,
             no_update,
             no_update,
+            no_update,
             False,  # make sure id-results-cleared-jiq is set back to false if any failure happens
         )
 
@@ -174,6 +187,8 @@ def on_button_click_jiq_run(
         no_update,
         histogram,
         box_plot,
+        box_plot_split,
+        box_plot_split_display,
         col_width,
         col_width,
         display_style,

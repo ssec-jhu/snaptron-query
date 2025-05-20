@@ -341,6 +341,33 @@ def get_card_box_plot_jiq():
     return card
 
 
+def get_card_box_plot_split_jiq():
+    """Wrapper function for the box plot component in a card layout"""
+    card = dbc.Card(
+        children=[
+            dbc.CardBody(
+                [
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                [components.get_text([icons.caution, gs.caution_box_plot_split])],
+                                className="d-flex justify-content-start",
+                                align="center",
+                                style=styles.border_column,
+                            ),
+                        ],
+                        className="g-0 form-control-sm",
+                        style=styles.border_column,
+                    ),
+                    dbc.Row([dcc.Graph(id="id-box-plot-jiq-split")], className="g-0", style=styles.border_column),
+                ]
+            )
+        ],
+        style=styles.boundary_style,
+    )
+    return card
+
+
 def get_card_table_jiq():
     """Wrapper function for the table component"""
     card = dmc.Card(
@@ -451,7 +478,15 @@ def get_accordian_graphs_jiq():
                             dbc.Col(id="id-jiq-box-plot-col", children=[html.Div(get_card_box_plot_jiq())]),
                             dbc.Col(id="id-jiq-histogram-col", children=[html.Div(get_card_histogram_jiq())]),
                         ]
-                    )
+                    ),
+                    dbc.Row(
+                        [  # full width
+                            dmc.Space(h=20),
+                            dbc.Col(id="id-jiq-box-plot-col-split", children=[html.Div(get_card_box_plot_split_jiq())]),
+                        ],
+                        id="id-display-box-plot-split-row",
+                        style={**styles.section_vis},
+                    ),
                 ],
                 title=gs.graphs_group_title,
             )

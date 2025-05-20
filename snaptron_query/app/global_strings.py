@@ -56,6 +56,10 @@ help_box_plot_click = (
     " You can click on the points in the box plot to filter table by that point. "
     'Reset the "Rail ID" column to go back.'
 )
+caution_box_plot_split = (
+    f"This graph is static and does not filter by points in the table. Loads with PSI\u2265{const_filter_psi} and "
+    f"Total\u2265{const_filter_total}. "
+)
 help_reset = (
     "This will remove all filters applied to the table below. For individual columns, "
     'click on the "Reset" button on the desired column'
