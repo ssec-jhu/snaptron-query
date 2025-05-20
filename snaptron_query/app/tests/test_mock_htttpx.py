@@ -113,10 +113,12 @@ def test_gather_snpt_query_results_into_dict(mock_httpx_get, mock_httpx_response
         SpliceJunctionPair(
             exc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
             inc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4492014),
+            search_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
         ),
         SpliceJunctionPair(
             exc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
             inc_coordinates=JunctionCoordinates(chr="chr19", start=4492153, end=4493702),
+            search_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
         ),
     ]
 
@@ -134,6 +136,7 @@ def test_gather_snpt_query_results_into_dic_exception(mock_httpx_get, mock_httpx
         SpliceJunctionPair(
             exc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
             inc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4492014),
+            search_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
         ),
     ]
 
@@ -148,6 +151,7 @@ def test_gather_snpt_query_results_into_dic_exception_2(mock_httpx_get, mock_df_
         SpliceJunctionPair(
             exc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
             inc_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4492014),
+            search_coordinates=JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
         ),
     ]
 

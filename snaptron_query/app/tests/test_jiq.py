@@ -191,8 +191,9 @@ def test_jiq_results_srav1m(junction_srav1m, rail_id, study, inc, exc, psi):
 @pytest.mark.parametrize(
     "pair_a,pair_b,chromosome,start_a,end_a,start_b,end_b",
     [
-        ("chr3:5555-6666", "chr3:4000-5000", "chr3", 5555, 6666, 4000, 5000),
-        ("chr19:5000-6000", "chr19:4000-5000", "chr19", 5000, 6000, 4000, 5000),
+        # These first junction is an "expanded junction" & the second junction shouldn't occur? I think
+        # ("chr3:5555-6666", "chr3:4000-5000", "chr3", 5555, 6666, 4000, 5000),
+        # ("chr19:5000-6000", "chr19:4000-5000", "chr19", 5000, 6000, 4000, 5000),
         ("chr7:100650136-100655018", "chr7:100650136-100650574", "chr7", 100650136, 100655018, 100650136, 100650574),
         ("chr1:1044440-1045160", "chr1:1044440-1044891", "chr1", 1044440, 1045160, 1044440, 1044891),
         ("chr5:112266331-112275325", "chr5:112266331-112267209", "chr5", 112266331, 112275325, 112266331, 112267209),
@@ -201,7 +202,7 @@ def test_jiq_results_srav1m(junction_srav1m, rail_id, study, inc, exc, psi):
     ],
 )
 def test_jiq_verify_coordinates(pair_a, pair_b, chromosome, start_a, end_a, start_b, end_b):
-    junction_coordinates = sc.jiq_verify_coordinate_pairs(pair_a, pair_b)
+    junction_coordinates = sc.jiq_verify_coordinate_pairs(pair_a, pair_b, expanded_coordinates=False)
     assert junction_coordinates.exc_coordinates.chr == chromosome
     assert junction_coordinates.inc_coordinates.chr == chromosome
     # make sure they are cast correctly
@@ -214,12 +215,18 @@ def test_jiq_verify_coordinates(pair_a, pair_b, chromosome, start_a, end_a, star
 @pytest.mark.parametrize("pair_a,pair_b", [("chr19:5000-6000", "chr29:4000-5000")])
 def test_jiq_verify_coordinates_with_errors(pair_a, pair_b):
     with pytest.raises(exceptions.BadCoordinates):
-        sc.jiq_verify_coordinate_pairs(pair_a, pair_b)
+        sc.jiq_verify_coordinate_pairs(pair_a, pair_b, expanded_coordinates=False)
+
+
+@pytest.mark.parametrize("pair_a,pair_b", [("chr1:11022251-11023192", "chr1:11020600-11022123")])
+def test_jiq_verify_expanded_coordinates_with_errors(pair_a, pair_b):
+    with pytest.raises(exceptions.ExpandedJunctions):
+        sc.jiq_verify_coordinate_pairs(pair_a, pair_b, expanded_coordinates=False)
 
 
 def test_split_and_verify_mismatch_chromosomes():
     with pytest.raises(exceptions.BadCoordinates):
-        sc.jiq_verify_coordinate_pairs("chr19:5000-6000", "chr29:4000-5000")
+        sc.jiq_verify_coordinate_pairs("chr19:5000-6000", "chr29:4000-5000", expanded_coordinates=False)
 
 
 @pytest.mark.parametrize(gs.snpt_col_rail_id, [2171668, 988956, 1127039, 499887, 988942, 1641727, 1641757, 2109561])
@@ -241,6 +248,7 @@ def test_jiq_empty_exc_junctions(
         splice_pair = sc.SpliceJunctionPair(
             exc_coordinates=sc.JunctionCoordinates(exc_chr, exc_start, exc_end),
             inc_coordinates=sc.JunctionCoordinates(inc_chr, inc_start, inc_end),
+            search_coordinates=sc.JunctionCoordinates(exc_chr, exc_start, exc_end),
         )
         JunctionQuery(
             compilation=gs.compilation_srav3h,
@@ -261,6 +269,7 @@ def test_jiq_empty_inc_junctions(
         splice_pair = sc.SpliceJunctionPair(
             exc_coordinates=sc.JunctionCoordinates(exc_chr, exc_start, exc_end),
             inc_coordinates=sc.JunctionCoordinates(inc_chr, inc_start, inc_end),
+            search_coordinates=sc.JunctionCoordinates(exc_chr, exc_start, exc_end),
         )
         JunctionQuery(
             compilation=gs.compilation_srav3h,

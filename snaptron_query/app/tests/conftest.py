@@ -120,6 +120,7 @@ def junction_pair_human_1():
     return sc.SpliceJunctionPair(
         exc_coordinates=sc.JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
         inc_coordinates=sc.JunctionCoordinates(chr="chr19", start=4491836, end=4492014),
+        search_coordinates=sc.JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
     )
 
 
@@ -128,6 +129,7 @@ def junction_pair_human_2():
     return sc.SpliceJunctionPair(
         exc_coordinates=sc.JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
         inc_coordinates=sc.JunctionCoordinates(chr="chr19", start=4492153, end=4493702),
+        search_coordinates=sc.JunctionCoordinates(chr="chr19", start=4491836, end=4493702),
     )
 
 
@@ -136,6 +138,7 @@ def junction_pair_human_3():
     return sc.SpliceJunctionPair(
         exc_coordinates=sc.JunctionCoordinates(chr="chr7", start=98881251, end=98881974),
         inc_coordinates=sc.JunctionCoordinates(chr="chr19", start=98881251, end=98881694),
+        search_coordinates=sc.JunctionCoordinates(chr="chr7", start=98881251, end=98881974),
     )
 
 
@@ -144,6 +147,7 @@ def junction_pair_human_4():
     return sc.SpliceJunctionPair(
         exc_coordinates=sc.JunctionCoordinates(chr="chr7", start=98881251, end=98881974),
         inc_coordinates=sc.JunctionCoordinates(chr="chr19", start=98881737, end=98881974),
+        search_coordinates=sc.JunctionCoordinates(chr="chr7", start=98881251, end=98881974),
     )
 
 
@@ -152,6 +156,7 @@ def junction_pair_mouse_1():
     return sc.SpliceJunctionPair(
         exc_coordinates=sc.JunctionCoordinates(chr="chr8", start=71666671, end=71671625),
         inc_coordinates=sc.JunctionCoordinates(chr="chr19", start=71666671, end=71667328),
+        search_coordinates=sc.JunctionCoordinates(chr="chr8", start=71666671, end=71671625),
     )
 
 
@@ -160,6 +165,7 @@ def junction_pair_mouse_2():
     return sc.SpliceJunctionPair(
         exc_coordinates=sc.JunctionCoordinates(chr="chr8", start=71666671, end=71671625),
         inc_coordinates=sc.JunctionCoordinates(chr="chr19", start=71667373, end=71671625),
+        search_coordinates=sc.JunctionCoordinates(chr="chr8", start=71666671, end=71671625),
     )
 
 
@@ -343,6 +349,7 @@ def multi_junction_srav3h_one_empty_inclusion(
     junction_3 = sc.SpliceJunctionPair(
         exc_coordinates=sc.JunctionCoordinates("chr19", 4491836, 4493702),
         inc_coordinates=sc.JunctionCoordinates("chr19", 4056797, 4643209),
+        search_coordinates=sc.JunctionCoordinates("chr19", 4491836, 4493702),
     )
     j_list = [junction_pair_human_1, junction_pair_human_2, junction_3]
     df_from_snaptron_map = {junction_pair_human_1.exc_coordinates: df_sample_junctions_from_srav3h}

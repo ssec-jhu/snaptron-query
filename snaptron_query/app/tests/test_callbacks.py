@@ -352,6 +352,7 @@ def test_on_button_click_geq_clear_error(monkeypatch_meta_data):
         (exceptions.BadCoordinates, gs.bad_coordinates),
         (exceptions.QueryGeneNotFound, gs.query_gene_not_found),
         (exceptions.NormalizationGeneNotFound, gs.normalization_gene_not_found),
+        (exceptions.ExpandedJunctions, gs.expanded_coordinates),
     ],
 )
 def test_alerts(exc, msg):
