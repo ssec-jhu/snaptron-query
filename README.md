@@ -70,4 +70,4 @@ Follow above setup instructions if you have not done so already.
   * ``tox -e build-docs``
   * ``tox -e format``
 
-Typically, the CI tests run in github actions will use tox to run as above. See also [ci.yml](https://github.com/ssec-jhu/base-template/blob/main/.github/workflows/ci.yml).
+Typically, the CI tests run in GitHub actions will use tox to run as above. See also [ci.yml](https://github.com/ssec-jhu/base-template/blob/main/.github/workflows/ci.yml).
