@@ -8,10 +8,9 @@ contacts = "Contacts: Irika - isinha1 [@] jhu [.] edu & Dr. Jonathan Ling - jlin
 built_using = ["Built using ", "Snaptron", " and ", "Recount3"]
 url_snaptron = "https://snaptron.cs.jhu.edu/"
 url_recount = "https://rna.recount.bio/"
-# url_paper = "https://www.biorxiv.org/content/10.1101/2024.03.27.587011v1.full.pdf"
-url_paper = "https://doi.org/10.1101/2024.03.27.587011"
+url_paper = "https://doi.org/10.1038/s41467-025-62004-5"
 cite = "Please cite: "
-paper_text = "[Sinha et al. 2024]"
+paper_text = "[Sinha IR, Sandal PS et al. Nat Commun 2025]"
 
 const_log_epsilon = 0.01
 const_filter_psi = 5

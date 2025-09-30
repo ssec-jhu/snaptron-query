@@ -9,7 +9,7 @@
 
 # About 
 Web application for junction or gene expression count extraction and analysis:
-* Preprint at: [Large-scale RNA-seq mining reveals ciclopirox triggers TDP-43 cryptic exons](https://www.biorxiv.org/content/10.1101/2024.03.27.587011v1)
+* Published at: [Large-scale RNA-seq mining reveals ciclopirox triggers TDP-43 cryptic exons](https://doi.org/10.1038/s41467-025-62004-5)
 * **SnapMine** is deployed at: https://snapmine.idies.jhu.edu/
 
 
@@ -70,4 +70,4 @@ Follow above setup instructions if you have not done so already.
   * ``tox -e build-docs``
   * ``tox -e format``
 
-Typically, the CI tests run in github actions will use tox to run as above. See also [ci.yml](https://github.com/ssec-jhu/base-template/blob/main/.github/workflows/ci.yml).
+Typically, the CI tests run in GitHub actions will use tox to run as above. See also [ci.yml](https://github.com/ssec-jhu/base-template/blob/main/.github/workflows/ci.yml).
