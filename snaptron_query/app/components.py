@@ -41,7 +41,7 @@ def get_dropdown_compilation(component_id):
                 [
                     # create a bundle with the tooltip icon here
                     dbc.Label(gs.drop_compilation, className="fw-bold me-2 mt-1"),
-                    get_info_icon_tooltip_bundle(f"{component_id}_info", gs.drop_compilation_help, "top"),
+                    get_caution_icon_tooltip_bundle(f"{component_id}_info", gs.drop_compilation_help, "top"),
                 ],
                 style={"display": "flex"},
             ),
@@ -221,4 +221,13 @@ def get_button_reset(button_id):
 def get_info_icon_tooltip_bundle(info_icon_id, help_string, location):
     return html.Div(
         [dmc.Text(icons.info, id=info_icon_id, weight=500, size="md"), get_tooltip(info_icon_id, help_string, location)]
+    )
+
+
+def get_caution_icon_tooltip_bundle(caution_icon_id, help_string, location):
+    return html.Div(
+        [
+            dmc.Text(icons.caution, id=caution_icon_id, weight=500, size="md"),
+            get_tooltip(caution_icon_id, help_string, location),
+        ]
     )

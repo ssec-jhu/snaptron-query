@@ -131,6 +131,10 @@ def test_get_info_icon_tooltip_bundle():
     assert isinstance(components.get_info_icon_tooltip_bundle("id", "string", "location"), html.Div)
 
 
+def test_get_caution_icon_tooltip_bundle():
+    assert isinstance(components.get_caution_icon_tooltip_bundle("id", "string", "location"), html.Div)
+
+
 def test_empty_inc_junction():
     assert exceptions.EmptyIncJunction(2).get_message().find("Inclusion Junction 2") != -1
 
@@ -259,6 +263,7 @@ def test_get_tabs():
         (paths.srav3h_meta, paths.filename_srav3h),
         (paths.gtexv2_meta, paths.filename_gtexv2),
         (paths.tcgav2_meta, paths.filename_tcgav2),
+        (paths.encode_meta, paths.filename_encode),
         (paths.srav1m_meta, paths.filename_srav1m),
     ],
 )

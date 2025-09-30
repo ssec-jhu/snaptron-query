@@ -12,9 +12,10 @@ filename_srav3h = "srav3h_samples.tsv"
 filename_gtexv2 = "gtexv2_samples.tsv"
 filename_tcgav2 = "tcgav2_samples.tsv"
 filename_srav1m = "srav1m_samples.tsv"
-
+filename_encode = "encode1159_samples.tsv"
 
 srav3h_meta = meta_data_directory / filename_srav3h
 gtexv2_meta = meta_data_directory / filename_gtexv2
 tcgav2_meta = meta_data_directory / filename_tcgav2
 srav1m_meta = meta_data_directory / filename_srav1m
+encode_meta = meta_data_directory / filename_encode

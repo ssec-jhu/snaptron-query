@@ -22,6 +22,7 @@ Web application for junction or gene expression count extraction and analysis:
     * [gtexv2](https://snaptron.cs.jhu.edu/data/gtexv2/samples.tsv) to `gtexv2_samples.tsv`
     * [tcgav2](https://snaptron.cs.jhu.edu/data/tcgav2/samples.tsv) to `tcgav2_samples.tsv`
     * [srav1m](https://snaptron.cs.jhu.edu/data/srav1m/samples.tsv) to `srav1m_samples.tsv`
+    * [encode](https://snaptron.cs.jhu.edu/data/encode1159/samples.tsv) to `encode1159_samples.tsv`
     * Change the `meta_data_directory` string in [snaptron-query/snaptron_query/app/paths.py](https://github.com/ssec-jhu/snaptron-query/blob/07103767262f5292ada793c4c1e7a94b32e7fd15/snaptron_query/app/paths.py#L7) to the directory of the metadata files downloaded 
 
 ## Build & Run:

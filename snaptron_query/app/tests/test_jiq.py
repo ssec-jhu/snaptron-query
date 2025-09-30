@@ -146,6 +146,27 @@ def test_jiq_results_tcgav2(junction_tcgav2, rail_id, study, inc, exc, psi):
 
 
 @pytest.mark.parametrize(
+    "rail_id,cell, inc,exc,psi",
+    [
+        (71123, "K562", 0, 35, 0),
+        (71141, "K562", 0, 4, 0),
+        (71151, "K562", 0, 16, 0),
+        (71195, "K562", 0, 78, 0),
+        (71200, "HepG2", 0, 22, 0),
+        (71263, "IMR-90", 0, 667, 0),
+        (71495, "HepG2", 0, 31, 0),
+        (71741, "K562", 14, 59, 19.18),
+    ],
+)
+def test_jiq_results_encode(junction_encode, rail_id, cell, inc, exc, psi):
+    s = junction_encode.get_results().loc[rail_id]
+    assert s[gs.snpt_col_cell_line] == cell
+    assert s[gs.table_jiq_col_inc] == inc
+    assert s[gs.table_jiq_col_exc] == exc
+    assert s[gs.table_jiq_col_psi] == psi
+
+
+@pytest.mark.parametrize(
     "rail_id,study,inc,exc,psi",
     [
         (3072016, "SRP057123", 21, 0, 100.0),
@@ -201,7 +222,7 @@ def test_split_and_verify_mismatch_chromosomes():
         sc.jiq_verify_coordinate_pairs("chr19:5000-6000", "chr29:4000-5000")
 
 
-@pytest.mark.parametrize("rail_id", [2171668, 988956, 1127039, 499887, 988942, 1641727, 1641757, 2109561])
+@pytest.mark.parametrize(gs.snpt_col_rail_id, [2171668, 988956, 1127039, 499887, 988942, 1641727, 1641757, 2109561])
 def test_jiq_psi_results_vs_shinyapp_website(junction_srav3h, ground_truth_df, rail_id):
     our_results = junction_srav3h.get_results().loc[rail_id]
     ground_truth = ground_truth_df.loc[rail_id]
