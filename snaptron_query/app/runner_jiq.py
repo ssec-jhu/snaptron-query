@@ -6,6 +6,7 @@ from snaptron_query.app import (
     exceptions,
     global_strings as gs,
     snaptron_client as sc,
+    inline_styles as styles,
 )
 from snaptron_query.app.query_junction_inclusion import JunctionInclusionQueryManager, JiqReturnType
 
@@ -73,6 +74,39 @@ def run_query(
     histogram = graphs.get_histogram_jiq(df, histogram_log_psi, histogram_log_y, list_of_calculated_junctions)
     box_plot = graphs.get_box_plot_jiq(df, box_log_psi, violin_overlay, list_of_calculated_junctions)
 
+    # Create split graph
+    box_plot_split_display = styles.display_none
+    if len(inc_junctions) == 1:
+        if compilation in {gs.compilation_gtexv2, gs.compilation_tcgav2, gs.compilation_encode}:
+            if compilation == gs.compilation_gtexv2:
+                split_column = gs.snpt_col_smts
+            elif compilation == gs.compilation_tcgav2:
+                split_column = gs.snpt_col_gdc_prim_site
+            else:
+                split_column = gs.snpt_col_exp_target
+
+            unique_categories = df[split_column].unique()
+            box_plot_split = graphs.get_box_plot_jiq(
+                df=df,
+                log_psi_values=False,
+                violin_overlay=False,
+                list_of_calculated_junctions=list_of_calculated_junctions,
+                split=split_column,
+                n_col_graph=len(unique_categories),
+                order_split={split_column: sorted(unique_categories)},
+            )
+            box_plot_split_display = styles.display_block
+
+            if compilation == gs.compilation_encode:
+                # remove "-human" from shRNA label
+                box_plot_split.for_each_annotation(lambda a: a.update(text=a.text.split("-")[0]))
+        else:
+            # placeholder graph needed for appropriate refresh of graph
+            box_plot_split = box_plot
+    else:
+        # placeholder graph needed for multi-junction query
+        box_plot_split = box_plot
+
     col_width = {"size": 6}
     # when the component is hidden, then becomes visible, the original style is lost,
     # so I am putting it back again.
@@ -81,4 +115,15 @@ def run_query(
         "border-radius": "10px",
     }
 
-    return row_data, column_defs, filter_model, histogram, box_plot, col_width, col_width, display_style
+    return (
+        row_data,
+        column_defs,
+        filter_model,
+        histogram,
+        box_plot,
+        box_plot_split,
+        box_plot_split_display,
+        col_width,
+        col_width,
+        display_style,
+    )
