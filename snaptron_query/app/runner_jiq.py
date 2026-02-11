@@ -19,6 +19,7 @@ def run_query(
     violin_overlay,
     histogram_log_psi,
     histogram_log_y,
+    expanded_coordinates=False,
 ):
     # count is indexed at 0
     inc_junctions, exc_junctions = utils.get_element_id_and_value(children, junction_count)
@@ -28,12 +29,15 @@ def run_query(
     # verify all the coordinates, if there is any error in the intervals, an exception will be thrown
     junction_lists = []
     for j in range(len(exc_junctions)):
-        junction_coordinates = sc.jiq_verify_coordinate_pairs(exc_junctions[j], inc_junctions[j])
+        junction_coordinates = sc.jiq_verify_coordinate_pairs(
+            exc_junctions[j], inc_junctions[j], expanded_coordinates=expanded_coordinates
+        )
         junction_lists.append(junction_coordinates)
 
     # gather the snaptron results form the exclusion junctions
     df_snpt_results_dict = sc.gather_snpt_query_results_into_dict(
-        compilation=compilation, junction_lists=junction_lists
+        compilation=compilation,
+        junction_lists=junction_lists,
     )
     # Select the metadata that must be used
     # meta_data_dict = get_meta_data(compilation)

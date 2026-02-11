@@ -242,6 +242,10 @@ def get_form_jiq():
                 ),
             ],
         ),
+        dmc.Space(h=10),
+        dbc.Row(
+            components_jiq.get_checkbox_jiq_expanded_coordinates(), class_name="g-0 form-control-sm", align="start"
+        ),
         # ROW: Main Calculate Button
         dbc.Row(
             [
