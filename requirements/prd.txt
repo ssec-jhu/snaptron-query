@@ -7,4 +7,4 @@ dash-mantine-components==0.13.0.a3
 pandas==2.2.2
 httpx==0.27.0
 dash-loading-spinners==1.0.3
-gunicorn==23.0.0
+gunicorn==26.0.0
